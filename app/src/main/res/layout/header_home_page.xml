@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <com.youth.banner.Banner
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/root_padding_10">
+
+        <TextView
+            android:id="@+id/tv_title1"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_common_press_bg"
+            android:drawablePadding="4dp"
+            android:drawableTop="@mipmap/ic_launcher_round"
+            android:gravity="center"
+            android:text="@string/simulation_trade"/>
+
+        <TextView
+            android:id="@+id/tv_title2"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_common_press_bg"
+            android:drawablePadding="4dp"
+            android:drawableTop="@mipmap/ic_launcher_round"
+            android:gravity="center"
+            android:text="市场监管"/>
+
+        <TextView
+            android:id="@+id/tv_title3"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selector_common_press_bg"
+            android:drawablePadding="4dp"
+            android:drawableTop="@mipmap/ic_launcher_round"
+            android:gravity="center"
+            android:text="风险提示"/>
+    </LinearLayout>
+
+    <TextView
+        style="@style/text_color_333333_16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/root_padding_10"
+        android:text="国际期货"/>
+
+</LinearLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <dimen name="root_padding_15">15dp</dimen>
+    <dimen name="root_padding_10">10dp</dimen>
+
+    <!-- UI 定义字体 start -->
+    <dimen name="text_size_10sp">10sp</dimen>
+    <dimen name="text_size_15sp">15sp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
+    <dimen name="text_size_20sp">20sp</dimen>
+    <dimen name="text_size_40sp">40sp</dimen>
+    <dimen name="text_size_31sp">31sp</dimen>
+    <dimen name="text_size_12sp">12sp</dimen>
+    <dimen name="text_size_14sp">14sp</dimen>
+    <dimen name="text_size_17sp">17sp</dimen>
+    <dimen name="text_size_19sp">19sp</dimen>
+    <dimen name="text_size_21sp">21sp</dimen>
+    <dimen name="text_size_25sp">25sp</dimen>
+    <dimen name="common_divider">5dp</dimen>
+    <dimen name="common_divider_small">0.5dp</dimen>
+    <dimen name="header_height">56dp</dimen>
+    <!-- UI 定义字体 end -->
+</resources>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.yjjr.yjfutures.ui.trade.TradeActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/root_padding_10">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/selector_back_arrow_press"/>
+
+        <com.yjjr.yjfutures.widget.EditTextWithControl
+            android:id="@+id/et_hand"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_back"
+            app:etwc_step="0.01"
+            app:etwc_value="0.01"/>
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/text_color_333333_17sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="美原油 CL1078"/>
+
+        <TextView
+            android:id="@+id/tv_subtitle"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.1"
+            android:text="持仓总收益\n1000"/>
+
+        <TextView
+            android:id="@+id/tv_setting"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:text="@string/setting"/>
+
+        <TextView
+            android:id="@+id/tv_close_order"
+            style="@style/text_color_333333_12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_setting"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/selector_common_press_bg"
+            android:text="一键\n平仓"/>
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/rg_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_chart1"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="@dimen/root_padding_10"
+            android:text="闪电图"
+            android:textColor="@color/selector_trade_rb_text_color"
+            />
+
+        <RadioButton
+            android:id="@+id/rb_chart2"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="@dimen/root_padding_10"
+            android:text="分时图"
+            android:textColor="@color/selector_trade_rb_text_color"
+            />
+
+        <RadioButton
+            android:id="@+id/rb_chart3"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="@dimen/root_padding_10"
+            android:text="K线图"
+            android:textColor="@color/selector_trade_rb_text_color"
+            />
+
+        <RadioButton
+            android:id="@+id/rb_chart4"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="@dimen/root_padding_10"
+            android:text="盘口"
+            android:textColor="@color/selector_trade_rb_text_color"/>
+    </RadioGroup>
+
+    <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/root_padding_10"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/pb_left"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="45"/>
+
+        <TextView
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:layout_marginRight="@dimen/root_padding_10"
+            android:text="买卖量"/>
+
+        <ProgressBar
+            android:id="@+id/pb_right"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="45"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/root_padding_10"
+        android:layout_marginRight="@dimen/root_padding_10"
+        android:background="@color/background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <TextView
+                android:id="@+id/tv_left"
+                style="@style/text_color_ffffff_12sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_online_tx_green"
+                android:gravity="center"
+                android:paddingRight="16dp"
+                android:textStyle="bold"
+                tools:text="113.881"/>
+
+            <TextView
+                android:id="@+id/tv_right"
+                style="@style/text_color_ffffff_12sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_online_tx_red"
+                android:gravity="center"
+                android:paddingRight="4dp"
+                android:textStyle="bold"
+                tools:text="113.881"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_center"
+            style="@style/text_color_333333_12sp"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_online_tx_white"
+            android:gravity="center"
+            android:text="反手"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_bottom"
+        style="@style/text_color_333333_14sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/root_padding_10"
+        android:gravity="center"
+        android:text="本段时间持仓至"/>
+</LinearLayout>

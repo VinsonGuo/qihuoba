@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:background="@color/white"
-              tools:context="com.yjjr.yjfutures.found.FoundFragment">
+              tools:context=".ui.found.FoundFragment">
 
     <TextView
         style="@style/text_color_333333_17sp"

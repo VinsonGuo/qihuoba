@@ -52,6 +52,8 @@
         <activity android:name=".ui.trade.TradeActivity"/>
         <activity android:name=".ui.mine.LoginActivity">
         </activity>
+        <activity android:name=".ui.trade.TakeOrderActivity">
+        </activity>
     </application>
 
 </manifest>

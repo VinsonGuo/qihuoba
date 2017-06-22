@@ -22,16 +22,15 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 
 /**
- * Created by hou on 2016/5/13.
+ * Created by guoziwei on 2017/5/13.
  */
 public class PriceRealTimeChart extends RelativeLayout {
 
-    public static final int FULL_SCREEN_SHOW_COUNT = 10;
+    public static final int FULL_SCREEN_SHOW_COUNT = 100;
     public static final int DATA_SET_SELL = 0;
     public static final int DATA_SET_BUY = 1;
     private LineChart mChart;
     private Context mContext;
-    private YAxis rightAxis;
     private int candleIncreaseColor = getResources().getColor(R.color.main_color_red);
     private int candleDecreaseColor = getResources().getColor(R.color.main_color);
     private int candleGridColor = getResources().getColor(R.color.color_e6e6e6);
@@ -100,17 +99,8 @@ public class PriceRealTimeChart extends RelativeLayout {
             RealPriceMarkerView mv = new RealPriceMarkerView(mContext, candleIncreaseColor, candleDecreaseColor, digits);
             mChart.setMarker(mv);
             mChart.calculateOffsets();
-            Highlight chartHighlighter = new Highlight(
-                    data.getDataSetByIndex(DATA_SET_BUY).getEntryCount() - 1, ask, DATA_SET_BUY);
-            Highlight chartHighlighter2 = new Highlight(
-                    data.getDataSetByIndex(DATA_SET_SELL).getEntryCount() - 1, bid, DATA_SET_SELL);
-//            Highlight chartHighlighter = new Highlight(data.getEntryCount() - 1,
-//                    ask,data.getDataSetByIndex(DATA_SET_BUY).getEntryCount() - 1, DATA_SET_BUY);
-//            Highlight chartHighlighter2 = new Highlight(data.getXValCount() - 1,
-//                    bid,data.getDataSetByIndex(DATA_SET_SELL).getEntryCount() - 1, DATA_SET_SELL);
-//            chartHighlighter.setmDrawPosition(Highlight.DrawPosition.RIGHT);
-//            chartHighlighter2.setmDrawPosition(Highlight.DrawPosition.RIGHT);
-
+            Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_BUY).getEntryCount() - 1, ask, DATA_SET_BUY);
+            Highlight chartHighlighter2 = new Highlight(data.getDataSetByIndex(DATA_SET_SELL).getEntryCount() - 1, bid, DATA_SET_SELL);
             Highlight highlight[] = new Highlight[]{chartHighlighter, chartHighlighter2};
             mChart.highlightValues(highlight);
             mChart.notifyDataSetChanged();
@@ -158,7 +148,7 @@ public class PriceRealTimeChart extends RelativeLayout {
         mChart.setClickable(false);
         mChart.setTouchEnabled(false);
 
-        rightAxis = mChart.getAxisRight();
+        YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setDrawGridLines(true);
         rightAxis.setGridColor(candleGridColor);
         rightAxis.setGridLineWidth(0.5f);

@@ -1,4 +1,4 @@
-package com.yjjr.yjfutures.ui;
+package com.yjjr.yjfutures.ui.trade;
 
 
 import android.graphics.Color;
@@ -13,17 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.CandleStickChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
+import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.utils.DateUtils;
+import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 
@@ -32,18 +40,19 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CandleStickChartFragment extends BaseFragment {
+public class CombinedChartFragment extends BaseFragment {
 
 
-    private CandleStickChart mChart;
+    private CombinedChart mChart;
 
-    public CandleStickChartFragment() {
+    public CombinedChartFragment() {
         // Required empty public constructor
     }
 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mChart = new CandleStickChart(mContext);
+
+        mChart = new CombinedChart(mContext);
         mChart.setBackgroundColor(Color.WHITE);
 
         mChart.getDescription().setEnabled(false);
@@ -129,7 +138,7 @@ public class CandleStickChartFragment extends BaseFragment {
             }
         });
         fullData();
-        mChart.setVisibleXRange(20,10); // allow 20 values to be displayed at once on the x-axis, not more
+        mChart.setVisibleXRange(21,9); // allow 20 values to be displayed at once on the x-axis, not more
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
         return mChart;
     }
@@ -172,7 +181,19 @@ public class CandleStickChartFragment extends BaseFragment {
         set1.setNeutralColor(Color.BLUE);
         //set1.setHighlightLineWidth(1f);
 
-        CandleData data = new CandleData(set1);
+//        CandleData data = new CandleData(set1);
+
+        ArrayList<BarEntry> yVals2 = new ArrayList<>();
+
+        for (int i = 0; i < 100; i++) {
+            float mult = 40 / 2f;
+            float val = (float) (Math.random() * mult);
+            yVals2.add(new BarEntry(i, val));
+        }
+        BarDataSet set2 = new BarDataSet(yVals2,"test");
+        CombinedData data = new CombinedData();
+        data.setData(new CandleData(set1));
+        data.setData(new BarData(set2));
 
         mChart.setData(data);
         mChart.invalidate();

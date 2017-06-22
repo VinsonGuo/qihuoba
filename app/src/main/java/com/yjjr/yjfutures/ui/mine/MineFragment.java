@@ -24,25 +24,18 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TextView tvFive;
     private TextView tvSix;
 
-    /**
-     * Find the Views in the layout<br />
-     * <br />
-     * Auto-created on 2017-06-21 15:12:33 by Android Layout Finder
-     * (http://www.buzzingandroid.com/tools/android-layout-finder)
-     */
-    private void findViews(View v) {
-        tvOne = (TextView)v.findViewById( R.id.tv_one );
-        tvTwo = (TextView)v.findViewById( R.id.tv_two );
-        tvThree = (TextView)v.findViewById( R.id.tv_three );
-        tvFour = (TextView)v.findViewById( R.id.tv_four );
-        tvFive = (TextView)v.findViewById( R.id.tv_five );
-        tvSix = (TextView)v.findViewById( R.id.tv_six );
-    }
-
     public MineFragment() {
         // Required empty public constructor
     }
 
+    private void findViews(View v) {
+        tvOne = (TextView) v.findViewById(R.id.tv_one);
+        tvTwo = (TextView) v.findViewById(R.id.tv_two);
+        tvThree = (TextView) v.findViewById(R.id.tv_three);
+        tvFour = (TextView) v.findViewById(R.id.tv_four);
+        tvFive = (TextView) v.findViewById(R.id.tv_five);
+        tvSix = (TextView) v.findViewById(R.id.tv_six);
+    }
 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

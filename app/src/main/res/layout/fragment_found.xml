@@ -3,7 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context="com.yjjr.yjfutures.found.FoundFragment">
+              tools:context=".ui.found.FoundFragment">
 
     <TextView
         style="@style/text_color_333333_17sp"

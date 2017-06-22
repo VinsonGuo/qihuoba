@@ -770,7 +770,6 @@
     <string name="get_service_fee_fail">获取服务费信息失败，请下拉刷新数据</string>
 
 
-
     <string name="join_step0_title">1. 推广计划概述</string>
     <string name="join_step1_title">2. 填写资料</string>
     <string name="join_step2_title">3. 完善Followme资料</string>
@@ -1413,13 +1412,11 @@
     <string name="serial_number">编号</string>
     <string name="account_not_login_prompt">登录后，您可以在这里查看您的资金状况，及进行出入金操作</string>
     <string name="style">风格</string>
-    <string name="trade_num">交易账号</string>
+    <string name="trade_num">交易数量</string>
     <string name="send_email">发送邮件</string>
     <string name="withdrawal_history_empty">您没有取款记录</string>
     <string name="withdraw_cash">实际取现</string>
     <string name="charge">手续费</string>
-    的局限性。本人在此授权及指示 KVB Kunlun New Zealand Limited 根据本人之程式所产生之交易讯号为
-    <string name="kvb_account">KVB账号</string>
     <string name="disclaimer_content">
         下方签署者已向 KVB Kunlun New Zealand Limited 申请开立外汇交易账户。本人已向 KVB Kunlun New Zealand Limited
         提供由本人设计之交易系统、
@@ -1491,5 +1488,7 @@
     <string name="fund_detail">资金明细</string>
     <string name="risk_info">风险提示</string>
     <string name="about_us">关于我们</string>
+    <string name="zhjjf">综合交易费</string>
+    <string name="total_pay">合计支付</string>
 
 </resources>

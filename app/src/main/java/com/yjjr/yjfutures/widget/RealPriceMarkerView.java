@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.utils.MPPointF;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 
@@ -35,7 +34,6 @@ public class RealPriceMarkerView extends MarkerView {
         this.digital = digital;
     }
 
-
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
         int dataIndex = highlight.getDataSetIndex();
@@ -46,7 +44,7 @@ public class RealPriceMarkerView extends MarkerView {
         if (digital > 0)
             parsedValue = DoubleUtil.formatDecimal((double) value, digital);
         tvContent.setText(parsedValue);
-        super.refreshContent(e,highlight);
+        super.refreshContent(e, highlight);
     }
 
 }

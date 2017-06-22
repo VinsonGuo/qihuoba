@@ -1,4 +1,4 @@
-package com.yjjr.yjfutures.ui;
+package com.yjjr.yjfutures.ui.trade;
 
 
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.widget.PriceRealTimeChart;
 
 import java.util.concurrent.TimeUnit;

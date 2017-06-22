@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/header_height"
+    android:background="@drawable/shape_bg_bottom_line"
+    android:orientation="horizontal">
+    <!--android:background="@color/black"-->
+    <!--android:background="@drawable/shape_head_bottom"-->
+
+
+    <ImageView
+        android:id="@+id/view_header_image_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:clickable="false"
+        android:focusable="false"
+        android:paddingLeft="20dp"
+        android:paddingRight="35dp"
+        android:src="@drawable/drawable_header_back1"/>
+
+    <TextView
+        android:id="@+id/view_header_text_maintitle"
+        style="@style/text_color_333333_20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:maxEms="10"
+        android:singleLine="true"
+        android:text="@string/title"
+        />
+
+
+    <TextView
+        android:id="@+id/view_header_text_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:ellipsize="end"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:singleLine="true"
+        android:textSize="17sp"
+        />
+
+
+</RelativeLayout>

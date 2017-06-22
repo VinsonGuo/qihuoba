@@ -16,9 +16,6 @@ import android.widget.TextView;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.ui.BaseFragment;
-import com.yjjr.yjfutures.ui.CandleStickChartFragment;
-import com.yjjr.yjfutures.ui.CombinedChartFragment;
-import com.yjjr.yjfutures.ui.LineChartFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.widget.EditTextWithControl;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
@@ -26,13 +23,6 @@ import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 public class TradeFragment extends BaseFragment implements View.OnClickListener {
 
     private boolean mIsNeedBack;
-    private ImageView ivBack;
-    private EditTextWithControl etHand;
-    private TextView tvTitle;
-    private TextView tvSubtitle;
-    private TextView tvSetting;
-    private TextView tvCloseOrder;
-    private RadioGroup rgNav;
     private RadioButton rbChart1;
     private RadioButton rbChart2;
     private RadioButton rbChart3;
@@ -72,12 +62,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
         RadioGroup rgNav = (RadioGroup) v.findViewById(R.id.rg_nav);
-        ivBack = (ImageView)v.findViewById( R.id.iv_back );
-        etHand = (EditTextWithControl)v.findViewById( R.id.et_hand );
-        tvTitle = (TextView)v.findViewById( R.id.tv_title );
-        tvSubtitle = (TextView)v.findViewById( R.id.tv_subtitle );
-        tvSetting = (TextView)v.findViewById( R.id.tv_setting );
-        tvCloseOrder = (TextView)v.findViewById( R.id.tv_close_order );
         rbChart1 = (RadioButton)v.findViewById( R.id.rb_chart1 );
         rbChart2 = (RadioButton)v.findViewById( R.id.rb_chart2 );
         rbChart3 = (RadioButton)v.findViewById( R.id.rb_chart3 );
@@ -113,17 +97,18 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             }
         });
         ((RadioButton) rgNav.getChildAt(0)).setChecked(true);
-        ivBack.setOnClickListener(this);
-        ivBack.setVisibility(mIsNeedBack?View.VISIBLE:View.INVISIBLE);
         pbLeft.setRotation(180);
+        tvLeft.setOnClickListener(this);
+        tvRight.setOnClickListener(this);
         return v;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_back:
-                getActivity().finish();
+            case R.id.tv_left:
+            case R.id.tv_right:
+                TakeOrderActivity.startActivity(mContext);
                 break;
         }
     }

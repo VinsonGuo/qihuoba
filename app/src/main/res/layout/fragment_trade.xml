@@ -9,65 +9,24 @@
     android:background="@color/white"
     tools:context="com.yjjr.yjfutures.ui.trade.TradeActivity">
 
-    <RelativeLayout
+    <com.yjjr.yjfutures.widget.HeaderView
+        android:id="@+id/header_view"
+        app:main_title="美原油 CL1078"
+        app:sub_title="玩法"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/root_padding_10">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:src="@drawable/selector_back_arrow_press"/>
-
-        <com.yjjr.yjfutures.widget.EditTextWithControl
-            android:id="@+id/et_hand"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_back"
-            app:etwc_step="0.01"
-            app:etwc_value="0.01"/>
-
         <TextView
-            android:id="@+id/tv_title"
-            style="@style/text_color_333333_17sp"
+            android:id="@+id/tv_order"
+            android:text="@string/trader_detail"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="美原油 CL1078"/>
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_subtitle"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="6dp"
-            android:gravity="center"
-            android:lineSpacingMultiplier="1.1"
-            android:text="持仓总收益\n1000"/>
-
-        <TextView
-            android:id="@+id/tv_setting"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="26dp"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:text="@string/setting"/>
-
-        <TextView
-            android:id="@+id/tv_close_order"
-            style="@style/text_color_333333_12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/tv_setting"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/selector_common_press_bg"
-            android:text="一键\n平仓"/>
-    </RelativeLayout>
 
     <RadioGroup
         android:id="@+id/rg_nav"

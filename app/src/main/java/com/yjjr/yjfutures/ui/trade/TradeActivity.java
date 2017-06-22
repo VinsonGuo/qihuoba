@@ -3,19 +3,10 @@ package com.yjjr.yjfutures.ui.trade;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.v4.app.Fragment;
 import android.widget.FrameLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.BaseActivity;
-import com.yjjr.yjfutures.ui.CandleStickChartFragment;
-import com.yjjr.yjfutures.ui.CombinedChartFragment;
-import com.yjjr.yjfutures.ui.LineChartFragment;
-import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
-import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
 public class TradeActivity extends BaseActivity {
 

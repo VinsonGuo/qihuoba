@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.yjjr.yjfutures.ui.trade.TakeOrderActivity">
+
+    <com.yjjr.yjfutures.widget.HeaderView
+        android:id="@+id/header_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:main_title="@string/take_order"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:padding="@dimen/root_padding_10">
+
+                <TextView
+                    style="@style/text_color_333333_14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/trade_num"/>
+
+                <RadioGroup
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_hand_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1手"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_hand_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="2手"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_hand_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="3手"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_hand_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="4手"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_hand_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="5手"/>
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:orientation="vertical"
+                android:padding="@dimen/root_padding_10">
+
+                <TextView
+                    style="@style/text_color_333333_14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="触发止损"/>
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_sl_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$170"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_sl_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="$240"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_sl_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="$330"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_sl_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="$470"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_sl_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="$670"/>
+                </RadioGroup>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:orientation="vertical"
+                android:padding="@dimen/root_padding_10">
+
+                <TextView
+                    style="@style/text_color_333333_14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="触发止赢"/>
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_s_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$170"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_sw_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="$240"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_sw_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="$330"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_sw_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="$470"/>
+
+                    <RadioButton
+                        android:id="@+id/rb_sw_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:text="$670"/>
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:padding="@dimen/root_padding_10">
+
+                <TextView
+                    style="@style/text_color_333333_14sp"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/bzj"/>
+
+                <TextView
+                    android:id="@+id/bzj_value"
+                    android:text="$123"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:padding="@dimen/root_padding_10">
+
+                <TextView
+                    style="@style/text_color_333333_14sp"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/zhjjf"/>
+
+                <TextView
+                    android:id="@+id/trade_fee_value"
+                    android:text="$123"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <TextView
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:gravity="center"
+                android:id="@+id/tv_info"
+                android:background="@color/background"
+                android:layout_width="match_parent"
+                android:text="持仓至明天凌晨自动平仓"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:padding="@dimen/root_padding_10">
+
+                <TextView
+                    style="@style/text_color_333333_14sp"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/total_pay"/>
+
+                <TextView
+                    android:id="@+id/total_pay_value"
+                    android:text="$123"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="确认买涨"/>
+</LinearLayout>

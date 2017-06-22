@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.found.FoundFragment;
+import com.yjjr.yjfutures.ui.found.FoundFragment;
 import com.yjjr.yjfutures.ui.mine.MineFragment;
 import com.yjjr.yjfutures.ui.home.HomePageFragment;
 import com.yjjr.yjfutures.ui.trade.TradeFragment;

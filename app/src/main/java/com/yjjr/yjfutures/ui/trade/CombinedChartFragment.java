@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.CandleStickChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -24,9 +23,6 @@ import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -64,7 +60,6 @@ public class CombinedChartFragment extends BaseFragment {
         mChart.setScaleYEnabled(false);
 
 
-
         // scaling can now only be done on x- and y-axis separately
         mChart.setPinchZoom(true);
 
@@ -76,7 +71,7 @@ public class CombinedChartFragment extends BaseFragment {
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return (int)value+"号";
+                return (int) value + "";
             }
         });
 
@@ -98,7 +93,7 @@ public class CombinedChartFragment extends BaseFragment {
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                if (lastPerformedGesture.equals(ChartTouchListener.ChartGesture.DRAG)||lastPerformedGesture.equals(ChartTouchListener.ChartGesture.FLING)) {
+                if (lastPerformedGesture.equals(ChartTouchListener.ChartGesture.DRAG) || lastPerformedGesture.equals(ChartTouchListener.ChartGesture.FLING)) {
                     float lowestVisibleX = mChart.getLowestVisibleX();
                     LogUtils.d("getLowestVisibleX is %f", lowestVisibleX);
                     if (lowestVisibleX <= 0) {
@@ -138,7 +133,7 @@ public class CombinedChartFragment extends BaseFragment {
             }
         });
         fullData();
-        mChart.setVisibleXRange(21,9); // allow 20 values to be displayed at once on the x-axis, not more
+        mChart.setVisibleXRange(30, 9); // allow 20 values to be displayed at once on the x-axis, not more
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
         return mChart;
     }
@@ -190,7 +185,7 @@ public class CombinedChartFragment extends BaseFragment {
             float val = (float) (Math.random() * mult);
             yVals2.add(new BarEntry(i, val));
         }
-        BarDataSet set2 = new BarDataSet(yVals2,"test");
+        BarDataSet set2 = new BarDataSet(yVals2, "test");
         CombinedData data = new CombinedData();
         data.setData(new CandleData(set1));
         data.setData(new BarData(set2));

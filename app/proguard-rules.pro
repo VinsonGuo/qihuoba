@@ -43,7 +43,6 @@
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 
-# 保持自定义控件类不被混淆
 -keepclassmembers class * extends android.app.Activity {
  public void *(android.view.View);
 }
@@ -58,6 +57,7 @@
   public static final android.os.Parcelable$Creator *;
 }
 
+-dontwarn javax.annotation.**
 
 #gson
 #-libraryjars libs/gson-2.2.2.jar
@@ -66,7 +66,7 @@
 -keep class sun.misc.Unsafe { *; }
 # Application classes that will be serialized/deserialized over Gson
 -keep class com.google.gson.examples.android.model.** { *; }
--keep class com.kvbkunlun.KVBApp.model.**{*;}
+-keep class com.yjjr.yjfutures.model.**{*;}
 
 #retrofit
 # Platform calls Class.forName on types which do not exist on Android to determine platform.

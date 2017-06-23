@@ -12,17 +12,26 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    signingConfigs {
+        signConfig {
+            keyAlias 'guoziwei'
+            keyPassword 'guoziwei'
+            storeFile file('./guoziwei.jks')
+            storePassword 'guoziwei'
         }
     }
-
+    buildTypes {
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.signConfig
+        }
+    }
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
-
     repositories {
         mavenCentral()
         maven { url "https://jitpack.io" }

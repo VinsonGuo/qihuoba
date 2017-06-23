@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_bg_bottom_line"
     android:padding="@dimen/root_padding_10">
 
     <ImageView
@@ -10,24 +12,43 @@
         android:layout_height="60dp"
         android:layout_marginRight="@dimen/root_padding_10"
         android:src="@mipmap/ic_launcher_round"/>
-    
+
     <TextView
         android:id="@+id/tv_title"
-        android:text="title"
-        android:layout_marginTop="8dp"
+        style="@style/text_color_333333_14sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_toRightOf="@id/iv_icon"
-        style="@style/text_color_333333_14sp"/>
+        android:text="title"/>
 
     <TextView
-    android:id="@+id/tv_desc"
-    android:text="description"
-    android:layout_below="@id/tv_title"
-    android:layout_marginTop="8dp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_toRightOf="@id/iv_icon"
-    style="@style/text_color_333333_14sp"/>
+        android:id="@+id/tv_desc"
+        style="@style/text_color_333333_14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/iv_icon"
+        android:text="description"/>
 
+    <ImageView
+        android:id="@+id/iv_right_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/icon_right_arrow"/>
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/root_padding_10"
+        android:layout_toLeftOf="@id/iv_right_icon"
+        android:gravity="right"
+        android:text="44.5\n-1.4%"
+        android:textColor="@color/main_color_red"
+        android:textSize="@dimen/text_size_14sp"/>
 </RelativeLayout>

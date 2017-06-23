@@ -1,5 +1,6 @@
 package com.yjjr.yjfutures.ui;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,8 +38,15 @@ public class BaseActivity extends RxAppCompatActivity {
     }
 
     @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.move_right_in_activity, R.anim.move_left_out_activity);
+    }
+
+    @Override
     public void finish() {
         super.finish();
+        overridePendingTransition(R.anim.move_left_in_activity, R.anim.move_right_out_activity);
         // 在这里统一加了关闭键盘的逻辑，防止用户点击左上角返回键而键盘没有关闭
         InputMethodUtil.hiddenInputMethod(this);
     }

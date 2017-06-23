@@ -562,7 +562,7 @@
     <string name="cancel_favorite_success">取消收藏成功</string>
     <string name="favorite_success">收藏成功</string>
     <string name="not_friends_send_blog">你的好友没有发过微博</string>
-    <string name="index_page">首页</string>
+    <string name="home_page">首页</string>
     <string name="friends_circle">朋友圈</string>
     <string name="wechat_friend">微信好友</string>
     <string name="qq_friend">QQ好友</string>
@@ -1261,6 +1261,7 @@
     <string name="load_candle_data_fail">加载图表信息失败</string>
     <string name="no_write_introduction">暂无个人简介</string>
     <string name="cc">持仓</string>
+    <string name="js">结算</string>
     <string name="mdpjylds">每单平均盈利点数</string>
     <string name="trade_data">交易数据</string>
     <string name="syl">收益率</string>
@@ -1490,5 +1491,7 @@
     <string name="about_us">关于我们</string>
     <string name="zhjjf">综合交易费</string>
     <string name="total_pay">合计支付</string>
+    <string name="one_click_position">一键\n平仓</string>
+    <string name="quick">快速</string>
 
 </resources>

@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yjjr.yjfutures.ui.BaseFragment;
-import com.yjjr.yjfutures.widget.PriceRealTimeChart;
+import com.yjjr.yjfutures.widget.chart.PriceRealTimeChart;
 
 import java.util.concurrent.TimeUnit;
 

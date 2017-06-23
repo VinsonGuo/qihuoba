@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_bg_bottom_line"
+    android:orientation="vertical"
+    android:padding="@dimen/root_padding_10">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/root_padding_10"
+        android:background="@drawable/shape_bg_bottom_line"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/root_padding_10"
+        android:paddingTop="@dimen/root_padding_10">
+
+        <TextView
+            android:id="@+id/tv_symbol"
+            style="@style/text_color_333333_16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="美原油(CZ123)"/>
+
+        <TextView
+            android:id="@+id/tv_ticket"
+            style="@style/text_color_666666_14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:layout_weight="1"
+            android:text="订单ID: 123456"/>
+
+        <TextView
+            android:id="@+id/tv_setting"
+            style="@style/text_color_666666_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_color_ced0d5_all_1_circle_2"
+            android:padding="4dp"
+            android:text="@string/setting_lose_stop_and_lose_win"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_direction"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="看涨"/>
+
+        <TextView
+            android:id="@+id/tv_hand"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_direction"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:layout_toRightOf="@id/tv_direction"
+            android:text="1手"/>
+
+        <TextView
+            android:id="@+id/tv_stop_lose"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_direction"
+            android:layout_marginTop="@dimen/root_padding_10"
+            android:text="止损额\t123"/>
+
+        <TextView
+            android:id="@+id/tv_stop_win"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_stop_lose"
+            android:layout_marginTop="@dimen/root_padding_10"
+            android:text="止赢额\t123"/>
+
+        <TextView
+            android:id="@+id/tv_close_order"
+            style="@style/text_color_333333_21sp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/shape_color_ced0d5_all_1_circle_5"
+            android:gravity="center"
+            android:text="@string/pingcang"/>
+
+        <TextView
+            android:id="@+id/tv_profit"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_direction"
+            android:layout_marginRight="50dp"
+            android:layout_toLeftOf="@id/tv_close_order"
+            android:text="+288元"/>
+
+        <TextView
+            android:id="@+id/tv_open_price"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_stop_lose"
+            android:layout_alignLeft="@id/tv_profit"
+            android:text="开仓价\t123"/>
+
+        <TextView
+            android:id="@+id/tv_current_price"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_stop_win"
+            android:layout_alignLeft="@id/tv_profit"
+            android:layout_marginTop="@dimen/root_padding_10"
+            android:text="当前价\t123"/>
+    </RelativeLayout>
+</LinearLayout>

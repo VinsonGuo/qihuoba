@@ -11,7 +11,6 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
-
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.utils.SystemBarHelper;
@@ -64,8 +63,7 @@ public class SplashScreen extends BaseActivity {
                         @Override
                         public void accept(@NonNull Boolean aBoolean) throws Exception {
                             if (aBoolean) {
-                                MainActivity.startActivity(mContext);
-                                mContext.finish();
+                                startActivity();
                             } else {
                                 AlertDialog dialog = new AlertDialog.Builder(SplashScreen.this)
                                         .setMessage(getString(R.string.permission_deny_message))
@@ -91,8 +89,12 @@ public class SplashScreen extends BaseActivity {
                         }
                     });
         } else {
-            MainActivity.startActivity(mContext);
-            mContext.finish();
+            startActivity();
         }
+    }
+
+    private void startActivity() {
+        MainActivity.startActivity(mContext);
+        finishDelay();
     }
 }

@@ -5,26 +5,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.TradeActivity">
 
     <com.yjjr.yjfutures.widget.HeaderView
         android:id="@+id/header_view"
-        app:main_title="美原油 CL1078"
-        app:sub_title="玩法"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:main_title="美原油 CL1078"
+        app:sub_title="玩法"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/root_padding_10">
-        <TextView
-            android:id="@+id/tv_order"
-            android:text="@string/trader_detail"
+
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_direction"
+                android:text="看涨"
+                style="@style/text_color_333333_14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_toRightOf="@id/tv_direction"
+                android:layout_marginLeft="@dimen/root_padding_10"
+                android:text="1手"
+                android:layout_width="wrap_content"
+                style="@style/text_color_333333_14sp"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_below="@id/tv_direction"
+                android:id="@+id/tv_order"
+                style="@style/text_color_333333_14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/trader_detail"/>
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/tv_total"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="持仓总获利\n1000"/>
+
+        <TextView
+            android:id="@+id/tv_close_order"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/one_click_position"/>
     </LinearLayout>
 
 
@@ -173,7 +210,7 @@
             android:layout_gravity="center"
             android:background="@drawable/shape_online_tx_white"
             android:gravity="center"
-            android:text="反手"/>
+            android:text="@string/quick"/>
     </FrameLayout>
 
     <TextView

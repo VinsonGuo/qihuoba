@@ -24,9 +24,9 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.BaseFragment;
-import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
+import com.yjjr.yjfutures.widget.chart.RealPriceMarkerView;
 
 import java.util.ArrayList;
 
@@ -56,7 +56,6 @@ public class CandleStickChartFragment extends BaseFragment {
         mChart.setScaleYEnabled(false);
 
 
-
         // scaling can now only be done on x- and y-axis separately
         mChart.setPinchZoom(true);
 
@@ -68,7 +67,7 @@ public class CandleStickChartFragment extends BaseFragment {
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return (int)value+"号";
+                return (int) value + "号";
             }
         });
 
@@ -82,6 +81,8 @@ public class CandleStickChartFragment extends BaseFragment {
 
 
         mChart.getLegend().setEnabled(false);
+        mChart.setMarker(new RealPriceMarkerView(mContext, getResources().getColor(R.color.main_color_red),
+                getResources().getColor(R.color.main_color), 5));
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -90,7 +91,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                if (lastPerformedGesture.equals(ChartTouchListener.ChartGesture.DRAG)||lastPerformedGesture.equals(ChartTouchListener.ChartGesture.FLING)) {
+                if (lastPerformedGesture.equals(ChartTouchListener.ChartGesture.DRAG) || lastPerformedGesture.equals(ChartTouchListener.ChartGesture.FLING)) {
                     float lowestVisibleX = mChart.getLowestVisibleX();
                     LogUtils.d("getLowestVisibleX is %f", lowestVisibleX);
                     if (lowestVisibleX <= 0) {
@@ -130,7 +131,7 @@ public class CandleStickChartFragment extends BaseFragment {
             }
         });
         fullData();
-        mChart.setVisibleXRange(20,10); // allow 20 values to be displayed at once on the x-axis, not more
+        mChart.setVisibleXRange(20, 10); // allow 20 values to be displayed at once on the x-axis, not more
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
         return mChart;
     }

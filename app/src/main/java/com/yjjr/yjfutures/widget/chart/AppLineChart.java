@@ -1,4 +1,4 @@
-package com.yjjr.yjfutures.widget;
+package com.yjjr.yjfutures.widget.chart;
 
 import android.content.Context;
 import android.graphics.Canvas;

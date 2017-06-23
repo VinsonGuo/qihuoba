@@ -1,4 +1,4 @@
-package com.yjjr.yjfutures.widget;
+package com.yjjr.yjfutures.widget.chart;
 
 /**
  * Created by Administrator on 2016/2/1.

@@ -1,4 +1,4 @@
-package com.yjjr.yjfutures.widget;
+package com.yjjr.yjfutures.widget.chart;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -26,7 +26,7 @@ import com.yjjr.yjfutures.utils.DoubleUtil;
  */
 public class PriceRealTimeChart extends RelativeLayout {
 
-    public static final int FULL_SCREEN_SHOW_COUNT = 100;
+    public static final int FULL_SCREEN_SHOW_COUNT = 10;
     public static final int DATA_SET_SELL = 0;
     public static final int DATA_SET_BUY = 1;
     private LineChart mChart;
@@ -106,7 +106,7 @@ public class PriceRealTimeChart extends RelativeLayout {
             mChart.notifyDataSetChanged();
             mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
             mChart.setAutoScaleMinMaxEnabled(true);
-            mChart.moveViewToX(data.getEntryCount() - FULL_SCREEN_SHOW_COUNT - 1);
+            mChart.moveViewToX(data.getEntryCount()/* - FULL_SCREEN_SHOW_COUNT - 1*/);
         }
     }
 

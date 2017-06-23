@@ -6,15 +6,12 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.yjjr.yjfutures.ui.BaseApplication;
-import com.yjjr.yjfutures.utils.LogUtils;
 
 /**
  * 存储用户信息用户的sp
  * Created by guoziwei on 2015/8/31.
  */
 public class UserSharePrefernce {
-
-    private static Gson sGson = new Gson();
 
     public static final String TOKEN_SHAREPREF_NAME = "user";
     public static final String IS_LOGIN = "is_login";
@@ -23,6 +20,8 @@ public class UserSharePrefernce {
     public static final String TOKEN = "token";
     public static final String PASSWORD = "password";
     public static final String ACCOUNT_INFO = "account_info";
+    public static final String FAST_TAKE_ORDER = "fast_take_order";
+    private static Gson sGson = new Gson();
 
     public static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(TOKEN_SHAREPREF_NAME,
@@ -34,7 +33,7 @@ public class UserSharePrefernce {
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(IS_LOGIN, token);
-        editor.commit();
+        editor.apply();
     }
 
     public static boolean isLogin(Context ctx) {
@@ -73,7 +72,7 @@ public class UserSharePrefernce {
 
 
     public static void setToken(Context ctx, String token) {
-        if(TextUtils.isEmpty(token)) {
+        if (TextUtils.isEmpty(token)) {
             return;
         }
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
@@ -91,20 +90,34 @@ public class UserSharePrefernce {
 
 
     public static void setPassword(Context ctx, String token) {
-        if(TextUtils.isEmpty(token)) {
+        if (TextUtils.isEmpty(token)) {
             return;
         }
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(PASSWORD, token);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getPassword(Context ctx) {
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
                 Context.MODE_PRIVATE);
         return sharedPreferences.getString(PASSWORD, "");
+    }
+
+    public static void setFastTakeOrder(Context ctx, boolean token) {
+        SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(FAST_TAKE_ORDER, token);
+        editor.apply();
+    }
+
+    public static boolean isFastTakeOrder(Context ctx) {
+        SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
+                Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(FAST_TAKE_ORDER, false);
     }
 
    /* public static void setAccountInfo(Context ctx, AccountInfoContent token) {
@@ -136,7 +149,7 @@ public class UserSharePrefernce {
         SharedPreferences sp = BaseApplication.getInstance().getSharedPreferences(TOKEN_SHAREPREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();
         edit.clear();
-        edit.commit();
+        edit.apply();
     }
 
 }

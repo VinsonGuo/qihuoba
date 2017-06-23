@@ -16,7 +16,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
-import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
 import com.youth.banner.Banner;
 import com.youth.banner.loader.ImageLoaderInterface;
@@ -70,7 +69,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                ToastUtils.show(mContext, "position" + position);
                 TradeActivity.startActivity(mContext);
             }
         });

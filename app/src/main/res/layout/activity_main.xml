@@ -13,10 +13,54 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-    <com.roughike.bottombar.BottomBar
-        android:id="@+id/bottom_bar"
+
+    <com.yinglan.alphatabs.AlphaTabsIndicator
+        android:id="@+id/alphaIndicator"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        app:bb_tabXmlResource="@xml/bottombar_tabs"/>
+        android:layout_height="55dp"
+        android:background="@drawable/shape_bg_top_bottom_line"
+        android:orientation="horizontal">
+
+        <com.yinglan.alphatabs.AlphaTabView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            app:tabIconNormal="@drawable/ic_account_circle"
+            app:tabIconSelected="@drawable/ic_account_circle"
+            app:tabText="@string/home_page"
+            app:textColorSelected="@color/main_color"/>
+
+        <com.yinglan.alphatabs.AlphaTabView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            app:tabIconNormal="@drawable/ic_account_circle"
+            app:tabIconSelected="@drawable/ic_account_circle"
+            app:tabText="@string/trade"
+            app:textColorSelected="@color/main_color"/>
+
+        <com.yinglan.alphatabs.AlphaTabView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            app:tabIconNormal="@drawable/ic_account_circle"
+            app:tabIconSelected="@drawable/ic_account_circle"
+            app:tabText="@string/found"
+            app:textColorSelected="@color/main_color"/>
+
+        <com.yinglan.alphatabs.AlphaTabView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            app:tabIconNormal="@drawable/ic_account_circle"
+            app:tabIconSelected="@drawable/ic_account_circle"
+            app:tabText="@string/mine"
+            app:textColorSelected="@color/main_color"/>
+
+    </com.yinglan.alphatabs.AlphaTabsIndicator>
 
 </LinearLayout>

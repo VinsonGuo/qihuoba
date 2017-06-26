@@ -16,43 +16,95 @@
         app:main_title="美原油 CL1078"
         app:sub_title="玩法"/>
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/vg_settlement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_bottom_line"
         android:padding="@dimen/root_padding_10">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/tv_yue"
+            style="@style/text_color_666666_14sp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/tv_direction"
-                android:text="看涨"
-                style="@style/text_color_333333_14sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_toRightOf="@id/tv_direction"
-                android:layout_marginLeft="@dimen/root_padding_10"
-                android:text="1手"
-                android:layout_width="wrap_content"
-                style="@style/text_color_333333_14sp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_below="@id/tv_direction"
-                android:id="@+id/tv_order"
-                style="@style/text_color_333333_14sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/trader_detail"/>
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:text="可用余额    (元):"/>
+
+        <TextView
+            android:id="@+id/tv_yue_value"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:layout_toRightOf="@id/tv_yue"
+            android:text="￥5000"/>
+
+        <TextView
+            android:id="@+id/tv_margin"
+            style="@style/text_color_666666_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_yue"
+            android:layout_marginTop="4dp"
+            android:text="可用保证金(元):"/>
+
+        <TextView
+            android:id="@+id/tv_margin_value"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_margin"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:layout_toRightOf="@id/tv_margin"
+            android:text="￥5000"/>
+
+        <TextView
+            android:id="@+id/tv_deposit"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/deposit"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/vg_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_bottom_line"
+        android:padding="@dimen/root_padding_10">
+
+        <TextView
+            android:id="@+id/tv_direction"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="看涨"/>
+
+        <TextView
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:layout_toRightOf="@id/tv_direction"
+            android:text="1手"/>
+
+        <TextView
+            android:id="@+id/tv_order"
+            style="@style/text_color_333333_14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_direction"
+            android:text="@string/trader_detail"/>
 
 
         <TextView
             android:id="@+id/tv_total"
             style="@style/text_color_333333_14sp"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_centerInParent="true"
             android:gravity="center"
             android:text="持仓总获利\n1000"/>
 
@@ -61,8 +113,10 @@
             style="@style/text_color_333333_14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:text="@string/one_click_position"/>
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <RadioGroup
@@ -206,11 +260,11 @@
             android:id="@+id/tv_center"
             style="@style/text_color_333333_12sp"
             android:layout_width="40dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:background="@drawable/shape_online_tx_white"
             android:gravity="center"
-            android:text="@string/quick"/>
+            android:text="@string/closed"/>
     </FrameLayout>
 
     <TextView

@@ -7,9 +7,12 @@ import android.view.View;
 import android.widget.Button;
 
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.FastTakeOrderEvent;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.widget.HeaderView;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class FastTakeOrderActivity extends BaseActivity {
 
@@ -30,7 +33,9 @@ public class FastTakeOrderActivity extends BaseActivity {
             public void onClick(View v) {
                 boolean isFastTakeOrder = UserSharePrefernce.isFastTakeOrder(mContext);
                 btnOpen.setText(!isFastTakeOrder ? "关闭" : "开启");
-                UserSharePrefernce.setFastTakeOrder(mContext, !isFastTakeOrder);
+                boolean bool = !isFastTakeOrder;
+                UserSharePrefernce.setFastTakeOrder(mContext, bool);
+                EventBus.getDefault().post(new FastTakeOrderEvent(bool));
             }
         });
     }

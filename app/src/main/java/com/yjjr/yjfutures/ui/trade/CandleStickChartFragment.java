@@ -81,8 +81,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
 
         mChart.getLegend().setEnabled(false);
-        mChart.setMarker(new RealPriceMarkerView(mContext, getResources().getColor(R.color.main_color_red),
-                getResources().getColor(R.color.main_color), 5));
+        mChart.setMarker(new RealPriceMarkerView(mContext, 5));
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {

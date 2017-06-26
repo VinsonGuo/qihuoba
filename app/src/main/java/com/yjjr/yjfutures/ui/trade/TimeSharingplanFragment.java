@@ -8,8 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.ui.BaseFragment;
-import com.yjjr.yjfutures.widget.chart.PriceRealTimeChart;
+import com.yjjr.yjfutures.utils.LogUtils;
+import com.yjjr.yjfutures.widget.chart.TimeSharingplanChart;
+
+import org.joda.time.DateTime;
 
 import java.util.concurrent.TimeUnit;
 
@@ -21,25 +25,36 @@ import io.reactivex.functions.Consumer;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LineChartFragment extends BaseFragment {
+public class TimeSharingplanFragment extends BaseFragment {
 
 
-    public LineChartFragment() {
+    public TimeSharingplanFragment() {
         // Required empty public constructor
     }
 
 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final PriceRealTimeChart chart = new PriceRealTimeChart(mContext);
-        chart.addEntry(10, 10.2f);
+        final TimeSharingplanChart chart = new TimeSharingplanChart(mContext);
+        chart.addEntry(9, (float) (9 + 0.2));
+        for (int i = 0; i < 20; i++) {
+            float ask = (float) Math.random() + 10;
+            chart.addEntry(ask, (float) (ask + 0.2));
+        }
         Observable.interval(1, TimeUnit.SECONDS)
+                .compose(this.<Long>bindUntilEvent(FragmentEvent.DESTROY))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(@NonNull Long aLong) throws Exception {
-                        float ask = (float) Math.random() + 10;
-                        chart.addEntry(ask, (float) (ask + 0.2));
+                        DateTime now = DateTime.now();
+                        LogUtils.d("secondOfDay %s", now.toString());
+                        if (now.getSecondOfMinute() == 0) {
+                           chart.addLastEntry();
+                        } else {
+                            float ask = (float) Math.random() + 10;
+                            chart.refreshEntry(ask, (float) (ask + 0.2));
+                        }
                     }
                 });
         return chart;

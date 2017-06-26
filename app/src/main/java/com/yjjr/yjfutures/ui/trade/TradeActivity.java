@@ -26,7 +26,7 @@ public class TradeActivity extends BaseActivity {
                 .commitAllowingStateLoss();
        /* RadioGroup rgNav = (RadioGroup) findViewById(R.id.rg_nav);
         final NoTouchScrollViewpager viewpager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
-        Fragment[] fragments = {new LineChartFragment(), new LineChartFragment(), new CombinedChartFragment(), new CandleStickChartFragment()};
+        Fragment[] fragments = {new TickChartFragment(), new TickChartFragment(), new CombinedChartFragment(), new CandleStickChartFragment()};
         viewpager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         viewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

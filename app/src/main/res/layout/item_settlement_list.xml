@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="80dp"
+              android:background="@drawable/shape_bg_bottom_line"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+              android:padding="@dimen/root_padding_10">
+
+    <TextView
+        android:id="@+id/tv_time"
+        style="@style/text_color_333333_14sp"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="2017年6月26日\n08:30"/>
+
+    <TextView
+        android:id="@+id/tv_direction"
+        style="@style/text_color_333333_14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="看涨"/>
+
+    <TextView
+        android:id="@+id/tv_type"
+        style="@style/text_color_333333_16sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_weight="1"
+        android:text="止损卖出"/>
+
+    <TextView
+        android:id="@+id/tv_price"
+        style="@style/text_color_333333_14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="+1234元\n($690)"/>
+</LinearLayout>

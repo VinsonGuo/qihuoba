@@ -21,16 +21,15 @@ import com.yjjr.yjfutures.utils.DoubleUtil;
 public class RealPriceMarkerView extends MarkerView {
 
     private TextView tvContent;
-    private int dataSet1Color, dataSet2Color;
+
+    private int dataSet1Color = getResources().getColor(R.color.main_color_red);
+    private int dataSet2Color = getResources().getColor(R.color.main_color);
     private int digital;
 
 
-    public RealPriceMarkerView(Context context, int dataSet1Color, int dataSet2Color
-            , int digital) {
+    public RealPriceMarkerView(Context context, int digital) {
         super(context, R.layout.view_mp_real_price_marker);
         tvContent = (TextView) findViewById(R.id.tvContent);
-        this.dataSet1Color = dataSet1Color;
-        this.dataSet2Color = dataSet2Color;
         this.digital = digital;
     }
 

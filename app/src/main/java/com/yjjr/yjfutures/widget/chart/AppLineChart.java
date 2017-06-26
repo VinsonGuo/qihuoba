@@ -28,6 +28,12 @@ public class AppLineChart extends LineChart {
     }
 
     @Override
+    protected void init() {
+        super.init();
+        mRenderer = new AppLineChartRenderer(this, mAnimator, mViewPortHandler);
+    }
+
+    @Override
     protected void drawMarkers(Canvas canvas) {
         if (mMarker == null || !isDrawMarkersEnabled() || !valuesToHighlight())
             return;

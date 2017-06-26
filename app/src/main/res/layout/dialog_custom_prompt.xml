@@ -26,6 +26,7 @@
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="fill_parent"
+            android:minWidth="300dp"
             android:layout_height="wrap_content"
             android:gravity="center">
 

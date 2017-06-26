@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -17,16 +18,19 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 
 /**
+ * 分时图
  * Created by guoziwei on 2017/5/13.
  */
-public class PriceRealTimeChart extends RelativeLayout {
+public class TimeSharingplanChart extends RelativeLayout {
 
-    public static final int FULL_SCREEN_SHOW_COUNT = 10;
+    public static final int FULL_SCREEN_SHOW_COUNT = 100;
     public static final int DATA_SET_SELL = 0;
     public static final int DATA_SET_BUY = 1;
     private LineChart mChart;
@@ -35,19 +39,20 @@ public class PriceRealTimeChart extends RelativeLayout {
     private int candleDecreaseColor = getResources().getColor(R.color.main_color);
     private int candleGridColor = getResources().getColor(R.color.color_e6e6e6);
     private int digits = 5;
+    private boolean isIdle = true;
 
-    public PriceRealTimeChart(Context context) {
+    public TimeSharingplanChart(Context context) {
         this(context, null);
     }
 
-    public PriceRealTimeChart(Context context, AttributeSet attrs) {
+    public TimeSharingplanChart(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public PriceRealTimeChart(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TimeSharingplanChart(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        LayoutInflater.from(context).inflate(R.layout.view_mp_real_price_chart, this);
+        LayoutInflater.from(context).inflate(R.layout.view_mp_line_chart, this);
         mChart = (LineChart) findViewById(R.id.line_chart);
         mChart.setDrawGridBackground(false);
         setupSettingParameter();
@@ -78,6 +83,49 @@ public class PriceRealTimeChart extends RelativeLayout {
         refreshChart(ask, bid);
     }
 
+    public void addLastEntry() {
+        LineData data = mChart.getData();
+        ILineDataSet setSell = data.getDataSetByIndex(DATA_SET_SELL);
+        ILineDataSet setBuy = data.getDataSetByIndex(DATA_SET_BUY);
+        Entry bid = setSell.getEntryForIndex(setSell.getEntryCount() - 1);
+        Entry ask = setBuy.getEntryForIndex(setSell.getEntryCount() - 1);
+        refreshChart(ask.getY(), bid.getY());
+    }
+
+    public void refreshEntry(float ask, float bid) {
+        LineData data = mChart.getData();
+
+        if (data != null) {
+            ILineDataSet setSell = data.getDataSetByIndex(DATA_SET_SELL);
+            ILineDataSet setBuy = data.getDataSetByIndex(DATA_SET_BUY);
+            if (setSell == null) {
+                setSell = createSet(DATA_SET_SELL);
+                data.addDataSet(setSell);
+            }
+            if (setBuy == null) {
+                setBuy = createSet(DATA_SET_BUY);
+                data.addDataSet(setBuy);
+            }
+
+            data.removeEntry(setBuy.getEntryCount(), DATA_SET_BUY);
+            data.removeEntry(setSell.getEntryCount(), DATA_SET_SELL);
+            data.addEntry(new Entry(setBuy.getEntryCount(), ask), DATA_SET_BUY);
+            data.addEntry(new Entry(setSell.getEntryCount(), bid), DATA_SET_SELL);
+
+
+            mChart.calculateOffsets();
+            if(isIdle) {
+                Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_BUY).getEntryCount() - 1, ask, DATA_SET_BUY);
+                Highlight chartHighlighter2 = new Highlight(data.getDataSetByIndex(DATA_SET_SELL).getEntryCount() - 1, bid, DATA_SET_SELL);
+                Highlight highlight[] = new Highlight[]{chartHighlighter, chartHighlighter2};
+                mChart.highlightValues(highlight);
+            }
+            mChart.notifyDataSetChanged();
+            mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
+
+        }
+    }
+
     private void refreshChart(float ask, float bid) {
         LineData data = mChart.getData();
 
@@ -96,8 +144,7 @@ public class PriceRealTimeChart extends RelativeLayout {
             data.addEntry(new Entry(setBuy.getEntryCount(), ask), DATA_SET_BUY);
             data.addEntry(new Entry(setSell.getEntryCount(), bid), DATA_SET_SELL);
 
-            RealPriceMarkerView mv = new RealPriceMarkerView(mContext, candleIncreaseColor, candleDecreaseColor, digits);
-            mChart.setMarker(mv);
+
             mChart.calculateOffsets();
             Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_BUY).getEntryCount() - 1, ask, DATA_SET_BUY);
             Highlight chartHighlighter2 = new Highlight(data.getDataSetByIndex(DATA_SET_SELL).getEntryCount() - 1, bid, DATA_SET_SELL);
@@ -105,8 +152,8 @@ public class PriceRealTimeChart extends RelativeLayout {
             mChart.highlightValues(highlight);
             mChart.notifyDataSetChanged();
             mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
-            mChart.setAutoScaleMinMaxEnabled(true);
             mChart.moveViewToX(data.getEntryCount()/* - FULL_SCREEN_SHOW_COUNT - 1*/);
+
         }
     }
 
@@ -137,6 +184,10 @@ public class PriceRealTimeChart extends RelativeLayout {
     }
 
     private void setupSettingParameter() {
+        RealPriceMarkerView mv = new RealPriceMarkerView(mContext, digits);
+        mv.setChartView(mChart);
+        mChart.setMarker(mv);
+
         mChart.setDescription(null);
         mChart.setPinchZoom(false);
         mChart.setDragEnabled(false);
@@ -144,9 +195,55 @@ public class PriceRealTimeChart extends RelativeLayout {
         mChart.setScaleXEnabled(false);
         mChart.setScaleYEnabled(false);
         mChart.setAutoScaleMinMaxEnabled(true);
-        mChart.setDrawMarkerViews(true);
-        mChart.setClickable(false);
-        mChart.setTouchEnabled(false);
+        mChart.setDrawMarkers(true);
+        // enable touch gestures
+        mChart.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        mChart.setDragEnabled(true);
+        mChart.setAutoScaleMinMaxEnabled(false);
+        mChart.setOnChartGestureListener(new OnChartGestureListener() {
+            @Override
+            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+                isIdle = false;
+            }
+
+            @Override
+            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+                isIdle = true;
+            }
+
+            @Override
+            public void onChartLongPressed(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartDoubleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartSingleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+            }
+
+            @Override
+            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+            }
+
+            @Override
+            public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+            }
+        });
+
 
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setDrawGridLines(true);
@@ -161,11 +258,10 @@ public class PriceRealTimeChart extends RelativeLayout {
                 return DoubleUtil.formatDecimal((double) value, digits);
             }
         });
-        rightAxis.setMinWidth(50);
-        rightAxis.setMaxWidth(50);
-
+//        rightAxis.setMinWidth(50);
+//        rightAxis.setMaxWidth(50);
         Legend legend = mChart.getLegend();
-        legend.setEnabled(false);
+        legend.setForm(Legend.LegendForm.LINE);
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);

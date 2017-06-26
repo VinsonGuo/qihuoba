@@ -26,7 +26,7 @@ public class OrderActivity extends BaseActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         NoTouchScrollViewpager viewpager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
         headerView.bindActivity(mContext);
-        Fragment[] fragments = {new PositionListFragment(), new CandleStickChartFragment()};
+        Fragment[] fragments = {new PositionListFragment(), new SettlementListFragment()};
         String[] titles = {getString(R.string.cc), getString(R.string.js)};
         viewpager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments, titles));
         tabLayout.setupWithViewPager(viewpager);

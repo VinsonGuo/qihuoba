@@ -61,7 +61,6 @@
     <string name="icon_text_msg">消息</string>
     <string name="trader_name">交易员名字</string>
     <string name="found">发现</string>
-    <string name="follow">跟随</string>
     <string name="trader_msg_shouyilv">收益率</string>
     <string name="search">搜索</string>
     <string name="china">中国</string>
@@ -86,20 +85,8 @@
     <string name="trader_msg_pjccsj">平均持仓时间</string>
     <string name="trader_msg_gsres">跟随人数</string>
     <string name="server_connect_err">服务器连接失败</string>
-    <string name="xlistview_footer_hint_normal">上拉加载更多</string>
-    <string name="release_to_load">松开加载</string>
-    <string name="xlistview_header_hint_normal">下拉刷新</string>
-    <string name="xlistview_footer_hint_ready">准备刷新</string>
-    <string name="xlistview_header_last_time">最后更新时间</string>
-    <string name="xlistview_header_hint_ready">释放更新</string>
-    <string name="xlistview_header_hint_loading">数据加载中</string>
     <string name="no_more_data">已经全部加载完毕</string>
-    <string name="trader_detail_ac_title">交易员详细信息</string>
-    <string name="activity_trader_detail_celue">策略展示 ▽</string>
-    <string name="activity_trader_detail_attention">关注 +</string>
     <string name="plus">+</string>
-    <string name="activity_trader_detail_follow">跟随 +</string>
-    <string name="follower">跟随者</string>
     <string name="dynamic">动态</string>
     <string name="order">订单</string>
     <string name="order_by">排序</string>
@@ -159,7 +146,6 @@
     <string name="ywzf">原文转发</string>
     <string name="comment">评论</string>
     <string name="praise">赞</string>
-    <string name="title_activity_send_micro_blog">分享到Followme</string>
     <string name="send_micro_blog">发微博</string>
     <string name="say_something">分享新鲜事...</string>
     <string name="say_something_1">说说分享心得...</string>
@@ -218,23 +204,17 @@
     <string name="jingzhi">净值</string>
     <string name="balance">余额</string>
     <string name="trader_detail">交易明细</string>
-    <string name="follow_manage">跟随管理</string>
     <string name="financing_manage">资金管理</string>
     <string name="trader_report">交易报表</string>
     <string name="is_holding">正在持仓</string>
     <string name="historical_order">历史订单</string>
     <string name="zizhuxiadan">自主下单</string>
     <string name="ordering">下单中</string>
-    <string name="is_follow">正在跟随</string>
-    <string name="has_follow">已跟随</string>
-    <string name="history_follow">历史跟随</string>
-    <string name="all_follow">所有跟随</string>
     <string name="stategy_1">固定数量</string>
     <string name="stategy_2">按比例</string>
     <string name="multiple">倍</string>
     <string name="positive">正向</string>
     <string name="reverse">反向</string>
-    <string name="follow_profit">跟随收益</string>
     <string name="ypcyk">已平仓收益</string>
     <string name="zsy">总收益</string>
     <string name="fdyk">浮动收益</string>
@@ -251,7 +231,6 @@
     <string name="ypcxx">已平仓利息</string>
     <string name="fdlx">浮动利息</string>
     <string name="load_data">加载数据</string>
-    <string name="follow_modify">编辑跟随</string>
     <string name="zryk">昨日盈亏</string>
     <string name="zjyrsy">最近一日收益</string>
     <string name="jybs">交易笔数</string>
@@ -260,13 +239,9 @@
     <string name="ykds">盈亏点数</string>
     <string name="pjmdylds">每单平均盈利点数</string>
     <string name="pjjysj">平均交易时间</string>
-    <string name="follow_balance">跟随总额</string>
-    <string name="follow_peoples">跟随人数</string>
-    <string name="follow_count">跟随总笔数</string>
     <string name="gsyk">跟随盈亏</string>
     <string name="no_attention_this_user">确认不再关注此人？</string>
     <string name="confirm">确定</string>
-    <string name="choose_follow_type">选择跟随方式</string>
     <string name="gdssxd">固定数量下单</string>
     <string name="gdssxd_introduce">例如您设置固定数量0.1手，不论交易员下单多少手，您手数均为0.1手。最低跟随手数为0.1手。</string>
     <string name="ablxd">按比例下单</string>
@@ -276,29 +251,10 @@
     <string name="thl">他获利</string>
     <string name="nyhl">您也获利</string>
     <string name="njyl">您将获利</string>
-    <string name="follow_positive">正向跟随</string>
-    <string name="follow_reverse">反向跟随</string>
-    <string name="follow_introduce_hand">例如您设置固定数量0.1手，不论交易员下单多少手，您手数均为0.1手。最低跟随手数为0.1手。</string>
-    <string name="follow_introduce_hand_fh">例如您设置固定数量0.01手，不论交易员下单多少手，您手数均为0.01手。最低跟随手数为0.01手。
-    </string>
-    <string name="follow_introduce_times">按比例下单 例如您设置为0.5倍比例跟随，交易员下单1手，您的手数为0.5手。不足0.1手时将默认为0.1手。
-    </string>
-    <string name="follow_introduce_times_fh">按比例下单
-        例如您设置为0.5倍比例跟随，交易员下单1手，您的手数为0.5手。不足0.01手时将默认为0.01手。
-    </string>
-    <string name="follow_introduce_001">0.01手=$10</string>
     <string name="tks">他亏损</string>
-    <string name="follow_me">Followme</string>
     <string name="introduce">跟随顶尖交易员投资</string>
     <string name="szxdbs">设置下单倍数</string>
-    <string name="can_not_follow_with_zero">跟随参数不能为0</string>
     <string name="data_is_error">数据出错</string>
-    <string name="send_follow_request">发送跟随请求....</string>
-    <string name="follow_fail">跟随失败</string>
-    <string name="follow_success">跟随成功</string>
-    <string name="cancel_follow">取消发送跟随请求</string>
-    <string name="cancel_follow_request">发送取消跟随请求....</string>
-    <string name="sure_to_cancel_follow">确定取消跟随？</string>
     <string name="confirm_apply_change">确定申请更变</string>
     <string name="request_fail">请求发送失败</string>
     <string name="login_in">登录中...</string>
@@ -306,31 +262,12 @@
     <string name="activation_code">验证码</string>
     <string name="login_cancel">登录取消</string>
     <string name="cancel_send_verfication">取消发送验证码</string>
-    <string name="register_success_introduce01">恭喜您，已经成功注册成为Followme的用户。</string>
+    <string name="register_success_introduce01">恭喜您，已经成功注册成为期货吧的用户。</string>
     <string name="register_success_introduce02">为了便于识别，请设置您的昵称。</string>
     <string name="take_photo">拍照</string>
     <string name="choose_from_phone">从手机相册选择</string>
     <string name="nickname_inlegal">昵称格式不对，只允许输入字母，数字和汉字</string>
     <string name="cancel_set_nickname">取消设置昵称</string>
-    <string name="upgrade_trader">升级为跟随者</string>
-    <string name="choose_broker">3、选择经纪商</string>
-    <string name="pico_name">PICO国际有限公司</string>
-    <string name="pico_type">外汇&#160;贵金属</string>
-    <string name="pico_introduce">
-        PICO国际有限公司是一家全球范围内领先的贵金属外汇交易服务提供商，持有由伯利兹(BELIZE)政府颁发的外汇交易牌照(编号:IFSC/60/302/TS/14)
-    </string>
-    <string name="jf_name">晋峰集团有限公司</string>
-    <string name="jf_type">贵金属</string>
-    <string name="jf_introduce">晋峰集团有限公司是香港金银业贸易场AA类第196号行员，专业为投资者提供优质的现货黄金白银网上交易服务。</string>
-    <string name="relation_broker">4.开设经纪商账号</string>
-    <string name="relation_exist_account">关联已有账号</string>
-    <string name="relation_pico">如您已注册过PICO国际有限公司账户，可关联原有账户。</string>
-    <string name="open_new_account">开通新账户</string>
-    <string name="open_pico">若您没有PICO国际有限公司账户，请开通新账户。</string>
-    <string name="you_have_choose">您当前已选择</string>
-    <string name="relation_account">关联账号</string>
-    <string name="broker_account">经纪商账号</string>
-    <string name="broker_password">经纪商密码</string>
     <string name="account_name">账户名</string>
     <string name="relation">关联</string>
     <string name="account">账户</string>
@@ -342,13 +279,9 @@
     <string name="card_number">证件号码</string>
     <string name="id_card_name">身份证姓名</string>
     <string name="id_card_number">身份证号码</string>
-    <string name="agree_protocol">《Followme跟随者协议书和免责声明》</string>
+    <string name="agree_protocol">《xx协议书和免责声明》</string>
     <string name="confirm_data">2、完善资料</string>
     <string name="complete">完成</string>
-    <string name="edit_follow">编辑跟随</string>
-    <string name="follow_cancel">取消跟随</string>
-    <string name="load_follow_message">加载跟随信息</string>
-    <string name="load_follow_message_fail">加载跟随信息失败</string>
     <string name="cancel_to_investor">取消升级为真实账户？</string>
     <string name="login_out_time">登录过期，请重新登录</string>
     <string name="get_trader_msg">获取用户信息</string>
@@ -488,8 +421,6 @@
     <string name="dbzdyl">单笔最大盈利</string>
     <string name="gshlze">跟随获利总额</string>
     <string name="gshl">跟随获利</string>
-    <string name="follow_hand">跟随手数：</string>
-    <string name="follow_hand2">跟随总手数</string>
     <string name="apply_money">申请金额</string>
     <string name="exchange_rate">汇率</string>
     <string name="apply_time">申请时间</string>
@@ -501,7 +432,6 @@
     <string name="link_cannot_null">链接地址出错</string>
     <string name="no_order_data">没有持仓数据</string>
     <string name="no_order_history_data">没有历史交易记录</string>
-    <string name="no_follow_trader">您还没有跟随的交易员</string>
     <string name="gsss">跟随手数</string>
     <string name="please_input_number">请输入数字</string>
     <string name="apply_success">申请成功</string>
@@ -520,9 +450,8 @@
     <string name="also_have">还有</string>
     <string name="zsyfdqs">总收益浮动趋势：</string>
     <string name="cancel_send_blog">取消发送微博</string>
-    <string name="followme_register_protocol">《Followme注册协议》</string>
+    <string name="register_protocol">《期货吧注册协议》</string>
     <string name="user_message">用户信息</string>
-    <string name="follow_header_title">他正在跟随%1$d个交易员投资</string>
     <string name="cancel_collection">取消收藏</string>
     <string name="send_cancel_colloection">正在取消收藏</string>
     <string name="cancel_collection_success">取消收藏成功</string>
@@ -530,11 +459,6 @@
     <string name="access_explain">存取说明</string>
     <string name="service_fee_not_enough">您当前服务费不足$30</string>
     <string name="apply_in_1_5">请在每月1-5日申请</string>
-    <string name="access_explain_detail">Followme为独立即时跟随平台，为保障您的资金独立安全，资金存取将通过您签约的经纪商平台完成。</string>
-    <string name="follower_person">跟随%1$d位交易员</string>
-    <string name="follow_hand_introduce">固定手数%1$d手</string>
-    <string name="followed_person">%1$d人跟随他</string>
-    <string name="follow_person">跟随%1$d人</string>
     <string name="attention_people">关注%1$d人</string>
     <string name="fans_people">粉丝%1$d人</string>
     <string name="daily_profit">每日收益</string>
@@ -545,7 +469,6 @@
     <string name="nobody_comment_me">还没有人评论我</string>
     <string name="you_comment_nobody">我还没有发表过评论</string>
     <string name="nobody_at_me">还没有人@我</string>
-    <string name="welcome_content">还等什么？Followme</string>
     <string name="no_fans">您还没有粉丝</string>
     <string name="attention_nobody">您还没有关注任何人</string>
     <string name="not_send_blog">您还没有发过微博</string>
@@ -558,7 +481,6 @@
     <string name="gszdd">跟随者订单</string>
     <string name="comment_is_delete">此评论已被作者删除</string>
     <string name="comment_delete_not_reply">评论已删除 不能回复</string>
-    <string name="report_has_no_data">报表数据加载失败，请刷新</string>
     <string name="cancel_favorite_success">取消收藏成功</string>
     <string name="favorite_success">收藏成功</string>
     <string name="not_friends_send_blog">你的好友没有发过微博</string>
@@ -596,13 +518,9 @@
     <string name="ykje">盈亏金额</string>
     <string name="year">年</string>
     <string name="month">月</string>
-    <string name="title_activity_trader_search">TraderSearchActivity</string>
-    <string name="title_activity_trader_follower_detail">TraderFollowerDetailActivity</string>
-    <string name="follow_time">跟随时间</string>
     <string name="private_letter">私信</string>
     <string name="title_activity_letter_list">LetterListActivity</string>
     <string name="title_activity_letter_detail_list">LetterDetailListActivity</string>
-    <string name="input_follow_me_message">2、完善Followme资料</string>
     <string name="domain_not_legal">域名最少为四位</string>
     <string name="user_name_not_legal">您输入的姓名不合法</string>
     <string name="email_not_legal">邮箱不合法</string>
@@ -636,7 +554,6 @@
     <string name="no_trader">没有交易员数据</string>
     <string name="add_attention">加关注</string>
 
-    <string name="follow_detail">跟随详情</string>
     <string name="suffix_year">年</string>
     <string name="suffix_month">月</string>
     <string name="suffix_day">日</string>
@@ -651,7 +568,6 @@
     <string name="service_fee_check">服务费核算</string>
     <string name="service_fee_check_explain">服务费核算说明</string>
     <string name="trader_service_fee">交易服务费</string>
-    <string name="follow_service_fee_check">跟随服务费核算</string>
     <string name="apply_service_fee">申请服务费</string>
     <string name="service_fee_check_explain_1">根据不同经纪商不同交易品种，可获得每手1-5美元不等的跟随服务费。</string>
     <string name="service_fee_check_explain_3">反向跟随不产生服务费。</string>
@@ -659,12 +575,8 @@
     <string name="end_time">结束时间</string>
     <string name="check_date">核算日期</string>
     <string name="service_fee_money">服务费金额</string>
-    <string name="service_fee_introduce_short">请在每月1-5日申请，当月6日统一审核后三个工作日汇出</string>
-    <string name="service_fee_prompt_1">服务费余额不足30时不可申请</string>
-    <!--<string name="service_fee_prompt_2">授信账户月末累计净值大于月初累计净值时方可申请当月服务费</string>-->
     <string name="unfold">展开</string>
     <string name="fold">收起</string>
-    <string name="official_account">Followme官方账号</string>
     <string name="certification">认证</string>
     <string name="trader_service_fee_check">交易服务费核算</string>
     <string name="service_fee_blance">服务费余额</string>
@@ -706,14 +618,7 @@
     <string name="ljgsss">累计跟随手数</string>
     <string name="zjgsjysj">最近跟随交易时间</string>
     <string name="ljgsbs">累计跟随笔数</string>
-    <string name="follow_direction">跟随方向</string>
     <string name="no_match_trader">没有符合筛选条件的交易员</string>
-    <string name="follow_search">跟随筛选</string>
-    <string name="follower_search">跟随者筛选</string>
-    <string name="follow_status">跟随状态</string>
-    <string name="no_match_follower">没有符合条件的跟随者</string>
-    <string name="history_follow_search">历史跟随筛选</string>
-    <string name="is_follow_search">正在跟随筛选</string>
     <string name="upgrade_investor_success">您的升级操作完成</string>
     <string name="is_update_data">更新资料中</string>
     <string name="update_data_sucess">更新个人信息成功</string>
@@ -725,14 +630,10 @@
     <string name="has_verified">已验证</string>
     <string name="not_verified">未验证</string>
     <string name="mine_not_login_prompt">登录后，您可以在这里查看您的个人数据，及维护个人资料</string>
-    <string name="message_not_login_prompt">登录后，这里将显示您收到的评论和消息\n快加入Followme与交易大咖互动吧</string>
     <string name="inverstor_protocol">跟随者协议书和免责声明</string>
     <string name="blog_topic">微博话题</string>
     <string name="service_fee_introduce_no_enough_30">服务费不足$30，不可提取</string>
     <string name="apply">申请</string>
-    <string name="all_follow_search">交易员筛选</string>
-    <string name="certification_user">认证账户</string>
-    <string name="investor">跟随者</string>
     <string name="normal_user">普通用户</string>
     <string name="no_attention_user">您还没有关注任何人</string>
     <string name="yestoday">昨天</string>
@@ -741,21 +642,14 @@
     <string name="pcjg">平仓价格</string>
     <string name="commit_success">提交成功</string>
     <string name="commit_upgrade_investor_success">关联完成 等待经纪商审核</string>
-    <string name="follow_hand_to_low">跟随手数不能小于0.1手</string>
-    <string name="follow_hand_to_low_fh">跟随手数不能小于0.01手</string>
     <string name="service_fee_prompt_3">反向跟随的服务费不可提取</string>
-    <string name="cancel_follow_prompt">您跟随此交易员有未平仓单，停止跟随后此平仓单将在交易员平仓后自动平仓。是否确定停止跟随?</string>
     <string name="choose_time_not_legal">平仓时间不能小于开仓时间</string>
     <string name="choose_time_not_legal_2">结束时间不能小于开始时间</string>
     <string name="no_messgae_to_delete">没有聊天记录可以删除</string>
-    <string name="no_follow_order">没有跟随的订单</string>
     <string name="activation_picture_code">图形验证码</string>
     <string name="activation_message_code">短信验证码</string>
     <string name="gstdsy">跟随他的收益:</string>
-    <string name="follow_type">跟随方式</string>
     <string name="sure_to_get_service_fee">您确定要申请 $%1$.2f 服务费吗?</string>
-    <string name="parter_introduce">Followme选择的合作经纪商是经过严格筛选审核，具有从事相关行业牌照，且受相关机构或部门监管的合法正规平台。Followme是由合作经纪商授权发布信息的第三方平台，Followme并不给您提供交易软件（如MT4）及交易技术支持，也不对交易资金作任何担保。您在合作经纪商平台交易的资金风险和使用交易软件存在的风险，Followme概不承担任何法律责任。
-    </string>
     <string name="service_fee_apply_success">您的服务费申请已提交,请等待系统审核</string>
     <string name="trader_order">交易订单</string>
     <string name="can_get_introduce">当前最多可申请</string>
@@ -769,18 +663,6 @@
     <string name="send_long_blog">发长微博</string>
     <string name="get_service_fee_fail">获取服务费信息失败，请下拉刷新数据</string>
 
-
-    <string name="join_step0_title">1. 推广计划概述</string>
-    <string name="join_step1_title">2. 填写资料</string>
-    <string name="join_step2_title">3. 完善Followme资料</string>
-    <string name="join_step3_title">4. 申请完成</string>
-
-    <string name="join_step0_container0">Followme会员发展计划是Followme在网上推出并面向所有用户的一项网站推广服务。</string>
-    <string name="join_step0_container1">会员可以是个人，也可以是企业。</string>
-    <string name="join_step0_container2">加入会员发展计划，可获得佣金分成。</string>
-    <string name="join_step0_container3">若您加入此计划并设置一个唯一的URL（网址）来宣传、推广Follow
-        me，所有通过此URL注册的用户将成为您的客户，他们每产生一手真实交易，您均可获得佣金分成。您的所有客户累计的真实交易手数每达到一定数量，您的会员级别将会提高，您也相应获得更多的佣金分成。
-    </string>
 
     <string name="individual">个人</string>
     <string name="enterprise">企业</string>
@@ -797,17 +679,13 @@
     <string name="cancel_to_join_vip">取消加入会员推广计划？</string>
     <string name="vip_promotion">会员推广</string>
     <string name="read_and_agree_trems">我已阅读并同意以下协议书条款</string>
-    <string name="follow_me_join_plan">《Followme会员推广计划》</string>
     <string name="join_vip_plan">加入会员推广计划</string>
     <string name="cannot_alter_after_submit">确认后不可修改</string>
-    <string name="join_success">您已完成加入Followme会员推广计划申请，审核通过后会将相关信息发送至您的邮箱%s.</string>
     <string name="join_domain_illegal">自定义域名不合法</string>
     <string name="online_transaction">在线交易</string>
 
     <string name="transaction_type">交易品种</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="promotion_customer">推广客户</string>
     <string name="vip_promotion_legend">已注册用户可在其设置页面填写右侧的邀请码，成为您的客户。</string>
     <string name="vip_promotion_ways">通过以下方式推广客户</string>
@@ -866,15 +744,6 @@
     <string name="online_transaction_order_has_deleted">订单已处于平仓或删除状态</string>
     <string name="close_not_bigger_than_position">平仓数不能大于持仓数</string>
     <string name="close_data_illegal">手数不能小于最小值</string>
-    <string name="fh">福汇</string>
-    <string name="fxcm">FXCM</string>
-    <string name="fh_name">FXCM福汇</string>
-    <string name="fh_jituan">福汇集团</string>
-    <string name="fh_type">外汇 贵金属 指数 原油</string>
-    <string name="fh_introduce">FXCM Inc. (NYSE:
-        FXCM)是一家为零售及机构客户提供外汇交易及相关服务的主要环球供应商。FXCM于1999年创立，是首家在纽约证券交易所上市的外汇经纪商，在透明度和金融稳定性上的市场领导者。
-        Forex Capital Markets Limited于英国获金融市场行为监管局(FCA)认可及监管。注册编号∶217689。
-    </string>
     <string name="no_title_document">无标题文档</string>
     <string name="online_transaction_in_order">正在下单</string>
     <string name="online_transaction_in_guadan">正在挂单中</string>
@@ -959,7 +828,6 @@
     <string name="new_message_voice">声音</string>
     <string name="new_message_vibration">震动</string>
     <string name="new_message_prompt_voice">新消息提示音</string>
-    <string name="new_message_follow_system">跟随系统</string>
     <string name="add_validation">加我时需要验证</string>
     <string name="the_blacklist">黑名单</string>
     <string name="join_the_blacklist">加入黑名单</string>
@@ -1069,10 +937,6 @@
     <string name="input_chatroom_desc">输入聊天室简介</string>
     <string name="switch_account">切换账户</string>
     <string name="more_report">更多报表</string>
-    <string name="upgrade_trader_introduce">成为Followme交易员，您可在Followme平台在线交易，您的交易结果将显示在交易员排行中，跟随者可设置策略跟随你投资，从而您获取一定的服务费。
-    </string>
-    <string name="upgrade_follower_introduce">成为Followme跟随者，您可以使用各种参数筛选和分析交易员，多种方式自主跟随交易员的交易，并能与交易员微博互动。
-    </string>
     <string name="choose_user_type">1、选择身份</string>
     <string name="id_card_front">身份证正面</string>
     <string name="id_card_down">身份证背面</string>
@@ -1101,15 +965,11 @@
     <string name="third_part_account_bind">第三方账号绑定</string>
     <string name="bind_old_account">已有账户绑定</string>
     <string name="bind_new_account">新用户绑定</string>
-    <string name="placeholder_bind_third_welcome">您好，%1$s\n欢迎使用%2$s登录Followme!</string>
-    <string name="please_bind_followme">请绑定一个Followme账号，绑定后您将可以通过此账号第三方登录。</string>
-    <string name="not_followme_account">还没有Followme账号？</string>
     <string name="bind">绑定</string>
     <string name="phone_email">手机号/邮箱</string>
     <string name="trade_strategy">交易策略：</string>
     <string name="clear_search_history">清空搜索记录</string>
     <string name="find_people">找人</string>
-    <string name="follow_him">跟随他</string>
     <string name="more">更多</string>
     <string name="edit_string">编辑</string>
     <string name="time_chooser">时间选择</string>
@@ -1145,7 +1005,6 @@
     <string name="apply_status1">申请经纪商账号</string>
     <string name="apply_status2">经纪商开户成功</string>
     <string name="apply_status3">签订授权说明书</string>
-    <string name="apply_status4">Followme审核通过</string>
 
     <string name="trade_account">交易账户</string>
     <string name="open_push">开启推送</string>
@@ -1153,7 +1012,6 @@
     <string name="clear_cache_success">清除缓存成功</string>
     <string name="add_condition">筛选名称</string>
     <string name="search_condition_max_10">最多10个字符</string>
-    <string name="follow_service_fee">跟随服务费</string>
     <string name="customer_number">客户数</string>
     <string name="customer_trade_count">客户交易量</string>
     <string name="vip_service_fee">会员服务费</string>
@@ -1238,7 +1096,6 @@
     <string name="change_user_in">账户切换中...</string>
     <string name="change_account_fail">切换账户失败</string>
     <string name="simulation_role">交易规则：</string>
-    <string name="simulation_role_account">交易规则：Followme为模拟用户提供了10000美元的模拟资金，资金有效期1个月，您可借此体验Followme社区交易。</string>
     <string name="no_set_strategy">没有填写交易策略</string>
     <string name="wait_broker_audit">等待经纪商审核</string>
     <string name="expire_time">还有%1$d天到期</string>
@@ -1252,7 +1109,6 @@
     <string name="one_day">1日</string>
     <string name="one_week">1周</string>
     <string name="one_month">1月</string>
-    <string name="following">正在跟随中</string>
     <string name="zhuan">赚:$</string>
     <string name="no_request_data">无申请记录</string>
 
@@ -1275,12 +1131,8 @@
     <string name="check_account_apply_status">检查账户申请状态</string>
     <string name="you_hava_this_broker_not_pass_apply">当前所选经纪商存在审核中的账号，您可以选择申请其他经纪商账户</string>
     <string name="check_account_status_fail">检查用户账户状态失败</string>
-    <string name="no_is_follow">没有正在跟随</string>
-    <string name="no_history_follow">没有历史跟随</string>
     <string name="demo">模拟账号</string>
-    <string name="upgrade_prompt_1">您在followme的操作部分已完成，请申请经纪商</string>
     <string name="upgrade_prompt_2">账号，前往经纪商官网</string>
-    <string name="upgrade_prompt_3">经纪商开户成功后，请前往您的开户邮箱%1$s签署《指示授权书》，即可开启Followme社区交易体验。</string>
     <string name="back_to_person_center">回到个人中心</string>
     <string name="huoqianwang">或前往</string>
     <string name="shezhi_jiaoyizhanghu">设置-交易账户</string>
@@ -1288,9 +1140,6 @@
     <string name="upgrade_prompt_2_1">账号，</string>
     <string name="upgrade_prompt_2_2">前往经纪商官网</string>
     <string name="update_fail">更新数据失败</string>
-    <string name="reconnect_prompt">账号在别的设备登录聊天室，当前设备将无法进入聊天室。是否重新连接？</string>
-    <string name="jf_world">晋峰环球国际</string>
-    <string name="jf_world_introduce">晋峰环球国际由伯利兹（BELIZE）政府授权许可,并颁发金融服务供货商认证（编号：IFSC/60/302/TS/14）。  晋峰环球国际为机构及个人投资者提供专业的外汇、黄金等金融产品的网上交易解决方案。</string>
     <string name="committing">正在提交中</string>
     <string name="hour">小时</string>
     <string name="qianwang">前往</string>
@@ -1317,7 +1166,6 @@
 
     <string name="is_close_order">正在平仓</string>
     <string name="message_not_empty">消息不能为空</string>
-    <string name="follow_point">跟随点数</string>
     <string name="xpyz">夏普比率</string>
     <string name="lryz">利润因子</string>
     <string name="hyd">活跃度</string>
@@ -1342,9 +1190,7 @@
     <string name="large_text">sdfdsfsdf</string>
     <string name="user_type">用户类型</string>
     <string name="empty"/>
-    <string name="follow_top_3">跟随获利TOP3</string>
     <string name="fans">粉丝</string>
-    <string name="following_5_trader">他正在跟随的5个交易员</string>
     <string name="newest_blog">最新微博</string>
     <string name="pjmdhlds">平均每单获利点数</string>
     <string name="trade_service_disconnect">由于网络问题，交易服务已断开,</string>
@@ -1352,8 +1198,6 @@
     <string name="his_trade">他的交易</string>
     <string name="trade_pandect">交易总览</string>
     <string name="please_read_detail">详情请阅读</string>
-    <string name="follow_strategy">跟随策略</string>
-    <string name="cross_broker_follow_info">跨经纪商跟随可能存在点差、交易品种及开/休市时间的差异</string>
     <string name="mine_fans">我的粉丝</string>
     <string name="mine_attention">我的关注</string>
     <string name="blog_is_shield">微博被屏蔽，请联系小秘书！</string>
@@ -1398,7 +1242,6 @@
     <string name="pay_card_number">支付卡号</string>
     <string name="amount">金额</string>
     <string name="rmb_symbol">¥</string>
-    <string name="followme_and_kvb_service_apply"><![CDATA[Followme&KVB 服务申请]]></string>
     <string name="no_account_and_register">没有账号？立即注册</string>
     <string name="change_leverage_rate">修改杠杆比例</string>
     <string name="leverage_rate">杠杆比例</string>
@@ -1418,18 +1261,6 @@
     <string name="withdrawal_history_empty">您没有取款记录</string>
     <string name="withdraw_cash">实际取现</string>
     <string name="charge">手续费</string>
-    <string name="disclaimer_content">
-        下方签署者已向 KVB Kunlun New Zealand Limited 申请开立外汇交易账户。本人已向 KVB Kunlun New Zealand Limited
-        提供由本人设计之交易系统、
-        已购买（或租借）由第三者系统发展商开发之系统，或已同意或授权 KVB Kunlun New Zealand Limited 使用由
-        本人修改的交易建议服务或咨询（简称「本人之程式」）。本人确认已获悉本人之程式所产生的交易额及
-        其所产生的佣金，以及其对表现的影响。本人完全了解有关假设备份测试和即时跟踪记录对于测试未来表现
-        本人账户输入交易。根据本人对开设账户所作出之考虑，本人确认及同意以下条款及细则，具体情况如下：
-    </string>
-    <string name="follow_kvb_service_check">
-        我/我们特此证明我/我们已阅读并同意上述声明。我/我们特此同意，我/我们理解并保证我/我们有能力（财力）
-        签订本协议并达成以上阐述所有交易目标。我/我们确认收到，于都并理解上述说明，委托限制，授权服务及风险披露。
-    </string>
     <string name="commit_apply">提交申请</string>
     <string name="same_as_idcard_address">与身份证地址一致</string>
     <string name="use_other_address">使用其他地址</string>
@@ -1493,5 +1324,8 @@
     <string name="total_pay">合计支付</string>
     <string name="one_click_position">一键\n平仓</string>
     <string name="quick">快速</string>
-
+    <string name="yuan">元</string>
+    <string name="deposit">充值</string>
+    <string name="opened">已开启</string>
+    <string name="closed">已关闭</string>
 </resources>

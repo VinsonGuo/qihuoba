@@ -12,20 +12,19 @@ import android.view.ViewGroup;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.Collections;
+import com.yjjr.yjfutures.utils.LogUtils;
 
 /**
  * Created by dell on 2017/6/22.
  */
 
-public abstract class ListFragment<T> extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class ListFragment<T> extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {
 
-    private int mPage = 0;
-    private RecyclerView mRvList;
-    private SwipeRefreshLayout mRefreshLayout;
+    protected int mPage = 0;
+    protected RecyclerView mRvList;
+    protected SwipeRefreshLayout mRefreshLayout;
+    private View mLoadView;
+    private BaseQuickAdapter<T, BaseViewHolder> mAdapter;
 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,8 +32,10 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
         mRefreshLayout = (SwipeRefreshLayout) v;
         mRvList = (RecyclerView) v.findViewById(R.id.rv_list);
         mRvList.setLayoutManager(new LinearLayoutManager(mContext));
-        BaseQuickAdapter<T, BaseViewHolder> adapter = getAdapter();
-        mRvList.setAdapter(adapter);
+        mLoadView = v.findViewById(R.id.ll_load);
+        mAdapter = getAdapter();
+        mAdapter.setOnLoadMoreListener(this, mRvList);
+        mRvList.setAdapter(mAdapter);
         mRefreshLayout.setOnRefreshListener(this);
         onRefresh();
         return v;
@@ -45,5 +46,30 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     @Override
     public void onRefresh() {
         mPage = 0;
+        mRvList.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadView.setVisibility(View.GONE);
+                mRefreshLayout.setRefreshing(false);
+            }
+        }, 2000);
+    }
+
+    @Override
+    public void onLoadMoreRequested() {
+        mPage++;
+        mRvList.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 20; i++) {
+                    try {
+                        mAdapter.addData((T) ("test" + i));
+                    } catch (Exception e) {
+                        LogUtils.e(e);
+                    }
+                }
+                mAdapter.loadMoreComplete();
+            }
+        }, 2000);
     }
 }

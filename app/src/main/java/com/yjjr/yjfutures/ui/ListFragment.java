@@ -31,14 +31,20 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         mRefreshLayout = (SwipeRefreshLayout) v;
         mRvList = (RecyclerView) v.findViewById(R.id.rv_list);
-        mRvList.setLayoutManager(new LinearLayoutManager(mContext));
+        setManager();
         mLoadView = v.findViewById(R.id.ll_load);
         mAdapter = getAdapter();
-        mAdapter.setOnLoadMoreListener(this, mRvList);
+        if(mAdapter.isLoadMoreEnable()) {
+            mAdapter.setOnLoadMoreListener(this, mRvList);
+        }
         mRvList.setAdapter(mAdapter);
         mRefreshLayout.setOnRefreshListener(this);
         onRefresh();
         return v;
+    }
+
+    protected void setManager() {
+        mRvList.setLayoutManager(new LinearLayoutManager(mContext));
     }
 
     public abstract BaseQuickAdapter<T, BaseViewHolder> getAdapter();

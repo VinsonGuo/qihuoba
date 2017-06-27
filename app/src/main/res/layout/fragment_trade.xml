@@ -123,6 +123,7 @@
         android:id="@+id/rg_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_bottom_line"
         android:orientation="horizontal">
 
         <RadioButton

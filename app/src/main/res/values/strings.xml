@@ -1326,6 +1326,7 @@
     <string name="quick">快速</string>
     <string name="yuan">元</string>
     <string name="deposit">充值</string>
+    <string name="account_deposit">账户充值</string>
     <string name="opened">已开启</string>
     <string name="closed">已关闭</string>
 </resources>

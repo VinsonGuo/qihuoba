@@ -58,6 +58,8 @@
         </activity>
         <activity android:name=".ui.trade.FastTakeOrderActivity">
         </activity>
+        <activity android:name=".ui.trade.DepositActivity">
+        </activity>
     </application>
 
 </manifest>

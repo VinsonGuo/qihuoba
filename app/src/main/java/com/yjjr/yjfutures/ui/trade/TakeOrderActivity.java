@@ -1,9 +1,11 @@
 package com.yjjr.yjfutures.ui.trade;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
 import com.yjjr.yjfutures.R;
@@ -14,6 +16,7 @@ import com.yjjr.yjfutures.widget.HeaderView;
 public class TakeOrderActivity extends BaseActivity implements View.OnClickListener {
 
     private CustomPromptDialog mDialog;
+    private ProgressDialog mProgressDialog;
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, TakeOrderActivity.class));
@@ -34,6 +37,9 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                     }
                 })
                 .create();
+        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage(getString(R.string.online_transaction_in_order));
         headerView.bindActivity(mContext);
         findViewById(R.id.btn_confirm).setOnClickListener(this);
     }
@@ -42,7 +48,14 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_confirm:
-                mDialog.show();
+                mProgressDialog.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressDialog.dismiss();
+                        mDialog.show();
+                    }
+                }, 3000);
                 break;
         }
     }

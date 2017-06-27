@@ -56,9 +56,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         mChart = (LineChart) findViewById(R.id.line_chart);
         mChart.setDrawGridBackground(false);
         setupSettingParameter();
-
         LineData data = new LineData();
-
         data.setValueTextColor(Color.WHITE);
         mChart.setData(data);
 
@@ -261,7 +259,7 @@ public class TimeSharingplanChart extends RelativeLayout {
 //        rightAxis.setMinWidth(50);
 //        rightAxis.setMaxWidth(50);
         Legend legend = mChart.getLegend();
-        legend.setForm(Legend.LegendForm.LINE);
+        legend.setEnabled(false);
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);

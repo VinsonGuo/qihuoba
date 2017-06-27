@@ -48,6 +48,7 @@
                         android:id="@+id/rb_hand_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="1手"/>
 
                     <RadioButton
@@ -103,6 +104,7 @@
                         android:id="@+id/rb_sl_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="$170"/>
 
                     <RadioButton
@@ -156,9 +158,10 @@
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/rb_s_1"
+                        android:id="@+id/rb_sw_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:checked="true"
                         android:text="$170"/>
 
                     <RadioButton
@@ -205,9 +208,9 @@
 
                 <TextView
                     android:id="@+id/bzj_value"
-                    android:text="$123"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="$123"/>
             </LinearLayout>
 
             <LinearLayout
@@ -224,20 +227,21 @@
 
                 <TextView
                     android:id="@+id/trade_fee_value"
-                    android:text="$123"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="$123"/>
             </LinearLayout>
 
             <TextView
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:gravity="center"
                 android:id="@+id/tv_info"
-                android:background="@color/background"
                 android:layout_width="match_parent"
-                android:text="持仓至明天凌晨自动平仓"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:background="@color/background"
+                android:gravity="center"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="持仓至明天凌晨自动平仓"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -252,9 +256,9 @@
 
                 <TextView
                     android:id="@+id/total_pay_value"
-                    android:text="$123"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="$123"/>
             </LinearLayout>
 
         </LinearLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="com.yjjr.yjfutures.ui.trade.DepositActivity">
+
+    <com.yjjr.yjfutures.widget.HeaderView
+        android:id="@+id/header_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:main_title="@string/account_deposit"/>
+
+    <TextView
+        android:id="@+id/tv_unionpay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/root_padding_10"
+        android:background="@drawable/shape_bg_bottom_line"
+        android:padding="@dimen/root_padding_10"
+        android:text="银联支付"/>
+
+    <TextView
+        android:id="@+id/tv_alipay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_bottom_line"
+        android:padding="@dimen/root_padding_10"
+        android:text="支付宝"/>
+
+
+</LinearLayout>

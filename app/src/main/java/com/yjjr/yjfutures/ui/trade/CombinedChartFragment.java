@@ -101,11 +101,12 @@ public class CombinedChartFragment extends BaseFragment {
                         ToastUtils.show(mContext, "bottom");
                     }
                 }
+                mChart.setDragEnabled(true);
             }
 
             @Override
             public void onChartLongPressed(MotionEvent me) {
-
+                mChart.setDragEnabled(false);
             }
 
             @Override

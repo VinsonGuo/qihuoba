@@ -1,7 +1,9 @@
 package com.yjjr.yjfutures.ui.trade;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +21,8 @@ import com.yjjr.yjfutures.event.FastTakeOrderEvent;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
+import com.yjjr.yjfutures.utils.StringUtils;
+import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
@@ -38,6 +42,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvBottom;
     private CustomPromptDialog mTakeOrderDialog;
     private CustomPromptDialog mCloseOrderDialog;
+    private ProgressDialog mProgressDialog;
     private NoTouchScrollViewpager mViewpager;
     private RadioGroup rgNav;
     private HeaderView headerView;
@@ -69,7 +74,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
         findViews(v);
         headerView.bindActivity(getActivity());
-        Fragment[] fragments = {new TickChartFragment(), new TimeSharingplanFragment(), new CombinedChartFragment(), new CandleStickChartFragment()};
+        Fragment[] fragments = {new TickChartFragment(), new TimeSharingplanFragment(), new CombinedChartFragment(), new HandicapListFragment()};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
         mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -94,6 +99,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         ((RadioButton) rgNav.getChildAt(0)).setChecked(true);
         pbLeft.setRotation(180);
         tvCenter.setText(UserSharePrefernce.isFastTakeOrder(mContext) ? R.string.opened : R.string.closed);
+        StringUtils.setOnlineTxTextStyle(tvLeft, "23.123", 1);
+        StringUtils.setOnlineTxTextStyle(tvRight, "23.123", -1);
         tvLeft.setOnClickListener(this);
         tvRight.setOnClickListener(this);
         v.findViewById(R.id.tv_order).setOnClickListener(this);
@@ -118,7 +125,15 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        mProgressDialog.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mProgressDialog.dismiss();
+                                mTakeOrderDialog.dismiss();
+                                ToastUtils.show(mContext, R.string.online_transaction_open_success);
+                            }
+                        }, 3000);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -143,6 +158,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     }
                 })
                 .create();
+        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog.setMessage(getString(R.string.online_transaction_in_order));
+        mProgressDialog.setCancelable(false);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -171,6 +189,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 FastTakeOrderActivity.startActivity(mContext);
                 break;
             case R.id.tv_deposit:
+                DepositActivity.startActivity(mContext);
                 break;
         }
     }

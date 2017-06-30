@@ -1329,4 +1329,5 @@
     <string name="account_deposit">账户充值</string>
     <string name="opened">已开启</string>
     <string name="closed">已关闭</string>
+    <string name="kchart">k线图</string>
 </resources>

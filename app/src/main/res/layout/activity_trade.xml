@@ -12,17 +12,33 @@
         android:id="@+id/header_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:main_title="@string/order"/>
+        app:main_title="@string/symbol"/>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
     <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
         android:id="@+id/viewpager"
         app:tabBackground="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_weight="1"
+        android:layout_height="0dp"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rb_market"
+            android:layout_width="0dp"
+            android:text="@string/market_quotations"
+            android:layout_height="wrap_content"/>
+
+        <RadioButton
+            android:id="@+id/rb_order"
+            android:layout_width="0dp"
+            android:text="@string/positions"
+            android:layout_height="wrap_content"/>
+
+    </RadioGroup>
 
 </LinearLayout>

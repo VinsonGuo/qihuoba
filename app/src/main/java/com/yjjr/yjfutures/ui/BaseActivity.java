@@ -82,20 +82,8 @@ public class BaseActivity extends RxAppCompatActivity {
     }
 
     protected void setStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (mIsSetDefaultStatusBar) {
-                // 设置状态栏的颜色
-                if (SystemBarHelper.isMIUI6Later() || SystemBarHelper.isFlyme4Later() || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    SystemBarHelper.setStatusBarDarkMode(this);
-                    SystemBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.white), 0);
-                } else {
-                    SystemBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.color_bbbbbb), 0);
-                }
-            }
-            // 设置导航栏的颜色
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.color_bbbbbb));
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && mIsSetDefaultStatusBar) {
+            SystemBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.colorPrimary), 0);
         }
     }
 

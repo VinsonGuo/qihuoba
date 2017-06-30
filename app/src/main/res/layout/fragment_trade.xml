@@ -119,10 +119,10 @@
     </RelativeLayout>
 
 
-    <RadioGroup
+    <com.yjjr.yjfutures.widget.NestRadioGroup
         android:id="@+id/rg_nav"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="@drawable/shape_bg_bottom_line"
         android:orientation="horizontal">
 
@@ -130,11 +130,10 @@
             android:id="@+id/rb_chart1"
             style="@style/text_color_333333_14sp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@null"
             android:gravity="center"
-            android:padding="@dimen/root_padding_10"
             android:text="闪电图"
             android:textColor="@color/selector_trade_rb_text_color"
             />
@@ -143,25 +142,22 @@
             android:id="@+id/rb_chart2"
             style="@style/text_color_333333_14sp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@null"
             android:gravity="center"
-            android:padding="@dimen/root_padding_10"
             android:text="分时图"
             android:textColor="@color/selector_trade_rb_text_color"
             />
 
-        <RadioButton
-            android:id="@+id/rb_chart3"
+        <TextView
+            android:id="@+id/tv_kchart"
             style="@style/text_color_333333_14sp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:button="@null"
             android:gravity="center"
-            android:padding="@dimen/root_padding_10"
-            android:text="K线图"
+            android:text="@string/kchart"
             android:textColor="@color/selector_trade_rb_text_color"
             />
 
@@ -169,14 +165,13 @@
             android:id="@+id/rb_chart4"
             style="@style/text_color_333333_14sp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@null"
             android:gravity="center"
-            android:padding="@dimen/root_padding_10"
             android:text="盘口"
             android:textColor="@color/selector_trade_rb_text_color"/>
-    </RadioGroup>
+    </com.yjjr.yjfutures.widget.NestRadioGroup>
 
     <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
         android:id="@+id/viewpager"
@@ -195,7 +190,8 @@
             android:id="@+id/pb_left"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/bg_horizontal_pb_trade"
+            android:layout_height="10dp"
             android:layout_weight="1"
             android:max="100"
             android:progress="45"/>
@@ -212,7 +208,8 @@
             android:id="@+id/pb_right"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/bg_horizontal_pb_trade"
+            android:layout_height="10dp"
             android:layout_weight="1"
             android:max="100"
             android:progress="45"/>

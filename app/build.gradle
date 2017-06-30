@@ -78,5 +78,6 @@ dependencies {
     compile 'com.youth.banner:banner:1.4.9'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
+    compile 'com.zaaach:toprightmenu:1.0'
     testCompile 'junit:junit:4.12'
 }

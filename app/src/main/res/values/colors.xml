@@ -13,6 +13,7 @@
     <color name="multiple_image_select_primaryDark">@color/main_color</color>
     <color name="multiple_image_select_primary">@color/main_color</color>
     <color name="tab_color">#999999</color>
+    <color name="divider_color">#999999</color>
     <color name="trader_chart_line_color">#f9d2c9</color>
     <color name="unselect_button">#9d9fa5</color>
 
@@ -133,4 +134,5 @@
     <color name="black_30">#4d000000</color>
     <color name="black_35">#59000000</color>
     <color name="chart_background">#0d0d0d</color>
+    <color name="color_0d0d0d">#0d0d0d</color>
 </resources>

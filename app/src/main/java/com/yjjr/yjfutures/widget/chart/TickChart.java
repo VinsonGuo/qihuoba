@@ -27,14 +27,12 @@ import com.yjjr.yjfutures.utils.DoubleUtil;
  */
 public class TickChart extends RelativeLayout {
 
-    public static final int FULL_SCREEN_SHOW_COUNT = 10;
+    public static final int FULL_SCREEN_SHOW_COUNT = 50;
     public static final int DATA_SET_SELL = 0;
-    public static final int DATA_SET_BUY = 1;
     private LineChart mChart;
     private Context mContext;
-    private int candleIncreaseColor = getResources().getColor(R.color.main_color_red);
-    private int candleDecreaseColor = getResources().getColor(R.color.main_color);
-    private int candleGridColor = getResources().getColor(R.color.color_e6e6e6);
+    private int candleIncreaseColor = getResources().getColor(R.color.third_text_color);
+    private int candleGridColor = getResources().getColor(R.color.color_333333);
     private int digits = 5;
     private int mTextColor = getResources().getColor(R.color.second_text_color);
 
@@ -76,34 +74,26 @@ public class TickChart extends RelativeLayout {
         refreshChart(ask, bid);
     }*/
 
-    public void addEntry(float ask, float bid) {
-        refreshChart(ask, bid);
+    public void addEntry(float bid) {
+        refreshChart(bid);
     }
 
-    private void refreshChart(float ask, float bid) {
+    private void refreshChart(float bid) {
         LineData data = mChart.getData();
 
         if (data != null) {
             ILineDataSet setSell = data.getDataSetByIndex(DATA_SET_SELL);
-            ILineDataSet setBuy = data.getDataSetByIndex(DATA_SET_BUY);
             if (setSell == null) {
                 setSell = createSet(DATA_SET_SELL);
                 data.addDataSet(setSell);
             }
-            if (setBuy == null) {
-                setBuy = createSet(DATA_SET_BUY);
-                data.addDataSet(setBuy);
-            }
 
-            data.addEntry(new Entry(setBuy.getEntryCount(), ask), DATA_SET_BUY);
             data.addEntry(new Entry(setSell.getEntryCount(), bid), DATA_SET_SELL);
 
 
             mChart.calculateOffsets();
-            Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_BUY).getEntryCount() - 1, ask, DATA_SET_BUY);
-            Highlight chartHighlighter2 = new Highlight(data.getDataSetByIndex(DATA_SET_SELL).getEntryCount() - 1, bid, DATA_SET_SELL);
-            Highlight highlight[] = new Highlight[]{chartHighlighter, chartHighlighter2};
-            mChart.highlightValues(highlight);
+            Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_SELL).getEntryCount() - 1, bid, DATA_SET_SELL);
+            mChart.highlightValue(chartHighlighter);
             mChart.notifyDataSetChanged();
             mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
             mChart.setAutoScaleMinMaxEnabled(true);
@@ -112,10 +102,10 @@ public class TickChart extends RelativeLayout {
     }
 
     private ILineDataSet createSet(int orderType) {
-        int setIntroduce = orderType == DATA_SET_BUY ? R.string.buy_in : R.string.sold_out;
+        int setIntroduce = R.string.sold_out;
         LineDataSet set = new LineDataSet(null, mContext.getString(setIntroduce));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        int color = orderType == DATA_SET_BUY ? candleDecreaseColor : candleIncreaseColor;
+        int color = candleIncreaseColor;
 
         set.setHighLightColor(color);
         set.setDrawHighlightIndicators(false);
@@ -148,7 +138,7 @@ public class TickChart extends RelativeLayout {
         mChart.setScaleXEnabled(false);
         mChart.setScaleYEnabled(false);
         mChart.setAutoScaleMinMaxEnabled(true);
-        mChart.setDrawMarkerViews(true);
+        mChart.setDrawMarkers(true);
         mChart.setClickable(false);
         mChart.setTouchEnabled(false);
 

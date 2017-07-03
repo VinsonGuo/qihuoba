@@ -33,7 +33,7 @@ public class TickChartFragment extends BaseFragment {
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final TickChart chart = new TickChart(mContext);
-        chart.addEntry(10, 10.2f);
+        chart.addEntry(10);
         Observable.interval(1, TimeUnit.SECONDS)
                 .compose(this.<Long>bindUntilEvent(FragmentEvent.DESTROY))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -41,7 +41,7 @@ public class TickChartFragment extends BaseFragment {
                     @Override
                     public void accept(@NonNull Long aLong) throws Exception {
                         float ask = (float) Math.random() + 10;
-                        chart.addEntry(ask, (float) (ask + 0.2));
+                        chart.addEntry(ask);
                     }
                 });
         return chart;

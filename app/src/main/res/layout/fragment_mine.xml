@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
         android:background="@color/background_dark"
-        android:textColor="@color/white"
+        android:textColor="@color/main_text_color"
         android:textSize="@dimen/text_size_20sp"
         android:gravity="center"
         android:text="@string/mine"/>

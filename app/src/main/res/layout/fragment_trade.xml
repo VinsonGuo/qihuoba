@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/chart_background"
     android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.TradeActivity">
-
-    <com.yjjr.yjfutures.widget.HeaderView
-        android:id="@+id/header_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:main_title="美原油 CL1078"
-        app:sub_title="玩法"/>
 
     <RelativeLayout
         android:id="@+id/vg_settlement"
@@ -66,6 +58,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/selector_common_btn_bg"
+            android:drawableLeft="@drawable/ic_wallet"
             android:gravity="center"
             android:padding="6dp"
             android:text="@string/deposit"/>
@@ -165,6 +158,7 @@
             android:layout_marginLeft="@dimen/root_padding_10"
             android:background="@drawable/selector_trade_rb_bg"
             android:button="@null"
+            android:drawableRight="@drawable/ic_down_arrow"
             android:gravity="center"
             android:padding="4dp"
             android:text="@string/kchart"
@@ -233,25 +227,22 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/root_padding_10"
-        android:layout_marginRight="@dimen/root_padding_10"
-        android:layout_marginTop="20dp"
+        android:layout_margin="@dimen/root_padding_10"
         android:background="@color/chart_background">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="48dp"
+            android:layout_gravity="center">
 
             <TextView
                 android:id="@+id/tv_left"
                 style="@style/text_color_ffffff_12sp"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_online_tx_green"
                 android:gravity="center"
-                android:paddingRight="16dp"
                 android:textStyle="bold"
                 tools:text="113.881"/>
 
@@ -260,33 +251,26 @@
                 style="@style/text_color_ffffff_12sp"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_online_tx_red"
                 android:gravity="center"
-                android:paddingRight="4dp"
                 android:textStyle="bold"
                 tools:text="113.881"/>
 
         </LinearLayout>
 
+
         <TextView
             android:id="@+id/tv_center"
             style="@style/text_color_333333_12sp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
-            android:background="@drawable/shape_online_tx_white"
+            android:background="@drawable/bg_fast_order"
+            android:drawableTop="@drawable/ic_fast_order"
             android:gravity="center"
-            android:text="@string/closed"/>
+            android:padding="10dp"
+            android:text="@string/closed"
+            android:textColor="@color/third_text_color"/>
     </FrameLayout>
-
-    <TextView
-        android:id="@+id/tv_bottom"
-        style="@style/text_color_333333_14sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/root_padding_10"
-        android:gravity="center"
-        android:text="本段时间持仓至"/>
 </LinearLayout>

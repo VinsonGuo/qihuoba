@@ -37,7 +37,7 @@ public class TimeSharingplanChart extends RelativeLayout {
     private Context mContext;
     private int candleIncreaseColor = getResources().getColor(R.color.main_color_red);
     private int candleDecreaseColor = getResources().getColor(R.color.main_color);
-    private int candleGridColor = getResources().getColor(R.color.color_e6e6e6);
+    private int candleGridColor = getResources().getColor(R.color.color_333333);
     private int mTextColor = getResources().getColor(R.color.second_text_color);
     private int digits = 5;
     private boolean isIdle = true;

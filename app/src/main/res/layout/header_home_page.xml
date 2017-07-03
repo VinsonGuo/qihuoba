@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:background="@drawable/selector_common_press_bg"
             android:drawablePadding="4dp"
-            android:drawableTop="@mipmap/ic_launcher_round"
+            android:drawableTop="@drawable/ic_home1"
             android:gravity="center"
             android:text="@string/simulation_trade"/>
 
@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:background="@drawable/selector_common_press_bg"
             android:drawablePadding="4dp"
-            android:drawableTop="@mipmap/ic_launcher_round"
+            android:drawableTop="@drawable/ic_home2"
             android:gravity="center"
             android:text="市场监管"/>
 
@@ -47,19 +47,31 @@
             android:layout_weight="1"
             android:background="@drawable/selector_common_press_bg"
             android:drawablePadding="4dp"
-            android:drawableTop="@mipmap/ic_launcher_round"
+            android:drawableTop="@drawable/ic_home3"
             android:gravity="center"
             android:text="风险提示"/>
     </LinearLayout>
 
-    <TextView
-        style="@style/text_color_333333_16sp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/root_padding_10"
-        android:paddingBottom="@dimen/root_padding_10"
         android:background="@drawable/shape_bg_bottom_line"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/root_padding_10"
         android:paddingLeft="@dimen/root_padding_15"
-        android:text="国际期货"/>
+        android:paddingTop="@dimen/root_padding_10">
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/third_text_color"/>
+
+        <TextView
+            style="@style/text_color_333333_16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:text="国际期货"/>
+    </LinearLayout>
 
 </LinearLayout>

@@ -1330,4 +1330,8 @@
     <string name="opened">已开启</string>
     <string name="closed">已关闭</string>
     <string name="kchart">k线图</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hqjy">行情交易</string>
 </resources>

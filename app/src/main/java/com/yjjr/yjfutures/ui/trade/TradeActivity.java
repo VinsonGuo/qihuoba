@@ -3,10 +3,15 @@ package com.yjjr.yjfutures.ui.trade;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.v4.app.Fragment;
 import android.widget.FrameLayout;
+import android.widget.RadioGroup;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
+import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
 public class TradeActivity extends BaseActivity {
 
@@ -17,38 +22,23 @@ public class TradeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FrameLayout root = new FrameLayout(mContext);
-        root.setId(R.id.root_view);
-        setContentView(root);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(root.getId(), TradeFragment.newInstance(true))
-                .commitAllowingStateLoss();
-       /* RadioGroup rgNav = (RadioGroup) findViewById(R.id.rg_nav);
+      setContentView(R.layout.activity_trade);
         final NoTouchScrollViewpager viewpager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
-        Fragment[] fragments = {new TickChartFragment(), new TickChartFragment(), new CombinedChartFragment(), new CandleStickChartFragment()};
+        Fragment[] fragments = {TradeFragment.newInstance(false), new OrderFragment()};
         viewpager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
-        viewpager.setOffscreenPageLimit(fragments.length);
+       RadioGroup rgNav = (RadioGroup) findViewById(R.id.rg_nav);
         rgNav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId) {
-                    case R.id.rb_chart1:
+                    case R.id.rb_market:
                         viewpager.setCurrentItem(0, false);
                         break;
-                    case R.id.rb_chart2:
+                    case R.id.rb_order:
                         viewpager.setCurrentItem(1, false);
-                        break;
-                    case R.id.rb_chart3:
-                        viewpager.setCurrentItem(2, false);
-                        break;
-                    case R.id.rb_chart4:
-                        viewpager.setCurrentItem(3, false);
                         break;
                 }
             }
         });
-        ((RadioButton) rgNav.getChildAt(0)).setChecked(true);
-*/
     }
 }

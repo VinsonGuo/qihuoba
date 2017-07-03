@@ -47,13 +47,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvLeft;
     private TextView tvRight;
     private TextView tvCenter;
-    private TextView tvBottom;
     private CustomPromptDialog mTakeOrderDialog;
     private CustomPromptDialog mCloseOrderDialog;
     private ProgressDialog mProgressDialog;
     private NoTouchScrollViewpager mViewpager;
     private NestRadioGroup rgNav;
-    private HeaderView headerView;
     private TextView mTvKchart;
     private TopRightMenu mTopRightMenu;
 
@@ -83,7 +81,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
         findViews(v);
-        headerView.bindActivity(getActivity());
         Fragment[] fragments = {new TickChartFragment(), new TimeSharingplanFragment(), new CombinedChartFragment(), new HandicapFragment()};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
         mViewpager.setOffscreenPageLimit(fragments.length);
@@ -116,7 +113,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         menuItems.add(new MenuItem(R.drawable.transport, "15分钟"));
         menuItems.add(new MenuItem(R.drawable.transport, "30分钟"));
         mTopRightMenu
-                .setWidth(320)      //默认宽度wrap_content
+                .setWidth(220)      //默认宽度wrap_content
                 .showIcon(false)     //显示菜单图标，默认为true
                 .dimBackground(true)        //背景变暗，默认为true
                 .needAnimationStyle(true)   //显示动画，默认为true
@@ -147,14 +144,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void findViews(View v) {
-        headerView = (HeaderView) v.findViewById(R.id.header_view);
         rgNav = (NestRadioGroup) v.findViewById(R.id.rg_nav);
         pbLeft = (ProgressBar) v.findViewById(R.id.pb_left);
         pbRight = (ProgressBar) v.findViewById(R.id.pb_right);
         tvLeft = (TextView) v.findViewById(R.id.tv_left);
         tvRight = (TextView) v.findViewById(R.id.tv_right);
         tvCenter = (TextView) v.findViewById(R.id.tv_center);
-        tvBottom = (TextView) v.findViewById(R.id.tv_bottom);
         mViewpager = (NoTouchScrollViewpager) v.findViewById(R.id.viewpager);
         mTvKchart = (TextView) v.findViewById(R.id.tv_kchart);
         mTakeOrderDialog = new CustomPromptDialog.Builder(mContext)

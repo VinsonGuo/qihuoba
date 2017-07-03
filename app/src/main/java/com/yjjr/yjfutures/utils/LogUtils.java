@@ -7,7 +7,7 @@ import com.yjjr.yjfutures.BuildConfig;
 
 public class LogUtils {
     public static void init() {
-        Logger.init("KVB")                 // default PRETTYLOGGER or use just init()
+        Logger.init("qihuoba")                 // default PRETTYLOGGER or use just init()
                 .methodCount(1)                 // default 2
 //                .hideThreadInfo()
                 .logLevel(BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE)        // default LogLevel.FULL

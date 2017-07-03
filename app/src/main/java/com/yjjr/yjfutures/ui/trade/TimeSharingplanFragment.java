@@ -23,7 +23,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
 /**
- * A simple {@link Fragment} subclass.
+ * 分时图Fragment
  */
 public class TimeSharingplanFragment extends BaseFragment {
 
@@ -48,7 +48,6 @@ public class TimeSharingplanFragment extends BaseFragment {
                     @Override
                     public void accept(@NonNull Long aLong) throws Exception {
                         DateTime now = DateTime.now();
-                        LogUtils.d("secondOfDay %s", now.toString());
                         if (now.getSecondOfMinute() == 0) {
                            chart.addLastEntry();
                         } else {

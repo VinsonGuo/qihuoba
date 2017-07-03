@@ -171,3 +171,9 @@
 
 -dontwarn org.android.agoo.**
 -keep class org.android.agoo.** {*;}
+
+-dontwarn com.just.library.**
+-keep com.just.library.** {*;}
+
+-dontwarn com.zaaach.toprightmenu.**
+-keep com.zaaach.toprightmenu.** {*;}

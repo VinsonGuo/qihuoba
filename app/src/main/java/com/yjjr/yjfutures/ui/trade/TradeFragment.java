@@ -10,16 +10,19 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.just.library.AgentWeb;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FastTakeOrderEvent;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
+import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
@@ -98,7 +101,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mViewpager.setCurrentItem(3, false);
                         break;
                 }
-                mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.color_333333));
+                mTvKchart.setBackgroundResource(R.drawable.shape_trade_rb_bg_unchecked);
+                mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.second_text_color));
             }
         });
         ((RadioButton) rgNav.getChildAt(0)).setChecked(true);
@@ -123,7 +127,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     public void onMenuItemClick(int position) {
                         rgNav.clearCheck();
                         mTvKchart.setText(menuItems.get(position).getText());
-                        mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.main_color));
+                        mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.main_text_color));
+                        mTvKchart.setBackgroundResource(R.drawable.shape_trade_rb_bg_checked);
                         mViewpager.setCurrentItem(2, false);
                     }
                 });
@@ -221,7 +226,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 FastTakeOrderActivity.startActivity(mContext);
                 break;
             case R.id.tv_deposit:
-                DepositActivity.startActivity(mContext);
+                WebActivity.startActivity(mContext, "http://www.jd.com");
+//                DepositActivity.startActivity(mContext);
                 break;
             case R.id.tv_kchart:
                 mTopRightMenu.showAsDropDown(mTvKchart);

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/chart_background"
     android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.TradeActivity">
 
@@ -20,51 +20,54 @@
         android:id="@+id/vg_settlement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_bg_bottom_line"
+        android:background="@color/background_dark"
         android:padding="@dimen/root_padding_10">
 
         <TextView
             android:id="@+id/tv_yue"
-            style="@style/text_color_666666_14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="可用余额    (元):"/>
+            android:text="可用余额:"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:id="@+id/tv_yue_value"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/root_padding_10"
-            android:layout_toRightOf="@id/tv_yue"
-            android:text="￥5000"/>
-
-        <TextView
-            android:id="@+id/tv_margin"
-            style="@style/text_color_666666_14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_yue"
-            android:layout_marginTop="4dp"
-            android:text="可用保证金(元):"/>
+            android:text="￥5000"
+            android:textColor="@color/third_text_color"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tv_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="冻结保证金:"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:id="@+id/tv_margin_value"
-            style="@style/text_color_333333_14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/tv_margin"
-            android:layout_marginLeft="@dimen/root_padding_10"
-            android:layout_toRightOf="@id/tv_margin"
-            android:text="￥5000"/>
+            android:layout_alignLeft="@id/tv_margin"
+            android:layout_below="@id/tv_margin"
+            android:text="￥5000"
+            android:textColor="@color/third_text_color"
+            android:textSize="18sp"/>
 
-        <TextView
+        <Button
             android:id="@+id/tv_deposit"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:background="@drawable/selector_common_btn_bg"
+            android:gravity="center"
+            android:padding="6dp"
             android:text="@string/deposit"/>
     </RelativeLayout>
 
@@ -72,7 +75,7 @@
         android:id="@+id/vg_order"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_bg_bottom_line"
+        android:background="@color/background_dark"
         android:padding="@dimen/root_padding_10">
 
         <TextView
@@ -122,55 +125,65 @@
     <com.yjjr.yjfutures.widget.NestRadioGroup
         android:id="@+id/rg_nav"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/shape_bg_bottom_line"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/root_padding_10"
+        android:background="@color/chart_background"
         android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/rb_chart1"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:background="@drawable/selector_trade_rb_bg"
             android:button="@null"
             android:gravity="center"
+            android:padding="4dp"
             android:text="闪电图"
             android:textColor="@color/selector_trade_rb_text_color"
+            android:textSize="@dimen/sp_12"
             />
 
         <RadioButton
             android:id="@+id/rb_chart2"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:background="@drawable/selector_trade_rb_bg"
             android:button="@null"
             android:gravity="center"
+            android:padding="4dp"
             android:text="分时图"
             android:textColor="@color/selector_trade_rb_text_color"
+            android:textSize="@dimen/sp_12"
             />
 
         <TextView
             android:id="@+id/tv_kchart"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:background="@drawable/selector_trade_rb_bg"
+            android:button="@null"
             android:gravity="center"
+            android:padding="4dp"
             android:text="@string/kchart"
             android:textColor="@color/selector_trade_rb_text_color"
+            android:textSize="@dimen/sp_12"
             />
 
         <RadioButton
             android:id="@+id/rb_chart4"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/root_padding_10"
+            android:background="@drawable/selector_trade_rb_bg"
             android:button="@null"
             android:gravity="center"
+            android:padding="4dp"
             android:text="盘口"
-            android:textColor="@color/selector_trade_rb_text_color"/>
+            android:textColor="@color/selector_trade_rb_text_color"
+            android:textSize="@dimen/sp_12"/>
     </com.yjjr.yjfutures.widget.NestRadioGroup>
 
     <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
@@ -182,7 +195,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/root_padding_10"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -190,11 +204,11 @@
             android:id="@+id/pb_left"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
-            android:progressDrawable="@drawable/bg_horizontal_pb_trade"
             android:layout_height="10dp"
             android:layout_weight="1"
             android:max="100"
-            android:progress="45"/>
+            android:progress="45"
+            android:progressDrawable="@drawable/bg_horizontal_pb_trade_red"/>
 
         <TextView
             style="@style/text_color_333333_14sp"
@@ -202,17 +216,18 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/root_padding_10"
             android:layout_marginRight="@dimen/root_padding_10"
-            android:text="买卖量"/>
+            android:text="买卖量"
+            android:textColor="@color/third_text_color"/>
 
         <ProgressBar
             android:id="@+id/pb_right"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dp"
-            android:progressDrawable="@drawable/bg_horizontal_pb_trade"
             android:layout_height="10dp"
             android:layout_weight="1"
             android:max="100"
-            android:progress="45"/>
+            android:progress="45"
+            android:progressDrawable="@drawable/bg_horizontal_pb_trade_green"/>
     </LinearLayout>
 
     <FrameLayout
@@ -220,7 +235,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/root_padding_10"
         android:layout_marginRight="@dimen/root_padding_10"
-        android:background="@color/background">
+        android:layout_marginTop="20dp"
+        android:background="@color/chart_background">
 
         <LinearLayout
             android:layout_width="match_parent"

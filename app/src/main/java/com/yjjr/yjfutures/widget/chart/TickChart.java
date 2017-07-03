@@ -36,6 +36,7 @@ public class TickChart extends RelativeLayout {
     private int candleDecreaseColor = getResources().getColor(R.color.main_color);
     private int candleGridColor = getResources().getColor(R.color.color_e6e6e6);
     private int digits = 5;
+    private int mTextColor = getResources().getColor(R.color.second_text_color);
 
     public TickChart(Context context) {
         this(context, null);
@@ -154,6 +155,7 @@ public class TickChart extends RelativeLayout {
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setDrawGridLines(true);
         rightAxis.setGridColor(candleGridColor);
+        rightAxis.setTextColor(mTextColor);
         rightAxis.setGridLineWidth(0.5f);
         rightAxis.enableGridDashedLine(20, 5, 0);
         rightAxis.setDrawAxisLine(false);

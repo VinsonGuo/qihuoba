@@ -6,7 +6,7 @@
         <corners
             android:topLeftRadius="5dp"
             android:bottomLeftRadius="5dp"/>
-        <solid android:color="@color/follow_button_normal" />
+        <solid android:color="@color/second_text_color" />
     </shape>
 </item>
 <!-- 主体背景颜色值 -->

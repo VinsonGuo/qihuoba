@@ -56,7 +56,10 @@
         style="@style/text_color_333333_16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/root_padding_10"
+        android:paddingTop="@dimen/root_padding_10"
+        android:paddingBottom="@dimen/root_padding_10"
+        android:background="@drawable/shape_bg_bottom_line"
+        android:paddingLeft="@dimen/root_padding_15"
         android:text="国际期货"/>
 
 </LinearLayout>

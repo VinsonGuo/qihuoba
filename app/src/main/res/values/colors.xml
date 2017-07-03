@@ -2,50 +2,34 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">@color/main_color</color>
+    <color name="colorAccent">@color/third_text_color</color>
 
-    <color name="tab_select_color">@color/main_color</color>
-    <color name="follow_button_normal">@color/main_color</color>
+    <color name="tab_select_color">@color/third_text_color</color>
+    <color name="tab_unselect_color">@color/second_text_color</color>
     <color name="main_color">#1c72ea</color>
-    <color name="main_color_red">#f74141</color>
+    <color name="main_color_red">#ff3b30</color>
+    <color name="main_color_green">#68dc7b</color>
     <color name="link_color">#002f9a</color>
-    <color name="second_color">#61b3ff</color>
-    <color name="third_color">#ffac1b</color>
-    <color name="warn_color">#fef9df</color>
-    <color name="follow_button_press">@color/main_color</color>
     <color name="multiple_image_select_primaryDark">@color/main_color</color>
     <color name="multiple_image_select_primary">@color/main_color</color>
     <color name="tab_color">#999999</color>
-    <color name="trader_msg_nickname">#484954</color>
-    <!--<color name="follow_button_press">#C53B14</color>-->
     <color name="trader_chart_line_color">#f9d2c9</color>
     <color name="unselect_button">#9d9fa5</color>
 
 
-    <color name="main_color_orange_focus">#c8330d</color>
-    <color name="main_color_orange_dark">#d53b14</color>
-    <!--<color name="auxiliary_color_green">#56b30b</color>-->
-    <color name="auxiliary_color_green">#00b876</color>
     <color name="background">#f2f2f2</color>
-    <color name="background_dark">#000000</color>
+    <color name="background_dark">#181818</color>
     <color name="p15_dard">#26000000</color>
-    <color name="background_dark_cc">#CC000000</color>
-    <color name="white">#FFFFFF</color>
     <color name="line_head">#b9bbc1</color>
     <color name="line_trader">#ced0d5</color>
     <color name="line_trader_divider">#ebedf3</color>
-    <color name="main_text_color">#484954</color>
-    <color name="second_text_color">#666666</color>
-    <color name="third_text_color">#999999</color>
+    <color name="main_text_color">@color/white</color>
+    <color name="second_text_color">#b7b7b7</color>
+    <color name="third_text_color">#ff9500</color>
     <color name="forth_text_color">#333333</color>
-    <color name="color_ff9600">#ff9600</color>
-    <color name="color_ff9c00">#ff9c00</color>
     <color name="color_20_ffffff">#33ffffff</color>
     <color name="half_white">#80FFFFFF</color>
-    <color name="mine_title_line">#3e3e3e</color>  <!--我的主题中的横线-->
-    <!-- 升级为投资人按钮颜色 50 % 透明度-->
-    <color name="mine_upgrade_trader_button">#7f072a47</color>
-    <!-- 资金管理title分割线 -->
+    <color name="mine_title_line">#3e3e3e</color>
     <color name="color_7ffbad8f">#7ffbad8f</color>
     <color name="color_f7791f">#f7791f</color>
     <color name="color_f4f5f8">#f4f5f8</color>
@@ -99,24 +83,6 @@
     <color name="color_00b876">#00b876</color>
     <color name="color_fef1e2_transparent">#00fef1e2</color>
 
-    <!-- Blog -->
-    <color name="blue_200">#FF90CAF9</color>
-    <color name="blue_500">#FF2196F3</color>
-    <color name="blue_700">#FF1976D2</color>
-    <color name="color_999999">#999999</color>
-
-
-    <!-- wordpress -->
-    <color name="legacy_format_bar_button_selected">#00aadc</color>
-    <color name="legacy_placeholder_content_text">#21759B</color>
-    <color name="legacy_format_bar_background">#eeeeee</color>
-    <color name="legacy_pressed_wordpress">#CC78C8E6</color>
-
-    <color name="color_00a81f">#00a81f</color>
-    <!--    <color name="color_333333">#333333</color>
-        <color name="black_half">#80000000</color>
-
-    chatroom-->
     <color name="color_bebebe">#bebebe</color>
     <color name="color_f0f2f3">#f0f2f3</color>
     <color name="color_737375">#737375</color>
@@ -166,4 +132,5 @@
     <color name="black_20">#33000000</color>
     <color name="black_30">#4d000000</color>
     <color name="black_35">#59000000</color>
+    <color name="chart_background">#0d0d0d</color>
 </resources>

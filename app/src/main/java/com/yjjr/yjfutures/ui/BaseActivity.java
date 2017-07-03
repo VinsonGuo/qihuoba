@@ -83,7 +83,7 @@ public class BaseActivity extends RxAppCompatActivity {
 
     protected void setStatusBarColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && mIsSetDefaultStatusBar) {
-            SystemBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.colorPrimary), 0);
+            SystemBarHelper.tintStatusBar(this, ContextCompat.getColor(this, R.color.background_dark), 0);
         }
     }
 

@@ -18,7 +18,7 @@
         android:id="@+id/alphaIndicator"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@drawable/shape_bg_top_bottom_line"
+        android:background="@color/background_dark"
         android:orientation="horizontal">
 
         <com.yinglan.alphatabs.AlphaTabView
@@ -29,7 +29,8 @@
             app:tabIconNormal="@drawable/ic_account_circle"
             app:tabIconSelected="@drawable/ic_account_circle"
             app:tabText="@string/home_page"
-            app:textColorSelected="@color/main_color"/>
+            app:textColorNormal="@color/second_text_color"
+            app:textColorSelected="@color/tab_select_color"/>
 
         <com.yinglan.alphatabs.AlphaTabView
             android:layout_width="0dp"
@@ -39,7 +40,8 @@
             app:tabIconNormal="@drawable/ic_account_circle"
             app:tabIconSelected="@drawable/ic_account_circle"
             app:tabText="@string/trade"
-            app:textColorSelected="@color/main_color"/>
+            app:textColorNormal="@color/second_text_color"
+            app:textColorSelected="@color/tab_select_color"/>
 
         <com.yinglan.alphatabs.AlphaTabView
             android:layout_width="0dp"
@@ -49,7 +51,8 @@
             app:tabIconNormal="@drawable/ic_account_circle"
             app:tabIconSelected="@drawable/ic_account_circle"
             app:tabText="@string/found"
-            app:textColorSelected="@color/main_color"/>
+            app:textColorNormal="@color/second_text_color"
+            app:textColorSelected="@color/tab_select_color"/>
 
         <com.yinglan.alphatabs.AlphaTabView
             android:layout_width="0dp"
@@ -59,7 +62,8 @@
             app:tabIconNormal="@drawable/ic_account_circle"
             app:tabIconSelected="@drawable/ic_account_circle"
             app:tabText="@string/mine"
-            app:textColorSelected="@color/main_color"/>
+            app:textColorNormal="@color/second_text_color"
+            app:textColorSelected="@color/tab_select_color"/>
 
     </com.yinglan.alphatabs.AlphaTabsIndicator>
 

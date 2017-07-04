@@ -34,13 +34,24 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
         setManager();
         mLoadView = v.findViewById(R.id.ll_load);
         mAdapter = getAdapter();
-        if(mAdapter.isLoadMoreEnable()) {
+        if (mAdapter.isLoadMoreEnable()) {
             mAdapter.setOnLoadMoreListener(this, mRvList);
         }
         mRvList.setAdapter(mAdapter);
         mRefreshLayout.setOnRefreshListener(this);
-        onRefresh();
         return v;
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mRvList.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadView.setVisibility(View.GONE);
+                mRefreshLayout.setRefreshing(false);
+            }
+        }, 2000);
     }
 
     protected void setManager() {
@@ -52,13 +63,7 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     @Override
     public void onRefresh() {
         mPage = 0;
-        mRvList.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mLoadView.setVisibility(View.GONE);
-                mRefreshLayout.setRefreshing(false);
-            }
-        }, 2000);
+        initData();
     }
 
     @Override

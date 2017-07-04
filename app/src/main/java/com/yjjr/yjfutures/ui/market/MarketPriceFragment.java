@@ -8,13 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.BaseFragment;
+import com.yjjr.yjfutures.ui.trade.TradeActivity;
 
 /**
  * 行情页面
  */
-public class MarketPriceFragment extends BaseFragment {
+public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapter.OnItemClickListener {
 
 
     public MarketPriceFragment() {
@@ -30,10 +32,15 @@ public class MarketPriceFragment extends BaseFragment {
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
         MarketPriceAdapter adapter = new MarketPriceAdapter(null);
         rvList.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
         for (int i = 0; i < 10; i++) {
             adapter.addData("test" + i);
         }
         return v;
     }
 
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        TradeActivity.startActivity(mContext);
+    }
 }

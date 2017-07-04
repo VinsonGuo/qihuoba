@@ -20,14 +20,14 @@
 
     <TextView
         android:id="@+id/view_header_text_maintitle"
-        android:textSize="@dimen/text_size_20sp"
-        android:textColor="@color/main_text_color"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:maxEms="10"
         android:singleLine="true"
         android:text="@string/title"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/text_size_20sp"
         />
 
 
@@ -38,14 +38,19 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:gravity="center"
         android:ellipsize="end"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:singleLine="true"
+        android:gravity="center"
+        android:lines="1"
         android:textColor="@color/main_text_color"
         android:textSize="17sp"
         />
 
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_divider_small"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider_color"/>
 </RelativeLayout>

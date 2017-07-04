@@ -676,10 +676,7 @@
     <string name="input_name">请填写姓名，提交后不可修改</string>
     <string name="legal_person_certification">法人证件</string>
     <string name="bank_location">开户网点</string>
-    <string name="cancel_to_join_vip">取消加入会员推广计划？</string>
-    <string name="vip_promotion">会员推广</string>
-    <string name="read_and_agree_trems">我已阅读并同意以下协议书条款</string>
-    <string name="join_vip_plan">加入会员推广计划</string>
+    <string name="read_and_agree_terms">我已阅读并同意以下协议书条款</string>
     <string name="cannot_alter_after_submit">确认后不可修改</string>
     <string name="join_domain_illegal">自定义域名不合法</string>
     <string name="online_transaction">在线交易</string>
@@ -1334,4 +1331,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hqjy">行情交易</string>
+    <string name="bullish">看涨</string>
+    <string name="bearish">看跌</string>
 </resources>

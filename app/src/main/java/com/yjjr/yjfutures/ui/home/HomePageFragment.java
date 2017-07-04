@@ -36,6 +36,9 @@ public class HomePageFragment extends BaseFragment {
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home_page, container, false);
+        HomePageListFragment fragment = new HomePageListFragment();
+        getChildFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
+        fragment.setUserVisibleHint(true);
         return v;
     }
 }

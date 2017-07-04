@@ -18,21 +18,16 @@ package com.yjjr.yjfutures.utils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
-import android.widget.RadioButton;
 import android.widget.TextView;
-
 
 import com.yjjr.yjfutures.R;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,13 +37,6 @@ import java.util.regex.Pattern;
 public class StringUtils {
 
 
-    public static String parseSpan(String s) {
-        String replaceSpan = "<span class=\"highlight\">";
-        s = s.replaceAll(replaceSpan, "<font color='#0083f2'>").
-                replaceAll("</span>", "</font>");
-        return s;
-    }
-
     private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
             "[a-zA-Z0-9\\+\\._%\\-\\+]{1,256}" +
                     "@" +
@@ -57,6 +45,13 @@ public class StringUtils {
                     "\\." +
                     "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
                     ")+");
+
+    public static String parseSpan(String s) {
+        String replaceSpan = "<span class=\"highlight\">";
+        s = s.replaceAll(replaceSpan, "<font color='#0083f2'>").
+                replaceAll("</span>", "</font>");
+        return s;
+    }
 
     public static String replaceBlank(String str) {
         String dest = "";
@@ -225,33 +220,46 @@ public class StringUtils {
     /**
      * 给在线交易的TextView设置指定的样式
      */
-    public static void setOnlineTxTextStyle(TextView tv, String content, double change) {
+    public static void setOnlineTxTextStyleRight(TextView tv, String content, double change) {
         if (TextUtils.isEmpty(content)) return;
+        String text = tv.getContext().getString(R.string.bearish);
         if (change > 0) {
-            tv.setText(TextUtils.concat(StringUtils.getOnlineTxString(content), "↑"));
+            tv.setText(TextUtils.concat(text, content));
             tv.setBackgroundResource(R.drawable.shape_online_tx_green);
         } else if (change < 0) {
-            tv.setText(TextUtils.concat(StringUtils.getOnlineTxString(content), "↓"));
+            tv.setText(TextUtils.concat(text, content));
             tv.setBackgroundResource(R.drawable.shape_online_tx_red);
         } else {
-            tv.setText(TextUtils.concat(StringUtils.getOnlineTxString(content), "\u00A0\u00A0\u00A0\u00A0"));
+            tv.setText(TextUtils.concat(text, content));
 //            tv.setBackgroundResource(R.drawable.shape_online_tx_gray);
             tv.setBackgroundResource(R.drawable.shape_online_tx_green);
         }
     }
 
-    public static void setOnlineTxTextStyle2(TextView tv, String content, double change) {
+    public static void setOnlineTxTextStyleLeft(TextView tv, String content, double change) {
         if (TextUtils.isEmpty(content)) return;
+        String text = tv.getContext().getString(R.string.bullish);
         if (change > 0) {
-            tv.setText(TextUtils.concat(StringUtils.getOnlineTxString(content), "↑"));
-            tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.main_color));
+            tv.setText(TextUtils.concat(text, content));
+            tv.setBackgroundResource(R.drawable.shape_online_tx_green);
         } else if (change < 0) {
-            tv.setText(TextUtils.concat(StringUtils.getOnlineTxString(content), "↓"));
-            tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.main_color_red));
+            tv.setText(TextUtils.concat(text, content));
+            tv.setBackgroundResource(R.drawable.shape_online_tx_red);
         } else {
-            tv.setText(TextUtils.concat(StringUtils.getOnlineTxString(content), "\u00A0\u00A0\u00A0\u00A0"));
+            tv.setText(TextUtils.concat(text, content));
 //            tv.setBackgroundResource(R.drawable.shape_online_tx_gray);
-            tv.setTextColor(ContextCompat.getColor(tv.getContext(), R.color.main_color));
+            tv.setBackgroundResource(R.drawable.shape_online_tx_green);
+        }
+    }
+
+
+    public static void setOnlineTxArrow(TextView tv, int change) {
+        if (change > 0) {
+            tv.setText("↑");
+        } else if (change < 0) {
+            tv.setText("↓");
+        } else {
+            tv.setText("\u00A0\u00A0\u00A0\u00A0");
         }
     }
 
@@ -348,7 +356,9 @@ public class StringUtils {
         setRadioButtonStyle(ctx, symbol, mLeftBtn, mRightBtn);
     }
 
-    *//**
+    */
+
+    /**
      * 设置RadioButton的样式，样式要根据数字显示颜色和箭头
      *//*
     public static void setRadioButtonStyle(Context ctx, MT4Symbol symbol, RadioButton mLeftBtn, RadioButton mRightBtn) {
@@ -375,7 +385,6 @@ public class StringUtils {
             mLeftBtn.setText(ssb);
         }
     }*/
-
     public static CharSequence getMineSpannableStringWithColor(Context mContext, @StringRes int res, double d) {
         return TextUtils.concat(
                 mContext.getString(res),

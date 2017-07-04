@@ -237,28 +237,45 @@
 
             <TextView
                 android:id="@+id/tv_left"
-                style="@style/text_color_ffffff_12sp"
+                android:textSize="@dimen/sp_16"
+                android:textColor="@color/main_text_color"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/shape_online_tx_green"
                 android:gravity="center"
-                android:textStyle="bold"
                 tools:text="113.881"/>
 
             <TextView
                 android:id="@+id/tv_right"
-                style="@style/text_color_ffffff_12sp"
+                android:textSize="@dimen/sp_16"
+                android:textColor="@color/main_text_color"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/shape_online_tx_red"
                 android:gravity="center"
-                android:textStyle="bold"
                 tools:text="113.881"/>
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tv_left_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/main_text_color"
+            android:layout_marginLeft="20dp"
+            android:textSize="30sp"/>
+
+        <TextView
+            android:id="@+id/tv_right_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:textColor="@color/main_text_color"
+            android:layout_marginRight="20dp"
+            android:textSize="30sp"/>
 
         <TextView
             android:id="@+id/tv_center"

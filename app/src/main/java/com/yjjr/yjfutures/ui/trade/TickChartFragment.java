@@ -25,6 +25,8 @@ import io.reactivex.functions.Consumer;
 public class TickChartFragment extends BaseFragment {
 
 
+    private TickChart mChart;
+
     public TickChartFragment() {
         // Required empty public constructor
     }
@@ -32,8 +34,14 @@ public class TickChartFragment extends BaseFragment {
 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final TickChart chart = new TickChart(mContext);
-        chart.addEntry(10);
+        mChart = new TickChart(mContext);
+        return mChart;
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mChart.addEntry(10);
         Observable.interval(1, TimeUnit.SECONDS)
                 .compose(this.<Long>bindUntilEvent(FragmentEvent.DESTROY))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -41,10 +49,8 @@ public class TickChartFragment extends BaseFragment {
                     @Override
                     public void accept(@NonNull Long aLong) throws Exception {
                         float ask = (float) Math.random() + 10;
-                        chart.addEntry(ask);
+                        mChart.addEntry(ask);
                     }
                 });
-        return chart;
     }
-
 }

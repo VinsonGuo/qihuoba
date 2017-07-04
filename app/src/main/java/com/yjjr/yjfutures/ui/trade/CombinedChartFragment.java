@@ -133,10 +133,15 @@ public class CombinedChartFragment extends BaseFragment {
             public void onChartTranslate(MotionEvent me, float dX, float dY) {
             }
         });
+        return mChart;
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
         fullData();
         mChart.setVisibleXRange(30, 9); // allow 20 values to be displayed at once on the x-axis, not more
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
-        return mChart;
     }
 
     private void fullData() {

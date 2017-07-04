@@ -15,15 +15,25 @@ import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
 public class OrderFragment extends BaseFragment {
 
+    private Fragment[] mFragments;
+    private NoTouchScrollViewpager mViewpager;
+    private TabLayout mTabLayout;
+
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_order, container, false);
-        TabLayout tabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
-        NoTouchScrollViewpager viewpager = (NoTouchScrollViewpager) v.findViewById(R.id.viewpager);
-        Fragment[] fragments = {new PositionListFragment(), new SettlementListFragment()};
-        String[] titles = {getString(R.string.cc), getString(R.string.js)};
-        viewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments, titles));
-        tabLayout.setupWithViewPager(viewpager);
+        mTabLayout = (TabLayout) v.findViewById(R.id.tab_layout);
+        mViewpager = (NoTouchScrollViewpager) v.findViewById(R.id.viewpager);
+
         return v;
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mFragments = new Fragment[]{new PositionListFragment(), new SettlementListFragment()};
+        String[] titles = {getString(R.string.cc), getString(R.string.js)};
+        mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), mFragments, titles));
+        mTabLayout.setupWithViewPager(mViewpager);
     }
 }

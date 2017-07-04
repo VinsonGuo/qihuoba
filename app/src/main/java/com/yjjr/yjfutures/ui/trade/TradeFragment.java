@@ -46,6 +46,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private ProgressBar pbRight;
     private TextView tvLeft;
     private TextView tvRight;
+    private TextView tvLeftArrow;
+    private TextView tvRightArrow;
     private TextView tvCenter;
     private CustomPromptDialog mTakeOrderDialog;
     private CustomPromptDialog mCloseOrderDialog;
@@ -130,8 +132,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     }
                 });
         tvCenter.setText(UserSharePrefernce.isFastTakeOrder(mContext) ? R.string.opened : R.string.closed);
-        StringUtils.setOnlineTxTextStyle(tvLeft, "23.123", 1);
-        StringUtils.setOnlineTxTextStyle(tvRight, "23.123", -1);
+        StringUtils.setOnlineTxTextStyleLeft(tvLeft, "23.123", 1);
+        StringUtils.setOnlineTxArrow(tvLeftArrow, 1);
+        StringUtils.setOnlineTxTextStyleRight(tvRight, "23.123", -1);
+        StringUtils.setOnlineTxArrow(tvRightArrow, -1);
         tvLeft.setOnClickListener(this);
         tvRight.setOnClickListener(this);
         v.findViewById(R.id.tv_order).setOnClickListener(this);
@@ -149,6 +153,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         pbRight = (ProgressBar) v.findViewById(R.id.pb_right);
         tvLeft = (TextView) v.findViewById(R.id.tv_left);
         tvRight = (TextView) v.findViewById(R.id.tv_right);
+        tvLeftArrow = (TextView) v.findViewById(R.id.tv_left_arrow);
+        tvRightArrow = (TextView) v.findViewById(R.id.tv_right_arrow);
         tvCenter = (TextView) v.findViewById(R.id.tv_center);
         mViewpager = (NoTouchScrollViewpager) v.findViewById(R.id.viewpager);
         mTvKchart = (TextView) v.findViewById(R.id.tv_kchart);
@@ -221,7 +227,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 FastTakeOrderActivity.startActivity(mContext);
                 break;
             case R.id.tv_deposit:
-                WebActivity.startActivity(mContext, "http://www.jd.com");
+                WebActivity.startActivity(mContext, "http://www.youku.com");
 //                DepositActivity.startActivity(mContext);
                 break;
             case R.id.tv_kchart:

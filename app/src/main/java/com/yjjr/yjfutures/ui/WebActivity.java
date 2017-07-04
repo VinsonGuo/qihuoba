@@ -15,6 +15,8 @@ import com.yjjr.yjfutures.widget.HeaderView;
 
 public class WebActivity extends BaseActivity {
 
+    private AgentWeb mAgentWeb;
+
     public static void startActivity(Context context, String url) {
         Intent intent = new Intent(context, WebActivity.class);
         intent.putExtra(Constants.CONTENT_PARAMETER, url);
@@ -30,7 +32,7 @@ public class WebActivity extends BaseActivity {
         final HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
         headerView.setMainTitle(url);
-        AgentWeb.with(mContext)//传入Activity
+        mAgentWeb = AgentWeb.with(mContext)//传入Activity
                 .setAgentWebParent(linearLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
                 .useDefaultIndicator()// 使用默认进度条
                 .defaultProgressBarColor() // 使用默认进度条颜色
@@ -42,6 +44,13 @@ public class WebActivity extends BaseActivity {
                 }) //设置 Web 页面的 title 回调
                 .createAgentWeb()//
                 .ready()
-                .go("http://www.jd.com");
+                .go(url);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mAgentWeb.back()) {
+            super.onBackPressed();
+        }
     }
 }

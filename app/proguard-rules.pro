@@ -172,8 +172,12 @@
 -dontwarn org.android.agoo.**
 -keep class org.android.agoo.** {*;}
 
--dontwarn com.just.library.**
--keep com.just.library.** {*;}
+#-dontwarn com.just.library.**
+#-keep com.just.library.** {*;}
 
--dontwarn com.zaaach.toprightmenu.**
--keep com.zaaach.toprightmenu.** {*;}
+#-dontwarn com.zaaach.toprightmenu.**
+#-keep com.zaaach.toprightmenu.** {*;}
+
+#bugly
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}

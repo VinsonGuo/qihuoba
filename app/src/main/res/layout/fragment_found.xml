@@ -2,8 +2,8 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/chart_background"
               android:orientation="vertical"
-              android:background="@color/background"
               tools:context=".ui.found.FoundFragment">
 
     <TextView
@@ -11,145 +11,214 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
         android:background="@color/background_dark"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_20sp"
         android:gravity="center"
-        android:text="@string/found"/>
+        android:text="@string/found"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_20sp"/>
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/root_padding_10"
-        android:background="@drawable/shape_bg_bottom_line"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/root_padding_15">
+        android:layout_height="@dimen/common_divider_small"
+        android:background="@color/divider_color"/>
 
-        <FrameLayout
+    <RelativeLayout
+        android:id="@+id/root_view1"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:paddingLeft="25dp"
+        android:background="@drawable/selector_common_press_bg">
+
+        <ImageView
+            android:id="@+id/iv_icon1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_found_information"/>
+
+        <TextView
+            android:id="@+id/tv_title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_icon1"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/iv_icon1"
+            android:text="重要通知"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_16"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_title1"
+            android:layout_below="@id/tv_title1"
+            android:layout_marginTop="6dp"
+            android:text="公告通知 敬请知悉"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:src="@drawable/icon_right_arrow"/>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_alignParentBottom="true"
+            android:background="@color/divider_color"/>
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tv_one"
-                style="@style/text_color_333333_15sp"
-                android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:layout_marginRight="@dimen/root_padding_10"
-                android:layout_marginTop="@dimen/common_divider_small"
-                android:background="@drawable/shape_bg_bottom_line"
-                android:drawableRight="@drawable/icon_right_arrow"
-                android:gravity="center_vertical"
-                android:text="公告"/>
+    <RelativeLayout
+        android:id="@+id/root_view2"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:background="@drawable/selector_common_press_bg"
+        android:paddingLeft="25dp">
 
-            <TextView
-                style="@style/text_color_666666_12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="43dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="26dp"
-                android:gravity="center"
-                tools:text="审核中"/>
-        </FrameLayout>
+        <ImageView
+            android:id="@+id/iv_icon2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_found_gift"/>
 
-        <FrameLayout
+        <TextView
+            android:id="@+id/tv_title2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_icon2"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/iv_icon2"
+            android:text="任务中心"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_16"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_title2"
+            android:layout_below="@id/tv_title2"
+            android:layout_marginTop="6dp"
+            android:text="动动手做任务"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:src="@drawable/icon_right_arrow"/>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_alignParentBottom="true"
+            android:background="@color/divider_color"/>
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tv_two"
-                style="@style/text_color_333333_15sp"
-                android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:layout_marginRight="@dimen/root_padding_10"
-                android:background="@drawable/shape_bg_bottom_line"
-                android:drawableRight="@drawable/icon_right_arrow"
-                android:gravity="center_vertical"
-                android:text="任务中心"/>
+    <RelativeLayout
+        android:id="@+id/root_view3"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:background="@drawable/selector_common_press_bg"
+        android:paddingLeft="25dp">
 
-            <TextView
-                style="@style/text_color_666666_12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="43dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="26dp"
-                android:gravity="center"
-                tools:text="审核中"/>
-        </FrameLayout>
+        <ImageView
+            android:id="@+id/iv_icon3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_found_service"/>
 
-        <FrameLayout
+        <TextView
+            android:id="@+id/tv_title3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_icon3"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/iv_icon3"
+            android:text="客服中心"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_16"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_title3"
+            android:layout_below="@id/tv_title3"
+            android:layout_marginTop="6dp"
+            android:text="贴心专业周到"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:src="@drawable/icon_right_arrow"/>
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_alignParentBottom="true"
+            android:background="@color/divider_color"/>
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tv_three"
-                style="@style/text_color_333333_15sp"
-                android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:layout_marginRight="@dimen/root_padding_10"
-                android:background="@drawable/shape_bg_bottom_line"
-                android:drawableRight="@drawable/icon_right_arrow"
-                android:gravity="center_vertical"
-                android:text="客服中心"/>
+    <RelativeLayout
+        android:id="@+id/root_view4"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:background="@drawable/selector_common_press_bg"
+        android:paddingLeft="25dp">
 
-            <TextView
-                style="@style/text_color_666666_12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="43dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="26dp"
-                android:gravity="center"
-                tools:text="审核中"/>
-        </FrameLayout>
+        <ImageView
+            android:id="@+id/iv_icon4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_found_money"/>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_title4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_icon4"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/iv_icon4"
+            android:text="推广赚钱"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_16"/>
 
-            <TextView
-                android:id="@+id/tv_four"
-                style="@style/text_color_333333_15sp"
-                android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:layout_marginRight="@dimen/root_padding_10"
-                android:background="@drawable/shape_bg_bottom_line"
-                android:drawableRight="@drawable/icon_right_arrow"
-                android:gravity="center_vertical"
-                android:text="推广赚钱"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_title4"
+            android:layout_below="@id/tv_title4"
+            android:layout_marginTop="6dp"
+            android:text="0成本 轻松赚"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
 
-            <TextView
-                style="@style/text_color_666666_12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="43dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="26dp"
-                android:gravity="center"
-                tools:text="市场资讯"/>
-        </FrameLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:src="@drawable/icon_right_arrow"/>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tv_five"
-                style="@style/text_color_333333_15sp"
-                android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:layout_marginRight="@dimen/root_padding_10"
-                android:background="@drawable/shape_bg_bottom_line"
-                android:drawableRight="@drawable/icon_right_arrow"
-                android:gravity="center_vertical"
-                android:text="客服中心"/>
-
-            <TextView
-                style="@style/text_color_666666_12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="43dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="26dp"
-                android:gravity="center"
-                tools:text="审核中"/>
-        </FrameLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_divider_small"
+        android:background="@color/divider_color"/>
 
 </LinearLayout>

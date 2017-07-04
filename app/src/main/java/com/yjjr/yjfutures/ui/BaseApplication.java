@@ -2,8 +2,11 @@ package com.yjjr.yjfutures.ui;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 
+import com.tencent.bugly.crashreport.CrashReport;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.utils.ExceptionHandler;
@@ -31,15 +34,21 @@ public class BaseApplication extends Application implements Application.Activity
     @Override
     public void onCreate() {
         super.onCreate();
-//        MultiDex.install(this);
         sInstance = this;
         LogUtils.init();
         JodaTimeAndroid.init(this);
         registerActivityLifecycleCallbacks(this);
+        CrashReport.initCrashReport(getApplicationContext(), "97d5703386", BuildConfig.DEBUG);
 //        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 //        MobclickAgent.enableEncrypt(true);
 //        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
 //        MobclickAgent.setCheckDevice(false);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @Override

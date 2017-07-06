@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
+import com.facebook.stetho.Stetho;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
@@ -39,6 +40,7 @@ public class BaseApplication extends Application implements Application.Activity
         JodaTimeAndroid.init(this);
         registerActivityLifecycleCallbacks(this);
         CrashReport.initCrashReport(getApplicationContext(), "97d5703386", BuildConfig.DEBUG);
+        Stetho.initializeWithDefaults(this);
 //        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 //        MobclickAgent.enableEncrypt(true);
 //        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
@@ -116,8 +118,9 @@ public class BaseApplication extends Application implements Application.Activity
         return isLogin() && UserSharePrefernce.isRealAccount(this);
     }
 
-    public long getAccount() {
-        return UserSharePrefernce.getAccount(this);
+    public String getAccount() {
+//        return UserSharePrefernce.getAccount(this);
+        return "582c5812-a757-4bcf-89bf-dc5d2be39fa0";
     }
 
     public String getToken() {

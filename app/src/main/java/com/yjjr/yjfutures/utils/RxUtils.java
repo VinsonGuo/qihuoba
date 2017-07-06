@@ -1,16 +1,27 @@
 package com.yjjr.yjfutures.utils;
 
-import android.content.Context;
-import android.text.TextUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
 
-import org.greenrobot.eventbus.EventBus;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2016/11/29.
@@ -18,69 +29,146 @@ import rx.schedulers.Schedulers;
 
 public class RxUtils {
 
+    private static Gson sGson = new Gson();
+
     /**
      * io线程执行，主线程观察
      * .compose(RxUtils.<T>applySchedulers())
      */
-    public static <T> Observable.Transformer<T, T> applySchedulers() {
-        return new Observable.Transformer<T, T>() {
+    public static <T> ObservableTransformer<T, T> applySchedulers() {
+        return new ObservableTransformer<T, T>() {
             @Override
-            public Observable<T> call(Observable<T> observable) {
+            public ObservableSource<T> apply(@NonNull Observable<T> observable) {
                 return observable.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread());
             }
         };
     }
 
-  /*  public static <T extends CommonResponse> Observable.Transformer<T, T> applySchedulers() {
-        return new Observable.Transformer<T, T>() {
+    public static <T> Observable<T> createSoapObservable(final String methodName, final Object model, final Class<T> responseClz) {
+        return Observable.create(new ObservableOnSubscribe<T>() {
             @Override
-            public Observable<T> call(Observable<T> observable) {
-                return observable
-                        .map(RxUtils.<T>isSuccessFunc1())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread());
-            }
-        };
-    }*/
+            public void subscribe(@NonNull ObservableEmitter<T> e) throws Exception {
+                try {
 
-    /*public static <T extends CommonResponse> Func1<T, T> isSuccessFunc1() {
-        return new Func1<T, T>() {
-            @Override
-            public T call(T commonResponse) {
-                // 检测token过期
-                if (BaseApplication.getInstance().isRealAccount()
-                        && TextUtils.equals(commonResponse.getReturnCode(), "-4002")) {
-                    EventBus.getDefault().post(new UnauthorizeEvent());
-                }
-                if (!commonResponse.isSuccess()) {
-                    throw new BusinessException(commonResponse.getMessage());
-                }
-                return commonResponse;
-            }
-        };
-    }*/
+                    String url = HttpConfig.BASE_URL;
+                    // SOAP Action
+                    final String soapAction = HttpConfig.AOSP_ACTION+ methodName;
 
-    public static Action1<Throwable> commonErrorAction(final Context context) {
-        return new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                LogUtils.e(throwable);
-                if (throwable instanceof BusinessException) {
-                    ToastUtils.show(context, throwable.getMessage());
-                } else if (throwable instanceof IllegalStateException) {
-//                    ToastUtils.show(context, R.string.send_request_fail);
+                    // 指定WebService的命名空间和调用的方法名
+                    SoapObject rpc = model2SoapObject( methodName, model);
+                    // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+                    final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+                    // 设置是否调用的是dotNet开发的WebService
+                    envelope.dotNet = true;
+                    // 等价于envelope.bodyOut = rpc;
+                    envelope.setOutputSoapObject(rpc);
+
+                    final HttpTransportSE transport = new HttpTransportSE(url);
+                    // 调用WebService
+                    transport.call(soapAction, envelope);
+                    SoapObject result = (SoapObject) envelope.bodyIn;
+                    SoapObject s = (SoapObject) result.getProperty(0);
+                    T t = soapObject2Model(s, responseClz);
+                    e.onNext(t);
+                } catch (Exception ex) {
+                    e.onError(ex);
                 }
             }
-        };
+        });
     }
 
-    public static class BusinessException extends RuntimeException {
-        public BusinessException(String detailMessage) {
-            super(detailMessage);
-        }
+    public static Observable<SoapObject> createSoapObservable2(final String methodName, final Object model) {
+        return Observable.create(new ObservableOnSubscribe<SoapObject>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<SoapObject> e) throws Exception {
+                try {
 
-        public BusinessException() {
+                    String url = HttpConfig.BASE_URL;
+                    // SOAP Action
+                    final String soapAction = HttpConfig.AOSP_ACTION + methodName;
+
+                    // 指定WebService的命名空间和调用的方法名
+                    SoapObject rpc = model2SoapObject( methodName, model);
+                    // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+                    final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+                    // 设置是否调用的是dotNet开发的WebService
+                    envelope.dotNet = true;
+                    // 等价于envelope.bodyOut = rpc;
+                    envelope.setOutputSoapObject(rpc);
+
+                    final HttpTransportSE transport = new HttpTransportSE(url);
+                    // 调用WebService
+                    transport.call(soapAction, envelope);
+                    SoapObject result = (SoapObject) envelope.bodyIn;
+                    SoapObject s = (SoapObject) result.getProperty(0);
+                    e.onNext(s);
+                } catch (Exception ex) {
+                    e.onError(ex);
+                }
+            }
+        });
+    }
+
+    public static Observable<SoapObject> createSoapObservable3(final String methodName, final SoapObject rpc) {
+        return Observable.create(new ObservableOnSubscribe<SoapObject>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<SoapObject> e) throws Exception {
+                try {
+                    // 命名空间
+
+                    String url = HttpConfig.BASE_URL;
+                    // SOAP Action
+                    final String soapAction = HttpConfig.AOSP_ACTION + methodName;
+
+                    // 指定WebService的命名空间和调用的方法名
+                    // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+                    final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
+
+                    // 设置是否调用的是dotNet开发的WebService
+                    envelope.dotNet = true;
+                    // 等价于envelope.bodyOut = rpc;
+                    envelope.setOutputSoapObject(rpc);
+
+                    final HttpTransportSE transport = new HttpTransportSE(url);
+                    // 调用WebService
+                    transport.call(soapAction, envelope);
+                    SoapObject result = (SoapObject) envelope.bodyIn;
+                    SoapObject s = (SoapObject) result.getProperty(0);
+                    LogUtils.d(s.toString());
+                    e.onNext(s);
+                } catch (Exception ex) {
+                    e.onError(ex);
+                }
+            }
+        });
+    }
+
+    public static SoapObject model2SoapObject( String methodName, Object o) throws Exception {
+
+        SoapObject rpc = new SoapObject(HttpConfig.NAME_SPACE, methodName);
+        Field[] declaredFields = o.getClass().getDeclaredFields();
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            if ("serialVersionUID".equals(field.getName()) || field.getName().startsWith("$")) {
+                continue;
+            }
+            rpc.addProperty(field.getName(), field.get(o));
         }
+        return rpc;
+    }
+
+    public static <T> T soapObject2Model(SoapObject soap, Class<T> clazz) throws Exception {
+        Map<Object, Object> map = new HashMap<>(10);
+        PropertyInfo pi = new PropertyInfo();
+        int count = soap.getPropertyCount();
+        for (int i = 0; i < count; i++) {
+            soap.getPropertyInfo(i, pi);
+            map.put(pi.getName(), soap.getProperty(i).toString());
+        }
+        JsonElement jsonElement = sGson.toJsonTree(map);
+        return sGson.fromJson(jsonElement, clazz);
     }
 }

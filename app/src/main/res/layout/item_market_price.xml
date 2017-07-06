@@ -15,13 +15,14 @@
         android:layout_weight="1"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/tv_symbol"
+            android:id="@+id/tv_symbol_name"
             android:textColor="@color/main_text_color"
             android:textSize="@dimen/sp_14"
             android:text="恒指期货"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
+            android:id="@+id/tv_symbol"
             android:textSize="@dimen/sp_12"
             android:textColor="@color/second_text_color"
             android:text="HS123"
@@ -53,6 +54,7 @@
        android:layout_weight="1"
        android:layout_height="wrap_content">
        <TextView
+           android:id="@+id/tv_change"
            android:layout_gravity="right"
            android:textSize="10sp"
            android:textColor="@color/main_color_red"

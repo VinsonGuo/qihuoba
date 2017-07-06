@@ -1,10 +1,14 @@
 package com.yjjr.yjfutures.ui.market;
 
 import android.support.annotation.Nullable;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.LogUtils;
 
 import java.util.List;
 
@@ -12,13 +16,25 @@ import java.util.List;
  * Created by dell on 2017/7/3.
  */
 
-public class MarketPriceAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
-    public MarketPriceAdapter(@Nullable List<String> data) {
+public class MarketPriceAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
+    public MarketPriceAdapter(@Nullable List<Quote> data) {
         super(R.layout.item_market_price, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, String item) {
+    protected void convert(BaseViewHolder helper, Quote item) {
+        try {
+            double change = item.getChange();
+            helper.setText(R.id.tv_symbol_name, item.getSymbolname())
+                    .setText(R.id.tv_symbol, item.getSymbol())
+                    .setText(R.id.tv_price, DoubleUtil.format2Decimal(item.getLastPrice()))
+                    .setText(R.id.tv_trade_amount, item.getVol() + "");
+            TextView tvChange = helper.getView(R.id.tv_change);
+            tvChange.setText(DoubleUtil.format2Decimal(change)+"%");
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
+//        tvChange.setTextColor(ContextCompat.getColor(mContext, change > 0 ? R.color.main_color_red : R.color.main_color_green));
 
     }
 }

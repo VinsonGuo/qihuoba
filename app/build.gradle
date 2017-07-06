@@ -31,6 +31,7 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
+        exclude 'META-INF/LICENSE'
     }
     repositories {
         mavenCentral()
@@ -82,5 +83,7 @@ dependencies {
     compile 'com.zaaach:toprightmenu:1.0'
     compile 'com.just.agentweb:agentweb:1.2.3'
     compile 'com.tencent.bugly:crashreport:2.6.5'
+    compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     testCompile 'junit:junit:4.12'
 }

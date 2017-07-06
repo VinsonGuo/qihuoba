@@ -125,7 +125,7 @@
 
         <RadioButton
             android:id="@+id/rb_chart1"
-            android:layout_width="60dp"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/root_padding_10"
             android:background="@drawable/selector_trade_rb_bg"
@@ -139,7 +139,7 @@
 
         <RadioButton
             android:id="@+id/rb_chart2"
-            android:layout_width="60dp"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/root_padding_10"
             android:background="@drawable/selector_trade_rb_bg"
@@ -153,7 +153,7 @@
 
         <TextView
             android:id="@+id/tv_kchart"
-            android:layout_width="60dp"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/root_padding_10"
             android:background="@drawable/selector_trade_rb_bg"
@@ -168,7 +168,7 @@
 
         <RadioButton
             android:id="@+id/rb_chart4"
-            android:layout_width="60dp"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/root_padding_10"
             android:background="@drawable/selector_trade_rb_bg"

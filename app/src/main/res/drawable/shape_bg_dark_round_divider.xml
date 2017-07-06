@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="false">
+        <layer-list>
+            <!-- 连框颜色值 -->
+            <item>
+                <shape>
+                    <corners android:radius="4dp"/>
+                    <solid android:color="@color/divider_color"/>
+                </shape>
+            </item>
+            <!-- 主体背景颜色值 -->
+            <item
+                android:top="@dimen/common_divider_small"
+                android:bottom="@dimen/common_divider_small"
+                android:left="@dimen/common_divider_small"
+                android:right="@dimen/common_divider_small">
+                <shape>
+                    <corners android:radius="4dp"/>
+                    <solid android:color="@color/background_dark"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <item android:state_pressed="true">
+        <layer-list>
+            <!-- 连框颜色值 -->
+            <item>
+                <shape>
+                    <corners android:radius="4dp"/>
+                    <solid android:color="@color/divider_color"/>
+                </shape>
+            </item>
+            <!-- 主体背景颜色值 -->
+            <item
+                android:top="@dimen/common_divider_small"
+                android:bottom="@dimen/common_divider_small"
+                android:left="@dimen/common_divider_small"
+                android:right="@dimen/common_divider_small">
+                <shape>
+                    <corners android:radius="4dp"/>
+                    <solid android:color="@color/color_5_ffffff"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

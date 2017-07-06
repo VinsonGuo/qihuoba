@@ -10,25 +10,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/ll_load"
+        <com.yjjr.yjfutures.widget.LoadingView
+            android:id="@+id/load_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                style="@style/text_color_333333_14sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/root_padding_10"
-                android:text="@string/data_is_loading"/>
-        </LinearLayout>
+            android:layout_height="match_parent"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_list"

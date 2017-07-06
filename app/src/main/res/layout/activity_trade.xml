@@ -9,14 +9,6 @@
     tools:context="com.yjjr.yjfutures.ui.trade.OrderActivity">
 
 
-    <com.yjjr.yjfutures.widget.HeaderView
-        android:id="@+id/header_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:main_title="美原油 CL1078"
-        app:sub_title="玩法"/>
-
-
     <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"

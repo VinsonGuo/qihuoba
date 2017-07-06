@@ -56,16 +56,18 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private NestRadioGroup rgNav;
     private TextView mTvKchart;
     private TopRightMenu mTopRightMenu;
+    private String mSymbol;
 
 
     public TradeFragment() {
         // Required empty public constructor
     }
 
-    public static TradeFragment newInstance(boolean isNeedBack) {
+    public static TradeFragment newInstance(boolean isNeedBack,String symbol) {
         TradeFragment fragment = new TradeFragment();
         Bundle args = new Bundle();
         args.putBoolean(Constants.CONTENT_PARAMETER, isNeedBack);
+        args.putString(Constants.CONTENT_PARAMETER_2, symbol);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,6 +78,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         EventBus.getDefault().register(this);
         if (getArguments() != null) {
             mIsNeedBack = getArguments().getBoolean(Constants.CONTENT_PARAMETER);
+            mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER_2);
         }
     }
 
@@ -148,6 +151,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void findViews(View v) {
+        HeaderView headerView = (HeaderView) v.findViewById(R.id.header_view);
+        headerView.bindActivity(getActivity());
         rgNav = (NestRadioGroup) v.findViewById(R.id.rg_nav);
         pbLeft = (ProgressBar) v.findViewById(R.id.pb_left);
         pbRight = (ProgressBar) v.findViewById(R.id.pb_right);

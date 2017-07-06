@@ -1,41 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="80dp"
-              android:background="@drawable/shape_bg_bottom_line"
+              android:layout_height="wrap_content"
+              android:layout_margin="@dimen/root_padding_10"
+              android:background="@drawable/shape_bg_dark_round_divider"
               android:gravity="center_vertical"
-              android:orientation="horizontal"
-              android:padding="@dimen/root_padding_10">
+              android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_time"
-        style="@style/text_color_333333_14sp"
-        android:layout_width="140dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="2017年6月26日\n08:30"/>
+        android:padding="@dimen/root_padding_10">
 
-    <TextView
-        android:id="@+id/tv_direction"
-        style="@style/text_color_333333_14sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="看涨"/>
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:text="2017年6月26日\n08:30"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
 
-    <TextView
-        android:id="@+id/tv_type"
-        style="@style/text_color_333333_16sp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/root_padding_15"
-        android:layout_weight="1"
-        android:text="止损卖出"/>
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_time"
+            android:layout_marginTop="10dp"
+            android:text="美原油 CL 1手"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
-    <TextView
-        android:id="@+id/tv_price"
-        style="@style/text_color_333333_14sp"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tv_yuan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="8dp"
+            android:text="@string/yuan"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_yuan"
+            android:gravity="center"
+            android:text="+288\n($240)"
+            android:textColor="@color/main_color_red"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_divider_small"
+        android:background="@color/divider_color"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="+1234元\n($690)"/>
+        android:padding="@dimen/root_padding_10">
+
+        <TextView
+            android:id="@+id/tv_direction"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_online_tx_red"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="看涨"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/tv_type"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="@dimen/root_padding_15"
+            android:background="@drawable/shape_third_text_color_border_bg"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="止损卖出"
+            android:textColor="@color/third_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </FrameLayout>
 </LinearLayout>

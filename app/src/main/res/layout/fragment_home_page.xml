@@ -43,13 +43,8 @@
             android:textSize="@dimen/text_size_20sp"/>
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/fl_container"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-   <!-- <fragment
-        android:id="@+id/fragment_list"
-        android:name="com.yjjr.yjfutures.ui.home.HomePageListFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>-->
 </LinearLayout>

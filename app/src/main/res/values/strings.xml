@@ -1333,4 +1333,6 @@
     <string name="hqjy">行情交易</string>
     <string name="bullish">看涨</string>
     <string name="bearish">看跌</string>
+    <string name="mine_order">我的订单</string>
+    <string name="order_record">订单记录</string>
 </resources>

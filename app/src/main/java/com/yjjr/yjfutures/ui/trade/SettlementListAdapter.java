@@ -32,11 +32,10 @@ public class SettlementListAdapter extends BaseQuickAdapter<String, BaseViewHold
 
     private CharSequence getPriceColor(double y, double d) {
         String symbol = y >= 0 ? "+" : "-";
-        int color = y >= 0 ? R.color.main_color : R.color.main_color_red;
+        int color = y >= 0 ? R.color.main_color_red : R.color.main_color_green;
         return TextUtils.concat(
                 SpannableUtil.getStringByColor(mContext, symbol, color),
                 SpannableUtil.getOnlinePriceString(mContext, String.valueOf(y), y),
-                mContext.getString(R.string.yuan),
-                SpannableUtil.getStringByColor(mContext, "\n($" + d + ")", color));
+                SpannableUtil.getStringBySize(SpannableUtil.getStringByColor(mContext, "\n($" + d + ")", color), 0.8f));
     }
 }

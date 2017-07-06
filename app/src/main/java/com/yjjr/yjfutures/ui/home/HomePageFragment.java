@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
@@ -26,8 +27,11 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomePageFragment extends BaseFragment {
+public class HomePageFragment extends BaseFragment implements View.OnClickListener {
 
+
+    private Banner mBanner;
+    private HomePageAdapter mAdapter;
 
     public HomePageFragment() {
         // Required empty public constructor
@@ -36,9 +40,69 @@ public class HomePageFragment extends BaseFragment {
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home_page, container, false);
-        HomePageListFragment fragment = new HomePageListFragment();
-        getChildFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
-        fragment.setUserVisibleHint(true);
+        RecyclerView rvList = (RecyclerView) v.findViewById(R.id.rv_list);
+        rvList.setLayoutManager(new LinearLayoutManager(mContext));
+        mAdapter = new HomePageAdapter(null);
+        View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, rvList, false);
+        mBanner = (Banner) headerView.findViewById(R.id.banner);
+        headerView.findViewById(R.id.tv_title1).setOnClickListener(this);
+        mAdapter.addHeaderView(headerView);
+        mBanner.setImageLoader(new ImageLoaderInterface() {
+            @Override
+            public void displayImage(Context context, Object path, View imageView) {
+                ImageLoader.load(context, (String) path, (ImageView) imageView);
+            }
+
+            @Override
+            public View createImageView(Context context) {
+                return new ImageView(context);
+            }
+        });
+        List<String> images = new ArrayList<>();
+        images.add("http://img1.imgtn.bdimg.com/it/u=1089399937,1684001946&fm=26&gp=0.jpg");
+        images.add("http://img3.imgtn.bdimg.com/it/u=3241219306,1400876595&fm=26&gp=0.jpg");
+        images.add("http://img4.imgtn.bdimg.com/it/u=787324823,4149955059&fm=26&gp=0.jpg");
+        mBanner.setImages(images);
+        mBanner.isAutoPlay(true);
+        mBanner.start();
+
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                TradeActivity.startActivity(mContext,"USD");
+            }
+        });
+        rvList.setAdapter(mAdapter);
+
         return v;
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mAdapter.addData(StaticStore.sQuoteMap.values());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mBanner != null) {
+            mBanner.startAutoPlay();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mBanner != null) {
+            mBanner.stopAutoPlay();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.tv_title1) {
+            TradeActivity.startActivity(mContext,"Test");
+        }
     }
 }

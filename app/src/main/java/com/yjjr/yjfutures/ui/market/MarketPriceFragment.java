@@ -14,6 +14,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.GetSymbolsRequest;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
+import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
@@ -21,7 +22,6 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 
-import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 
 import java.util.ArrayList;
@@ -59,88 +59,11 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
 
     @Override
     protected void initData() {
-       /* RxUtils.createSoapObservable2("GetSymbols", new GetSymbolsRequest(BaseApplication.getInstance().getAccount()))
-                .map(new Function<SoapObject, List<Symbol>>() {
-                    @Override
-                    public List<Symbol> apply(@NonNull SoapObject soapObject) throws Exception {
-                        List<Symbol> symbols = new ArrayList<Symbol>();
-                        SoapObject s = (SoapObject) ((SoapObject) soapObject.getProperty(1)).getProperty(0);
-                        for (int i = 0; i < s.getPropertyCount(); i++) {
-                            symbols.add(RxUtils.soapObject2Model((SoapObject) s.getProperty(i), Symbol.class));
-                        }
-                        return symbols;
-                    }
-                }) .compose(RxUtils.<List<Symbol>>applySchedulers())
-                .compose(this.<List<Symbol>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<List<Symbol>>() {
-                    @Override
-                    public void accept(@NonNull List<Symbol> symbols) throws Exception {
-                        LogUtils.d(symbols.toString());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
-                    }
-                });*/
-        RxUtils.createSoapObservable2("GetSymbols", new GetSymbolsRequest(BaseApplication.getInstance().getAccount()))
-                .map(new Function<SoapObject, List<Symbol>>() {
-                    @Override
-                    public List<Symbol> apply(@NonNull SoapObject soapObject) throws Exception {
-                        List<Symbol> symbols = new ArrayList<Symbol>();
-                        SoapObject s = (SoapObject) ((SoapObject) soapObject.getProperty(1)).getProperty(0);
-                        for (int i = 0; i < s.getPropertyCount(); i++) {
-                            symbols.add(RxUtils.soapObject2Model((SoapObject) s.getProperty(i), Symbol.class));
-                        }
-                        return symbols;
-                    }
-                })
-                .flatMap(new Function<List<Symbol>, ObservableSource<List<Quote>>>() {
-                    @Override
-                    public ObservableSource<List<Quote>> apply(@NonNull List<Symbol> symbols) throws Exception {
-                        SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetQuoteList");
-                        SoapObject symList = new SoapObject("", "SymList");
-                        for (int i = 0; i < symbols.size(); i++) {
-                            SoapObject s = new SoapObject("", "mySym");
-                            Symbol symbol = symbols.get(i);
-                            s.addAttribute("xmlns","http://schemas.datacontract.org/2004/07/IBManager.QuoteServer");
-                            s.addProperty("Exchange",symbol.getExchange());
-                            s.addProperty("Symbol",symbol.getSymbol());
-                            symList.addProperty("mySym", s);
-                        }
-                        soapObject.addProperty("SymList",symList);
-                        return  RxUtils.createSoapObservable3("GetQuoteList", soapObject)
-                                .map(new Function<SoapObject, List<Quote>>() {
-                                    @Override
-                                    public List<Quote> apply(@NonNull SoapObject soapObject) throws Exception {
-                                        List<Quote> quotes = new ArrayList<Quote>();
-                                        for (int i = 0; i < soapObject.getPropertyCount(); i++) {
-                                            quotes.add(RxUtils.soapObject2Model((SoapObject) soapObject.getProperty(i), Quote.class));
-                                        }
-                                        return quotes;
-                                    }
-                                })
-                                .compose(RxUtils.<List<Quote>>applySchedulers());
-                    }
-                })
-                .compose(RxUtils.<List<Quote>>applySchedulers())
-                .compose(this.<List<Quote>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<List<Quote>>() {
-                    @Override
-                    public void accept(@NonNull List<Quote> symbols) throws Exception {
-                        LogUtils.d(symbols.toString());
-                        mAdapter.addData(symbols);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
-                    }
-                });
+        mAdapter.addData(StaticStore.sQuoteMap.values());
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        TradeActivity.startActivity(mContext);
+        TradeActivity.startActivity(mContext, mAdapter.getData().get(position).getSymbol());
     }
 }

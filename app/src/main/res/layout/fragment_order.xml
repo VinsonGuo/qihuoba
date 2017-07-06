@@ -8,15 +8,15 @@
     android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.OrderActivity">
 
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
+    <com.yjjr.yjfutures.widget.HeaderView
+        android:id="@+id/header_view"
+        app:main_title="@string/mine_order"
+        app:sub_title="@string/order_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
-        android:id="@+id/viewpager"
-        app:tabBackground="@color/white"
+    <FrameLayout
+        android:id="@+id/fl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

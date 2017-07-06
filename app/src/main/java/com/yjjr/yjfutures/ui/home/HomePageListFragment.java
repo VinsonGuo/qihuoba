@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
@@ -21,12 +22,12 @@ import java.util.List;
  * Created by dell on 2017/6/26.
  */
 
-public class HomePageListFragment extends ListFragment<String> implements View.OnClickListener {
+public class HomePageListFragment extends ListFragment<Quote> implements View.OnClickListener {
 
     private Banner mBanner;
 
     @Override
-    public BaseQuickAdapter<String, BaseViewHolder> getAdapter() {
+    public BaseQuickAdapter<Quote, BaseViewHolder> getAdapter() {
         HomePageAdapter adapter = new HomePageAdapter(null);
         View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, mRvList, false);
         mBanner = (Banner) headerView.findViewById(R.id.banner);
@@ -54,13 +55,13 @@ public class HomePageListFragment extends ListFragment<String> implements View.O
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                TradeActivity.startActivity(mContext);
+                TradeActivity.startActivity(mContext,"USD");
             }
         });
 
-        for (int i = 0; i < 10; i++) {
+        /*for (int i = 0; i < 10; i++) {
             adapter.addData("item" + i);
-        }
+        }*/
         return adapter;
     }
 
@@ -83,7 +84,7 @@ public class HomePageListFragment extends ListFragment<String> implements View.O
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.tv_title1) {
-            TradeActivity.startActivity(mContext);
+            TradeActivity.startActivity(mContext,"Test");
         }
     }
 }

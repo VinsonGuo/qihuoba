@@ -1,7 +1,10 @@
 package com.yjjr.yjfutures.ui.trade;
 
+import android.support.v4.content.ContextCompat;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.ListFragment;
 
 import java.util.ArrayList;
@@ -22,5 +25,11 @@ public class SettlementListFragment extends ListFragment<String> {
         adapter.addData(data);
 
         return adapter;
+    }
+
+    @Override
+    protected void setManager() {
+        super.setManager();
+        mRvList.setBackgroundColor(ContextCompat.getColor(mContext, R.color.chart_background));
     }
 }

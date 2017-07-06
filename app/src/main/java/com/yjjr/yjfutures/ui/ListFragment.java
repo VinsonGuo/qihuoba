@@ -13,6 +13,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.utils.LogUtils;
+import com.yjjr.yjfutures.widget.LoadingView;
 
 /**
  * Created by dell on 2017/6/22.
@@ -23,7 +24,7 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     protected int mPage = 0;
     protected RecyclerView mRvList;
     protected SwipeRefreshLayout mRefreshLayout;
-    private View mLoadView;
+    private LoadingView mLoadView;
     private BaseQuickAdapter<T, BaseViewHolder> mAdapter;
 
     @Override
@@ -32,7 +33,7 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
         mRefreshLayout = (SwipeRefreshLayout) v;
         mRvList = (RecyclerView) v.findViewById(R.id.rv_list);
         setManager();
-        mLoadView = v.findViewById(R.id.ll_load);
+        mLoadView = (LoadingView) v.findViewById(R.id.load_view);
         mAdapter = getAdapter();
         if (mAdapter.isLoadMoreEnable()) {
             mAdapter.setOnLoadMoreListener(this, mRvList);

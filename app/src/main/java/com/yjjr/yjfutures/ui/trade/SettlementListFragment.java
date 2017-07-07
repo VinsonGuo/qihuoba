@@ -1,6 +1,7 @@
 package com.yjjr.yjfutures.ui.trade;
 
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -23,7 +24,12 @@ public class SettlementListFragment extends ListFragment<String> {
             data.add("test" + i);
         }
         adapter.addData(data);
-
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                OrderDetailActivity.startActivity(mContext);
+            }
+        });
         return adapter;
     }
 

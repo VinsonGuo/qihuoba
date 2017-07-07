@@ -24,7 +24,7 @@ public class HttpManager {
         if (sRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sRetrofit = new Retrofit.Builder()
-                    .baseUrl(HttpConfig.BASE_URL)
+                    .baseUrl("http://139.224.8.133:9100/WebService.asmx/")
                     .client(client)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())

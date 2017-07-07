@@ -9,7 +9,7 @@
     <string name="confirm_password">确认密码</string>
     <string name="password_prompt">密码长度为6-16位</string>
     <string name="password_role">请输入6-16个字符</string>
-    <string name="input_user">请输入手机号码或邮箱</string>
+    <string name="input_user">请输入手机号码</string>
     <string name="input_prompt">输入提示</string>
     <string name="input_nickname">请输入2-16位昵称</string>
     <!-- constant -->
@@ -105,6 +105,8 @@
     <string name="click_to_refresh">点击刷新</string>
     <string name="trader_msg_dbyl">订单盈利</string>
     <string name="buyin">买入</string>
+    <string name="buy_price">买入价</string>
+    <string name="sell_price">卖出价</string>
     <string name="hand">手</string>
     <string name="dot">点</string>
     <string name="ticket_number">订单号</string>
@@ -221,6 +223,8 @@
     <string name="credit_mount">信用额</string>
     <string name="credit">信用</string>
     <string name="bzj">保证金</string>
+    <string name="lybzj">履约保证金</string>
+    <string name="jyzhf">交易综合费</string>
     <string name="kybzj">可用保证金</string>
     <string name="yybzj">已用保证金</string>
     <string name="bzjbz">保证金不足</string>
@@ -681,7 +685,7 @@
     <string name="join_domain_illegal">自定义域名不合法</string>
     <string name="online_transaction">在线交易</string>
 
-    <string name="transaction_type">交易品种</string>
+    <string name="trade_symbol">交易品种</string>
 
     <string name="promotion_customer">推广客户</string>
     <string name="vip_promotion_legend">已注册用户可在其设置页面填写右侧的邀请码，成为您的客户。</string>
@@ -1065,32 +1069,10 @@
     <string name="congratulation_you">恭喜您!</string>
     <string name="you_have_bind_succeed">您已绑定成功</string>
     <string name="binding">正在绑定中</string>
-    <string name="quick_take_order_desc">下单时，默认弹出确认下单提示，确认后下单成功；若您同意以下协议，下单时将不再弹出确认提示，快速下单。</string>
     <string name="disclaimer">免责声明</string>
-    <string name="quick_take_order_desc1">
-        您将要激活单击交易模式。通过点击下面的“我接受这些合同条款”，您会承认您已经阅读并理解以下合同条款，您同意特此遵守。您可以在当前的程序端版本下做订单提交模式选择。您同意遵守本规定的条款和条件，有关这样的模式。
-    </string>
-    <string name="quick_take_order_desc2">1.
-        订单提交的默认模式是两步处理法。使用默认模式，您先调用一个新订单窗口。然后您需要选择一个合适的订单类型，它根据您选定的具体订单类型和您的交易意愿，通过点击“确定”，“取消”按钮，确认您订单的提交。使用默认模式，您的订单将直到您完成前面提到的两个步骤才会提交。
-    </string>
-    <string name="quick_take_order_desc3">2.
-        订单提交的单击交易模式（“单击交易”）是一步处理法。使用单击模式，当您在市场报价窗口的交易标签上单击卖出(SELL)或买入(BUY)价格按钮时，系统将会立即提交您的订单。
-    </string>
-    <string name="quick_position_desc">若您同意以下协议，平仓时将不再弹出确认提示，快速平仓。若您同意以下协议，平仓时将不再弹出确认提示，快速平仓。
-    </string>
-    <string name="quick_position_desc1">
-        您将要激活单击交易模式。通过点击下面的“我接受这些合同条款”，您会承认您已经阅读并理解以下合同条款，您同意特此遵守。您可以在当前的程序端版本下做订单提交模式选择。您同意遵守本规定的条款和条件，有关这样的模式。
-    </string>
-    <string name="quick_position_desc2">1.
-        订单提交的默认模式是两步处理法。使用默认模式，您先调用一个新订单窗口。然后您需要选择一个合适的平仓时机，它的参数根据您选定的具体订单手数和您的交易意愿，通过点击“确认平仓”，确认您订单的
-        提交。使用默认模式，您的订单将直到您完成前面提到的两个步骤才会提交。
-    </string>
-    <string name="quick_position_desc3">2.
-        订单提交的单击交易模式（“单击交易”）是一步处理法。使用单击模式，您的订单将会被提交。当您：点击“平仓”按钮，您的订单默认立即平仓。
-    </string>
+
 
     <string name="part_position">部分平仓</string>
-    <string name="change_user_in">账户切换中...</string>
     <string name="change_account_fail">切换账户失败</string>
     <string name="simulation_role">交易规则：</string>
     <string name="no_set_strategy">没有填写交易策略</string>
@@ -1335,4 +1317,14 @@
     <string name="bearish">看跌</string>
     <string name="mine_order">我的订单</string>
     <string name="order_record">订单记录</string>
+    <string name="order_detail">订单详情</string>
+    <string name="contract_info">合约信息</string>
+    <string name="hydqsj">合约到期时间</string>
+    <string name="order_info">订单信息</string>
+    <string name="buy_time">买入时间</string>
+    <string name="sell_time">卖出时间</string>
+    <string name="sell_type">卖出类型</string>
+    <string name="buy_type">买入类型</string>
+    <string name="phone">手机</string>
+    <string name="free_register">免费注册</string>
 </resources>

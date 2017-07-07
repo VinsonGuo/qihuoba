@@ -5,11 +5,13 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.text.TextUtils;
 
 import com.facebook.stetho.Stetho;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
+import com.yjjr.yjfutures.ui.mine.LoginActivity;
 import com.yjjr.yjfutures.utils.ExceptionHandler;
 import com.yjjr.yjfutures.utils.LogUtils;
 
@@ -99,12 +101,12 @@ public class BaseApplication extends Application implements Application.Activity
     }
 
     public boolean isLogin() {
-        return UserSharePrefernce.getAccount(this) != -1 && UserSharePrefernce.isLogin(this);
+        return !TextUtils.isEmpty(UserSharePrefernce.getAccount(this)) && UserSharePrefernce.isLogin(this);
     }
 
     public void toLogin(Activity a) {
         closeApplication();
-//        LoginActivity.startActivity(a);
+        LoginActivity.startActivity(a);
     }
 
 
@@ -119,8 +121,7 @@ public class BaseApplication extends Application implements Application.Activity
     }
 
     public String getAccount() {
-//        return UserSharePrefernce.getAccount(this);
-        return "582c5812-a757-4bcf-89bf-dc5d2be39fa0";
+        return UserSharePrefernce.getAccount(this);
     }
 
     public String getToken() {

@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.ui.mine.LoginActivity;
 import com.yjjr.yjfutures.utils.SystemBarHelper;
 
 import io.reactivex.annotations.NonNull;
@@ -94,7 +95,11 @@ public class SplashScreen extends BaseActivity {
     }
 
     private void startActivity() {
-        MainActivity.startActivity(mContext);
+        if(BaseApplication.getInstance().isLogin()) {
+            MainActivity.startActivity(mContext);
+        }else {
+            LoginActivity.startActivity(mContext);
+        }
         finishDelay();
     }
 }

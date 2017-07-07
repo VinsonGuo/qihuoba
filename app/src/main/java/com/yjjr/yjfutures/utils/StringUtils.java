@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.regex.Matcher;
@@ -417,6 +419,44 @@ public class StringUtils {
         }
         sb.append(lastCode);
         return sb.toString();
+    }
+
+    public static String encodePassword(String password) {
+        return sha256(sha256(password) + "wzhdxtx");
+    }
+
+    private static String sha256(final String strText) {
+        // 返回值
+        String strResult = null;
+
+        // 是否是有效字符串
+        if (strText != null && strText.length() > 0) {
+            try {
+                // SHA 加密开始
+                // 创建加密对象 并傳入加密類型
+                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                // 得到 byte 類型结果
+                byte byteBuffer[] = messageDigest.digest(strText.getBytes("UTF-8"));
+
+                // 將 byte 轉換爲 string
+                StringBuffer strHexString = new StringBuffer();
+                // 遍歷 byte buffer
+                for (int i = 0; i < byteBuffer.length; i++) {
+                    String hex = Integer.toHexString(0xff & byteBuffer[i]).toUpperCase();
+//                    String hex = Integer.toHexString(0xff & byteBuffer[i]);
+                    if (hex.length() == 1) {
+                        strHexString.append('0');
+                    }
+                    strHexString.append(hex);
+                }
+                // 得到返回結果
+                strResult = strHexString.toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return strResult;
     }
 
 }

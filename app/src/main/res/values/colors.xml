@@ -6,7 +6,7 @@
 
     <color name="tab_select_color">@color/third_text_color</color>
     <color name="tab_unselect_color">@color/second_text_color</color>
-    <color name="main_color">#1c72ea</color>
+    <color name="main_color">#5daeea</color>
     <color name="main_color_red">#ff3b30</color>
     <color name="main_color_green">#68dc7b</color>
     <color name="link_color">#002f9a</color>

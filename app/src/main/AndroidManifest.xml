@@ -61,6 +61,8 @@
         </activity>
         <activity android:name=".ui.mine.UploadCardActivity">
         </activity>
+        <activity android:name=".ui.trade.OrderDetailActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -12,12 +12,24 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.UserLoginRequest;
+import com.yjjr.yjfutures.model.UserLoginResponse;
+import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.BaseApplication;
+import com.yjjr.yjfutures.ui.MainActivity;
+import com.yjjr.yjfutures.utils.LogUtils;
+import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.StringUtils;
+import com.yjjr.yjfutures.utils.ToastUtils;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 public class LoginActivity extends BaseActivity {
@@ -130,49 +142,45 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
-       /* if (!btnLogin.isSelected()) {
-            return;
-        }
-        if (!TextUtils.isDigitsOnly(etUsername.getText().toString().trim())) {
-            ToastUtils.show(mContext, R.string.user_name_not_legal);
+        if (!btnLogin.isSelected()) {
             return;
         }
         btnLogin.setSelected(false);
-        final long account = Long.valueOf(etUsername.getText().toString().trim());
-        LastInputSharePrefernce.setLastAccount(mContext, account);
-        final String password = etPassword.getText().toString();
-        HttpManager.getInstance().getHttpService()
-                .login(account, password, ActivityTools.getDeviceId(mContext))
-                .map(RxUtils.<TypeResponse<LoginType>>isSuccessFunc1())
-                .compose(RxUtils.<TypeResponse<LoginType>>applySchedulers())
-                .compose(this.<TypeResponse<LoginType>>bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribe(new Action1<TypeResponse<LoginType>>() {
+        final String account = etUsername.getText().toString().trim();
+//        LastInputSharePrefernce.setLastAccount(mContext, account);
+        final String password = StringUtils.encodePassword(etPassword.getText().toString().trim());
+        UserLoginRequest model = new UserLoginRequest(account, password, "Trader", "3.29");
+        RxUtils.createSoapObservable("UserLogin", model, UserLoginResponse.class)
+//        HttpManager.getHttpService().userLogin(account, "123456")
+                .map(new Function<UserLoginResponse, UserLoginResponse>() {
                     @Override
-                    public void call(TypeResponse<LoginType> commonResponse) {
-//                        ToastUtils.show(mContext, R.string.login_success);
-                        LoginType types = commonResponse.getTypes();
-                        UserSharePrefernce.setLogin(mContext, true);
-                        UserSharePrefernce.setRealAccount(mContext, types.isRealAccount());
-                        UserSharePrefernce.setAccount(mContext, account);
-                        UserSharePrefernce.setToken(mContext, types.getToken());
-                        UserSharePrefernce.setPassword(mContext, DESUtil.encrypt(password));
-
-                        MainFragmentActivity.startActivity(mContext, 3);
-                        mContext.finish();
+                    public UserLoginResponse apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
+                        if (userLoginResponse.getReturnCode() != 1) {
+                            throw new RuntimeException(userLoginResponse.getMessage());
+                        }
+                        return userLoginResponse;
                     }
-                }, new Action1<Throwable>() {
+                })
+                .compose(RxUtils.<UserLoginResponse>applySchedulers())
+                .compose(this.<UserLoginResponse>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new Consumer<UserLoginResponse>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void accept(@NonNull UserLoginResponse userLoginResponse) throws Exception {
+                        UserSharePrefernce.setLogin(mContext, true);
+                        UserSharePrefernce.setAccount(mContext, account);
+                        UserSharePrefernce.setPassword(mContext, password);
+                        BaseApplication.getInstance().setTradeToken(userLoginResponse.getCid());
+                        MainActivity.startActivity(mContext);
+                        finishDelay();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
                         LogUtils.e(throwable);
                         btnLogin.setSelected(true);
-                        if (throwable instanceof RxUtils.BusinessException) {
-                            ToastUtils.show(mContext, throwable.getMessage());
-                        } else {
-                            ToastUtils.show(mContext, R.string.login_fail);
-                        }
+                        ToastUtils.show(mContext, throwable.getMessage());
                     }
-                });*/
-
+                });
     }
 
     @Override

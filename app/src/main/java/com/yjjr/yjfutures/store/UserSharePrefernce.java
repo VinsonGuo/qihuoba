@@ -42,17 +42,17 @@ public class UserSharePrefernce {
         return sharedPreferences.getBoolean(IS_LOGIN, false);
     }
 
-    public static long getAccount(Context ctx) {
+    public static String getAccount(Context ctx) {
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
                 Context.MODE_PRIVATE);
-        return sharedPreferences.getLong(ACCOUNT, 0);
+        return sharedPreferences.getString(ACCOUNT, "");
     }
 
-    public static void setAccount(Context ctx, long token) {
+    public static void setAccount(Context ctx, String token) {
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(ACCOUNT, token);
+        editor.putString(ACCOUNT, token);
         editor.commit();
     }
 

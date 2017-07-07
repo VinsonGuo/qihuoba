@@ -17,6 +17,12 @@
     </style>
 
 
+    <style name="style_divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/common_divider_small</item>
+        <item name="android:background">@color/divider_color</item>
+    </style>
+
     <style name="color_333333">
         <item name="android:textColor">@color/color_333333</item>
     </style>

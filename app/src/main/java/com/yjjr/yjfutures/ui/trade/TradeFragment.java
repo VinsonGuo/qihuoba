@@ -19,6 +19,8 @@ import com.just.library.AgentWeb;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FastTakeOrderEvent;
+import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
@@ -85,8 +87,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
+        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         findViews(v);
-        Fragment[] fragments = {new TickChartFragment(), new TimeSharingplanFragment(), new CombinedChartFragment(), new HandicapFragment()};
+        Fragment[] fragments = {new TickChartFragment(), TimeSharingplanFragment.newInstance(mSymbol),
+                CandleStickChartFragment.newInstance(mSymbol), new HandicapFragment()};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
         mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
@@ -135,10 +139,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     }
                 });
         tvCenter.setText(UserSharePrefernce.isFastTakeOrder(mContext) ? R.string.opened : R.string.closed);
-        StringUtils.setOnlineTxTextStyleLeft(tvLeft, "23.123", 1);
-        StringUtils.setOnlineTxArrow(tvLeftArrow, 1);
-        StringUtils.setOnlineTxTextStyleRight(tvRight, "23.123", -1);
-        StringUtils.setOnlineTxArrow(tvRightArrow, -1);
+        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice()+"", quote.getChange());
+        StringUtils.setOnlineTxArrow(tvLeftArrow, quote.getChange());
+        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice()+"", quote.getChange());
+        StringUtils.setOnlineTxArrow(tvRightArrow, quote.getChange());
+        pbLeft.setProgress(quote.getBidSize());
+        pbRight.setProgress(quote.getAskSize());
         tvLeft.setOnClickListener(this);
         tvRight.setOnClickListener(this);
         v.findViewById(R.id.tv_order).setOnClickListener(this);

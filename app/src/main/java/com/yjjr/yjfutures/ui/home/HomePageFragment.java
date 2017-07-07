@@ -69,7 +69,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                TradeActivity.startActivity(mContext,"USD");
+                TradeActivity.startActivity(mContext, mAdapter.getData().get(position).getSymbol());
             }
         });
         rvList.setAdapter(mAdapter);
@@ -102,7 +102,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.tv_title1) {
-            TradeActivity.startActivity(mContext,"Test");
+            TradeActivity.startActivity(mContext, "CLQ7");
         }
     }
 }

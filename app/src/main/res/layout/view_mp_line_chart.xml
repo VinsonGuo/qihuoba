@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/chart_background">
+    android:layout_height="match_parent">
 
     <com.yjjr.yjfutures.widget.chart.AppLineChart
         android:id="@+id/line_chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipChildren="false"
-        android:clipToPadding="false"/>
+        android:background="@color/chart_background"/>
 
 </LinearLayout>

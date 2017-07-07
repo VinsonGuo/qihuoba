@@ -255,7 +255,7 @@ public class StringUtils {
     }
 
 
-    public static void setOnlineTxArrow(TextView tv, int change) {
+    public static void setOnlineTxArrow(TextView tv, double change) {
         if (change > 0) {
             tv.setText("↑");
         } else if (change < 0) {

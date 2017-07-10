@@ -148,10 +148,11 @@ public class LoginActivity extends BaseActivity {
         btnLogin.setSelected(false);
         final String account = etUsername.getText().toString().trim();
 //        LastInputSharePrefernce.setLastAccount(mContext, account);
-        final String password = StringUtils.encodePassword(etPassword.getText().toString().trim());
+        final String password = etPassword.getText().toString().trim();
+//        final String password = StringUtils.encodePassword(etPassword.getText().toString().trim());
         UserLoginRequest model = new UserLoginRequest(account, password, "Trader", "3.29");
-        RxUtils.createSoapObservable("UserLogin", model, UserLoginResponse.class)
-//        HttpManager.getHttpService().userLogin(account, "123456")
+//        RxUtils.createSoapObservable("UserLogin", model, UserLoginResponse.class)
+        HttpManager.getHttpService().userLogin(account, password)
                 .map(new Function<UserLoginResponse, UserLoginResponse>() {
                     @Override
                     public UserLoginResponse apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {

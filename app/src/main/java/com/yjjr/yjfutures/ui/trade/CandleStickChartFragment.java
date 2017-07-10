@@ -25,7 +25,6 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
-import com.yjjr.yjfutures.model.GetFSDataRequest;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
@@ -34,6 +33,7 @@ import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.chart.RealPriceMarkerView;
 
 import org.joda.time.DateTime;
@@ -64,6 +64,7 @@ public class CandleStickChartFragment extends BaseFragment {
      * 数据类型  day=日线 hour=小时图 min15=15分钟图 min5=5分钟图 min=1分钟图
      */
     private String mType = MIN;
+    private List<HisData> mList;
 
     public CandleStickChartFragment() {
         // Required empty public constructor
@@ -115,7 +116,14 @@ public class CandleStickChartFragment extends BaseFragment {
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return (int) value + "号";
+                if (mList != null && value < mList.size()) {
+                    DateTime dateTime = new DateTime(mList.get((int) value).getsDate());
+                    if (mType.equals(DAY)) {
+                        return DateUtils.formatData(dateTime.getMillis());
+                    }
+                    return DateUtils.formatTime(dateTime.getMillis());
+                }
+                return "";
             }
         });
 
@@ -181,37 +189,39 @@ public class CandleStickChartFragment extends BaseFragment {
         return mChart;
     }
 
-    @Override
-    protected void initData() {
-        super.initData();
-//        loadDataByType(MIN);
-    }
 
     public void loadDataByType(String type) {
         mType = type;
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
-        DateTime dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
-        GetFSDataRequest request = new GetFSDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()));
-        LogUtils.d(request.toString());
+        DateTime dateTime= new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+        if(DAY.equals(type)) {
+            dateTime = dateTime.minusYears(1);
+        }else if(MIN15.equals(type)||MIN5.equals(type)){
+            dateTime = dateTime.minusWeeks(1);
+        }else if(HOUR.equals(type)) {
+            dateTime = dateTime.minusMonths(1);
+        }
+
         SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetHistoryData");
         soapObject.addProperty("Symbol", quote.getSymbol());
         soapObject.addProperty("Exchange", quote.getExchange());
         soapObject.addProperty("StartTime", DateUtils.formatData(dateTime.getMillis()));
         soapObject.addProperty("dataType", mType);
-        RxUtils.createSoapObservable3("GetHistoryData", soapObject)
+        /*RxUtils.createSoapObservable3("GetHistoryData", soapObject)
                 .map(new Function<SoapObject, List<HisData>>() {
                     @Override
                     public List<HisData> apply(@NonNull SoapObject soapObject) throws Exception {
                         if (soapObject.getPropertyCount() == 0) {
                             throw new RuntimeException("加载失败");
                         }
-                        List<HisData> list = new ArrayList<>(300);
+                        mList = new ArrayList<>(300);
                         for (int i = 0; i < soapObject.getPropertyCount(); i++) {
-                            list.add(RxUtils.soapObject2Model((SoapObject) soapObject.getProperty(i), HisData.class));
+                            mList.add(RxUtils.soapObject2Model((SoapObject) soapObject.getProperty(i), HisData.class));
                         }
-                        return list;
+                        return mList;
                     }
-                })
+                })*/
+        HttpManager.getHttpService().getHistoryData(quote.getSymbol(),quote.getExchange(),DateUtils.formatData(dateTime.getMillis()),mType)
                 .compose(RxUtils.<List<HisData>>applySchedulers())
                 .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<HisData>>() {
@@ -231,7 +241,6 @@ public class CandleStickChartFragment extends BaseFragment {
 
     private void fullData(List<HisData> datas) {
         ArrayList<CandleEntry> yVals1 = new ArrayList<>();
-
         for (int i = 0; i < datas.size(); i++) {
             HisData data = datas.get(i);
             yVals1.add(new CandleEntry(
@@ -261,7 +270,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
         mChart.setData(data);
         mChart.invalidate();
-        mChart.setVisibleXRange(20, 10); // allow 20 values to be displayed at once on the x-axis, not more
+        mChart.setVisibleXRange(40, 10); // allow 20 values to be displayed at once on the x-axis, not more
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
     }
 

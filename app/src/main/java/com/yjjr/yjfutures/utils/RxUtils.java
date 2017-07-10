@@ -54,10 +54,10 @@ public class RxUtils {
 
                     String url = HttpConfig.BASE_URL;
                     // SOAP Action
-                    final String soapAction = HttpConfig.AOSP_ACTION+ methodName;
+                    final String soapAction = HttpConfig.SOAP_ACTION + methodName;
 
                     // 指定WebService的命名空间和调用的方法名
-                    SoapObject rpc = model2SoapObject( methodName, model);
+                    SoapObject rpc = model2SoapObject(methodName, model);
                     // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
                     final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
 
@@ -90,10 +90,10 @@ public class RxUtils {
 
                     String url = HttpConfig.BASE_URL;
                     // SOAP Action
-                    final String soapAction = HttpConfig.AOSP_ACTION + methodName;
+                    final String soapAction = HttpConfig.SOAP_ACTION + methodName;
 
                     // 指定WebService的命名空间和调用的方法名
-                    SoapObject rpc = model2SoapObject( methodName, model);
+                    SoapObject rpc = model2SoapObject(methodName, model);
                     // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
                     final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
 
@@ -126,7 +126,7 @@ public class RxUtils {
 
                     String url = HttpConfig.BASE_URL;
                     // SOAP Action
-                    final String soapAction = HttpConfig.AOSP_ACTION + methodName;
+                    final String soapAction = HttpConfig.SOAP_ACTION + methodName;
 
                     // 指定WebService的命名空间和调用的方法名
                     // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
@@ -152,7 +152,7 @@ public class RxUtils {
         });
     }
 
-    public static SoapObject model2SoapObject( String methodName, Object o) throws Exception {
+    public static SoapObject model2SoapObject(String methodName, Object o) throws Exception {
 
         SoapObject rpc = new SoapObject(HttpConfig.NAME_SPACE, methodName);
         Field[] declaredFields = o.getClass().getDeclaredFields();
@@ -178,7 +178,7 @@ public class RxUtils {
         return sGson.fromJson(jsonElement, clazz);
     }
 
-    public static <T> T soapObject2Model(SoapObject soap,Type type) throws Exception {
+    public static <T> T soapObject2Model(SoapObject soap, Type type) throws Exception {
         Map<Object, Object> map = new HashMap<>(10);
         PropertyInfo pi = new PropertyInfo();
         int count = soap.getPropertyCount();

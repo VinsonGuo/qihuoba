@@ -23,7 +23,6 @@ import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
 import com.yjjr.yjfutures.ui.mine.MineFragment;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
-import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.LoadingView;
@@ -58,7 +57,7 @@ public class MainActivity extends BaseActivity {
                 loadData();
             }
         });
-        HttpManager.getHttpService().userLogin("test001","123456")
+        HttpManager.getHttpService().userLogin("test001", "123456")
                 .compose(RxUtils.<UserLoginResponse>applySchedulers())
                 .subscribe(new Consumer<UserLoginResponse>() {
                     @Override
@@ -71,7 +70,7 @@ public class MainActivity extends BaseActivity {
 
                     }
                 });
-        HttpManager.getHttpService().getQuote("CLQ7","NYMEX")
+        HttpManager.getHttpService().getQuote("CLQ7", "NYMEX")
                 .compose(RxUtils.<Quote>applySchedulers())
                 .subscribe(new Consumer<Quote>() {
                     @Override
@@ -95,12 +94,12 @@ public class MainActivity extends BaseActivity {
                     UserSharePrefernce.getPassword(mContext),
                     "Trader",
                     "3.29");
-            RxUtils.createSoapObservable("UserLogin", model, UserLoginResponse.class)
+            HttpManager.getHttpService().userLogin(UserSharePrefernce.getAccount(mContext), UserSharePrefernce.getPassword(mContext))
                     .flatMap(new Function<UserLoginResponse, ObservableSource<SoapObject>>() {
                         @Override
                         public ObservableSource<SoapObject> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
                             LogUtils.d(userLoginResponse.toString());
-                            if(userLoginResponse.getReturnCode() != 1){
+                            if (userLoginResponse.getReturnCode() != 1) {
                                 BaseApplication.getInstance().logout(mContext);
                             }
                             BaseApplication.getInstance().setTradeToken(userLoginResponse.getCid());
@@ -121,7 +120,7 @@ public class MainActivity extends BaseActivity {
                     .flatMap(new Function<List<Symbol>, ObservableSource<Boolean>>() {
                         @Override
                         public ObservableSource<Boolean> apply(@NonNull List<Symbol> symbols) throws Exception {
-                            SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetQuoteList");
+                           /* SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetQuoteList");
                             SoapObject symList = new SoapObject("", "SymList");
                             for (int i = 0; i < symbols.size(); i++) {
                                 SoapObject s = new SoapObject("", "mySym");
@@ -143,7 +142,26 @@ public class MainActivity extends BaseActivity {
                                             return true;
                                         }
                                     })
-                                    .compose(RxUtils.<Boolean>applySchedulers());
+                                    .compose(RxUtils.<Boolean>applySchedulers());*/
+                            StringBuilder symbol = new StringBuilder();
+                            StringBuilder exchange = new StringBuilder();
+                            for (int i = 0; i < symbols.size(); i++) {
+                                symbol.append(symbols.get(i).getSymbol());
+                                exchange.append(symbols.get(i).getExchange());
+                                if(i < symbols.size() - 1) {
+                                    symbol.append(",");
+                                    exchange.append(",");
+                                }
+                            }
+                            return HttpManager.getHttpService().getQuoteList(symbol.toString(), exchange.toString()).map(new Function<List<Quote>, Boolean>() {
+                                @Override
+                                public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
+                                    for (Quote quote : quotes) {
+                                        StaticStore.sQuoteMap.put(quote.getSymbol(), quote);
+                                    }
+                                    return true;
+                                }
+                            }).compose(RxUtils.<Boolean>applySchedulers());
                         }
                     })
                     .compose(RxUtils.<Boolean>applySchedulers())
@@ -176,7 +194,7 @@ public class MainActivity extends BaseActivity {
                     .flatMap(new Function<List<Symbol>, ObservableSource<Boolean>>() {
                         @Override
                         public ObservableSource<Boolean> apply(@NonNull List<Symbol> symbols) throws Exception {
-                            SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetQuoteList");
+                           /* SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetQuoteList");
                             SoapObject symList = new SoapObject("", "SymList");
                             for (int i = 0; i < symbols.size(); i++) {
                                 SoapObject s = new SoapObject("", "mySym");
@@ -198,7 +216,26 @@ public class MainActivity extends BaseActivity {
                                             return true;
                                         }
                                     })
-                                    .compose(RxUtils.<Boolean>applySchedulers());
+                                    .compose(RxUtils.<Boolean>applySchedulers());*/
+                            StringBuilder symbol = new StringBuilder();
+                            StringBuilder exchange = new StringBuilder();
+                            for (int i = 0; i < symbols.size(); i++) {
+                                symbol.append(symbols.get(i).getSymbol());
+                                exchange.append(symbols.get(i).getExchange());
+                                if(i < symbols.size() - 1) {
+                                    symbol.append(",");
+                                    exchange.append(",");
+                                }
+                            }
+                            return HttpManager.getHttpService().getQuoteList(symbol.toString(), exchange.toString()).map(new Function<List<Quote>, Boolean>() {
+                                @Override
+                                public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
+                                    for (Quote quote : quotes) {
+                                        StaticStore.sQuoteMap.put(quote.getSymbol(), quote);
+                                    }
+                                    return true;
+                                }
+                            }).compose(RxUtils.<Boolean>applySchedulers());
                         }
                     })
                     .compose(RxUtils.<Boolean>applySchedulers())

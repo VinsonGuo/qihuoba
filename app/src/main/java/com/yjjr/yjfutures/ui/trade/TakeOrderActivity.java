@@ -81,7 +81,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                         .map(new Function<SoapObject, SoapObject>() {
                             @Override
                             public SoapObject apply(@NonNull SoapObject soapObject) throws Exception {
-                                if (((int) soapObject.getProperty("ReturnCode")) < 0) {
+                                if (Integer.parseInt(soapObject.getProperty("ReturnCode").toString()) < 0) {
                                     throw new RuntimeException("下单失败");
                                 }
                                 return soapObject;
@@ -94,14 +94,12 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                             public void accept(@NonNull SoapObject soapObject) throws Exception {
                                 mProgressDialog.dismiss();
                                 ToastUtils.show(mContext, "成功");
-                                mDialog.show();
                             }
                         }, new Consumer<Throwable>() {
                             @Override
                             public void accept(@NonNull Throwable throwable) throws Exception {
                                 mProgressDialog.dismiss();
                                 ToastUtils.show(mContext, throwable.getMessage());
-                                mDialog.show();
                             }
                         });
                 break;

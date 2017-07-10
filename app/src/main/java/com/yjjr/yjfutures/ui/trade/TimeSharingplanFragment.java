@@ -18,6 +18,7 @@ import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.chart.TimeSharingplanChart;
 
 import org.joda.time.DateTime;
@@ -76,8 +77,9 @@ public class TimeSharingplanFragment extends BaseFragment {
         soapObject.addProperty("Symbol", quote.getSymbol());
         soapObject.addProperty("Exchange", quote.getExchange());
         soapObject.addProperty("StartTime", DateUtils.formatData(dateTime.getMillis()));
-        RxUtils.createSoapObservable3("GetFSData", soapObject)
-                .map(new Function<SoapObject, List<HisData>>() {
+//        RxUtils.createSoapObservable3("GetFSData", soapObject)
+        HttpManager.getHttpService().getFsData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()))
+               /* .map(new Function<SoapObject, List<HisData>>() {
                     @Override
                     public List<HisData> apply(@NonNull SoapObject soapObject) throws Exception {
                         if (soapObject.getPropertyCount() == 0) {
@@ -89,7 +91,7 @@ public class TimeSharingplanFragment extends BaseFragment {
                         }
                         return list;
                     }
-                })
+                })*/
                 .compose(RxUtils.<List<HisData>>applySchedulers())
                 .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<HisData>>() {

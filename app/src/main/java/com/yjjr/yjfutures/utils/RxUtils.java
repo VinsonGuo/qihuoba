@@ -68,6 +68,7 @@ public class RxUtils {
 
                     final HttpTransportSE transport = new HttpTransportSE(url);
                     // 调用WebService
+                    LogUtils.d(rpc.toString());
                     transport.call(soapAction, envelope);
                     SoapObject result = (SoapObject) envelope.bodyIn;
                     SoapObject s = (SoapObject) result.getProperty(0);
@@ -80,38 +81,6 @@ public class RxUtils {
         });
     }
 
-    public static <T> Observable<T> createSoapObservable(final String methodName, final Object model, final Type type) {
-        return Observable.create(new ObservableOnSubscribe<T>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<T> e) throws Exception {
-                try {
-                    String url = HttpConfig.BASE_URL;
-                    // SOAP Action
-                    final String soapAction = HttpConfig.AOSP_ACTION+ methodName;
-
-                    // 指定WebService的命名空间和调用的方法名
-                    SoapObject rpc = model2SoapObject( methodName, model);
-                    // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
-                    final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
-
-                    // 设置是否调用的是dotNet开发的WebService
-                    envelope.dotNet = true;
-                    // 等价于envelope.bodyOut = rpc;
-                    envelope.setOutputSoapObject(rpc);
-
-                    final HttpTransportSE transport = new HttpTransportSE(url);
-                    // 调用WebService
-                    transport.call(soapAction, envelope);
-                    SoapObject result = (SoapObject) envelope.bodyIn;
-                    SoapObject s = (SoapObject) result.getProperty(0);
-                    T t = soapObject2Model(s, type);
-                    e.onNext(t);
-                } catch (Exception ex) {
-                    e.onError(ex);
-                }
-            }
-        });
-    }
 
     public static Observable<SoapObject> createSoapObservable2(final String methodName, final Object model) {
         return Observable.create(new ObservableOnSubscribe<SoapObject>() {
@@ -135,8 +104,10 @@ public class RxUtils {
 
                     final HttpTransportSE transport = new HttpTransportSE(url);
                     // 调用WebService
+                    LogUtils.d(rpc.toString());
                     transport.call(soapAction, envelope);
                     SoapObject result = (SoapObject) envelope.bodyIn;
+                    LogUtils.d(result.toString());
                     SoapObject s = (SoapObject) result.getProperty(0);
                     e.onNext(s);
                 } catch (Exception ex) {
@@ -168,6 +139,7 @@ public class RxUtils {
 
                     final HttpTransportSE transport = new HttpTransportSE(url);
                     // 调用WebService
+                    LogUtils.d(rpc.toString());
                     transport.call(soapAction, envelope);
                     SoapObject result = (SoapObject) envelope.bodyIn;
                     SoapObject s = (SoapObject) result.getProperty(0);

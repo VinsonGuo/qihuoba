@@ -25,6 +25,7 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.LoadingView;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
@@ -57,6 +58,32 @@ public class MainActivity extends BaseActivity {
                 loadData();
             }
         });
+        HttpManager.getHttpService().userLogin("test001","123456")
+                .compose(RxUtils.<UserLoginResponse>applySchedulers())
+                .subscribe(new Consumer<UserLoginResponse>() {
+                    @Override
+                    public void accept(@NonNull UserLoginResponse userLoginResponse) throws Exception {
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+
+                    }
+                });
+        HttpManager.getHttpService().getQuote("CLQ7","NYMEX")
+                .compose(RxUtils.<Quote>applySchedulers())
+                .subscribe(new Consumer<Quote>() {
+                    @Override
+                    public void accept(@NonNull Quote quote) throws Exception {
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+
+                    }
+                });
         loadData();
     }
 

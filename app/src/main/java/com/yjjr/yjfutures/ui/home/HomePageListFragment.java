@@ -66,6 +66,11 @@ public class HomePageListFragment extends ListFragment<Quote> implements View.On
     }
 
     @Override
+    protected void loadData() {
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (mBanner != null) {

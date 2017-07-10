@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/chart_background"
     android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.TradeActivity">
@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         app:main_title="美原油 CL1078"
         app:sub_title="玩法"/>
+
     <RelativeLayout
         android:id="@+id/vg_settlement"
         android:layout_width="match_parent"
@@ -113,12 +114,15 @@
 
         <TextView
             android:id="@+id/tv_close_order"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="@string/one_click_position"/>
+            android:background="@drawable/shape_bg_one_click_close"
+            android:gravity="center"
+            android:text="@string/one_click_position"
+            android:textColor="@color/third_text_color"
+            android:textSize="@dimen/sp_12"/>
     </RelativeLayout>
 
 
@@ -244,24 +248,24 @@
 
             <TextView
                 android:id="@+id/tv_left"
-                android:textSize="@dimen/sp_16"
-                android:textColor="@color/main_text_color"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/shape_online_tx_green"
                 android:gravity="center"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_16"
                 tools:text="113.881"/>
 
             <TextView
                 android:id="@+id/tv_right"
-                android:textSize="@dimen/sp_16"
-                android:textColor="@color/main_text_color"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/shape_online_tx_red"
                 android:gravity="center"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_16"
                 tools:text="113.881"/>
 
         </LinearLayout>
@@ -271,8 +275,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textColor="@color/main_text_color"
             android:layout_marginLeft="20dp"
+            android:textColor="@color/main_text_color"
             android:textSize="30sp"/>
 
         <TextView
@@ -280,8 +284,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
-            android:textColor="@color/main_text_color"
             android:layout_marginRight="20dp"
+            android:textColor="@color/main_text_color"
             android:textSize="30sp"/>
 
         <TextView

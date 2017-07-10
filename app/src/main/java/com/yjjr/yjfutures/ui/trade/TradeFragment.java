@@ -10,12 +10,10 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.just.library.AgentWeb;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FastTakeOrderEvent;
@@ -59,13 +57,14 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView mTvKchart;
     private TopRightMenu mTopRightMenu;
     private String mSymbol;
+    private CandleStickChartFragment mCandleStickChartFragment;
 
 
     public TradeFragment() {
         // Required empty public constructor
     }
 
-    public static TradeFragment newInstance(boolean isNeedBack,String symbol) {
+    public static TradeFragment newInstance(boolean isNeedBack, String symbol) {
         TradeFragment fragment = new TradeFragment();
         Bundle args = new Bundle();
         args.putBoolean(Constants.CONTENT_PARAMETER, isNeedBack);
@@ -89,8 +88,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         findViews(v);
+        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol);
         Fragment[] fragments = {new TickChartFragment(), TimeSharingplanFragment.newInstance(mSymbol),
-                CandleStickChartFragment.newInstance(mSymbol), new HandicapFragment()};
+                mCandleStickChartFragment, new HandicapFragment()};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
         mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
@@ -117,10 +117,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
 //添加菜单项
         final List<MenuItem> menuItems = new ArrayList<>();
-        menuItems.add(new MenuItem(R.drawable.transport, "3分钟"));
+        menuItems.add(new MenuItem(R.drawable.transport, "1分钟"));
         menuItems.add(new MenuItem(R.drawable.transport, "5分钟"));
         menuItems.add(new MenuItem(R.drawable.transport, "15分钟"));
-        menuItems.add(new MenuItem(R.drawable.transport, "30分钟"));
+        menuItems.add(new MenuItem(R.drawable.transport, "1小时"));
+        menuItems.add(new MenuItem(R.drawable.transport, "日线"));
         mTopRightMenu
                 .setWidth(220)      //默认宽度wrap_content
                 .showIcon(false)     //显示菜单图标，默认为true
@@ -136,12 +137,31 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.main_text_color));
                         mTvKchart.setBackgroundResource(R.drawable.shape_trade_rb_bg_checked);
                         mViewpager.setCurrentItem(2, false);
+                        String type = CandleStickChartFragment.MIN;
+                        switch (position) {
+                            case 0:
+                                type = CandleStickChartFragment.MIN;
+                                break;
+                            case 1:
+                                type = CandleStickChartFragment.MIN5;
+                                break;
+                            case 2:
+                                type = CandleStickChartFragment.MIN15;
+                                break;
+                            case 3:
+                                type = CandleStickChartFragment.HOUR;
+                                break;
+                            case 4:
+                                type = CandleStickChartFragment.DAY;
+                                break;
+                        }
+                        mCandleStickChartFragment.loadDataByType(type);
                     }
                 });
         tvCenter.setText(UserSharePrefernce.isFastTakeOrder(mContext) ? R.string.opened : R.string.closed);
-        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice()+"", quote.getChange());
+        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", quote.getChange());
         StringUtils.setOnlineTxArrow(tvLeftArrow, quote.getChange());
-        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice()+"", quote.getChange());
+        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", quote.getChange());
         StringUtils.setOnlineTxArrow(tvRightArrow, quote.getChange());
         pbLeft.setProgress(quote.getBidSize());
         pbRight.setProgress(quote.getAskSize());
@@ -224,11 +244,16 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 mCloseOrderDialog.show();
                 break;
             case R.id.tv_left:
+                if (UserSharePrefernce.isFastTakeOrder(mContext)) {
+                    mTakeOrderDialog.show();
+                } else {
+                    TakeOrderActivity.startActivity(mContext,mSymbol,TakeOrderActivity.TYPE_BUY);
+                }
             case R.id.tv_right:
                 if (UserSharePrefernce.isFastTakeOrder(mContext)) {
                     mTakeOrderDialog.show();
                 } else {
-                    TakeOrderActivity.startActivity(mContext);
+                    TakeOrderActivity.startActivity(mContext,mSymbol,TakeOrderActivity.TYPE_SELL);
                 }
                 break;
             case R.id.tv_order:

@@ -24,8 +24,8 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     protected int mPage = 0;
     protected RecyclerView mRvList;
     protected SwipeRefreshLayout mRefreshLayout;
-    private LoadingView mLoadView;
-    private BaseQuickAdapter<T, BaseViewHolder> mAdapter;
+    protected LoadingView mLoadView;
+    protected BaseQuickAdapter<T, BaseViewHolder> mAdapter;
 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -46,13 +46,14 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     @Override
     protected void initData() {
         super.initData();
-        mRvList.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mLoadView.setVisibility(View.GONE);
-                mRefreshLayout.setRefreshing(false);
-            }
-        }, 2000);
+        loadData();
+    }
+
+    protected abstract void loadData();
+
+    protected void loadDataFinish() {
+        mLoadView.setVisibility(View.GONE);
+        mRefreshLayout.setRefreshing(false);
     }
 
     protected void setManager() {

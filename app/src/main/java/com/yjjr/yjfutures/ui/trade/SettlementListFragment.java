@@ -34,6 +34,11 @@ public class SettlementListFragment extends ListFragment<String> {
     }
 
     @Override
+    protected void loadData() {
+
+    }
+
+    @Override
     protected void setManager() {
         super.setManager();
         mRvList.setBackgroundColor(ContextCompat.getColor(mContext, R.color.chart_background));

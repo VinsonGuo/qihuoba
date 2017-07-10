@@ -52,8 +52,18 @@ import io.reactivex.functions.Function;
 public class CandleStickChartFragment extends BaseFragment {
 
 
+    public static final String MIN = "min";
+    public static final String MIN5 = "min5";
+    public static final String MIN15 = "min15";
+    public static final String HOUR = "hour";
+    public static final String DAY = "day";
+
     private CandleStickChart mChart;
     private String mSymbol;
+    /**
+     * 数据类型  day=日线 hour=小时图 min15=15分钟图 min5=5分钟图 min=1分钟图
+     */
+    private String mType = MIN;
 
     public CandleStickChartFragment() {
         // Required empty public constructor
@@ -65,6 +75,10 @@ public class CandleStickChartFragment extends BaseFragment {
         bundle.putString(Constants.CONTENT_PARAMETER, symbol);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    public void setType(String type) {
+        mType = type;
     }
 
     @Override
@@ -170,6 +184,11 @@ public class CandleStickChartFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
+//        loadDataByType(MIN);
+    }
+
+    public void loadDataByType(String type) {
+        mType = type;
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         DateTime dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
         GetFSDataRequest request = new GetFSDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()));
@@ -178,7 +197,7 @@ public class CandleStickChartFragment extends BaseFragment {
         soapObject.addProperty("Symbol", quote.getSymbol());
         soapObject.addProperty("Exchange", quote.getExchange());
         soapObject.addProperty("StartTime", DateUtils.formatData(dateTime.getMillis()));
-        soapObject.addProperty("dataType", "min15");
+        soapObject.addProperty("dataType", mType);
         RxUtils.createSoapObservable3("GetHistoryData", soapObject)
                 .map(new Function<SoapObject, List<HisData>>() {
                     @Override
@@ -205,6 +224,7 @@ public class CandleStickChartFragment extends BaseFragment {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         LogUtils.e(throwable);
+                        mChart.setNoDataText(getString(R.string.data_load_fail));
                     }
                 });
     }

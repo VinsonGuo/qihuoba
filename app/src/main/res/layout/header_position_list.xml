@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/chart_background"
+    android:padding="@dimen/root_padding_15">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="持仓总收益(人民币)"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_12"/>
+
+    <TextView
+        android:id="@+id/tv_profit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="10dp"
+        android:gravity="top"
+        android:textColor="@color/main_color_red"
+        android:textSize="20sp"
+        tools:text="+188"/>
+
+
+    <TextView
+        android:id="@+id/tv_close"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_bg_one_click_close"
+        android:layout_alignParentRight="true"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:text="@string/one_click_position"
+        android:textColor="@color/third_text_color"/>
+</RelativeLayout>

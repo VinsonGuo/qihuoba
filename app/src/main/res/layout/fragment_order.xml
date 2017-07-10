@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/chart_background"
     tools:context="com.yjjr.yjfutures.ui.trade.OrderActivity">
 
     <com.yjjr.yjfutures.widget.HeaderView

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.reflect.TypeToken;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.model.GetFSDataRequest;
@@ -26,10 +25,7 @@ import org.ksoap2.serialization.SoapObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -76,18 +72,20 @@ public class TimeSharingplanFragment extends BaseFragment {
         DateTime dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
         GetFSDataRequest request = new GetFSDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()));
         LogUtils.d(request.toString());
-        mChart.setStartTime(dateTime);
         SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetFSData");
-        soapObject.addProperty("Symbol",quote.getSymbol());
-        soapObject.addProperty("Exchange",quote.getExchange());
-        soapObject.addProperty("StartTime",DateUtils.formatData(dateTime.getMillis()));
-        RxUtils.createSoapObservable3("GetFSData",soapObject)
+        soapObject.addProperty("Symbol", quote.getSymbol());
+        soapObject.addProperty("Exchange", quote.getExchange());
+        soapObject.addProperty("StartTime", DateUtils.formatData(dateTime.getMillis()));
+        RxUtils.createSoapObservable3("GetFSData", soapObject)
                 .map(new Function<SoapObject, List<HisData>>() {
                     @Override
                     public List<HisData> apply(@NonNull SoapObject soapObject) throws Exception {
+                        if (soapObject.getPropertyCount() == 0) {
+                            throw new RuntimeException("加载失败");
+                        }
                         List<HisData> list = new ArrayList<>(300);
                         for (int i = 0; i < soapObject.getPropertyCount(); i++) {
-                            list.add(RxUtils.soapObject2Model((SoapObject) soapObject.getProperty(i),HisData.class));
+                            list.add(RxUtils.soapObject2Model((SoapObject) soapObject.getProperty(i), HisData.class));
                         }
                         return list;
                     }
@@ -98,6 +96,7 @@ public class TimeSharingplanFragment extends BaseFragment {
                     @Override
                     public void accept(@NonNull List<HisData> list) throws Exception {
                         LogUtils.d(list.toString());
+                        mChart.setStartTime(new DateTime(list.get(0).getsDate()));
                         mChart.addEntries(list);
                     }
                 }, new Consumer<Throwable>() {
@@ -106,20 +105,5 @@ public class TimeSharingplanFragment extends BaseFragment {
                         LogUtils.e(throwable);
                     }
                 });
-        /*Observable.interval(1, TimeUnit.SECONDS)
-                .compose(this.<Long>bindUntilEvent(FragmentEvent.DESTROY))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(@NonNull Long aLong) throws Exception {
-                        DateTime now = DateTime.now();
-                        if (now.getSecondOfMinute() == 0) {
-                            mChart.addLastEntry();
-                        } else {
-                            float ask = (float) Math.random() + 10;
-                            mChart.refreshEntry(ask);
-                        }
-                    }
-                });*/
     }
 }

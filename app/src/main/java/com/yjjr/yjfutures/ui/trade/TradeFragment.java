@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FastTakeOrderEvent;
+import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
@@ -89,7 +90,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         findViews(v);
         mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol);
-        Fragment[] fragments = {new TickChartFragment(), TimeSharingplanFragment.newInstance(mSymbol),
+        Fragment[] fragments = {TickChartFragment.newInstance(mSymbol), TimeSharingplanFragment.newInstance(mSymbol),
                 mCandleStickChartFragment, new HandicapFragment()};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
         mViewpager.setOffscreenPageLimit(fragments.length);
@@ -159,12 +160,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     }
                 });
         tvCenter.setText(UserSharePrefernce.isFastTakeOrder(mContext) ? R.string.opened : R.string.closed);
-        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", quote.getChange());
-        StringUtils.setOnlineTxArrow(tvLeftArrow, quote.getChange());
-        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", quote.getChange());
-        StringUtils.setOnlineTxArrow(tvRightArrow, quote.getChange());
-        pbLeft.setProgress(quote.getBidSize());
-        pbRight.setProgress(quote.getAskSize());
+        fillViews(quote);
         tvLeft.setOnClickListener(this);
         tvRight.setOnClickListener(this);
         v.findViewById(R.id.tv_order).setOnClickListener(this);
@@ -173,6 +169,16 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         v.findViewById(R.id.tv_deposit).setOnClickListener(this);
         v.findViewById(R.id.tv_kchart).setOnClickListener(this);
         return v;
+    }
+
+    private void fillViews(Quote quote) {
+        if(quote == null) return;
+        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", quote.getChange());
+        StringUtils.setOnlineTxArrow(tvLeftArrow, quote.getChange());
+        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", quote.getChange());
+        StringUtils.setOnlineTxArrow(tvRightArrow, quote.getChange());
+        pbLeft.setProgress(quote.getBidSize());
+        pbRight.setProgress(quote.getAskSize());
     }
 
 
@@ -230,6 +236,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage(getString(R.string.online_transaction_in_order));
         mProgressDialog.setCancelable(false);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RefreshEvent event) {
+        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        fillViews(quote);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

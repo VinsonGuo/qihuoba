@@ -8,16 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.widget.chart.TickChart;
 
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,11 +26,28 @@ public class TickChartFragment extends BaseFragment {
 
 
     private TickChart mChart;
+    private String mSymbol;
 
     public TickChartFragment() {
         // Required empty public constructor
     }
 
+    public static TickChartFragment newInstance(String symbol) {
+        TickChartFragment fragment = new TickChartFragment();
+        Bundle args = new Bundle();
+        args.putString(Constants.CONTENT_PARAMETER, symbol);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+        if (getArguments() != null) {
+            mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER);
+        }
+    }
 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,16 +58,23 @@ public class TickChartFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
-        mChart.addEntry(10);
-        Observable.interval(1, TimeUnit.SECONDS)
-                .compose(this.<Long>bindUntilEvent(FragmentEvent.DESTROY))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(@NonNull Long aLong) throws Exception {
-                        float ask = (float) Math.random() + 10;
-                        mChart.addEntry(ask);
-                    }
-                });
+        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        if (quote != null) {
+            mChart.addEntry((float) quote.getLastPrice());
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RefreshEvent event) {
+        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        if (quote != null) {
+            mChart.addEntry((float) quote.getLastPrice());
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

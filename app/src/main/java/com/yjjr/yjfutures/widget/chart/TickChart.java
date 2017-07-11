@@ -33,7 +33,7 @@ public class TickChart extends RelativeLayout {
     private Context mContext;
     private int candleIncreaseColor = getResources().getColor(R.color.third_text_color);
     private int candleGridColor = getResources().getColor(R.color.color_333333);
-    private int digits = 5;
+    private int digits = 2;
     private int mTextColor = getResources().getColor(R.color.second_text_color);
 
     public TickChart(Context context) {
@@ -59,21 +59,6 @@ public class TickChart extends RelativeLayout {
 
     }
 
-   /* public void addEntry(MT4Symbol symbol) {
-        if(null == symbol) return;
-        float ask = (float) symbol.getAsk();
-        float bid = (float) symbol.getBid();
-        this.digits = symbol.getDigits();
-        refreshChart(ask, bid);
-    }
-
-    public void addEntry(PriceEventResponse response) {
-        if(null == response) return;
-        float ask = (float) response.getAsk();
-        float bid = (float) response.getBid();
-        refreshChart(ask, bid);
-    }*/
-
     public void addEntry(float bid) {
         refreshChart(bid);
     }
@@ -91,9 +76,9 @@ public class TickChart extends RelativeLayout {
             data.addEntry(new Entry(setSell.getEntryCount(), bid), DATA_SET_SELL);
 
 
-            mChart.calculateOffsets();
             Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_SELL).getEntryCount() - 1, bid, DATA_SET_SELL);
             mChart.highlightValue(chartHighlighter);
+            mChart.calculateOffsets();
             mChart.notifyDataSetChanged();
             mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
             mChart.setAutoScaleMinMaxEnabled(true);
@@ -156,8 +141,8 @@ public class TickChart extends RelativeLayout {
                 return DoubleUtil.formatDecimal((double) value, digits);
             }
         });
-        rightAxis.setMinWidth(50);
-        rightAxis.setMaxWidth(50);
+//        rightAxis.setMinWidth(50);
+//        rightAxis.setMaxWidth(50);
 
         Legend legend = mChart.getLegend();
         legend.setEnabled(false);

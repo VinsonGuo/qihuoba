@@ -63,20 +63,6 @@ public class TimeSharingplanChart extends RelativeLayout {
         this(context, attrs, 0);
     }
 
-   /* public void addEntry(MT4Symbol symbol) {
-        if(null == symbol) return;
-        float ask = (float) symbol.getAsk();
-        float bid = (float) symbol.getBid();
-        this.digits = symbol.getDigits();
-        refreshChart(ask, bid);
-    }
-
-    public void addEntry(PriceEventResponse response) {
-        if(null == response) return;
-        float ask = (float) response.getAsk();
-        float bid = (float) response.getBid();
-        refreshChart(ask, bid);
-    }*/
 
     public TimeSharingplanChart(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);

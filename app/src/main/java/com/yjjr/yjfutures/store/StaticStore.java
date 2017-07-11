@@ -12,4 +12,6 @@ import java.util.Map;
 
 public class StaticStore {
     public static Map<String, Quote> sQuoteMap = new LinkedHashMap<>();
+    public static String sSymbols;
+    public static String sExchange;
 }

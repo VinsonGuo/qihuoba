@@ -14,6 +14,8 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
@@ -21,7 +23,12 @@ import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
 import com.youth.banner.Banner;
 import com.youth.banner.loader.ImageLoaderInterface;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,6 +42,12 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     public HomePageFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -80,7 +93,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     @Override
     protected void initData() {
         super.initData();
-        mAdapter.addData(StaticStore.sQuoteMap.values());
+        mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
     }
 
     @Override
@@ -104,5 +117,16 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         if (v.getId() == R.id.tv_title1) {
             TradeActivity.startActivity(mContext, "CLQ7");
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RefreshEvent event) {
+        mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

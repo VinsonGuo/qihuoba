@@ -44,7 +44,6 @@ import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -193,41 +192,21 @@ public class CandleStickChartFragment extends BaseFragment {
     public void loadDataByType(String type) {
         mType = type;
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
-        DateTime dateTime= new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
-        if(DAY.equals(type)) {
+        DateTime dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+        if (DAY.equals(type)) {
             dateTime = dateTime.minusYears(1);
-        }else if(MIN15.equals(type)||MIN5.equals(type)){
+        } else if (MIN15.equals(type) || MIN5.equals(type)) {
             dateTime = dateTime.minusWeeks(1);
-        }else if(HOUR.equals(type)) {
+        } else if (HOUR.equals(type)) {
             dateTime = dateTime.minusMonths(1);
         }
-
-        SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetHistoryData");
-        soapObject.addProperty("Symbol", quote.getSymbol());
-        soapObject.addProperty("Exchange", quote.getExchange());
-        soapObject.addProperty("StartTime", DateUtils.formatData(dateTime.getMillis()));
-        soapObject.addProperty("dataType", mType);
-        /*RxUtils.createSoapObservable3("GetHistoryData", soapObject)
-                .map(new Function<SoapObject, List<HisData>>() {
-                    @Override
-                    public List<HisData> apply(@NonNull SoapObject soapObject) throws Exception {
-                        if (soapObject.getPropertyCount() == 0) {
-                            throw new RuntimeException("加载失败");
-                        }
-                        mList = new ArrayList<>(300);
-                        for (int i = 0; i < soapObject.getPropertyCount(); i++) {
-                            mList.add(RxUtils.soapObject2Model((SoapObject) soapObject.getProperty(i), HisData.class));
-                        }
-                        return mList;
-                    }
-                })*/
-        HttpManager.getHttpService().getHistoryData(quote.getSymbol(),quote.getExchange(),DateUtils.formatData(dateTime.getMillis()),mType)
+        HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)
                 .compose(RxUtils.<List<HisData>>applySchedulers())
                 .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<HisData>>() {
                     @Override
                     public void accept(@NonNull List<HisData> list) throws Exception {
-                        LogUtils.d(list.toString());
+                        mList = list;
                         fullData(list);
                     }
                 }, new Consumer<Throwable>() {

@@ -8,22 +8,17 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.model.GetSymbolsRequest;
 import com.yjjr.yjfutures.model.Holding;
-import com.yjjr.yjfutures.model.OpenOrder;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 
-import org.ksoap2.serialization.SoapObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 /**
  * Created by dell on 2017/6/23.
@@ -40,7 +35,7 @@ public class PositionListFragment extends ListFragment<Holding> {
 
     @Override
     protected void loadData() {
-        RxUtils.createSoapObservable2("GetHolding", new GetSymbolsRequest(BaseApplication.getInstance().getTradeToken()))
+       /* RxUtils.createSoapObservable2("GetHolding", new GetSymbolsRequest(BaseApplication.getInstance().getTradeToken()))
                 .map(new Function<SoapObject, List<Holding>>() {
                     @Override
                     public List<Holding> apply(@NonNull SoapObject soapObject) throws Exception {
@@ -53,7 +48,8 @@ public class PositionListFragment extends ListFragment<Holding> {
                         }
                         return orders;
                     }
-                })
+                })*/
+        HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken())
                 .compose(RxUtils.<List<Holding>>applySchedulers())
                 .compose(this.<List<Holding>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<Holding>>() {

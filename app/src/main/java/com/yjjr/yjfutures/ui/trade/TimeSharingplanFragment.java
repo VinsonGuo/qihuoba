@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.contants.Constants;
-import com.yjjr.yjfutures.model.GetFSDataRequest;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
@@ -17,19 +16,15 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
-import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.chart.TimeSharingplanChart;
 
 import org.joda.time.DateTime;
-import org.ksoap2.serialization.SoapObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 /**
  * 分时图Fragment
@@ -71,33 +66,12 @@ public class TimeSharingplanFragment extends BaseFragment {
         super.initData();
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         DateTime dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
-        GetFSDataRequest request = new GetFSDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()));
-        LogUtils.d(request.toString());
-        SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetFSData");
-        soapObject.addProperty("Symbol", quote.getSymbol());
-        soapObject.addProperty("Exchange", quote.getExchange());
-        soapObject.addProperty("StartTime", DateUtils.formatData(dateTime.getMillis()));
-//        RxUtils.createSoapObservable3("GetFSData", soapObject)
         HttpManager.getHttpService().getFsData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()))
-               /* .map(new Function<SoapObject, List<HisData>>() {
-                    @Override
-                    public List<HisData> apply(@NonNull SoapObject soapObject) throws Exception {
-                        if (soapObject.getPropertyCount() == 0) {
-                            throw new RuntimeException("加载失败");
-                        }
-                        List<HisData> list = new ArrayList<>(300);
-                        for (int i = 0; i < soapObject.getPropertyCount(); i++) {
-                            list.add(RxUtils.soapObject2Model((SoapObject) soapObject.getProperty(i), HisData.class));
-                        }
-                        return list;
-                    }
-                })*/
                 .compose(RxUtils.<List<HisData>>applySchedulers())
                 .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<HisData>>() {
                     @Override
                     public void accept(@NonNull List<HisData> list) throws Exception {
-                        LogUtils.d(list.toString());
                         mChart.setStartTime(new DateTime(list.get(0).getsDate()));
                         mChart.addEntries(list);
                     }

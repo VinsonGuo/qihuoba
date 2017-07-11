@@ -1,10 +1,12 @@
 package com.yjjr.yjfutures.utils.http;
 
+import com.yjjr.yjfutures.model.FilledOrder;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.OpenOrder;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.SendOrderResponse;
+import com.yjjr.yjfutures.model.Trade;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 
 import java.util.List;
@@ -48,9 +50,11 @@ public interface HttpService {
 
     /**
      * 4、获取成交明细
-     http://139.224.8.133:9100/api/get_trades.ashx
-     传参：symbol,exchange,id,number
+     * http://139.224.8.133:9100/api/get_trades.ashx
+     * 传参：symbol,exchange,id,number
      */
+    @GET("/api/get_trades.ashx")
+    Observable<List<Trade>> getTrades(@Query("symbol") String symbol, @Query("exchange") String exchange, @Query("id") String id, @Query("number") int number);
 
     /**
      * 5、获取分时图数据
@@ -103,7 +107,7 @@ public interface HttpService {
      * 传参：account
      */
     @GET("/api/get_filled_order.ashx")
-    Observable<List<OpenOrder>> getFilledOrder(@Query("account") String account);
+    Observable<List<FilledOrder>> getFilledOrder(@Query("account") String account);
 
     /**
      * 11、获取新的已成交订单

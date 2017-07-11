@@ -27,13 +27,13 @@ import com.yjjr.yjfutures.utils.DoubleUtil;
  */
 public class TickChart extends RelativeLayout {
 
-    public static final int FULL_SCREEN_SHOW_COUNT = 50;
+    public static final int FULL_SCREEN_SHOW_COUNT = 100;
     public static final int DATA_SET_SELL = 0;
     private LineChart mChart;
     private Context mContext;
     private int candleIncreaseColor = getResources().getColor(R.color.third_text_color);
     private int candleGridColor = getResources().getColor(R.color.color_333333);
-    private int digits = 2;
+    private int digits = 3;
     private int mTextColor = getResources().getColor(R.color.second_text_color);
 
     public TickChart(Context context) {
@@ -141,8 +141,6 @@ public class TickChart extends RelativeLayout {
                 return DoubleUtil.formatDecimal((double) value, digits);
             }
         });
-//        rightAxis.setMinWidth(50);
-//        rightAxis.setMaxWidth(50);
 
         Legend legend = mChart.getLegend();
         legend.setEnabled(false);

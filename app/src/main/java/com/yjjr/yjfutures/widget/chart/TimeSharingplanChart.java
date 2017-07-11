@@ -89,11 +89,11 @@ public class TimeSharingplanChart extends RelativeLayout {
 
         for (int i = 0; i < list.size(); i++) {
             HisData hisData = list.get(i);
-            data.addEntry(new Entry(setSell.getEntryCount(), (float) hisData.getOpen()), DATA_SET_SELL);
+            data.addEntry(new Entry(setSell.getEntryCount(), (float) hisData.getClose()), DATA_SET_SELL);
         }
 
 
-        Highlight chartHighlighter = new Highlight(setSell.getEntryCount() - 1, (float) list.get(setSell.getEntryCount() - 1).getOpen(), DATA_SET_SELL);
+        Highlight chartHighlighter = new Highlight(setSell.getEntryCount() - 1, (float) list.get(setSell.getEntryCount() - 1).getClose(), DATA_SET_SELL);
         mChart.highlightValue(chartHighlighter);
         mChart.calculateOffsets();
         mChart.notifyDataSetChanged();

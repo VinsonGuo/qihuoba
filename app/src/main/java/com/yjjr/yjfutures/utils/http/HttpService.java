@@ -1,11 +1,14 @@
 package com.yjjr.yjfutures.utils.http;
 
+import com.yjjr.yjfutures.model.AccountInfo;
+import com.yjjr.yjfutures.model.Exchange;
 import com.yjjr.yjfutures.model.FilledOrder;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.OpenOrder;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.SendOrderResponse;
+import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.Trade;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 
@@ -19,7 +22,83 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 /**
- * Created by dell on 2017/6/19.
+ * 1、登录
+ * http://139.224.8.133:9100/api/login.ashx
+ * 传参：uname,upass
+ * <p>
+ * 2、获取单个合约报价
+ * http://139.224.8.133:9100/api/get_quote.ashx
+ * 传参：symbol,exchange
+ * <p>
+ * 3、一次获取多个合约报价
+ * http://139.224.8.133:9100/api/get_quote_list.ashx
+ * 传参：symbol="CLQ7,ESU7,HSIN17"
+ * <p>
+ * exchange="NYMEX,GLOBEX,HKFE"
+ * <p>
+ * 4、获取成交明细
+ * http://139.224.8.133:9100/api/get_trades.ashx
+ * 传参：symbol,exchange,id,number
+ * <p>
+ * 5、获取分时图数据
+ * http://139.224.8.133:9100/api/get_fs_data.ashx
+ * 传参：symbol,exchange,starttime
+ * <p>
+ * 6、获取历史数据
+ * http://139.224.8.133:9100/api/get_h_data.ashx
+ * 传参：symbol,exchange,starttime,datatype
+ * <p>
+ * 7、下单
+ * http://139.224.8.133:9100/api/send_order.ashx
+ * 传参：account,symbol,buysell,price,qty,ordertype
+ * <p>
+ * 8、获取未成交订单
+ * http://139.224.8.133:9100/api/get_open_order.ashx
+ * 传参：account
+ * <p>
+ * 9、获取未成交合约
+ * http://139.224.8.133:9100/api/get_unfill_order.ashx
+ * 传参：account
+ * <p>
+ * 10、获取已成交订单
+ * http://139.224.8.133:9100/api/get_filled_order.ashx
+ * 传参：account
+ * <p>
+ * 11、获取新的已成交订单
+ * http://139.224.8.133:9100/api/get_filled_order_ex.ashx
+ * 传参：account,id
+ * <p>
+ * 12、获取持仓
+ * http://139.224.8.133:9100/api/get_holding.ashx
+ * 传参：account
+ * <p>
+ * 13、撤单
+ * http://139.224.8.133:9100/api/cancel_order.ashx
+ * 传参：account,ordered
+ * <p>
+ * 14、获取能交易的所有合约列表
+ * http://139.224.8.133:9100/api/get_symbols.ashx
+ * 传参：account
+ * <p>
+ * 15、密码重置
+ * http://139.224.8.133:9100/api/reset_password.ashx
+ * 传参：account,password
+ * <p>
+ * 16、修改密码
+ * http://139.224.8.133:9100/api/change_password.ashx
+ * 传参：account,oldpassword,newpassword
+ * <p>
+ * 17、获取平仓单（结算单用）
+ * http://139.224.8.133:9100/api/get_closed_order.ashx
+ * 传参：account,startdate,enddate
+ * <p>
+ * 18、获得资金状况
+ * http://139.224.8.133:9100/api/get_account_info.ashx
+ * 传参：account
+ * <p>
+ * 19、获取用户汇率列表
+ * http://139.224.8.133:9100/api/get_user_exchange_rate_list.ashx
+ * 传参：rootaccount,account
  */
 
 public interface HttpService {
@@ -124,4 +203,29 @@ public interface HttpService {
      */
     @GET("/api/get_holding.ashx")
     Observable<List<Holding>> getHolding(@Query("account") String account);
+
+    /**
+     * 14、获取能交易的所有合约列表
+     * http://139.224.8.133:9100/api/get_symbols.ashx
+     * 传参：account
+     */
+    @GET("/api/get_symbols.ashx")
+    Observable<List<Symbol>> getSymbols(@Query("account") String account);
+
+    /**
+     * 18、获得资金状况
+     * http://139.224.8.133:9100/api/get_account_info.ashx
+     * 传参：account
+     */
+    @GET("/api/get_account_info.ashx")
+    Observable<AccountInfo> getAccountInfo(@Query("account") String account);
+
+
+    /**
+     * 19、获取用户汇率列表
+     * http://139.224.8.133:9100/api/get_user_exchange_rate_list.ashx
+     * 传参：rootaccount,account
+     */
+    @GET("/api/get_user_exchange_rate_list.ashx")
+    Observable<List<Exchange>> getUserExchange(@Query("rootaccount") String rootaccount, @Query("account") String account);
 }

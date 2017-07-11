@@ -61,6 +61,7 @@ public class TickChartFragment extends BaseFragment {
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         if (quote != null) {
             mChart.addEntry((float) quote.getLastPrice());
+            mChart.addEntry((float) quote.getLastPrice());
         }
     }
 

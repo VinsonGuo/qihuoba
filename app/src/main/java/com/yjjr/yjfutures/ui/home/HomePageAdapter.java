@@ -26,9 +26,9 @@ public class HomePageAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
         helper.setText(R.id.tv_title, item.getSymbolname())
                 .setText(R.id.tv_desc, item.getSymbol());
         TextView tvInfo = helper.getView(R.id.tv_info);
-        double change = item.getChangeRate();
+        double change = item.getLastPrice() - item.getLastclose();
 
-        tvInfo.setText(DoubleUtil.format2Decimal(item.getLastPrice()) + "\n" + DoubleUtil.format2Decimal(change) + "%");
+        tvInfo.setText(DoubleUtil.format2Decimal(item.getLastPrice()) + "\n" + DoubleUtil.format2Decimal(item.getChange()) + "%");
         tvInfo.setTextColor(ContextCompat.getColor(mContext, change > 0 ? R.color.main_color_red : R.color.main_color_green));
     }
 }

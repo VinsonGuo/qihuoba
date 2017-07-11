@@ -22,6 +22,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -188,5 +189,14 @@ public class RxUtils {
         }
         JsonElement jsonElement = sGson.toJsonTree(map);
         return sGson.fromJson(jsonElement, type);
+    }
+
+    public static Consumer<? super Throwable> commonErrorConsumer() {
+        return new Consumer<Throwable>() {
+            @Override
+            public void accept(@NonNull Throwable throwable) throws Exception {
+                LogUtils.e(throwable);
+            }
+        };
     }
 }

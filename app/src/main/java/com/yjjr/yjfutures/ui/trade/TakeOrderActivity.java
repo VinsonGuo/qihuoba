@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RadioGroup;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -18,6 +20,7 @@ import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.ksoap2.serialization.SoapObject;
 
 import io.reactivex.annotations.NonNull;
@@ -32,6 +35,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     private ProgressDialog mProgressDialog;
     private String mSymbol;
     private int mType;
+    private RadioGroup mRgHand;
 
     public static void startActivity(Context context, String symbol, int type) {
         Intent intent = new Intent(context, TakeOrderActivity.class);
@@ -48,6 +52,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         mSymbol = intent.getStringExtra(Constants.CONTENT_PARAMETER);
         mType = intent.getIntExtra(Constants.CONTENT_PARAMETER_2, TYPE_BUY);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
+        mRgHand = (RadioGroup) findViewById(R.id.rg_hand);
         mDialog = new CustomPromptDialog.Builder(mContext)
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
@@ -69,14 +74,26 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn_confirm:
                 mProgressDialog.show();
+                int qty = 1;
+                int id = mRgHand.getCheckedRadioButtonId();
+                if (id == R.id.rb_hand_1) {
+                    qty = 1;
+                } else if (id == R.id.rb_hand_2) {
+                    qty = 2;
+                } else if (id == R.id.rb_hand_3) {
+                    qty = 3;
+                } else if (id == R.id.rb_hand_4) {
+                    qty = 4;
+                } else if (id == R.id.rb_hand_5) {
+                    qty = 5;
+                }
                 SoapObject rpc = new SoapObject(HttpConfig.NAME_SPACE, "SendOrder");
                 rpc.addProperty("Account", BaseApplication.getInstance().getTradeToken());
                 rpc.addProperty("symbol", mSymbol);
                 rpc.addProperty("BuyType", mType == TYPE_BUY ? "买入" : "卖出");
                 rpc.addProperty("Price", 0);
-                rpc.addProperty("Qty", 1);
+                rpc.addProperty("Qty", qty);
                 rpc.addProperty("OrderType", "市价");
-
                 RxUtils.createSoapObservable3("SendOrder", rpc)
                         .map(new Function<SoapObject, SoapObject>() {
                             @Override
@@ -94,6 +111,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                             public void accept(@NonNull SoapObject soapObject) throws Exception {
                                 mProgressDialog.dismiss();
                                 ToastUtils.show(mContext, "成功");
+                                EventBus.getDefault().post(new SendOrderEvent());
                             }
                         }, new Consumer<Throwable>() {
                             @Override

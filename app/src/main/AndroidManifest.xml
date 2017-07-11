@@ -35,6 +35,7 @@
         <meta-data
             android:name="com.yjjr.yjfutures.utils.imageloader.AppGlideModule"
             android:value="GlideModule"/>
+        <service android:name=".ui.PollService"/>
 
         <activity android:name=".ui.MainActivity">
         </activity>

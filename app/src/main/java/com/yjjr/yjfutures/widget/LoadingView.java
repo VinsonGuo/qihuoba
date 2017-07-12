@@ -23,6 +23,7 @@ public class LoadingView extends RelativeLayout {
     private ProgressBar mProgressBar;
     private TextView mTextPrompt;
     private Context mContext;
+    private OnReloadListener mListener;
 
     private String NoDataPromptText;
 
@@ -55,13 +56,23 @@ public class LoadingView extends RelativeLayout {
     }
 
 
-    public void reload() {
+    private void reload() {
         mProgressBar.setVisibility(View.VISIBLE);
         mTextPrompt.setText("");
     }
 
-    public void setOnReloadListener(OnClickListener l) {
-        mContainerPrompt.setOnClickListener(l);
+    public void setOnReloadListener(OnReloadListener l) {
+        mListener = l;
+        mContainerPrompt.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reload();
+                mListener.onReload();
+            }
+        });
     }
 
+    public interface OnReloadListener{
+        void onReload();
+    }
 }

@@ -25,6 +25,7 @@ public class PositionListAdapter extends BaseQuickAdapter<Holding, BaseViewHolde
                 .setText(R.id.tv_open_price, "开仓价\t" + DoubleUtil.format2Decimal(item.getAvgPrice()))
                 .setText(R.id.tv_current_price, "当前价\t" + DoubleUtil.format2Decimal(item.getMargin()))
                 .setText(R.id.tv_profit, DoubleUtil.format2Decimal(item.getUnrealizedPL()))
-                .setText(R.id.tv_hand, item.getBuySell() + Math.abs(item.getQty()) + "手");
+                .setText(R.id.tv_hand, item.getBuySell() + Math.abs(item.getQty()) + "手")
+                .addOnClickListener(R.id.tv_close_order);
     }
 }

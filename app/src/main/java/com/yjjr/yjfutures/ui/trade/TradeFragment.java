@@ -24,13 +24,14 @@ import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.AccountInfo;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.model.SendOrderResponse;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
-import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
@@ -48,6 +49,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -82,6 +84,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvDirection;
     private TextView tvYueValue;
     private TextView tvMarginValue;
+    /**
+     * 持仓的对象
+     */
+    private Holding mHolding;
 
 
     public TradeFragment() {
@@ -114,7 +120,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         findViews(v);
         mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol);
         Fragment[] fragments = {TickChartFragment.newInstance(mSymbol), TimeSharingplanFragment.newInstance(mSymbol),
-                mCandleStickChartFragment, new HandicapFragment()};
+                mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol)};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
         mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
@@ -195,10 +201,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     private void fillViews(Quote quote) {
         if (quote == null) return;
-        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", quote.getChange());
-        StringUtils.setOnlineTxArrow(tvLeftArrow, quote.getChange());
-        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", quote.getChange());
-        StringUtils.setOnlineTxArrow(tvRightArrow, quote.getChange());
+        double change = quote.getChangeRate();
+        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", change);
+        StringUtils.setOnlineTxArrow(tvLeftArrow, change);
+        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", change);
+        StringUtils.setOnlineTxArrow(tvRightArrow, change);
         pbLeft.setProgress(quote.getBidSize());
         pbRight.setProgress(quote.getAskSize());
         tvLeftPb.setText(String.valueOf(quote.getBidSize()));
@@ -294,12 +301,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 .subscribe(new Consumer<Holding>() {
                     @Override
                     public void accept(@NonNull Holding holding) throws Exception {
-                        // 如果用户已经有一个方向的持仓单，只能追加，不能购买相反方向的
-                        if (TextUtils.equals(holding.getBuySell(), "买入")) {
-                            tvRight.setOnClickListener(null);
-                        } else {
-                            tvLeft.setOnClickListener(null);
-                        }
+                        mHolding = holding;
                         vgSettlement.setVisibility(View.GONE);
                         vgOrder.setVisibility(View.VISIBLE);
                         tvDirection.setText(holding.getBuySell() + Math.abs(holding.getQty()) + "手");
@@ -338,7 +340,27 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_close_order:
-                mCloseOrderDialog.show();
+                if (mHolding == null) return;
+                mProgressDialog.show();
+                RxUtils.createCloseObservable(mHolding)
+                        .delay(1, TimeUnit.SECONDS)
+                        .compose(RxUtils.<SendOrderResponse>applySchedulers())
+                        .compose(this.<SendOrderResponse>bindUntilEvent(FragmentEvent.DESTROY))
+                        .subscribe(new Consumer<SendOrderResponse>() {
+                            @Override
+                            public void accept(@NonNull SendOrderResponse response) throws Exception {
+                                ToastUtils.show(mContext, response.getMessage());
+                                mProgressDialog.dismiss();
+                                EventBus.getDefault().post(new SendOrderEvent());
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                LogUtils.e(throwable);
+                                mProgressDialog.dismiss();
+                                ToastUtils.show(mContext, throwable.getMessage());
+                            }
+                        });
                 break;
             case R.id.tv_left:
                 if (UserSharePrefernce.isFastTakeOrder(mContext)) {
@@ -358,8 +380,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 FastTakeOrderActivity.startActivity(mContext);
                 break;
             case R.id.tv_deposit:
-                WebActivity.startActivity(mContext, "http://www.youku.com");
-//                DepositActivity.startActivity(mContext);
+                DepositActivity.startActivity(mContext);
                 break;
             case R.id.tv_kchart:
                 mTopRightMenu.showAsDropDown(mTvKchart);

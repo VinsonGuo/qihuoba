@@ -3,10 +3,15 @@ package com.yjjr.yjfutures.ui.trade;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.widget.HeaderView;
 
 /**
@@ -31,8 +36,9 @@ public class OrderDetailActivity extends BaseActivity {
     private TextView tvTicket;
 
 
-    public static void startActivity(Context context) {
+    public static void startActivity(Context context, CloseOrder order) {
         Intent intent = new Intent(context, OrderDetailActivity.class);
+        intent.putExtra(Constants.CONTENT_PARAMETER, order);
         context.startActivity(intent);
     }
 
@@ -40,27 +46,46 @@ public class OrderDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
+        CloseOrder order = getIntent().getParcelableExtra(Constants.CONTENT_PARAMETER);
         findViews();
+        fillViews(order);
+
+    }
+
+    private void fillViews(CloseOrder order) {
         headerView.bindActivity(mContext);
+        tvDirection.setText(TextUtils.equals(order.getOpenBuySell(), "买入")?"看涨":"看跌");
+        tvProfitYuan.setText(DoubleUtil.format2Decimal(order.getRealizedPL()));
+        int color = order.getRealizedPL() > 0 ? R.color.main_color_red : R.color.main_color_green;
+        tvProfitYuan.setTextColor(ContextCompat.getColor(mContext, color));
+        tvProfitDollar.setTextColor(ContextCompat.getColor(mContext, color));
+        tvTradeSymbol.setText(order.getSymbol());
+        tvTradeNum.setText(order.getQty()+"");
+        tvBuyPrice.setText(DoubleUtil.format2Decimal(order.getOpenPrice()));
+        tvSellPrice.setText(DoubleUtil.format2Decimal(order.getClosePrice()));
+        tvBuyTime.setText(order.getOpenDate());
+        tvSellTime.setText(order.getCloseDate());
+        tvTicket.setText(order.getFilledID());
+
     }
 
 
     private void findViews() {
-        headerView = (HeaderView)findViewById( R.id.header_view );
-        tvDirection = (TextView)findViewById( R.id.tv_direction );
-        tvProfitYuan = (TextView)findViewById( R.id.tv_profit_yuan );
-        tvProfitDollar = (TextView)findViewById( R.id.tv_profit_dollar );
-        tvTradeSymbol = (TextView)findViewById( R.id.tv_trade_symbol );
-        tvTradeNum = (TextView)findViewById( R.id.tv_trade_num );
-        tvMargin = (TextView)findViewById( R.id.tv_margin );
-        tvCharge = (TextView)findViewById( R.id.tv_charge );
-        tvContractTime = (TextView)findViewById( R.id.tv_contract_time );
-        tvBuyPrice = (TextView)findViewById( R.id.tv_buy_price );
-        tvSellPrice = (TextView)findViewById( R.id.tv_sell_price );
-        tvBuyType = (TextView)findViewById( R.id.tv_buy_type );
-        tvSellType = (TextView)findViewById( R.id.tv_sell_type );
-        tvBuyTime = (TextView)findViewById( R.id.tv_buy_time );
-        tvSellTime = (TextView)findViewById( R.id.tv_sell_time );
-        tvTicket = (TextView)findViewById( R.id.tv_ticket );
+        headerView = (HeaderView) findViewById(R.id.header_view);
+        tvDirection = (TextView) findViewById(R.id.tv_direction);
+        tvProfitYuan = (TextView) findViewById(R.id.tv_profit_yuan);
+        tvProfitDollar = (TextView) findViewById(R.id.tv_profit_dollar);
+        tvTradeSymbol = (TextView) findViewById(R.id.tv_trade_symbol);
+        tvTradeNum = (TextView) findViewById(R.id.tv_trade_num);
+        tvMargin = (TextView) findViewById(R.id.tv_margin);
+        tvCharge = (TextView) findViewById(R.id.tv_charge);
+        tvContractTime = (TextView) findViewById(R.id.tv_contract_time);
+        tvBuyPrice = (TextView) findViewById(R.id.tv_buy_price);
+        tvSellPrice = (TextView) findViewById(R.id.tv_sell_price);
+        tvBuyType = (TextView) findViewById(R.id.tv_buy_type);
+        tvSellType = (TextView) findViewById(R.id.tv_sell_type);
+        tvBuyTime = (TextView) findViewById(R.id.tv_buy_time);
+        tvSellTime = (TextView) findViewById(R.id.tv_sell_time);
+        tvTicket = (TextView) findViewById(R.id.tv_ticket);
     }
 }

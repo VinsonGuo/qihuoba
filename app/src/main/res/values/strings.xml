@@ -119,7 +119,7 @@
     <string name="kaicang">开仓</string>
     <string name="pingcang">平仓</string>
     <string name="network_not_connect">请检查网络连接</string>
-    <string name="data_is_null">没有数据</string>
+    <string name="data_is_null">数据加载失败，点击重试</string>
     <string name="not_setting">没有设置</string>
     <string name="circles">圈子</string>
     <string name="i_want_evaluation">我要评价</string>
@@ -1036,9 +1036,6 @@
     <string name="topic">话题</string>
     <string name="dailyfx">财经日历</string>
     <string name="firewire_ourier">火线速递</string>
-    <string name="chat_room_not_null">聊天室名称或简介不能为空</string>
-    <string name="create_chat_room_failed">聊天室创建失败</string>
-    <string name="network_disconnect_click_retry">网络连接中断&#160;&#160;&#160;&#160;点击重试连接</string>
     <string name="reconnecting">正在重连中</string>
     <string name="reconnect">重新连接</string>
     <string name="visitor_can_not_send_msg">请登录后再发言</string>
@@ -1327,4 +1324,5 @@
     <string name="buy_type">买入类型</string>
     <string name="phone">手机</string>
     <string name="free_register">免费注册</string>
+    <string name="closeing">平仓中...</string>
 </resources>

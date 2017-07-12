@@ -175,9 +175,12 @@
 #-dontwarn com.just.library.**
 #-keep com.just.library.** {*;}
 
-#-dontwarn com.zaaach.toprightmenu.**
-#-keep com.zaaach.toprightmenu.** {*;}
 
 #bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+
+
+#soap
+-dontwarn org.xmlpull.**
+-keep public class org.xmlpull.**{*;}

@@ -11,7 +11,6 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.RefreshEvent;
-import com.yjjr.yjfutures.model.GetSymbolsRequest;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
@@ -28,9 +27,7 @@ import com.yjjr.yjfutures.widget.LoadingView;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
 import org.greenrobot.eventbus.EventBus;
-import org.ksoap2.serialization.SoapObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -53,11 +50,10 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PollService.startService(mContext);
         mLoadingView = (LoadingView) findViewById(R.id.load_view);
-        mLoadingView.setOnReloadListener(new View.OnClickListener() {
+        mLoadingView.setOnReloadListener(new LoadingView.OnReloadListener() {
             @Override
-            public void onClick(View v) {
+            public void onReload() {
                 loadData();
             }
         });
@@ -68,9 +64,9 @@ public class MainActivity extends BaseActivity {
         //如果交易token为null，先获取token
         if (TextUtils.isEmpty(BaseApplication.getInstance().getTradeToken())) {
             HttpManager.getHttpService().userLogin(UserSharePrefernce.getAccount(mContext), UserSharePrefernce.getPassword(mContext))
-                    .flatMap(new Function<UserLoginResponse, ObservableSource< List<Symbol>>>() {
+                    .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
                         @Override
-                        public ObservableSource< List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
+                        public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
                             LogUtils.d(userLoginResponse.toString());
                             if (userLoginResponse.getReturnCode() != 1) {
                                 BaseApplication.getInstance().logout(mContext);
@@ -122,7 +118,7 @@ public class MainActivity extends BaseActivity {
                         }
                     });
         } else {
-           HttpManager.getHttpService().getSymbols(BaseApplication.getInstance().getTradeToken())
+            HttpManager.getHttpService().getSymbols(BaseApplication.getInstance().getTradeToken())
                     .flatMap(new Function<List<Symbol>, ObservableSource<List<Quote>>>() {
                         @Override
                         public ObservableSource<List<Quote>> apply(@NonNull List<Symbol> symbols) throws Exception {

@@ -5,6 +5,7 @@
               android:layout_height="match_parent"
               android:gravity="center"
               android:orientation="vertical"
+              android:background="@color/chart_background"
               android:padding="@dimen/root_padding_10">
 
     <LinearLayout
@@ -15,29 +16,77 @@
         android:padding="@dimen/root_padding_10">
 
         <TextView
-            style="@style/text_color_666666_14sp"
-            android:layout_width="80dp"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/main_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="今持仓"/>
+            android:text="最新"/>
 
         <TextView
-            android:id="@+id/tv_today_position"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_last_price"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/second_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             tools:text="123456"/>
 
         <TextView
-            style="@style/text_color_666666_14sp"
-            android:layout_width="80dp"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/main_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:text="昨持仓"/>
+            android:text="今开"/>
 
         <TextView
-            android:id="@+id/tv_yesterday_position"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_open"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/second_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            tools:text="123456"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/root_padding_10">
+
+        <TextView
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/main_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="涨跌"/>
+
+        <TextView
+            android:id="@+id/tv_change"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/second_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            tools:text="1234"/>
+
+        <TextView
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/main_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="最高"/>
+
+        <TextView
+            android:id="@+id/tv_high"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/second_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             tools:text="123456"/>
     </LinearLayout>
@@ -50,64 +99,36 @@
         android:padding="@dimen/root_padding_10">
 
         <TextView
-            style="@style/text_color_666666_14sp"
-            android:layout_width="80dp"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/main_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="今结"/>
+            android:text="涨幅"/>
 
         <TextView
-            android:id="@+id/tv_today_count"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="123456"/>
-
-        <TextView
-            style="@style/text_color_666666_14sp"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:text="昨结"/>
-
-        <TextView
-            android:id="@+id/tv_yesterday_count"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="123456"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="@dimen/root_padding_10">
-
-        <TextView
-            style="@style/text_color_666666_14sp"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="总手"/>
-
-        <TextView
-            android:id="@+id/tv_total_hand"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_change_rate"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/second_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             tools:text="123456"/>
 
         <TextView
-            style="@style/text_color_666666_14sp"
-            android:layout_width="80dp"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/main_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:text="金额"/>
+            android:text="最低"/>
 
         <TextView
-            android:id="@+id/tv_amount"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_low"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/second_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             tools:text="123456"/>
     </LinearLayout>
@@ -120,29 +141,36 @@
         android:padding="@dimen/root_padding_10">
 
         <TextView
-            style="@style/text_color_666666_14sp"
-            android:layout_width="80dp"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/main_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="涨停"/>
+            android:text="总量"/>
 
         <TextView
-            android:id="@+id/tv_limit_up"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_vol"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/second_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             tools:text="123456"/>
 
         <TextView
-            style="@style/text_color_666666_14sp"
-            android:layout_width="80dp"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/main_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:text="跌停"/>
+            android:text="昨收"/>
 
         <TextView
-            android:id="@+id/tv_limit_down"
-            style="@style/text_color_333333_14sp"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_last_close"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/second_text_color"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             tools:text="123456"/>
     </LinearLayout>

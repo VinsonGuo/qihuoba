@@ -1,13 +1,11 @@
 package com.yjjr.yjfutures;
 
-import android.support.v4.media.MediaMetadataCompat;
-
 import com.yjjr.yjfutures.model.AccountInfo;
 import com.yjjr.yjfutures.model.Exchange;
-import com.yjjr.yjfutures.ui.BaseApplication;
-import com.yjjr.yjfutures.utils.LogUtils;
+import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,7 +13,7 @@ import java.util.List;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -30,7 +28,7 @@ public class ExampleUnitTest {
 
     @Test
     public void testGetExchangeList() throws Exception {
-        HttpManager.getHttpService().getUserExchange("5ff73cf4-1c90-4fb0-8147-7a7c7eb7f0e7","test001")
+        HttpManager.getHttpService().getUserExchange("5ff73cf4-1c90-4fb0-8147-7a7c7eb7f0e7", "test001")
                 .subscribe(new Consumer<List<Exchange>>() {
                     @Override
                     public void accept(@NonNull List<Exchange> exchanges) throws Exception {
@@ -48,5 +46,18 @@ public class ExampleUnitTest {
 
                     }
                 });
+    }
+
+    @Test
+    public void testGetCloseOrder() throws Exception {
+//        DateTime dateTime = new DateTime();
+//        HttpManager.getHttpService().getCloseOrder("ee7e4e12-6dda-427a-9d4b-433642f85e9b", DateUtils.formatData(
+//                dateTime.minusYears(1).getMillis()), DateUtils.formatData(System.currentTimeMillis()))
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(@NonNull String s) throws Exception {
+//
+//                    }
+//                });
     }
 }

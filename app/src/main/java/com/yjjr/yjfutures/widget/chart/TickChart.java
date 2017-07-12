@@ -69,7 +69,7 @@ public class TickChart extends RelativeLayout {
         if (data != null) {
             ILineDataSet setSell = data.getDataSetByIndex(DATA_SET_SELL);
             if (setSell == null) {
-                setSell = createSet(DATA_SET_SELL);
+                setSell = createSet();
                 data.addDataSet(setSell);
             }
 
@@ -86,7 +86,7 @@ public class TickChart extends RelativeLayout {
         }
     }
 
-    private ILineDataSet createSet(int orderType) {
+    private ILineDataSet createSet() {
         int setIntroduce = R.string.sold_out;
         LineDataSet set = new LineDataSet(null, mContext.getString(setIntroduce));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -97,6 +97,7 @@ public class TickChart extends RelativeLayout {
         set.setDrawHorizontalHighlightIndicator(true);
         set.setDrawVerticalHighlightIndicator(false);
         set.setHighlightLineWidth(1);
+        set.enableDashedHighlightLine(10, 5, 0);
 
         set.setColor(color);
         set.setCircleColor(Color.WHITE);

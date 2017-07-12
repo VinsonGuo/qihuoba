@@ -7,7 +7,9 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.model.FilledOrder;
+import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.SpannableUtil;
 
 import java.util.List;
@@ -16,22 +18,23 @@ import java.util.List;
  * Created by dell on 2017/6/20.
  */
 
-public class SettlementListAdapter extends BaseQuickAdapter<FilledOrder, BaseViewHolder> {
+public class SettlementListAdapter extends BaseQuickAdapter<CloseOrder, BaseViewHolder> {
 
     private double mExchange;
 
-    public SettlementListAdapter(@Nullable List<FilledOrder> data) {
+    public SettlementListAdapter(@Nullable List<CloseOrder> data) {
         super(R.layout.item_settlement_list, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, FilledOrder item) {
-        helper.setText(R.id.tv_time, item.getFilledTime().replace(' ', '\n'))
-                .setText(R.id.tv_info, item.getSymbol() + "\t" + item.getFilledQty() + "手")
-                .setText(R.id.tv_direction, item.getBuySell())
-                .setText(R.id.tv_type, item.getBuySell());
+    protected void convert(BaseViewHolder helper, CloseOrder item) {
+        String buySell = item.getOpenBuySell();
+        helper.setText(R.id.tv_time, item.getCloseDate().replace('T', '\n'))
+                .setText(R.id.tv_info, item.getSymbol() + "\t" + Math.abs(item.getQty()) + "手")
+                .setText(R.id.tv_direction, TextUtils.equals(buySell, "买入")?"看涨":"看跌")
+                .setText(R.id.tv_type, buySell);
         TextView tvPrice = helper.getView(R.id.tv_price);
-        tvPrice.setText(getPriceColor(item.getPrice(), 123));
+        tvPrice.setText(getPriceColor(item.getRealizedPL(), item.getRealizedPL()*mExchange));
     }
 
     private CharSequence getPriceColor(double y, double d) {
@@ -39,7 +42,7 @@ public class SettlementListAdapter extends BaseQuickAdapter<FilledOrder, BaseVie
         int color = y >= 0 ? R.color.main_color_red : R.color.main_color_green;
         return TextUtils.concat(
                 SpannableUtil.getStringByColor(mContext, symbol, color),
-                SpannableUtil.getOnlinePriceString(mContext, String.valueOf(y), y),
+                SpannableUtil.getOnlinePriceString(mContext, DoubleUtil.format2Decimal(y), y),
                 SpannableUtil.getStringBySize(SpannableUtil.getStringByColor(mContext, "\n($" + d + ")", color), 0.8f));
     }
 

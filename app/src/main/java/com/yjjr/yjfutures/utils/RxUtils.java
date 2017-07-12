@@ -1,8 +1,14 @@
 package com.yjjr.yjfutures.utils;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.yjjr.yjfutures.model.Holding;
+import com.yjjr.yjfutures.model.SendOrderResponse;
+import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
@@ -23,6 +29,7 @@ import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -198,5 +205,24 @@ public class RxUtils {
                 LogUtils.e(throwable);
             }
         };
+    }
+
+    public static Observable<SendOrderResponse> createCloseObservable(Holding holding) {
+        String type;
+        if (TextUtils.equals(holding.getBuySell(), "买入")) {
+            type = "卖出";
+        } else {
+            type = "买入";
+        }
+        return HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), holding.getSymbol(), type, 0, Math.abs(holding.getQty()), "市价")
+                .map(new Function<SendOrderResponse, SendOrderResponse>() {
+                    @Override
+                    public SendOrderResponse apply(@NonNull SendOrderResponse sendOrderResponse) throws Exception {
+                        if (sendOrderResponse.getReturnCode() < 0) {
+                            throw new RuntimeException(sendOrderResponse.getMessage());
+                        }
+                        return sendOrderResponse;
+                    }
+                });
     }
 }

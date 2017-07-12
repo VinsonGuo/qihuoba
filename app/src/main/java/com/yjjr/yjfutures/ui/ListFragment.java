@@ -34,6 +34,12 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
         mRvList = (RecyclerView) v.findViewById(R.id.rv_list);
         setManager();
         mLoadView = (LoadingView) v.findViewById(R.id.load_view);
+        mLoadView.setOnReloadListener(new LoadingView.OnReloadListener() {
+            @Override
+            public void onReload() {
+                loadData();
+            }
+        });
         mAdapter = getAdapter();
         if (mAdapter.isLoadMoreEnable()) {
             mAdapter.setOnLoadMoreListener(this, mRvList);
@@ -72,18 +78,5 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     @Override
     public void onLoadMoreRequested() {
         mPage++;
-        mRvList.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 20; i++) {
-                    try {
-                        mAdapter.addData((T) ("test" + i));
-                    } catch (Exception e) {
-                        LogUtils.e(e);
-                    }
-                }
-                mAdapter.loadMoreComplete();
-            }
-        }, 2000);
     }
 }

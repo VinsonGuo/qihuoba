@@ -1,5 +1,7 @@
 package com.yjjr.yjfutures.utils;
 
+import com.yjjr.yjfutures.model.Quote;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
@@ -147,5 +149,6 @@ public class DoubleUtil {
         if (digits < 1) return 1;
         return Math.pow(10, -digits);
     }
+
 
 }

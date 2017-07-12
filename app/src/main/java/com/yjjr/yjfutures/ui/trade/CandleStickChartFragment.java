@@ -44,6 +44,7 @@ import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,9 +100,9 @@ public class CandleStickChartFragment extends BaseFragment {
 
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
-        mChart.setMaxVisibleValueCount(0);
+        mChart.setMaxVisibleValueCount(100);
 
-        mChart.setScaleYEnabled(false);
+        mChart.setScaleYEnabled(true);
 
         // scaling can now only be done on x- and y-axis separately
         mChart.setPinchZoom(true);
@@ -118,7 +119,7 @@ public class CandleStickChartFragment extends BaseFragment {
                 if (mList != null && value < mList.size()) {
                     DateTime dateTime = new DateTime(mList.get((int) value).getsDate());
                     if (mType.equals(DAY)) {
-                        return DateUtils.formatData(dateTime.getMillis());
+                        return android.text.format.DateUtils.formatDateTime(mContext,dateTime.getMillis(), android.text.format.DateUtils.FORMAT_ABBREV_ALL);
                     }
                     return DateUtils.formatTime(dateTime.getMillis());
                 }
@@ -133,6 +134,7 @@ public class CandleStickChartFragment extends BaseFragment {
         leftAxis.setGridColor(dividerColor);
         leftAxis.setGridLineWidth(0.5f);
 
+        leftAxis.enableGridDashedLine(20, 5, 0);
 //        leftAxis.setDrawAxisLine(false);
 
         YAxis rightAxis = mChart.getAxisRight();
@@ -201,6 +203,25 @@ public class CandleStickChartFragment extends BaseFragment {
             dateTime = dateTime.minusMonths(1);
         }
         HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)
+        /*SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetHistoryData");
+        soapObject.addProperty("Symbol", quote.getSymbol());
+        soapObject.addProperty("Exchange", quote.getExchange());
+        soapObject.addProperty("StartTime", DateUtils.formatData(dateTime.getMillis()));
+        soapObject.addProperty("dataType", mType);
+        RxUtils.createSoapObservable3("GetHistoryData", soapObject)
+                .map(new Function<SoapObject, List<HisData>>() {
+                    @Override
+                    public List<HisData> apply(@NonNull SoapObject soapObject) throws Exception {
+                        if (soapObject.getPropertyCount() == 0) {
+                            throw new RuntimeException("加载失败");
+                        }
+                        List<HisData> list = new ArrayList<>(300);
+                        for (int i = 0; i < soapObject.getPropertyCount(); i++) {
+                            list.add(RxUtils.soapObject2Model((SoapObject) soapObject.getProperty(i), HisData.class));
+                        }
+                        return list;
+                    }
+                })*/
                 .compose(RxUtils.<List<HisData>>applySchedulers())
                 .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<HisData>>() {
@@ -219,6 +240,9 @@ public class CandleStickChartFragment extends BaseFragment {
     }
 
     private void fullData(List<HisData> datas) {
+        if (datas == null || datas.size() == 0) {
+            return;
+        }
         ArrayList<CandleEntry> yVals1 = new ArrayList<>();
         for (int i = 0; i < datas.size(); i++) {
             HisData data = datas.get(i);
@@ -244,7 +268,7 @@ public class CandleStickChartFragment extends BaseFragment {
         set1.setIncreasingPaintStyle(Paint.Style.FILL);
         set1.setNeutralColor(Color.BLUE);
         //set1.setHighlightLineWidth(1f);
-
+        set1.setDrawValues(false);
         CandleData data = new CandleData(set1);
 
         mChart.setData(data);

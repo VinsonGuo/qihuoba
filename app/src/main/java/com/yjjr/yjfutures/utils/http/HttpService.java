@@ -1,6 +1,7 @@
 package com.yjjr.yjfutures.utils.http;
 
 import com.yjjr.yjfutures.model.AccountInfo;
+import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.model.Exchange;
 import com.yjjr.yjfutures.model.FilledOrder;
 import com.yjjr.yjfutures.model.HisData;
@@ -157,7 +158,7 @@ public interface HttpService {
      * 传参：account,symbol,buysell,price,qty,ordertype
      */
     @GET("/api/send_order.ashx")
-    Observable<SendOrderResponse> getHistoryData(
+    Observable<SendOrderResponse> sendOrder(
             @Query("account") String account,
             @Query("symbol") String symbol,
             @Query("buysell") String buysell,
@@ -211,6 +212,14 @@ public interface HttpService {
      */
     @GET("/api/get_symbols.ashx")
     Observable<List<Symbol>> getSymbols(@Query("account") String account);
+
+    /**
+     * 17、获取平仓单（结算单用）
+     * http://139.224.8.133:9100/api/get_closed_order.ashx
+     * 传参：account,startdate,enddate
+     */
+    @GET("/api/get_closed_order.ashx")
+    Observable<List<CloseOrder>> getCloseOrder(@Query("account") String account, @Query("startdate") String startdate, @Query("enddate") String enddate);
 
     /**
      * 18、获得资金状况

@@ -168,6 +168,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         set.setDrawVerticalHighlightIndicator(false);
         set.setHighlightLineWidth(1);
 
+        set.enableDashedHighlightLine(10, 5, 0);
         set.setColor(color);
         set.setCircleColor(Color.WHITE);
         set.setLineWidth(1f);

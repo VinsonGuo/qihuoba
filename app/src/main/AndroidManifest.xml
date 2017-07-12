@@ -35,7 +35,6 @@
         <meta-data
             android:name="com.yjjr.yjfutures.utils.imageloader.AppGlideModule"
             android:value="GlideModule"/>
-        <service android:name=".ui.PollService"/>
 
         <activity android:name=".ui.MainActivity">
         </activity>
@@ -63,6 +62,8 @@
         <activity android:name=".ui.mine.UploadCardActivity">
         </activity>
         <activity android:name=".ui.trade.OrderDetailActivity">
+        </activity>
+        <activity android:name=".ui.trade.SettlementActivity">
         </activity>
     </application>
 

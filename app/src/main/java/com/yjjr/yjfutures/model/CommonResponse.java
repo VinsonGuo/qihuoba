@@ -4,7 +4,7 @@ package com.yjjr.yjfutures.model;
  * Created by dell on 2017/7/10.
  */
 
-public class SendOrderResponse {
+public class CommonResponse {
     private String Message;
     private int ReturnCode;
 
@@ -26,7 +26,7 @@ public class SendOrderResponse {
 
     @Override
     public String toString() {
-        return "SendOrderResponse{" +
+        return "CommonResponse{" +
                 "Message='" + Message + '\'' +
                 ", ReturnCode=" + ReturnCode +
                 '}';

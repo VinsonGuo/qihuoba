@@ -4,8 +4,8 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
-import com.yjjr.yjfutures.model.SendOrderResponse;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -207,7 +207,7 @@ public class RxUtils {
         };
     }
 
-    public static Observable<SendOrderResponse> createCloseObservable(Holding holding) {
+    public static Observable<CommonResponse> createCloseObservable(Holding holding) {
         String type;
         if (TextUtils.equals(holding.getBuySell(), "买入")) {
             type = "卖出";
@@ -215,13 +215,13 @@ public class RxUtils {
             type = "买入";
         }
         return HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), holding.getSymbol(), type, 0, Math.abs(holding.getQty()), "市价")
-                .map(new Function<SendOrderResponse, SendOrderResponse>() {
+                .map(new Function<CommonResponse, CommonResponse>() {
                     @Override
-                    public SendOrderResponse apply(@NonNull SendOrderResponse sendOrderResponse) throws Exception {
-                        if (sendOrderResponse.getReturnCode() < 0) {
-                            throw new RuntimeException(sendOrderResponse.getMessage());
+                    public CommonResponse apply(@NonNull CommonResponse commonResponse) throws Exception {
+                        if (commonResponse.getReturnCode() < 0) {
+                            throw new RuntimeException(commonResponse.getMessage());
                         }
-                        return sendOrderResponse;
+                        return commonResponse;
                     }
                 });
     }

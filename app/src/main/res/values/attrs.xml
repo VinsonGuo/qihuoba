@@ -35,4 +35,12 @@
         <attr name="actionSheetStyle" format="reference"/>
     </declare-styleable>
 
+
+    <declare-styleable name="RegisterInput">
+        <attr name="name" format="string"/>
+        <attr name="error_name" format="string"/>
+        <attr name="button_text" format="string"/>
+        <attr name="hint" format="string"/>
+        <attr name="value" format="string"/>
+    </declare-styleable>
 </resources>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YJFutures</string>
+    <string name="app_name">期货吧</string>
     <string name="permission_deny_message">需要您开启应用需要相应的权限才能更好地为您服务，请点击确定-权限选项中勾选</string>
     <string name="activity_main_stroll">暂不注册</string>
     <!--activity login-->
@@ -1325,4 +1325,5 @@
     <string name="phone">手机</string>
     <string name="free_register">免费注册</string>
     <string name="closeing">平仓中...</string>
+    <string name="register_by_phone">手机号注册</string>
 </resources>

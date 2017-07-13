@@ -22,7 +22,6 @@ import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.MainActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
-import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 
@@ -123,7 +122,7 @@ public class LoginActivity extends BaseActivity {
         tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                RegisterActivity.startActivity(mContext, REQUEST_REGISTER);
+                RegisterActivity.startActivity(mContext);
             }
         });
         btnLogin.setOnClickListener(new View.OnClickListener() {

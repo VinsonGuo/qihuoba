@@ -92,12 +92,12 @@ public class TimeSharingplanChart extends RelativeLayout {
             data.addEntry(new Entry(setSell.getEntryCount(), (float) hisData.getClose()), DATA_SET_SELL);
         }
 
-
         Highlight chartHighlighter = new Highlight(setSell.getEntryCount() - 1, (float) list.get(setSell.getEntryCount() - 1).getClose(), DATA_SET_SELL);
         mChart.highlightValue(chartHighlighter);
         mChart.calculateOffsets();
         mChart.notifyDataSetChanged();
-        mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
+//        mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
+        mChart.setVisibleXRange(list.size()+100, list.size()+100);
         mChart.moveViewToX(data.getEntryCount()/* - FULL_SCREEN_SHOW_COUNT - 1*/);
 
     }
@@ -151,7 +151,7 @@ public class TimeSharingplanChart extends RelativeLayout {
             Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_SELL).getEntryCount() - 1, bid, DATA_SET_SELL);
             mChart.highlightValue(chartHighlighter);
             mChart.notifyDataSetChanged();
-            mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
+//            mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
             mChart.moveViewToX(data.getEntryCount()/* - FULL_SCREEN_SHOW_COUNT - 1*/);
 
         }
@@ -166,12 +166,12 @@ public class TimeSharingplanChart extends RelativeLayout {
         set.setDrawHighlightIndicators(false);
         set.setDrawHorizontalHighlightIndicator(true);
         set.setDrawVerticalHighlightIndicator(false);
-        set.setHighlightLineWidth(1);
+        set.setHighlightLineWidth(0.5f);
 
         set.enableDashedHighlightLine(10, 5, 0);
         set.setColor(color);
         set.setCircleColor(Color.WHITE);
-        set.setLineWidth(1f);
+        set.setLineWidth(0.5f);
         set.setCircleRadius(4f);
         set.setFillAlpha(65);
         set.setFillColor(ColorTemplate.getHoloBlue());
@@ -195,16 +195,11 @@ public class TimeSharingplanChart extends RelativeLayout {
         mChart.setPinchZoom(false);
         mChart.setDragEnabled(false);
         mChart.setDoubleTapToZoomEnabled(false);
-        mChart.setScaleXEnabled(false);
-        mChart.setScaleYEnabled(false);
         mChart.setAutoScaleMinMaxEnabled(true);
         mChart.setDrawMarkers(true);
         // enable touch gestures
         mChart.setTouchEnabled(true);
 
-        // enable scaling and dragging
-        mChart.setDragEnabled(true);
-        mChart.setAutoScaleMinMaxEnabled(false);
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {

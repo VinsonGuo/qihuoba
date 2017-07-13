@@ -53,6 +53,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 LoginActivity.startActivity(mContext);
                 break;
             case R.id.btn_register:
+                RegisterActivity.startActivity(mContext);
                 break;
         }
     }

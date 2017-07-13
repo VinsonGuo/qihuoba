@@ -6,13 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RadioGroup;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.SendOrderEvent;
-import com.yjjr.yjfutures.model.SendOrderResponse;
+import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -70,7 +71,9 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         mProgressDialog.setMessage(getString(R.string.online_transaction_in_order));
         headerView.bindActivity(mContext);
         headerView.setMainTitle(mType == TYPE_BUY ? "买入" : "卖出" + "委托");
-        findViewById(R.id.btn_confirm).setOnClickListener(this);
+        Button btnConfirm = (Button) findViewById(R.id.btn_confirm);
+        btnConfirm.setSelected(true);
+        btnConfirm.setOnClickListener(this);
     }
 
     @Override
@@ -126,23 +129,23 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                         });*/
 
                 HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价")
-                        .map(new Function<SendOrderResponse, SendOrderResponse>() {
+                        .map(new Function<CommonResponse, CommonResponse>() {
                             @Override
-                            public SendOrderResponse apply(@NonNull SendOrderResponse sendOrderResponse) throws Exception {
-                                if (sendOrderResponse.getReturnCode() < 0) {
-                                    throw new RuntimeException(sendOrderResponse.getMessage());
+                            public CommonResponse apply(@NonNull CommonResponse commonResponse) throws Exception {
+                                if (commonResponse.getReturnCode() < 0) {
+                                    throw new RuntimeException(commonResponse.getMessage());
                                 }
-                                return sendOrderResponse;
+                                return commonResponse;
                             }
                         })
                         .delay(1, TimeUnit.SECONDS)
-                        .compose(RxUtils.<SendOrderResponse>applySchedulers())
-                        .compose(this.<SendOrderResponse>bindUntilEvent(ActivityEvent.DESTROY))
-                        .subscribe(new Consumer<SendOrderResponse>() {
+                        .compose(RxUtils.<CommonResponse>applySchedulers())
+                        .compose(this.<CommonResponse>bindUntilEvent(ActivityEvent.DESTROY))
+                        .subscribe(new Consumer<CommonResponse>() {
                             @Override
-                            public void accept(@NonNull SendOrderResponse sendOrderResponse) throws Exception {
+                            public void accept(@NonNull CommonResponse commonResponse) throws Exception {
                                 mProgressDialog.dismiss();
-                                ToastUtils.show(mContext, sendOrderResponse.getMessage());
+                                ToastUtils.show(mContext, commonResponse.getMessage());
                                 EventBus.getDefault().post(new SendOrderEvent());
                             }
                         }, new Consumer<Throwable>() {

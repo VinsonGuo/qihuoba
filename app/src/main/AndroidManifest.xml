@@ -65,6 +65,8 @@
         </activity>
         <activity android:name=".ui.trade.SettlementActivity">
         </activity>
+        <activity android:name=".ui.mine.RegisterActivity">
+        </activity>
     </application>
 
 </manifest>

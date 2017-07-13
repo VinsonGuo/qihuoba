@@ -102,6 +102,7 @@ public class CandleStickChartFragment extends BaseFragment {
         // drawn
         mChart.setMaxVisibleValueCount(100);
 
+        mChart.setAutoScaleMinMaxEnabled(true);
         mChart.setScaleYEnabled(true);
 
         // scaling can now only be done on x- and y-axis separately

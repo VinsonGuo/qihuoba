@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="持仓盈亏\n1000"
+            tools:text="持仓盈亏\n1000"
             android:textColor="@color/main_text_color"
             android:textSize="@dimen/sp_14"/>
 
@@ -134,6 +134,7 @@
             android:gravity="center"
             android:padding="4dp"
             android:text="闪电图"
+            android:visibility="gone"
             android:textColor="@color/selector_trade_rb_text_color"
             android:textSize="@dimen/sp_12"
             />

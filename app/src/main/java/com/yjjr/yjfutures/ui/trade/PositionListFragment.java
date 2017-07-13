@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -14,8 +13,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.SendOrderEvent;
+import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
-import com.yjjr.yjfutures.model.SendOrderResponse;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.utils.DoubleUtil;
@@ -82,7 +81,7 @@ public class PositionListFragment extends ListFragment<Holding> {
 
     private void closeAllOrder(List<Holding> data) {
         mProgressDialog.show();
-        List<Observable<SendOrderResponse>> observables = new ArrayList<>();
+        List<Observable<CommonResponse>> observables = new ArrayList<>();
         for (Holding holding : data) {
             observables.add(RxUtils.createCloseObservable(holding));
         }
@@ -92,8 +91,8 @@ public class PositionListFragment extends ListFragment<Holding> {
             public String apply(@NonNull Object[] objects) throws Exception {
                 String msg = null;
                 for (Object object : objects) {
-                    SendOrderResponse sendOrderResponse = (SendOrderResponse) object;
-                    msg = sendOrderResponse.getMessage();
+                    CommonResponse commonResponse = (CommonResponse) object;
+                    msg = commonResponse.getMessage();
                 }
                 return msg;
             }
@@ -124,13 +123,13 @@ public class PositionListFragment extends ListFragment<Holding> {
         mProgressDialog.show();
         RxUtils.createCloseObservable(holding)
                 .delay(1, TimeUnit.SECONDS)
-                .compose(RxUtils.<SendOrderResponse>applySchedulers())
-                .compose(this.<SendOrderResponse>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<SendOrderResponse>() {
+                .compose(RxUtils.<CommonResponse>applySchedulers())
+                .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<CommonResponse>() {
                     @Override
-                    public void accept(@NonNull SendOrderResponse sendOrderResponse) throws Exception {
+                    public void accept(@NonNull CommonResponse commonResponse) throws Exception {
                         mProgressDialog.dismiss();
-                        ToastUtils.show(mContext, sendOrderResponse.getMessage());
+                        ToastUtils.show(mContext, commonResponse.getMessage());
                         EventBus.getDefault().post(new SendOrderEvent());
                     }
                 }, new Consumer<Throwable>() {

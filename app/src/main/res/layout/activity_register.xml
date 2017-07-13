@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_dark"
+    tools:context="com.yjjr.yjfutures.ui.mine.RegisterActivity">
+
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="35dp"
+        android:src="@drawable/drawable_header_back1"/>
+
+    <TextView
+        android:textSize="30sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/register_by_phone"
+        android:gravity="center"
+        android:textColor="@color/main_text_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.yjjr.yjfutures.widget.RegisterInput
+        android:id="@+id/ri_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:name="@string/phone_number_format"/>
+
+    <com.yjjr.yjfutures.widget.RegisterInput
+        android:id="@+id/ri_smscode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:name="@string/activation_message_code"
+        app:button_text="@string/register_get_confirm_code"
+        />
+
+    <com.yjjr.yjfutures.widget.RegisterInput
+        android:id="@+id/ri_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:name="@string/set_password"
+        app:hint="@string/password_too_simple" />
+</LinearLayout>

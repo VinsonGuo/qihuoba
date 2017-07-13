@@ -2,13 +2,13 @@ package com.yjjr.yjfutures.utils.http;
 
 import com.yjjr.yjfutures.model.AccountInfo;
 import com.yjjr.yjfutures.model.CloseOrder;
+import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Exchange;
 import com.yjjr.yjfutures.model.FilledOrder;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.OpenOrder;
 import com.yjjr.yjfutures.model.Quote;
-import com.yjjr.yjfutures.model.SendOrderResponse;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.Trade;
 import com.yjjr.yjfutures.model.UserLoginResponse;
@@ -158,7 +158,7 @@ public interface HttpService {
      * 传参：account,symbol,buysell,price,qty,ordertype
      */
     @GET("/api/send_order.ashx")
-    Observable<SendOrderResponse> sendOrder(
+    Observable<CommonResponse> sendOrder(
             @Query("account") String account,
             @Query("symbol") String symbol,
             @Query("buysell") String buysell,
@@ -237,4 +237,12 @@ public interface HttpService {
      */
     @GET("/api/get_user_exchange_rate_list.ashx")
     Observable<List<Exchange>> getUserExchange(@Query("rootaccount") String rootaccount, @Query("account") String account);
+
+    /**
+     * 20、用户注册
+     * http://139.224.8.133:9100/api/register_online_2.ashx
+     * 传参：RootAccount, RegisterAccount, Name, MobileNo, AccountType, MainAccount, LiveAccount
+     */
+    @GET("/api/register_online_2.ashx")
+    Observable<List<Exchange>> register(@Query("rootaccount") String rootaccount, @Query("account") String account);
 }

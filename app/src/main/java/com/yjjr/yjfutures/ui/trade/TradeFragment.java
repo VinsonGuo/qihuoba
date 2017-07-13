@@ -22,14 +22,15 @@ import com.yjjr.yjfutures.event.FastTakeOrderEvent;
 import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.AccountInfo;
+import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
-import com.yjjr.yjfutures.model.SendOrderResponse;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
+import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -84,6 +85,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvDirection;
     private TextView tvYueValue;
     private TextView tvMarginValue;
+    private TextView tvTotal;
     /**
      * 持仓的对象
      */
@@ -119,7 +121,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         findViews(v);
         mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol);
-        Fragment[] fragments = {TickChartFragment.newInstance(mSymbol), TimeSharingplanFragment.newInstance(mSymbol),
+        Fragment[] fragments = {/*TickChartFragment.newInstance(mSymbol)*/new Fragment(), TimeSharingplanFragment.newInstance(mSymbol),
                 mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol)};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
         mViewpager.setOffscreenPageLimit(fragments.length);
@@ -141,7 +143,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.second_text_color));
             }
         });
-        ((RadioButton) rgNav.getChildAt(0)).setChecked(true);
+        ((RadioButton) rgNav.getChildAt(1)).setChecked(true);
         pbLeft.setRotation(180);
         mTopRightMenu = new TopRightMenu(getActivity());
 
@@ -154,6 +156,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         menuItems.add(new MenuItem(R.drawable.transport, "日线"));
         mTopRightMenu
                 .setWidth(220)      //默认宽度wrap_content
+                .setHeight(DisplayUtils.dip2px(mContext, 44 * menuItems.size()))
                 .showIcon(false)     //显示菜单图标，默认为true
                 .dimBackground(true)        //背景变暗，默认为true
                 .needAnimationStyle(true)   //显示动画，默认为true
@@ -194,7 +197,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvRight.setOnClickListener(this);
         v.findViewById(R.id.tv_center).setOnClickListener(this);
         v.findViewById(R.id.tv_close_order).setOnClickListener(this);
-        v.findViewById(R.id.tv_deposit).setOnClickListener(this);
+        View tvDeposit = v.findViewById(R.id.tv_deposit);
+        tvDeposit.setSelected(true);
+        tvDeposit.setOnClickListener(this);
         v.findViewById(R.id.tv_kchart).setOnClickListener(this);
         return v;
     }
@@ -206,8 +211,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         StringUtils.setOnlineTxArrow(tvLeftArrow, change);
         StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", change);
         StringUtils.setOnlineTxArrow(tvRightArrow, change);
-        pbLeft.setProgress(quote.getBidSize());
-        pbRight.setProgress(quote.getAskSize());
+
+        int allSize = quote.getBidSize() + quote.getAskSize();
+        if (allSize != 0) {
+            pbLeft.setProgress(quote.getBidSize() * 100 / allSize);
+            pbRight.setProgress(quote.getAskSize() * 100 / allSize);
+        }
         tvLeftPb.setText(String.valueOf(quote.getBidSize()));
         tvRightPb.setText(String.valueOf(quote.getAskSize()));
     }
@@ -234,6 +243,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvDirection = (TextView) v.findViewById(R.id.tv_direction);
         tvYueValue = (TextView) v.findViewById(R.id.tv_yue_value);
         tvMarginValue = (TextView) v.findViewById(R.id.tv_margin_value);
+        tvTotal = (TextView) v.findViewById(R.id.tv_total);
         mTakeOrderDialog = new CustomPromptDialog.Builder(mContext)
                 .setMessage("确定要下单么")
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
@@ -305,6 +315,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         vgSettlement.setVisibility(View.GONE);
                         vgOrder.setVisibility(View.VISIBLE);
                         tvDirection.setText(holding.getBuySell() + Math.abs(holding.getQty()) + "手");
+                        tvTotal.setText("持仓盈亏\n" + DoubleUtil.format2Decimal(holding.getUnrealizedPL()));
                     }
                 }, RxUtils.commonErrorConsumer());
         HttpManager.getHttpService().getAccountInfo(BaseApplication.getInstance().getTradeToken())
@@ -344,11 +355,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 mProgressDialog.show();
                 RxUtils.createCloseObservable(mHolding)
                         .delay(1, TimeUnit.SECONDS)
-                        .compose(RxUtils.<SendOrderResponse>applySchedulers())
-                        .compose(this.<SendOrderResponse>bindUntilEvent(FragmentEvent.DESTROY))
-                        .subscribe(new Consumer<SendOrderResponse>() {
+                        .compose(RxUtils.<CommonResponse>applySchedulers())
+                        .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
+                        .subscribe(new Consumer<CommonResponse>() {
                             @Override
-                            public void accept(@NonNull SendOrderResponse response) throws Exception {
+                            public void accept(@NonNull CommonResponse response) throws Exception {
                                 ToastUtils.show(mContext, response.getMessage());
                                 mProgressDialog.dismiss();
                                 EventBus.getDefault().post(new SendOrderEvent());

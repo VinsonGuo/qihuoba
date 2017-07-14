@@ -79,10 +79,10 @@ public class SpannableUtil {
         SpannableString ssb = new SpannableString(content);
         if (change > 0) {
             ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(ctx, R.color.main_color_red)), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        } else if (change < 0) {
+        } /*else if (change < 0) {
             ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(ctx, R.color.main_color_green)), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        } else {
-            ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(ctx, R.color.grey)), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }*/ else {
+            ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(ctx, R.color.main_color_green)), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return ssb;
     }

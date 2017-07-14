@@ -50,6 +50,7 @@
                     android:textSize="@dimen/sp_14"/>
 
                 <RadioGroup
+                    android:id="@+id/rg_hand"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -374,19 +375,20 @@
         android:gravity="center">
 
         <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/cb_check"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/read_and_agree"
-            android:scaleY="0.8"
             android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:text="@string/read_and_agree"
             android:textColor="@color/second_text_color"
             android:textSize="@dimen/sp_16"
             app:buttonTint="@color/main_text_color"/>
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_marginLeft="-15dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="-15dp"
             android:text="《投资人用点买人合作协议》"
             android:textColor="@color/third_text_color"
             android:textSize="@dimen/sp_12"/>

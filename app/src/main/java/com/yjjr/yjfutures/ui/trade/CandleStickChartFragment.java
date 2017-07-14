@@ -262,12 +262,13 @@ public class CandleStickChartFragment extends BaseFragment {
 //        set1.setColor(Color.rgb(80, 80, 80));
         set1.setShadowColor(Color.DKGRAY);
         set1.setShadowWidth(0.7f);
-        set1.setDecreasingColor(ContextCompat.getColor(getContext(), R.color.main_color));
+        set1.setDecreasingColor(ContextCompat.getColor(getContext(), R.color.main_color_green));
         set1.setDecreasingPaintStyle(Paint.Style.FILL);
+        set1.setShadowColorSameAsCandle(true);
         set1.setIncreasingColor(ContextCompat.getColor(getContext(), R.color.main_color_red));
         set1.setIncreasingPaintStyle(Paint.Style.STROKE);
         set1.setIncreasingPaintStyle(Paint.Style.FILL);
-        set1.setNeutralColor(Color.BLUE);
+        set1.setNeutralColor(ContextCompat.getColor(getContext(), R.color.main_color_red));
         //set1.setHighlightLineWidth(1f);
         set1.setDrawValues(false);
         CandleData data = new CandleData(set1);

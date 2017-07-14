@@ -23,6 +23,7 @@ import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.AccountInfo;
 import com.yjjr.yjfutures.model.CommonResponse;
+import com.yjjr.yjfutures.model.FastTakeOrderConfig;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
@@ -90,6 +91,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      * 持仓的对象
      */
     private Holding mHolding;
+    private TextView tvPrice;
+    private TextView tvChange;
+    private TextView tvChangeRate;
 
 
     public TradeFragment() {
@@ -191,7 +195,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mCandleStickChartFragment.loadDataByType(type);
                     }
                 });
-        tvCenter.setText(UserSharePrefernce.isFastTakeOrder(mContext) ? R.string.opened : R.string.closed);
+        tvCenter.setText(UserSharePrefernce.getFastTakeOrder(mContext, mSymbol) != null ? R.string.opened : R.string.closed);
         fillViews(quote);
         tvLeft.setOnClickListener(this);
         tvRight.setOnClickListener(this);
@@ -219,6 +223,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         }
         tvLeftPb.setText(String.valueOf(quote.getBidSize()));
         tvRightPb.setText(String.valueOf(quote.getAskSize()));
+        tvPrice.setText(quote.getLastPrice() + "");
+        tvChange.setText(DoubleUtil.format2Decimal(quote.getChange()));
+        tvChangeRate.setText(DoubleUtil.format2Decimal(quote.getChangeRate()) + "%");
     }
 
 
@@ -244,6 +251,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvYueValue = (TextView) v.findViewById(R.id.tv_yue_value);
         tvMarginValue = (TextView) v.findViewById(R.id.tv_margin_value);
         tvTotal = (TextView) v.findViewById(R.id.tv_total);
+        tvPrice = (TextView) v.findViewById(R.id.tv_price);
+        tvChange = (TextView) v.findViewById(R.id.tv_change);
+        tvChangeRate = (TextView) v.findViewById(R.id.tv_change_rate);
         mTakeOrderDialog = new CustomPromptDialog.Builder(mContext)
                 .setMessage("确定要下单么")
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
@@ -290,34 +300,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     @Override
     protected void initData() {
         super.initData();
-        vgOrder.setVisibility(View.GONE);
-        vgSettlement.setVisibility(View.VISIBLE);
-        HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken())
-                .flatMap(new Function<List<Holding>, ObservableSource<Holding>>() {
-                    @Override
-                    public ObservableSource<Holding> apply(@NonNull List<Holding> holdings) throws Exception {
-                        return Observable.fromIterable(holdings);
-                    }
-                })
-                .filter(new Predicate<Holding>() {
-                    @Override
-                    public boolean test(@NonNull Holding holding) throws Exception {
-                        return TextUtils.equals(holding.getSymbol(), mSymbol) && holding.getQty() != 0;
-                    }
-                })
-                .retry()
-                .compose(RxUtils.<Holding>applySchedulers())
-                .compose(this.<Holding>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<Holding>() {
-                    @Override
-                    public void accept(@NonNull Holding holding) throws Exception {
-                        mHolding = holding;
-                        vgSettlement.setVisibility(View.GONE);
-                        vgOrder.setVisibility(View.VISIBLE);
-                        tvDirection.setText(holding.getBuySell() + Math.abs(holding.getQty()) + "手");
-                        tvTotal.setText("持仓盈亏\n" + DoubleUtil.format2Decimal(holding.getUnrealizedPL()));
-                    }
-                }, RxUtils.commonErrorConsumer());
+        getHolding();
         HttpManager.getHttpService().getAccountInfo(BaseApplication.getInstance().getTradeToken())
                 .retry()
                 .compose(RxUtils.<AccountInfo>applySchedulers())
@@ -331,6 +314,50 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 }, RxUtils.commonErrorConsumer());
     }
 
+    private void getHolding() {
+        HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken())
+                .flatMap(new Function<List<Holding>, ObservableSource<Holding>>() {
+                    @Override
+                    public ObservableSource<Holding> apply(@NonNull List<Holding> holdings) throws Exception {
+                        return Observable.fromIterable(holdings);
+                    }
+                })
+                .filter(new Predicate<Holding>() {
+                    @Override
+                    public boolean test(@NonNull Holding holding) throws Exception {
+                        return TextUtils.equals(holding.getSymbol(), mSymbol);
+                    }
+                })
+                .map(new Function<Holding, Holding>() {
+                    @Override
+                    public Holding apply(@NonNull Holding holding) throws Exception {
+                        if (holding.getQty() == 0) {
+                            throw new RuntimeException("holding qty = 0");
+                        }
+                        return holding;
+                    }
+                })
+                .compose(RxUtils.<Holding>applySchedulers())
+                .compose(this.<Holding>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<Holding>() {
+                    @Override
+                    public void accept(@NonNull Holding holding) throws Exception {
+                        mHolding = holding;
+                        vgSettlement.setVisibility(View.GONE);
+                        vgOrder.setVisibility(View.VISIBLE);
+                        tvDirection.setText(holding.getBuySell() + Math.abs(holding.getQty()) + "手");
+                        tvTotal.setText("持仓盈亏\n" + DoubleUtil.format2Decimal(holding.getUnrealizedPL()));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        LogUtils.e(throwable);
+                        vgOrder.setVisibility(View.GONE);
+                        vgSettlement.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SendOrderEvent event) {
         initData();
@@ -340,6 +367,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     public void onEvent(RefreshEvent event) {
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         fillViews(quote);
+        if (vgOrder.getVisibility() == View.VISIBLE && isFragmentVisible) {
+            getHolding();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -349,6 +379,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
+        FastTakeOrderConfig fastTakeOrder = UserSharePrefernce.getFastTakeOrder(mContext, mSymbol);
         switch (v.getId()) {
             case R.id.tv_close_order:
                 if (mHolding == null) return;
@@ -374,21 +405,23 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         });
                 break;
             case R.id.tv_left:
-                if (UserSharePrefernce.isFastTakeOrder(mContext)) {
-                    mTakeOrderDialog.show();
+                if (fastTakeOrder != null) {
+                    //快速下单
+                    takeOrder(fastTakeOrder, "买入");
                 } else {
                     TakeOrderActivity.startActivity(mContext, mSymbol, TakeOrderActivity.TYPE_BUY);
                 }
                 break;
             case R.id.tv_right:
-                if (UserSharePrefernce.isFastTakeOrder(mContext)) {
-                    mTakeOrderDialog.show();
+                if (fastTakeOrder != null) {
+                    //快速下单
+                    takeOrder(fastTakeOrder, "卖出");
                 } else {
                     TakeOrderActivity.startActivity(mContext, mSymbol, TakeOrderActivity.TYPE_SELL);
                 }
                 break;
             case R.id.tv_center:
-                FastTakeOrderActivity.startActivity(mContext);
+                FastTakeOrderActivity.startActivity(mContext, mSymbol);
                 break;
             case R.id.tv_deposit:
                 DepositActivity.startActivity(mContext);
@@ -397,6 +430,29 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 mTopRightMenu.showAsDropDown(mTvKchart);
                 break;
         }
+    }
+
+    private void takeOrder(FastTakeOrderConfig order, String type) {
+        mProgressDialog.show();
+        HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), mSymbol, type, 0, Math.abs(order.getQty()), "市价")
+                .delay(1, TimeUnit.SECONDS)
+                .compose(RxUtils.<CommonResponse>applySchedulers())
+                .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<CommonResponse>() {
+                    @Override
+                    public void accept(@NonNull CommonResponse response) throws Exception {
+                        ToastUtils.show(mContext, response.getMessage());
+                        mProgressDialog.dismiss();
+                        EventBus.getDefault().post(new SendOrderEvent());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        LogUtils.e(throwable);
+                        mProgressDialog.dismiss();
+                        ToastUtils.show(mContext, throwable.getMessage());
+                    }
+                });
     }
 
     @Override

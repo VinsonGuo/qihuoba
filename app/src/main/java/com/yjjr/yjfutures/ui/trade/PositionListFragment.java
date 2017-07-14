@@ -12,6 +12,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
@@ -175,6 +176,13 @@ public class PositionListFragment extends ListFragment<Holding> {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SendOrderEvent event) {
         loadData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RefreshEvent event) {
+        if(isFragmentVisible) {
+            loadData();
+        }
     }
 
     @Override

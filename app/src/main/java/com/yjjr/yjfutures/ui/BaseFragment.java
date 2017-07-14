@@ -44,7 +44,7 @@ public abstract class BaseFragment extends RxFragment {
     /**
      * 是否可见状态 为了避免和{@link Fragment#isVisible()}冲突 换个名字
      */
-    private boolean isFragmentVisible;
+    protected boolean isFragmentVisible;
     /**
      * 标志位，View已经初始化完成。
      * 2016/04/29

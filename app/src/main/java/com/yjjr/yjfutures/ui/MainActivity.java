@@ -188,7 +188,7 @@ public class MainActivity extends BaseActivity {
                             }
                         });
             }
-        }, 5000, 5000);
+        }, 1000, 1000);
     }
 
     private void initViews() {

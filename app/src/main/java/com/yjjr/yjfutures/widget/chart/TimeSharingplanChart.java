@@ -278,6 +278,10 @@ public class TimeSharingplanChart extends RelativeLayout {
         xAxis.setValueFormatter(xValueFormatter);
     }
 
+    public void setNoDataText(String text) {
+        mChart.setNoDataText(text);
+    }
+
     public void setStartTime(DateTime startTime) {
         mStartTime = startTime;
     }

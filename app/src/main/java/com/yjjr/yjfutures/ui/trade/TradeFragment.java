@@ -211,9 +211,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private void fillViews(Quote quote) {
         if (quote == null) return;
         double change = quote.getChangeRate();
-        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", change);
+//        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", change);
+        tvLeft.setText("看涨" + quote.getBidPrice());
         StringUtils.setOnlineTxArrow(tvLeftArrow, change);
-        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", change);
+//        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", change);
+        tvRight.setText(quote.getBidPrice() + "看跌");
+
         StringUtils.setOnlineTxArrow(tvRightArrow, change);
 
         int allSize = quote.getBidSize() + quote.getAskSize();

@@ -134,7 +134,7 @@ public class LoginActivity extends BaseActivity {
         tvForgetPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                FindPwdCheckActivity.startActivity(mContext);
+                FindPwdActivity.startActivity(mContext);
             }
         });
 

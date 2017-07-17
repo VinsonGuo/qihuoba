@@ -22,7 +22,7 @@
         android:textSize="30sp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="30dp"
-        android:text="@string/register_by_phone"
+        android:text="@string/find_login_password"
         android:gravity="center"
         android:textColor="@color/main_text_color"
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
         android:id="@+id/ri_smscode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:button_text="@string/register_get_confirm_code"
+        app:button_text="@string/activation_code"
         app:name="@string/activation_message_code"
         />
 
@@ -56,6 +56,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:background="@drawable/selector_common_btn_bg"
-        android:text="@string/register"
+        android:text="@string/next_step"
         android:textColor="@color/selector_common_btn_text_color" />
 </LinearLayout>

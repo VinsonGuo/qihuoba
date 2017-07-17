@@ -14,7 +14,7 @@
     <string name="input_nickname">请输入2-16位昵称</string>
     <!-- constant -->
     <string name="login">登录</string>
-    <string name="logout">注销</string>
+    <string name="logout">退出</string>
     <string name="register">注册</string>
     <string name="title">标题</string>
     <string name="operate">操作</string>
@@ -1326,4 +1326,11 @@
     <string name="free_register">免费注册</string>
     <string name="closeing">平仓中...</string>
     <string name="register_by_phone">手机号注册</string>
+    <string name="djbzj">冻结保证金</string>
+    <string name="withdraw">提现</string>
+    <string name="set_trade_password">设置交易密码</string>
+    <string name="auth_name">实名认证</string>
+    <string name="login_pwd">登录密码</string>
+    <string name="pay_pwd">支付密码</string>
+    <string name="find_login_password">找回登录密码</string>
 </resources>

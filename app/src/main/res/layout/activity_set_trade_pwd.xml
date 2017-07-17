@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_dark"
+    android:orientation="vertical"
+    tools:context="com.yjjr.yjfutures.ui.mine.SetTradePwdActivity">
+
+    <com.yjjr.yjfutures.widget.HeaderView
+        android:id="@+id/header_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:main_title="@string/set_trade_password"/>
+
+    <TextView
+        android:layout_marginTop="@dimen/root_padding_15"
+        android:layout_marginBottom="@dimen/root_padding_15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginRight="@dimen/root_padding_15"
+        android:textSize="@dimen/sp_12"
+        android:text="交易密码6位数字"
+        android:textColor="@color/second_text_color"/>
+
+    <com.jungly.gridpasswordview.GridPasswordView
+        android:id="@+id/pwdView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginRight="@dimen/root_padding_15"
+        app:gpvGridColor="#181818"
+        app:gpvLineColor="@color/divider_color"
+        app:gpvLineWidth="1dp"
+        app:gpvPasswordLength="6"
+        app:gpvPasswordTransformation="*"
+        app:gpvPasswordType="numberPassword"
+        app:gpvTextColor="#999999"
+        app:gpvTextSize="25sp"/>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:text="@string/next_step"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginRight="@dimen/root_padding_15"
+        android:background="@drawable/selector_common_btn_bg"
+        android:textColor="@color/selector_common_btn_text_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@id/cb_check"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginRight="@dimen/root_padding_15"
+        app:buttonTint="@color/white"
+        android:textColor="@color/second_text_color"
+        android:text="我已阅读并同意"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -9,11 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.AccountInfo;
+import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
+import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.http.HttpManager;
+
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 /**
- * A simple {@link Fragment} subclass.
+ * mine fragment
  */
 public class MineFragment extends BaseFragment implements View.OnClickListener {
 
@@ -22,7 +31,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TextView tvThree;
     private TextView tvFour;
     private TextView tvFive;
-    private TextView tvSix;
+    private TextView tvYue;
+    private TextView tvMargin;
 
     public MineFragment() {
         // Required empty public constructor
@@ -34,7 +44,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         tvThree = (TextView) v.findViewById(R.id.tv_three);
         tvFour = (TextView) v.findViewById(R.id.tv_four);
         tvFive = (TextView) v.findViewById(R.id.tv_five);
-        tvSix = (TextView) v.findViewById(R.id.tv_six);
+        tvYue = (TextView) v.findViewById(R.id.tv_yue);
+        tvMargin = (TextView) v.findViewById(R.id.tv_margin);
+
+        tvOne.setOnClickListener(this);
+        tvTwo.setOnClickListener(this);
+        tvThree.setOnClickListener(this);
+        tvFour.setOnClickListener(this);
+        tvFive.setOnClickListener(this);
     }
 
     @Override
@@ -43,7 +60,24 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         findViews(v);
         v.findViewById(R.id.btn_login).setOnClickListener(this);
         v.findViewById(R.id.btn_register).setOnClickListener(this);
+        v.findViewById(R.id.tv_logout).setOnClickListener(this);
         return v;
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        HttpManager.getHttpService().getAccountInfo(BaseApplication.getInstance().getTradeToken())
+                .retry()
+                .compose(RxUtils.<AccountInfo>applySchedulers())
+                .compose(this.<AccountInfo>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<AccountInfo>() {
+                    @Override
+                    public void accept(@NonNull AccountInfo accountInfo) throws Exception {
+                        tvYue.setText(DoubleUtil.format2Decimal(accountInfo.getAvailableFund()));
+                        tvMargin.setText(DoubleUtil.format2Decimal(accountInfo.getFrozenMargin()));
+                    }
+                }, RxUtils.commonErrorConsumer());
     }
 
     @Override
@@ -54,6 +88,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.btn_register:
                 RegisterActivity.startActivity(mContext);
+                break;
+            case R.id.tv_logout:
+                BaseApplication.getInstance().logout(getActivity());
+                break;
+            case R.id.tv_one:
+                FundDetailActivity.startActivity(mContext);
+                break;
+            case R.id.tv_two:
+                UserInfoActivity.startActivity(mContext);
                 break;
         }
     }

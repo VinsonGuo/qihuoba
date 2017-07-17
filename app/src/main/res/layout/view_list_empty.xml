@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableTop="@mipmap/ic_launcher_round"
+        android:drawableTop="@mipmap/ic_launcher"
         android:text="暂无数据"
         android:textColor="@color/main_text_color"
         android:textSize="@dimen/sp_14"/>

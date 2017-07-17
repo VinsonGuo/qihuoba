@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/shape_bg_bottom_line"
+    android:background="@drawable/shape_bg_bottom_line_white"
     android:padding="@dimen/root_padding_15">
 
     <TextView
@@ -57,4 +57,5 @@
         tools:text="44.5\n-1.4%"
         android:textColor="@color/main_color_red"
         android:textSize="@dimen/text_size_14sp"/>
+
 </RelativeLayout>

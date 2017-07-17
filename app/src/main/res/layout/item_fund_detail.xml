@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/shape_bg_bottom_line"
+              android:gravity="center"
+              android:orientation="horizontal"
+              android:padding="@dimen/root_padding_15">
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2.17-1-1\n12:12"
+        android:textColor="@color/second_text_color"
+        android:textSize="@dimen/sp_14"/>
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/is_lastest_version"
+        android:textColor="@color/second_text_color"
+        android:textSize="@dimen/sp_16"/>
+
+    <TextView
+        android:id="@+id/tv_money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="111"
+        android:textColor="@color/main_color_red"/>
+
+</LinearLayout>

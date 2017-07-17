@@ -58,9 +58,9 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             android:layout_marginTop="1dp"
-            android:background="@drawable/selector_common_btn_bg"
+            android:background="@drawable/selector_register_input_btn_bg"
             android:gravity="center"
-            android:textColor="@color/selector_common_btn_text_color"
+            android:textColor="@color/selector_register_input_btn_color"
             android:textSize="@dimen/text_size_12sp"
             android:visibility="gone"
             tools:text="发送验证码"/>

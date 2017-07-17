@@ -3,7 +3,7 @@
     <!-- 连框颜色值 -->
     <item>
         <shape>
-            <solid android:color="@color/color_dbdce4" />
+            <solid android:color="@color/divider_color" />
         </shape>
     </item>
     <!-- 主体背景颜色值 -->
@@ -12,7 +12,7 @@
         android:top="@dimen/common_divider_small"
         >
         <shape>
-            <solid android:color="@color/white" />
+            <solid android:color="@color/background_dark" />
         </shape>
     </item>
 </layer-list>

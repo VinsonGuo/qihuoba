@@ -55,7 +55,7 @@ public class RegisterInput extends FrameLayout {
             mTvError = (TextView) findViewById(R.id.tv_error);
             mTvOpera = (TextView) findViewById(R.id.tv_opera);
             mIvDel = (ImageView) findViewById(R.id.iv_del);
-//            rootView.setSelected(mEtInput.hasFocus());
+            rootView.setSelected(mEtInput.hasFocus());
             RxView.focusChanges(mEtInput)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(RxView.selected(rootView));

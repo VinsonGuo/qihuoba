@@ -23,7 +23,7 @@ import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends BaseActivity implements View.OnClickListener, Validator.ValidationListener {
+public class FindPwdActivity extends BaseActivity implements View.OnClickListener, Validator.ValidationListener {
 
 
     @com.mobsandgeeks.saripaar.annotation.Pattern(regex = HttpConfig.REG_PHONE, messageResId = R.string.phone_num_illegal)
@@ -39,13 +39,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private Button mBtnConfirm;
 
     public static void startActivity(Context context) {
-        context.startActivity(new Intent(context, RegisterActivity.class));
+        context.startActivity(new Intent(context, FindPwdActivity.class));
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_find_pwd);
         mValidator = new Validator(mContext);
         mValidator.setValidationListener(this);
         RegisterInput riPhone = (RegisterInput) findViewById(R.id.ri_phone);

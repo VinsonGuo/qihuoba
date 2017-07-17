@@ -180,7 +180,10 @@
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 
-
 #soap
 -dontwarn org.xmlpull.**
 -keep public class org.xmlpull.**{*;}
+
+#password view
+-dontwarn com.jungly.gridpasswordview.**
+-keep public class com.jungly.gridpasswordview.**{*;}

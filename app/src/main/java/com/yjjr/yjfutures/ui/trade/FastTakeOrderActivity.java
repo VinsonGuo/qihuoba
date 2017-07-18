@@ -1,6 +1,7 @@
 package com.yjjr.yjfutures.ui.trade;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -16,12 +17,15 @@ import com.yjjr.yjfutures.event.FastTakeOrderEvent;
 import com.yjjr.yjfutures.model.FastTakeOrderConfig;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
 
 import org.greenrobot.eventbus.EventBus;
 
 public class FastTakeOrderActivity extends BaseActivity {
 
+
+    private CustomPromptDialog mDialog;
 
     public static void startActivity(Context context, String symbol) {
         Intent intent = new Intent(context, FastTakeOrderActivity.class);
@@ -33,6 +37,15 @@ public class FastTakeOrderActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fast_take_order);
+        mDialog = new CustomPromptDialog.Builder(mContext)
+                .setMessage("开启加速成功")
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
         final String symbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         final Button btnOpen = (Button) findViewById(R.id.btn_open);
@@ -54,6 +67,7 @@ public class FastTakeOrderActivity extends BaseActivity {
                     btnOpen.setText("开启");
                 } else {
                     btnOpen.setText("关闭");
+                    mDialog.show();
                 }
 
                 FastTakeOrderConfig config = null;

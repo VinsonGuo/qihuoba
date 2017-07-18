@@ -16,7 +16,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="40dp"
             android:layout_marginTop="40dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher_icon" />
 
         <FrameLayout
             android:layout_width="match_parent"

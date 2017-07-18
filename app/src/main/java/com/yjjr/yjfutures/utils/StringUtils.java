@@ -443,7 +443,6 @@ public class StringUtils {
                 // 遍歷 byte buffer
                 for (int i = 0; i < byteBuffer.length; i++) {
                     String hex = Integer.toHexString(0xff & byteBuffer[i]).toUpperCase();
-//                    String hex = Integer.toHexString(0xff & byteBuffer[i]);
                     if (hex.length() == 1) {
                         strHexString.append('0');
                     }
@@ -459,4 +458,13 @@ public class StringUtils {
         return strResult;
     }
 
+    public static String getOppositeBuySell(String buySell) {
+        String type;
+        if (TextUtils.equals(buySell, "买入")) {
+            type = "卖出";
+        } else {
+            type = "买入";
+        }
+        return type;
+    }
 }

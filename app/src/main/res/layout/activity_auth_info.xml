@@ -3,12 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:background="@color/chart_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    tools:context="com.yjjr.yjfutures.ui.mine.AuthActivity">
+    android:background="@color/chart_background"
+    android:orientation="vertical"
+    tools:context="com.yjjr.yjfutures.ui.mine.AuthInfoActivity">
 
     <com.yjjr.yjfutures.widget.HeaderView
         android:id="@+id/header_view"
@@ -16,12 +15,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <ImageView
-        android:src="@mipmap/ic_launcher_icon"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="20dp"
-        android:layout_height="wrap_content"/>
+    <com.yjjr.yjfutures.widget.RegisterInput
+        android:id="@+id/ri_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:name="@string/phone_number_format"/>
+
+    <com.yjjr.yjfutures.widget.RegisterInput
+        android:id="@+id/ri_smscode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:name="@string/activation_message_code"
+        />
+
 
     <Button
         android:id="@+id/btn_confirm"
@@ -30,5 +36,6 @@
         android:layout_margin="20dp"
         android:textColor="@color/selector_common_btn_text_color"
         android:background="@drawable/selector_common_btn_bg"
-        android:text="立即认证"/>
+        android:text="@string/next_step"/>
+
 </LinearLayout>

@@ -282,7 +282,7 @@
     <string name="card_type">证件类型</string>
     <string name="card_number">证件号码</string>
     <string name="id_card_name">身份证姓名</string>
-    <string name="id_card_number">身份证号码</string>
+    <string name="id_card_number">身份证号</string>
     <string name="agree_protocol">《xx协议书和免责声明》</string>
     <string name="confirm_data">2、完善资料</string>
     <string name="complete">完成</string>
@@ -1333,4 +1333,5 @@
     <string name="login_pwd">登录密码</string>
     <string name="pay_pwd">支付密码</string>
     <string name="find_login_password">找回登录密码</string>
+    <string name="finish">完成</string>
 </resources>

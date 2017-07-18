@@ -22,6 +22,7 @@ import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by Administrator on 2016/11/28.
@@ -76,6 +77,15 @@ public class RegisterInput extends FrameLayout {
                             mEtInput.setText(null);
                         }
                     });
+            RxView.focusChanges(mEtInput)
+                    .map(new Function<Boolean, Boolean>() {
+                        @Override
+                        public Boolean apply(@NonNull Boolean aBoolean) throws Exception {
+                            return aBoolean && !TextUtils.isEmpty(mEtInput.getText());
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(RxView.visibility(mIvDel));
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RegisterInput);
             String name = typedArray.getString(R.styleable.RegisterInput_name);
             String error = typedArray.getString(R.styleable.RegisterInput_error_name);

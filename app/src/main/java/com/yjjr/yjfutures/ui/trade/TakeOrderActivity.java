@@ -35,11 +35,11 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
 
     public static final int TYPE_BUY = 0;
     public static final int TYPE_SELL = 1;
-    private CustomPromptDialog mDialog;
     private ProgressDialog mProgressDialog;
     private String mSymbol;
     private int mType;
     private RadioGroup mRgHand;
+    private CustomPromptDialog mDialog;
 
     public static void startActivity(Context context, String symbol, int type) {
         Intent intent = new Intent(context, TakeOrderActivity.class);
@@ -55,9 +55,8 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         Intent intent = getIntent();
         mSymbol = intent.getStringExtra(Constants.CONTENT_PARAMETER);
         mType = intent.getIntExtra(Constants.CONTENT_PARAMETER_2, TYPE_BUY);
-        HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
-        mRgHand = (RadioGroup) findViewById(R.id.rg_hand);
-        mDialog = new CustomPromptDialog.Builder(mContext)
+        mDialog= new CustomPromptDialog.Builder(mContext)
+                .setMessage((mType == TYPE_BUY ? "买入" : "卖出")+"委托成功")
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -66,6 +65,8 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                     }
                 })
                 .create();
+        HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
+        mRgHand = (RadioGroup) findViewById(R.id.rg_hand);
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage(getString(R.string.online_transaction_in_order));
@@ -94,39 +95,6 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                 } else if (id == R.id.rb_hand_5) {
                     qty = 5;
                 }
-               /* SoapObject rpc = new SoapObject(HttpConfig.NAME_SPACE, "SendOrder");
-                rpc.addProperty("Account", BaseApplication.getInstance().getTradeToken());
-                rpc.addProperty("symbol", mSymbol);
-                rpc.addProperty("BuyType", mType == TYPE_BUY ? "买入" : "卖出");
-                rpc.addProperty("Price", 0);
-                rpc.addProperty("Qty", qty);
-                rpc.addProperty("OrderType", "市价");
-                RxUtils.createSoapObservable3("SendOrder", rpc)
-                        .map(new Function<SoapObject, SoapObject>() {
-                            @Override
-                            public SoapObject apply(@NonNull SoapObject soapObject) throws Exception {
-                                if (Integer.parseInt(soapObject.getProperty("ReturnCode").toString()) < 0) {
-                                    throw new RuntimeException("下单失败");
-                                }
-                                return soapObject;
-                            }
-                        })
-                        .compose(RxUtils.<SoapObject>applySchedulers())
-                        .compose(this.<SoapObject>bindUntilEvent(ActivityEvent.DESTROY))
-                        .subscribe(new Consumer<SoapObject>() {
-                            @Override
-                            public void accept(@NonNull SoapObject soapObject) throws Exception {
-                                mProgressDialog.dismiss();
-                                ToastUtils.show(mContext, "成功");
-                                EventBus.getDefault().post(new SendOrderEvent());
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception {
-                                mProgressDialog.dismiss();
-                                ToastUtils.show(mContext, throwable.getMessage());
-                            }
-                        });*/
 
                 HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价")
                         .map(new Function<CommonResponse, CommonResponse>() {
@@ -145,7 +113,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                             @Override
                             public void accept(@NonNull CommonResponse commonResponse) throws Exception {
                                 mProgressDialog.dismiss();
-                                ToastUtils.show(mContext, commonResponse.getMessage());
+                                mDialog.show();
                                 EventBus.getDefault().post(new SendOrderEvent());
                             }
                         }, new Consumer<Throwable>() {

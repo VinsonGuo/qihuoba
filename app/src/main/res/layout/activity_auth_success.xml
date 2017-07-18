@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chart_background"
+    android:orientation="vertical"
+    tools:context="com.yjjr.yjfutures.ui.mine.AuthSuccessActivity">
+
+    <TextView
+        android:id="@+id/tv_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:padding="@dimen/dp_10"
+        android:text="@string/finish"
+        android:textColor="@color/third_text_color"
+        android:textSize="@dimen/sp_14"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:text="实名认证完成"
+        android:textColor="@color/third_text_color"
+        android:textSize="24sp"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/shape_bg_top_bottom_line"
+        android:paddingLeft="15dp"
+        android:paddingRight="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/real_name"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"
+            tools:text="@string/real_name"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/shape_bg_top_bottom_line"
+        android:paddingLeft="15dp"
+        android:paddingRight="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/id_card_number"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"/>
+
+        <TextView
+            android:id="@+id/tv_card_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"
+            tools:text="@string/real_name"/>
+    </FrameLayout>
+
+</LinearLayout>

@@ -3,13 +3,13 @@ package com.yjjr.yjfutures.ui.found;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.BaseFragment;
+import com.yjjr.yjfutures.ui.WebActivity;
 
 /**
  * 发现页面
@@ -36,12 +36,16 @@ public class FoundFragment extends BaseFragment implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.root_view1:
+                WebActivity.startActivity(mContext, "http://www.baidu.com");
                 break;
             case R.id.root_view2:
+                WebActivity.startActivity(mContext, "http://www.baidu.com");
                 break;
             case R.id.root_view3:
+                WebActivity.startActivity(mContext, "http://www.baidu.com");
                 break;
             case R.id.root_view4:
+                WebActivity.startActivity(mContext, "http://www.baidu.com");
                 break;
         }
     }

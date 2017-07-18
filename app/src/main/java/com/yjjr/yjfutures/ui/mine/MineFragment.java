@@ -1,9 +1,9 @@
 package com.yjjr.yjfutures.ui.mine;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +14,12 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.AccountInfo;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
+import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.ui.trade.DepositActivity;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
+import com.yjjr.yjfutures.widget.CustomPromptDialog;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -26,24 +29,31 @@ import io.reactivex.functions.Consumer;
  */
 public class MineFragment extends BaseFragment implements View.OnClickListener {
 
-    private TextView tvOne;
-    private TextView tvTwo;
-    private TextView tvThree;
-    private TextView tvFour;
-    private TextView tvFive;
     private TextView tvYue;
     private TextView tvMargin;
+    private CustomPromptDialog mLogoutDialog;
 
     public MineFragment() {
         // Required empty public constructor
     }
 
     private void findViews(View v) {
-        tvOne = (TextView) v.findViewById(R.id.tv_one);
-        tvTwo = (TextView) v.findViewById(R.id.tv_two);
-        tvThree = (TextView) v.findViewById(R.id.tv_three);
-        tvFour = (TextView) v.findViewById(R.id.tv_four);
-        tvFive = (TextView) v.findViewById(R.id.tv_five);
+        mLogoutDialog = new CustomPromptDialog.Builder(mContext)
+                .setMessage("您确定退出当前账号吗？")
+                .isShowClose(true)
+                .setMessageDrawableId(R.drawable.ic_info)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BaseApplication.getInstance().logout(getActivity());
+                    }
+                })
+                .create();
+        TextView tvOne = (TextView) v.findViewById(R.id.tv_one);
+        TextView tvTwo = (TextView) v.findViewById(R.id.tv_two);
+        TextView tvThree = (TextView) v.findViewById(R.id.tv_three);
+        TextView tvFour = (TextView) v.findViewById(R.id.tv_four);
+        TextView tvFive = (TextView) v.findViewById(R.id.tv_five);
         tvYue = (TextView) v.findViewById(R.id.tv_yue);
         tvMargin = (TextView) v.findViewById(R.id.tv_margin);
 
@@ -61,6 +71,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         v.findViewById(R.id.btn_login).setOnClickListener(this);
         v.findViewById(R.id.btn_register).setOnClickListener(this);
         v.findViewById(R.id.tv_logout).setOnClickListener(this);
+        v.findViewById(R.id.btn_deposit).setOnClickListener(this);
+        v.findViewById(R.id.btn_withdraw).setOnClickListener(this);
         return v;
     }
 
@@ -90,13 +102,27 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 RegisterActivity.startActivity(mContext);
                 break;
             case R.id.tv_logout:
-                BaseApplication.getInstance().logout(getActivity());
+                mLogoutDialog.show();
                 break;
             case R.id.tv_one:
                 FundDetailActivity.startActivity(mContext);
                 break;
             case R.id.tv_two:
                 UserInfoActivity.startActivity(mContext);
+                break;
+            case R.id.tv_three:
+                WebActivity.startActivity(mContext, "http://www.baidu.com");
+                break;
+            case R.id.tv_four:
+                WebActivity.startActivity(mContext, "http://www.baidu.com");
+                break;
+            case R.id.tv_five:
+                WebActivity.startActivity(mContext, "http://www.baidu.com");
+                break;
+            case R.id.btn_deposit:
+                DepositActivity.startActivity(mContext);
+                break;
+            case R.id.btn_withdraw:
                 break;
         }
     }

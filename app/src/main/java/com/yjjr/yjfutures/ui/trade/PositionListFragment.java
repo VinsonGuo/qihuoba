@@ -1,6 +1,7 @@
 package com.yjjr.yjfutures.ui.trade;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +24,7 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
+import com.yjjr.yjfutures.widget.CustomPromptDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,6 +47,8 @@ public class PositionListFragment extends ListFragment<Holding> {
 
     private TextView mTvProfit;
     private ProgressDialog mProgressDialog;
+    private CustomPromptDialog mCloseAllDialog;
+    private CustomPromptDialog mSuccessDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +57,29 @@ public class PositionListFragment extends ListFragment<Holding> {
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage(getString(R.string.closeing));
         mProgressDialog.setCancelable(false);
+        mCloseAllDialog = new CustomPromptDialog.Builder(mContext)
+                .setMessage("您确定要卖出全部持仓么？")
+                .isShowClose(true)
+                .setMessageDrawableId(R.drawable.ic_info)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        List<Holding> data = mAdapter.getData();
+                        closeAllOrder(data);
+                        dialog.dismiss();
+                    }
+                })
+                .isShowClose(true)
+                .create();
+        mSuccessDialog = new CustomPromptDialog.Builder(mContext)
+                .setMessage("卖出委托成交完毕")
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
     }
 
     @Override
@@ -65,16 +92,29 @@ public class PositionListFragment extends ListFragment<Holding> {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (view.getId() == R.id.tv_close_order) {
-                    Holding holding = (Holding) adapter.getData().get(position);
-                    closeOrder(holding);
+                    final Holding holding = (Holding) adapter.getData().get(position);
+                    new CustomPromptDialog.Builder(mContext)
+                            .setMessage("您确定要卖出持仓么？")
+                            .isShowClose(true)
+                            .setMessageDrawableId(R.drawable.ic_info)
+                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    closeOrder(holding);
+                                    dialog.dismiss();
+                                }
+                            })
+                            .isShowClose(true)
+                            .create()
+                            .show();
+
                 }
             }
         });
         headerView.findViewById(R.id.tv_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Holding> data = adapter.getData();
-                closeAllOrder(data);
+                mCloseAllDialog.show();
             }
         });
         return adapter;
@@ -104,7 +144,7 @@ public class PositionListFragment extends ListFragment<Holding> {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(@NonNull String s) throws Exception {
-                        ToastUtils.show(mContext, s);
+                        mSuccessDialog.show();
                         mProgressDialog.dismiss();
                         EventBus.getDefault().post(new SendOrderEvent());
                     }
@@ -119,7 +159,6 @@ public class PositionListFragment extends ListFragment<Holding> {
     }
 
 
-
     private void closeOrder(Holding holding) {
         mProgressDialog.show();
         RxUtils.createCloseObservable(holding)
@@ -130,7 +169,7 @@ public class PositionListFragment extends ListFragment<Holding> {
                     @Override
                     public void accept(@NonNull CommonResponse commonResponse) throws Exception {
                         mProgressDialog.dismiss();
-                        ToastUtils.show(mContext, commonResponse.getMessage());
+                        mSuccessDialog.show();
                         EventBus.getDefault().post(new SendOrderEvent());
                     }
                 }, new Consumer<Throwable>() {
@@ -180,7 +219,7 @@ public class PositionListFragment extends ListFragment<Holding> {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        if(isFragmentVisible) {
+        if (isFragmentVisible) {
             loadData();
         }
     }

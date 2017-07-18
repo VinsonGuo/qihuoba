@@ -3,13 +3,16 @@ package com.yjjr.yjfutures.widget;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
@@ -38,6 +41,8 @@ public class CustomPromptDialog extends Dialog {
         private OnClickListener positiveButtonClickListener;
         private OnClickListener negativeButtonClickListener;
         private int messageGravity = Gravity.CENTER;
+        private boolean isShowClose = false;
+        private int messageDrawableId;
 
         public Builder(Context context) {
             this.context = context;
@@ -45,6 +50,11 @@ public class CustomPromptDialog extends Dialog {
 
         public Builder setMessage(String message) {
             this.message = message;
+            return this;
+        }
+
+        public Builder setMessageDrawableId(@DrawableRes int id) {
+            messageDrawableId = id;
             return this;
         }
 
@@ -127,6 +137,11 @@ public class CustomPromptDialog extends Dialog {
             return this;
         }
 
+        public Builder isShowClose(boolean isShow) {
+            this.isShowClose = isShow;
+            return this;
+        }
+
         public CustomPromptDialog create() {
             boolean navigationButtonShow = false;
             boolean positiveButtonShow = false;
@@ -140,6 +155,16 @@ public class CustomPromptDialog extends Dialog {
             // set the dialog title
             TextView tvTitle = (TextView) layout.findViewById(R.id.title);
             int visible = TextUtils.isEmpty(title) ? View.GONE : View.VISIBLE;
+            ImageView ivClose = (ImageView) layout.findViewById(R.id.iv_close);
+            ivClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            ivClose.setVisibility(isShowClose ? View.VISIBLE : View.GONE);
+
+
             tvTitle.setText(title);
             tvTitle.setVisibility(visible);
             // set the confirm button
@@ -185,12 +210,15 @@ public class CustomPromptDialog extends Dialog {
                 TextView tvMessage = (TextView) layout.findViewById(R.id.message);
                 tvMessage.setGravity(messageGravity);
                 tvMessage.setText(message);
+                if(messageDrawableId != 0) {
+                    tvMessage.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(context, messageDrawableId), null, null);
+                }
             } else if (contentView != null) {
                 // if no message set
                 // add the contentView to the dialog body
-                ((LinearLayout) layout.findViewById(R.id.content))
+                ((FrameLayout) layout.findViewById(R.id.content))
                         .removeAllViews();
-                ((LinearLayout) layout.findViewById(R.id.content))
+                ((FrameLayout) layout.findViewById(R.id.content))
                         .addView(contentView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             }
 

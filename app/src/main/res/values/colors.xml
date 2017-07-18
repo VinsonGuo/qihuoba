@@ -26,7 +26,7 @@
     <color name="line_trader_divider">#ebedf3</color>
     <color name="main_text_color">@color/white</color>
     <color name="second_text_color">#b7b7b7</color>
-    <color name="third_text_color">#ff9500</color>
+    <color name="third_text_color">#be945c</color>
     <color name="forth_text_color">#333333</color>
     <color name="color_20_ffffff">#33ffffff</color>
     <color name="half_white">#80FFFFFF</color>

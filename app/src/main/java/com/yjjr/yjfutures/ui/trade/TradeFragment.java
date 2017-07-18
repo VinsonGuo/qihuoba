@@ -3,7 +3,6 @@ package com.yjjr.yjfutures.ui.trade;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -70,8 +69,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvLeftArrow;
     private TextView tvRightArrow;
     private TextView tvCenter;
-    private CustomPromptDialog mTakeOrderDialog;
-    private CustomPromptDialog mCloseOrderDialog;
     private ProgressDialog mProgressDialog;
     private NoTouchScrollViewpager mViewpager;
     private NestRadioGroup rgNav;
@@ -94,6 +91,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvPrice;
     private TextView tvChange;
     private TextView tvChangeRate;
+    private CustomPromptDialog mCloseSuccessDialog;
+    private CustomPromptDialog mCloseDialog;
 
 
     public TradeFragment() {
@@ -117,6 +116,28 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             mIsNeedBack = getArguments().getBoolean(Constants.CONTENT_PARAMETER);
             mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER_2);
         }
+        mCloseSuccessDialog = new CustomPromptDialog.Builder(mContext)
+                .setMessage("卖出委托成交完毕")
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        mCloseDialog = new CustomPromptDialog.Builder(mContext)
+                .setMessage("您确定要卖出全部持仓么？")
+                .isShowClose(true)
+                .setMessageDrawableId(R.drawable.ic_info)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        closeAllOrder();
+                    }
+                })
+                .isShowClose(true)
+                .create();
     }
 
     @Override
@@ -257,44 +278,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvPrice = (TextView) v.findViewById(R.id.tv_price);
         tvChange = (TextView) v.findViewById(R.id.tv_change);
         tvChangeRate = (TextView) v.findViewById(R.id.tv_change_rate);
-        mTakeOrderDialog = new CustomPromptDialog.Builder(mContext)
-                .setMessage("确定要下单么")
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mProgressDialog.show();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mProgressDialog.dismiss();
-                                mTakeOrderDialog.dismiss();
-                                ToastUtils.show(mContext, R.string.online_transaction_open_success);
-                            }
-                        }, 3000);
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
-        mCloseOrderDialog = new CustomPromptDialog.Builder(mContext)
-                .setMessage("确定要卖出全部持仓么")
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage(getString(R.string.online_transaction_in_order));
         mProgressDialog.setCancelable(false);
@@ -385,27 +368,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         FastTakeOrderConfig fastTakeOrder = UserSharePrefernce.getFastTakeOrder(mContext, mSymbol);
         switch (v.getId()) {
             case R.id.tv_close_order:
-                if (mHolding == null) return;
-                mProgressDialog.show();
-                RxUtils.createCloseObservable(mHolding)
-                        .delay(1, TimeUnit.SECONDS)
-                        .compose(RxUtils.<CommonResponse>applySchedulers())
-                        .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
-                        .subscribe(new Consumer<CommonResponse>() {
-                            @Override
-                            public void accept(@NonNull CommonResponse response) throws Exception {
-                                ToastUtils.show(mContext, response.getMessage());
-                                mProgressDialog.dismiss();
-                                EventBus.getDefault().post(new SendOrderEvent());
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception {
-                                LogUtils.e(throwable);
-                                mProgressDialog.dismiss();
-                                ToastUtils.show(mContext, throwable.getMessage());
-                            }
-                        });
+                mCloseDialog.show();
                 break;
             case R.id.tv_left:
                 if (fastTakeOrder != null) {
@@ -435,7 +398,31 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         }
     }
 
-    private void takeOrder(FastTakeOrderConfig order, String type) {
+    private void closeAllOrder() {
+        if (mHolding == null) return;
+        mProgressDialog.show();
+        RxUtils.createCloseObservable(mHolding)
+                .delay(1, TimeUnit.SECONDS)
+                .compose(RxUtils.<CommonResponse>applySchedulers())
+                .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<CommonResponse>() {
+                    @Override
+                    public void accept(@NonNull CommonResponse response) throws Exception {
+                        mCloseSuccessDialog.show();
+                        mProgressDialog.dismiss();
+                        EventBus.getDefault().post(new SendOrderEvent());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        LogUtils.e(throwable);
+                        mProgressDialog.dismiss();
+                        ToastUtils.show(mContext, throwable.getMessage());
+                    }
+                });
+    }
+
+    private void takeOrder(FastTakeOrderConfig order, final String type) {
         mProgressDialog.show();
         HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), mSymbol, type, 0, Math.abs(order.getQty()), "市价")
                 .delay(1, TimeUnit.SECONDS)
@@ -444,7 +431,16 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 .subscribe(new Consumer<CommonResponse>() {
                     @Override
                     public void accept(@NonNull CommonResponse response) throws Exception {
-                        ToastUtils.show(mContext, response.getMessage());
+                        new CustomPromptDialog.Builder(mContext)
+                                .setMessage(type + "委托成功")
+                                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .create()
+                                .show();
                         mProgressDialog.dismiss();
                         EventBus.getDefault().post(new SendOrderEvent());
                     }

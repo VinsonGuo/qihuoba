@@ -1,7 +1,5 @@
 package com.yjjr.yjfutures.utils;
 
-import android.text.TextUtils;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.yjjr.yjfutures.model.CommonResponse;
@@ -208,13 +206,7 @@ public class RxUtils {
     }
 
     public static Observable<CommonResponse> createCloseObservable(Holding holding) {
-        String type;
-        if (TextUtils.equals(holding.getBuySell(), "买入")) {
-            type = "卖出";
-        } else {
-            type = "买入";
-        }
-        return HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), holding.getSymbol(), type, 0, Math.abs(holding.getQty()), "市价")
+        return HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), holding.getSymbol(), StringUtils.getOppositeBuySell(holding.getBuySell()), 0, Math.abs(holding.getQty()), "市价")
                 .map(new Function<CommonResponse, CommonResponse>() {
                     @Override
                     public CommonResponse apply(@NonNull CommonResponse commonResponse) throws Exception {

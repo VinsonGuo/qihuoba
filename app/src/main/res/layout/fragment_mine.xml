@@ -54,32 +54,33 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginRight="30dp"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="可用余额"
                 android:textColor="@color/main_text_color"
-                android:textSize="@dimen/sp_16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="@dimen/sp_16"/>
 
             <TextView
                 android:id="@+id/tv_yue"
-                tools:text="1234"
-                android:textColor="@color/third_text_color"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:textSize="@dimen/text_size_16sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/third_text_color"
+                android:textSize="@dimen/text_size_16sp"
+                tools:text="1234"/>
+
             <Button
                 android:id="@+id/btn_deposit"
                 android:layout_width="wrap_content"
                 android:layout_height="33dp"
                 android:background="@drawable/shape_third_text_color_border_bg"
-                android:drawableLeft="@drawable/selector_ic_chart"
+                android:drawableLeft="@drawable/ic_deposit"
                 android:drawablePadding="6dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
@@ -93,28 +94,30 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
+
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/djbzj"
                 android:textColor="@color/main_text_color"
-                android:textSize="@dimen/sp_16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="@dimen/sp_16"/>
 
             <TextView
                 android:id="@+id/tv_margin"
-                tools:text="1234"
-                android:textColor="@color/third_text_color"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:textSize="@dimen/text_size_16sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/text_size_16sp"
+                tools:text="1234"/>
+
             <Button
                 android:id="@+id/btn_withdraw"
                 android:layout_width="wrap_content"
                 android:layout_height="33dp"
                 android:background="@drawable/selector_trade_bottom_rb_bg"
-                android:drawableLeft="@drawable/selector_ic_position"
+                android:drawableLeft="@drawable/ic_withdraw"
                 android:drawablePadding="6dp"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
@@ -125,12 +128,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/login_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/background_dark"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -138,7 +141,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/root_padding_10"
             android:layout_marginTop="@dimen/root_padding_10"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@mipmap/ic_launcher_icon"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -148,15 +151,30 @@
             <Button
                 android:id="@+id/btn_login"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:text="@string/login"/>
+                android:layout_height="33dp"
+                android:background="@drawable/selector_trade_bottom_rb_bg"
+                android:drawableLeft="@drawable/ic_login"
+                android:drawablePadding="6dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="@string/login"
+                android:textColor="@color/selector_trade_bottom_rb_color"
+                android:textSize="@dimen/sp_16"/>
 
             <Button
                 android:id="@+id/btn_register"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/register"/>
+                android:layout_height="33dp"
+                android:background="@drawable/shape_third_text_color_border_bg"
+                android:drawableLeft="@drawable/ic_register"
+                android:drawablePadding="6dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:layout_marginLeft="30dp"
+                android:text="@string/register"
+                android:textColor="@color/third_text_color"
+                android:textSize="@dimen/sp_16"/>
+
         </LinearLayout>
     </LinearLayout>
 
@@ -182,6 +200,8 @@
                     android:layout_marginRight="@dimen/root_padding_10"
                     android:layout_marginTop="@dimen/common_divider_small"
                     android:background="@drawable/shape_bg_bottom_line"
+                    android:drawableLeft="@drawable/ic_trade_detail"
+                    android:drawablePadding="10dp"
                     android:drawableRight="@drawable/icon_right_arrow"
                     android:gravity="center_vertical"
                     android:text="@string/fund_detail"
@@ -208,6 +228,8 @@
                     android:layout_height="60dp"
                     android:layout_marginRight="@dimen/root_padding_10"
                     android:background="@drawable/shape_bg_bottom_line"
+                    android:drawableLeft="@drawable/ic_user_info"
+                    android:drawablePadding="10dp"
                     android:drawableRight="@drawable/icon_right_arrow"
                     android:gravity="center_vertical"
                     android:text="@string/user_info"
@@ -235,6 +257,8 @@
                     android:layout_height="60dp"
                     android:layout_marginRight="@dimen/root_padding_10"
                     android:background="@drawable/shape_bg_bottom_line"
+                    android:drawableLeft="@drawable/ic_mine_share"
+                    android:drawablePadding="10dp"
                     android:drawableRight="@drawable/icon_right_arrow"
                     android:gravity="center_vertical"
                     android:text="推广赚钱"
@@ -261,6 +285,8 @@
                     android:layout_height="60dp"
                     android:layout_marginRight="@dimen/root_padding_10"
                     android:background="@drawable/shape_bg_bottom_line"
+                    android:drawableLeft="@drawable/ic_about_us"
+                    android:drawablePadding="10dp"
                     android:drawableRight="@drawable/icon_right_arrow"
                     android:gravity="center_vertical"
                     android:text="@string/about_us"
@@ -296,6 +322,8 @@
                     android:layout_height="60dp"
                     android:layout_marginRight="@dimen/root_padding_10"
                     android:background="@drawable/shape_bg_bottom_line"
+                    android:drawableLeft="@drawable/ic_risk_info"
+                    android:drawablePadding="10dp"
                     android:drawableRight="@drawable/icon_right_arrow"
                     android:gravity="center_vertical"
                     android:text="@string/risk_info"

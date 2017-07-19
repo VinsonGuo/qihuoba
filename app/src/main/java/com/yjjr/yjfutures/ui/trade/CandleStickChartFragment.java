@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
@@ -32,19 +34,19 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
-import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
-import com.yjjr.yjfutures.widget.chart.RealPriceMarkerView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
-import org.ksoap2.serialization.SoapObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,6 +87,7 @@ public class CandleStickChartFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         if (getArguments() != null) {
             mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER);
         }
@@ -102,7 +105,7 @@ public class CandleStickChartFragment extends BaseFragment {
         // drawn
         mChart.setMaxVisibleValueCount(100);
 
-        mChart.setAutoScaleMinMaxEnabled(true);
+        mChart.setAutoScaleMinMaxEnabled(false);
         mChart.setScaleYEnabled(true);
 
         // scaling can now only be done on x- and y-axis separately
@@ -120,7 +123,7 @@ public class CandleStickChartFragment extends BaseFragment {
                 if (mList != null && value < mList.size()) {
                     DateTime dateTime = new DateTime(mList.get((int) value).getsDate());
                     if (mType.equals(DAY)) {
-                        return android.text.format.DateUtils.formatDateTime(mContext,dateTime.getMillis(), android.text.format.DateUtils.FORMAT_ABBREV_ALL);
+                        return android.text.format.DateUtils.formatDateTime(mContext, dateTime.getMillis(), android.text.format.DateUtils.FORMAT_ABBREV_ALL);
                     }
                     return DateUtils.formatTime(dateTime.getMillis());
                 }
@@ -128,22 +131,22 @@ public class CandleStickChartFragment extends BaseFragment {
             }
         });
 
-        YAxis leftAxis = mChart.getAxisLeft();
-        leftAxis.setTextColor(whiteColor);
-        leftAxis.setLabelCount(7, false);
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setGridColor(dividerColor);
-        leftAxis.setGridLineWidth(0.5f);
-
-        leftAxis.enableGridDashedLine(20, 5, 0);
-//        leftAxis.setDrawAxisLine(false);
-
         YAxis rightAxis = mChart.getAxisRight();
-        rightAxis.setEnabled(false);
+        rightAxis.setTextColor(whiteColor);
+        rightAxis.setLabelCount(7, false);
+        rightAxis.setDrawGridLines(true);
+        rightAxis.setGridColor(dividerColor);
+        rightAxis.setGridLineWidth(0.5f);
+
+        rightAxis.enableGridDashedLine(20, 5, 0);
+//        rightAxis.setDrawAxisLine(false);
+
+        YAxis left = mChart.getAxisLeft();
+        left.setEnabled(false);
 
 
         mChart.getLegend().setEnabled(false);
-        mChart.setMarker(new RealPriceMarkerView(mContext, 2));
+//        mChart.setMarker(new RealPriceMarkerView(mContext, 2));
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -191,6 +194,31 @@ public class CandleStickChartFragment extends BaseFragment {
         return mChart;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(OneMinuteEvent event) {
+        if (mList != null && TextUtils.equals(mType, MIN)) {
+            HisData hisData = mList.get(mList.size() - 1);
+            Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+            HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)
+                    .filter(new Predicate<List<HisData>>() {
+                        @Override
+                        public boolean test(@NonNull List<HisData> hisDatas) throws Exception {
+                            return hisDatas != null && hisDatas.size() > 0;
+                        }
+                    })
+                    .compose(RxUtils.<List<HisData>>applySchedulers())
+                    .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
+                    .subscribe(new Consumer<List<HisData>>() {
+                        @Override
+                        public void accept(@NonNull List<HisData> hisDatas) throws Exception {
+                            HisData data = hisDatas.get(hisDatas.size() - 1);
+                            mList.add(data);
+                            mChart.notifyDataSetChanged();
+                            mChart.moveViewToX(mChart.getCandleData().getEntryCount());
+                        }
+                    }, RxUtils.commonErrorConsumer());
+        }
+    }
 
     public void loadDataByType(String type) {
         mType = type;
@@ -204,25 +232,6 @@ public class CandleStickChartFragment extends BaseFragment {
             dateTime = dateTime.minusMonths(1);
         }
         HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)
-        /*SoapObject soapObject = new SoapObject(HttpConfig.NAME_SPACE, "GetHistoryData");
-        soapObject.addProperty("Symbol", quote.getSymbol());
-        soapObject.addProperty("Exchange", quote.getExchange());
-        soapObject.addProperty("StartTime", DateUtils.formatData(dateTime.getMillis()));
-        soapObject.addProperty("dataType", mType);
-        RxUtils.createSoapObservable3("GetHistoryData", soapObject)
-                .map(new Function<SoapObject, List<HisData>>() {
-                    @Override
-                    public List<HisData> apply(@NonNull SoapObject soapObject) throws Exception {
-                        if (soapObject.getPropertyCount() == 0) {
-                            throw new RuntimeException("加载失败");
-                        }
-                        List<HisData> list = new ArrayList<>(300);
-                        for (int i = 0; i < soapObject.getPropertyCount(); i++) {
-                            list.add(RxUtils.soapObject2Model((SoapObject) soapObject.getProperty(i), HisData.class));
-                        }
-                        return list;
-                    }
-                })*/
                 .compose(RxUtils.<List<HisData>>applySchedulers())
                 .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<HisData>>() {
@@ -274,10 +283,14 @@ public class CandleStickChartFragment extends BaseFragment {
         CandleData data = new CandleData(set1);
 
         mChart.setData(data);
-        mChart.invalidate();
+        mChart.notifyDataSetChanged();
         mChart.setVisibleXRange(40, 10); // allow 20 values to be displayed at once on the x-axis, not more
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }

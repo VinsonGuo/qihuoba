@@ -40,7 +40,7 @@
     <string name="read_and_agree">我已经阅读并同意</string>
     <string name="please_agree_the_protocol">请同意协议</string>
     <string name="input_confirm_code">请输入验证码</string>
-    <string name="register_get_confirm_code">发送\n验证码</string>
+    <string name="register_get_confirm_code">发送验证码</string>
     <string name="register_get_confirm_code_again">重新获取验证码</string>
     <string name="confirm_code_send_success">验证码发送成功</string>
     <string name="confirm_code_send_fail">验证码发送失败</string>
@@ -379,7 +379,7 @@
     <string name="document_number">证件号码</string>
     <string name="bank_account">银行账户</string>
     <string name="bank_name">银行名称</string>
-    <string name="bank_code">银行账号</string>
+    <string name="bank_code">银行卡号</string>
     <string name="bank_of_deposite">开户银行</string>
     <string name="deposite_sub_bank">开户支行</string>
     <string name="bank_position">开户网点</string>

@@ -3,9 +3,9 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/chart_background"
               android:gravity="center"
               android:orientation="vertical"
-              android:background="@color/chart_background"
               android:padding="@dimen/root_padding_10">
 
     <LinearLayout
@@ -16,37 +16,39 @@
         android:padding="@dimen/root_padding_10">
 
         <TextView
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/main_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="最新"/>
+            android:layout_weight="1"
+            android:text="最新"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:id="@+id/tv_last_price"
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/second_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"
             tools:text="123456"/>
 
         <TextView
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/main_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="今开"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="今开"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:id="@+id/tv_open"
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/second_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"
             tools:text="123456"/>
     </LinearLayout>
 
@@ -57,37 +59,39 @@
         android:padding="@dimen/root_padding_10">
 
         <TextView
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/main_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="涨跌"/>
+            android:layout_weight="1"
+            android:text="涨跌"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:id="@+id/tv_change"
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/second_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"
             tools:text="1234"/>
 
         <TextView
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/main_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="最高"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="最高"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:id="@+id/tv_high"
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/second_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"
             tools:text="123456"/>
     </LinearLayout>
 
@@ -99,37 +103,39 @@
         android:padding="@dimen/root_padding_10">
 
         <TextView
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/main_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="涨幅"/>
+            android:layout_weight="1"
+            android:text="涨幅"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:id="@+id/tv_change_rate"
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/second_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"
             tools:text="123456"/>
 
         <TextView
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/main_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="最低"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="最低"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:id="@+id/tv_low"
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/second_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"
             tools:text="123456"/>
     </LinearLayout>
 
@@ -141,37 +147,39 @@
         android:padding="@dimen/root_padding_10">
 
         <TextView
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/main_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="总量"/>
+            android:layout_weight="1"
+            android:text="总量"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:id="@+id/tv_vol"
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/second_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"
             tools:text="123456"/>
 
         <TextView
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/main_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="昨收"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="昨收"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
 
         <TextView
             android:id="@+id/tv_last_close"
-            android:textSize="@dimen/sp_14"
-            android:textColor="@color/second_text_color"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"
             tools:text="123456"/>
     </LinearLayout>
 </LinearLayout>

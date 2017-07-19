@@ -52,6 +52,7 @@ public class ToastUtils {
                     tvDesc.setText(desc);
                     sToast.setView(toastView);
                     sToast.setGravity(Gravity.FILL, 0, 0);
+//                    sToast.setGravity(Gravity.CENTER,0,0);
                 } else {
                     View toastView = LayoutInflater.from(context).inflate(R.layout.view_toast, null);
                     TextView tv = (TextView) toastView.findViewById(R.id.tv_title);

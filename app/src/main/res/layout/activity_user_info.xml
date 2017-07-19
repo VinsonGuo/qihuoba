@@ -34,6 +34,8 @@
                 android:background="@drawable/shape_bg_bottom_line"
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_user_info2"
+                android:drawablePadding="@dimen/dp_10"
                 android:text="@string/auth_name"
                 android:textColor="@color/main_text_color"
                 android:textSize="@dimen/sp_14"/>
@@ -59,6 +61,8 @@
                 android:layout_marginRight="@dimen/root_padding_10"
                 android:background="@drawable/shape_bg_bottom_line"
                 android:drawableRight="@drawable/icon_right_arrow"
+                android:drawableLeft="@drawable/ic_bank_card"
+                android:drawablePadding="@dimen/dp_10"
                 android:gravity="center_vertical"
                 android:text="提款支付宝、银行卡"
                 android:textColor="@color/main_text_color"
@@ -87,6 +91,8 @@
                 android:background="@drawable/shape_bg_bottom_line"
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_phone"
+                android:drawablePadding="@dimen/dp_10"
                 android:text="@string/bind_phone"
                 android:textColor="@color/main_text_color"
                 android:textSize="@dimen/sp_14"/>
@@ -114,6 +120,8 @@
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical"
                 android:text="@string/login_pwd"
+                android:drawableLeft="@drawable/ic_lock1"
+                android:drawablePadding="@dimen/dp_10"
                 android:textColor="@color/main_text_color"
                 android:textSize="@dimen/sp_14"/>
 
@@ -148,6 +156,8 @@
                 android:background="@drawable/selector_common_press_bg"
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical"
+                android:drawableLeft="@drawable/ic_lock2"
+                android:drawablePadding="@dimen/dp_10"
                 android:text="@string/pay_pwd"
                 android:textColor="@color/main_text_color"
                 android:textSize="@dimen/sp_14"/>

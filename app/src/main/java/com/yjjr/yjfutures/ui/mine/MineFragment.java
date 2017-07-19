@@ -4,6 +4,7 @@ package com.yjjr.yjfutures.ui.mine;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DepositActivity;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
@@ -56,6 +58,29 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         TextView tvFive = (TextView) v.findViewById(R.id.tv_five);
         tvYue = (TextView) v.findViewById(R.id.tv_yue);
         tvMargin = (TextView) v.findViewById(R.id.tv_margin);
+        final SwipeRefreshLayout refresh = (SwipeRefreshLayout) v.findViewById(R.id.refresh);
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                HttpManager.getHttpService().getAccountInfo(BaseApplication.getInstance().getTradeToken())
+                        .compose(RxUtils.<AccountInfo>applySchedulers())
+                        .compose(MineFragment.this.<AccountInfo>bindUntilEvent(FragmentEvent.DESTROY))
+                        .subscribe(new Consumer<AccountInfo>() {
+                            @Override
+                            public void accept(@NonNull AccountInfo accountInfo) throws Exception {
+                                refresh.setRefreshing(false);
+                                tvYue.setText(DoubleUtil.format2Decimal(accountInfo.getAvailableFund()));
+                                tvMargin.setText(DoubleUtil.format2Decimal(accountInfo.getFrozenMargin()));
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                LogUtils.e(throwable);
+                                refresh.setRefreshing(false);
+                            }
+                        });
+            }
+        });
 
         tvOne.setOnClickListener(this);
         tvTwo.setOnClickListener(this);

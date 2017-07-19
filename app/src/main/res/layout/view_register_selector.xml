@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+    <LinearLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:layout_below="@id/tv_error">
+
+        <TextView
+            android:id="@+id/tv_input"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            tools:text="test"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_value"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:textColor="@color/second_text_color"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:padding="6dp"
+            android:paddingRight="@dimen/root_padding_10"
+            android:drawableRight="@drawable/icon_right_arrow"
+            android:textColorHint="@color/third_text_color"
+            android:textSize="@dimen/text_size_16sp"
+            />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_error"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-15dp"
+        android:background="@drawable/input_error_msg_bg"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="4dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_12sp"
+        android:visibility="gone"
+        tools:text="error"/>
+
+</RelativeLayout>

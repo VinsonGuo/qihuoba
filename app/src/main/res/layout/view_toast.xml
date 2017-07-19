@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@color/main_color"
+            android:textColor="@color/color_333333"
             android:textSize="17sp"
             tools:text="您已成功下单" />
 

@@ -467,4 +467,9 @@ public class StringUtils {
         }
         return type;
     }
+
+    public static int getDigitByTick(double tick) {
+        String s = String.valueOf(tick);
+        return s.length() - 1;
+    }
 }

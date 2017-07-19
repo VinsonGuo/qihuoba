@@ -10,6 +10,7 @@ import android.view.View;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
@@ -27,6 +28,7 @@ import com.yjjr.yjfutures.widget.LoadingView;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
 import org.greenrobot.eventbus.EventBus;
+import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.Timer;
@@ -164,6 +166,10 @@ public class MainActivity extends BaseActivity {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
+                DateTime dateTime = new DateTime();
+                if(dateTime.getSecondOfMinute() == 1) {
+                    EventBus.getDefault().post(new OneMinuteEvent());
+                }
                 HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override

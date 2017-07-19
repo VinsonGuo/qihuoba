@@ -48,8 +48,8 @@ public class SetTradePwdActivity extends BaseActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(btnConfirm.isSelected()) {
-
+                if (btnConfirm.isSelected()) {
+                    CommonSuccessActivity.startActivity(mContext, "交易密码设置成功", "交易密码", pwdView.getPassWord());
                 }
             }
         });

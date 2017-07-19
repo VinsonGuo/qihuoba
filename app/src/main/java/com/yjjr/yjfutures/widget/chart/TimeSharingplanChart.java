@@ -25,7 +25,6 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.utils.DateUtils;
-import com.yjjr.yjfutures.utils.DoubleUtil;
 
 import org.joda.time.DateTime;
 
@@ -54,24 +53,28 @@ public class TimeSharingplanChart extends RelativeLayout {
             return DateUtils.formatTime(time.getMillis());
         }
     };
-
-    public TimeSharingplanChart(Context context) {
-        this(context, null);
+    public TimeSharingplanChart(Context context,int digits) {
+        super(context);
+        this.digits = digits;
+        init(context);
     }
 
     public TimeSharingplanChart(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
+        init(context);
     }
-
 
     public TimeSharingplanChart(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context);
+
+    }
+
+    private void init(Context context) {
         mContext = context;
         LayoutInflater.from(context).inflate(R.layout.view_mp_line_chart, this);
         mChart = (LineChart) findViewById(R.id.line_chart);
-        mChart.setDrawGridBackground(false);
         setupSettingParameter();
-
     }
 
     public void addEntry(float bid) {
@@ -97,7 +100,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         mChart.calculateOffsets();
         mChart.notifyDataSetChanged();
 //        mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
-        mChart.setVisibleXRange(list.size()+100, list.size()+100);
+        mChart.setVisibleXRange(list.size() + 100, list.size() + 100);
         mChart.moveViewToX(data.getEntryCount()/* - FULL_SCREEN_SHOW_COUNT - 1*/);
 
     }
@@ -129,7 +132,6 @@ public class TimeSharingplanChart extends RelativeLayout {
                 mChart.highlightValue(chartHighlighter);
             }
             mChart.notifyDataSetChanged();
-            mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, FULL_SCREEN_SHOW_COUNT);
 
         }
     }
@@ -184,6 +186,7 @@ public class TimeSharingplanChart extends RelativeLayout {
     }
 
     private void setupSettingParameter() {
+        mChart.setDrawGridBackground(false);
         mChart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.chart_background));
         RealPriceMarkerView mv = new RealPriceMarkerView(mContext, digits);
         mv.setChartView(mChart);
@@ -193,9 +196,9 @@ public class TimeSharingplanChart extends RelativeLayout {
 
         mChart.getDescription().setEnabled(false);
         mChart.setPinchZoom(false);
-        mChart.setDragEnabled(false);
+        mChart.setDragEnabled(true);
         mChart.setDoubleTapToZoomEnabled(false);
-        mChart.setAutoScaleMinMaxEnabled(true);
+        mChart.setAutoScaleMinMaxEnabled(false);
         mChart.setDrawMarkers(true);
         // enable touch gestures
         mChart.setTouchEnabled(true);
@@ -251,12 +254,6 @@ public class TimeSharingplanChart extends RelativeLayout {
         rightAxis.enableGridDashedLine(20, 5, 0);
         rightAxis.setDrawAxisLine(false);
         rightAxis.setDrawGridLines(true);
-        rightAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return DoubleUtil.formatDecimal((double) value, digits);
-            }
-        });
 //        rightAxis.setMinWidth(50);
 //        rightAxis.setMaxWidth(50);
         Legend legend = mChart.getLegend();
@@ -276,6 +273,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         xAxis.setGridColor(candleGridColor);
 
         xAxis.setValueFormatter(xValueFormatter);
+
     }
 
     public void setNoDataText(String text) {

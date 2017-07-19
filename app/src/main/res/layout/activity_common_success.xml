@@ -19,6 +19,7 @@
         android:textSize="@dimen/sp_14"/>
 
     <TextView
+        android:id="@+id/tv_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="56dp"
@@ -26,7 +27,7 @@
         android:gravity="center"
         android:drawablePadding="@dimen/dp_10"
         android:drawableTop="@drawable/ic_success"
-        android:text="实名认证成功"
+        tools:text="实名认证成功"
         android:textColor="@color/third_text_color"
         android:textSize="24sp"/>
 
@@ -38,40 +39,16 @@
         android:paddingRight="20dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="@string/real_name"
-            android:textColor="@color/second_text_color"
-            android:textSize="@dimen/sp_14"/>
-
-        <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:textColor="@color/main_text_color"
-            android:textSize="@dimen/sp_14"
-            tools:text="@string/real_name"/>
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/shape_bg_bottom_line"
-        android:paddingLeft="15dp"
-        android:paddingRight="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/id_card_number"
+            tools:text="@string/real_name"
             android:textColor="@color/second_text_color"
             android:textSize="@dimen/sp_14"/>
 
         <TextView
-            android:id="@+id/tv_card_number"
+            android:id="@+id/tv_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"

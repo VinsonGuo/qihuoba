@@ -3,23 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/chart_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/chart_background"
-    android:orientation="vertical"
-    tools:context="com.yjjr.yjfutures.ui.mine.AuthInfoActivity">
+    tools:context="com.yjjr.yjfutures.ui.mine.BindCardActivity">
 
     <com.yjjr.yjfutures.widget.HeaderView
         android:id="@+id/header_view"
-        app:main_title="@string/auth_name"
+        app:main_title="添加支付宝"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
 
     <com.yjjr.yjfutures.widget.RegisterInput
         android:id="@+id/ri_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:hint="您的真实姓名"
         app:name="@string/real_name"/>
 
     <com.yjjr.yjfutures.widget.RegisterInput
@@ -27,16 +27,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:name="@string/id_card_number"
-        app:hint="18位身份证号"/>
+        />
 
+    <com.yjjr.yjfutures.widget.RegisterSelector
+        android:id="@+id/rs_type"
+        app:name_text="开户类型"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/btn_confirm"
+    <com.yjjr.yjfutures.widget.RegisterInput
+        android:id="@+id/ri_bank_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:textColor="@color/selector_common_btn_text_color"
-        android:background="@drawable/selector_common_btn_bg"
-        android:text="@string/next_step"/>
+        app:name="@string/bank_code"
+        />
+
+    <com.yjjr.yjfutures.widget.RegisterSelector
+        android:id="@+id/rs_bank_name"
+        app:name_text="银行名称"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.yjjr.yjfutures.widget.RegisterSelector
+        android:id="@+id/rs_city"
+        app:name_text="开户城市"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

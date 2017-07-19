@@ -43,4 +43,9 @@
         <attr name="hint" format="string"/>
         <attr name="value" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="RegisterSelector">
+        <attr name="name_text" format="string"/>
+        <attr name="error_text" format="string"/>
+    </declare-styleable>
 </resources>

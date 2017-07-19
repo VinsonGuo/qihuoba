@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
           package="com.yjjr.yjfutures">
 
     <uses-permission android:name="android.permission.GET_TASKS"/>
@@ -35,7 +34,9 @@
             android:name="com.yjjr.yjfutures.utils.imageloader.AppGlideModule"
             android:value="GlideModule"/>
 
-        <activity android:name=".ui.MainActivity">
+        <activity
+            android:name=".ui.MainActivity"
+            android:launchMode="singleTask">
         </activity>
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
@@ -79,6 +80,16 @@
         <activity android:name=".ui.mine.AuthInfoActivity">
         </activity>
         <activity android:name=".ui.mine.AuthSuccessActivity">
+        </activity>
+        <activity android:name=".ui.mine.CommonSuccessActivity">
+        </activity>
+        <activity android:name=".ui.mine.BindCardActivity">
+        </activity>
+        <activity android:name=".ui.mine.AlterPhoneActivity">
+        </activity>
+        <activity android:name=".ui.mine.AlterLoginPwdActivity">
+        </activity>
+        <activity android:name=".ui.mine.AlterLoginPwdActivity2">
         </activity>
     </application>
 

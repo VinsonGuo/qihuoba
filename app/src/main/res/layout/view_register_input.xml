@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
+                android:layout_height="60dp"
                 tools:background="@color/background_dark">
 
     <LinearLayout
@@ -10,7 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/tv_error"
-        android:background="?android:editTextBackground">
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:background="@drawable/shape_bg_bottom_line">
 
         <TextView
             android:id="@+id/tv_input"
@@ -51,12 +53,11 @@
         <TextView
             android:id="@+id/tv_opera"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
             android:layout_marginLeft="6dp"
             android:layout_marginRight="6dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:padding="4dp"
             android:layout_marginTop="1dp"
             android:background="@drawable/selector_register_input_btn_bg"
             android:gravity="center"
@@ -79,7 +80,7 @@
         android:padding="4dp"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_12sp"
-        android:visibility="invisible"
+        android:visibility="gone"
         tools:text="errorsdfafdadfafafadfadfadfafadfdafafaafdafaf"/>
 
 </RelativeLayout>

@@ -63,6 +63,9 @@ public class FastTakeOrderActivity extends BaseActivity {
         btnOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!btnOpen.isSelected()) {
+                    return;
+                }
                 if (TextUtils.equals(btnOpen.getText(), "关闭")) {
                     btnOpen.setText("开启");
                 } else {

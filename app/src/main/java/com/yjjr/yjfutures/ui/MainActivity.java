@@ -15,6 +15,8 @@ import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
+import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Login;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.found.FoundFragment;
@@ -65,17 +67,27 @@ public class MainActivity extends BaseActivity {
     private void loadData() {
         //如果交易token为null，先获取token
         if (TextUtils.isEmpty(BaseApplication.getInstance().getTradeToken())) {
-            HttpManager.getHttpService().userLogin(UserSharePrefernce.getAccount(mContext), UserSharePrefernce.getPassword(mContext))
+            final String account = UserSharePrefernce.getAccount(mContext);
+            final String password = UserSharePrefernce.getPassword(mContext);
+//            HttpManager.getHttpService().userLogin(account, password )
+            HttpManager.getBizService().login(account, password)
+                    .flatMap(new Function<BizResponse<Login>, ObservableSource<UserLoginResponse>>() {
+                        @Override
+                        public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<Login> loginBizResponse) throws Exception {
+                            if(loginBizResponse.getRcode() != 0) {
+                                throw new RuntimeException("登录失败");
+                            }
+                            return HttpManager.getHttpService().userLogin(account, password);
+                        }
+                    })
                     .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
                         @Override
                         public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
-                            LogUtils.d(userLoginResponse.toString());
                             if (userLoginResponse.getReturnCode() != 1) {
                                 BaseApplication.getInstance().logout(mContext);
                             }
                             BaseApplication.getInstance().setTradeToken(userLoginResponse.getCid());
-                            return
-                                    HttpManager.getHttpService().getSymbols(BaseApplication.getInstance().getTradeToken());
+                            return HttpManager.getHttpService().getSymbols(BaseApplication.getInstance().getTradeToken());
                         }
                     })
                     .flatMap(new Function<List<Symbol>, ObservableSource<List<Quote>>>() {
@@ -163,6 +175,18 @@ public class MainActivity extends BaseActivity {
                         }
                     });
         }
+    }
+
+    private void initViews() {
+        AlphaTabsIndicator bottomBar = (AlphaTabsIndicator) findViewById(R.id.alphaIndicator);
+        final NoTouchScrollViewpager viewPager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
+        mLoadingView.setVisibility(View.GONE);
+        viewPager.setVisibility(View.VISIBLE);
+        Fragment[] fragments = {new HomePageFragment(), new MarketPriceFragment(), new FoundFragment(), new MineFragment()};
+        viewPager.setOffscreenPageLimit(fragments.length);
+        viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
+        bottomBar.setViewPager(viewPager);
+
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -194,18 +218,7 @@ public class MainActivity extends BaseActivity {
                             }
                         });
             }
-        }, 1000, 1000);
-    }
-
-    private void initViews() {
-        AlphaTabsIndicator bottomBar = (AlphaTabsIndicator) findViewById(R.id.alphaIndicator);
-        final NoTouchScrollViewpager viewPager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
-        mLoadingView.setVisibility(View.GONE);
-        viewPager.setVisibility(View.VISIBLE);
-        Fragment[] fragments = {new HomePageFragment(), new MarketPriceFragment(), new FoundFragment(), new MineFragment()};
-        viewPager.setOffscreenPageLimit(fragments.length);
-        viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
-        bottomBar.setViewPager(viewPager);
+        }, 3000, 1000);
     }
 
 

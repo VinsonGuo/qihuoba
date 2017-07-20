@@ -47,6 +47,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
                         BaseApplication.getInstance().logout(getActivity());
                     }
                 })
@@ -148,6 +149,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 DepositActivity.startActivity(mContext);
                 break;
             case R.id.btn_withdraw:
+                InputPayPwdActivity.startActivity(mContext);
                 break;
         }
     }

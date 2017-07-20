@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="@dimen/header_height"
-    android:background="@color/background_dark"
+    android:background="@drawable/shape_bg_bottom_line"
     android:orientation="horizontal">
 
 
@@ -46,9 +47,4 @@
         android:textColor="@color/main_text_color"
         android:textSize="17sp"
         />
-
-
-    <View
-        style="@style/style_divider"
-        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="100dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.yjjr.yjfutures.ui.mine.InputPayPwdActivity">
+
+
+    <com.yjjr.yjfutures.widget.HeaderView
+        android:id="@+id/header_view"
+        app:background_color="@color/white"
+        app:main_title_color="@color/color_333333"
+        app:main_title="输入支付密码"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.jungly.gridpasswordview.GridPasswordView
+        android:id="@+id/pwdView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginRight="@dimen/root_padding_15"
+        app:gpvGridColor="#ffffff"
+        app:gpvLineColor="@color/color_dedede"
+        app:gpvLineWidth="1dp"
+        app:gpvPasswordLength="6"
+        app:gpvPasswordTransformation="*"
+        app:gpvPasswordType="numberPassword"
+        app:gpvTextColor="#333333"
+        app:gpvTextSize="25sp"/>
+
+</LinearLayout>

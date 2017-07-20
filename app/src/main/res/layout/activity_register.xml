@@ -46,6 +46,7 @@
         android:id="@+id/ri_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:isShowEye="true"
         app:name="@string/set_password"
         app:hint="@string/password_too_simple" />
 

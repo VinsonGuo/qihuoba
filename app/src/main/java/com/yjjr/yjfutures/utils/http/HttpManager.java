@@ -19,6 +19,8 @@ public class HttpManager {
 
     private static volatile Retrofit sRetrofit;
     private static volatile HttpService sHttpService;
+    private static volatile Retrofit sBizRetrofit;
+    private static volatile BizService sBizService;
 
     public static Retrofit getInstance() {
         if (sRetrofit == null) {
@@ -32,6 +34,27 @@ public class HttpManager {
                     .build();
         }
         return sRetrofit;
+    }
+
+    public static Retrofit getBizInstance() {
+        if (sBizRetrofit == null) {
+            OkHttpClient client = getOkHttpClient();
+            sBizRetrofit = new Retrofit.Builder()
+                    .baseUrl("http://139.224.8.133:9300/service/")
+                    .client(client)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return sBizRetrofit;
+    }
+
+    public static BizService getBizService() {
+        if (sBizService == null) {
+            sBizService = getBizInstance().create(BizService.class);
+        }
+        return sBizService;
     }
 
     @NonNull

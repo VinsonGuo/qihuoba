@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.BaseActivity;
@@ -27,13 +28,14 @@ public class DepositActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_deposit);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
-        findViewById(R.id.tv_alipay).setOnClickListener(this);
+        Button btnConfirm = (Button) findViewById(R.id.btn_confirm);
+        btnConfirm.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_alipay:
+            case R.id.btn_confirm:
                 if(AlipayUtil.hasInstalledAlipayClient(mContext)) {
                     AlipayUtil.startAlipayClient(mContext, "FKX02655U4OLYIE59HJ9CD");
                 }else {

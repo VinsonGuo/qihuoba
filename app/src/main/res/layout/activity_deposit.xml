@@ -16,25 +16,87 @@
         app:main_title="@string/account_deposit"/>
 
     <TextView
-        android:id="@+id/tv_unionpay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/root_padding_10"
-        android:textSize="@dimen/sp_14"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginTop="8dp"
+        android:text="选择充值方式"
         android:textColor="@color/main_text_color"
-        android:background="@drawable/shape_bg_bottom_line"
-        android:padding="@dimen/root_padding_10"
-        android:text="银联支付"/>
+        android:textSize="@dimen/sp_14"/>
 
-    <TextView
-        android:id="@+id/tv_alipay"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/sp_14"
-        android:textColor="@color/main_text_color"
-        android:background="@drawable/shape_bg_bottom_line"
-        android:padding="@dimen/root_padding_10"
-        android:text="支付宝"/>
+        android:background="@drawable/shape_bg_top_bottom_line">
 
+        <ImageView
+            android:id="@+id/iv_alipay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/dp_10"
+            android:src="@drawable/ic_alipay"/>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/iv_alipay"
+            android:text="支付宝转账"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_title"
+            android:layout_marginTop="4dp"
+            android:layout_toRightOf="@id/iv_alipay"
+            android:text="手机支付，免手续费"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_below="@id/iv_alipay"
+            android:layout_marginLeft="@dimen/dp_10"/>
+
+        <com.yjjr.yjfutures.widget.RegisterInput
+            android:id="@+id/ri_money"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider"
+            android:layout_marginLeft="@dimen/dp_10"
+            app:hint="请输入金额"
+            app:name="充值金额"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ri_money"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/ri_money"
+            android:layout_marginRight="@dimen/dp_10"
+            android:gravity="center"
+            android:text="@string/yuan"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/root_padding_15"
+        android:background="@drawable/selector_common_btn_bg"
+        android:text="@string/next_step"
+        android:textColor="@color/selector_common_btn_text_color"/>
 
 </LinearLayout>

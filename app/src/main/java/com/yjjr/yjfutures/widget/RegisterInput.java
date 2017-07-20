@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class RegisterInput extends FrameLayout {
     private TextView mTvError;
     private TextView mTvOpera;
     private ImageView mIvDel;
+    private ImageView mIvEye;
     private boolean editable = true;
     private CountDownTimer countDownTimer;
 
@@ -56,6 +58,7 @@ public class RegisterInput extends FrameLayout {
             mTvError = (TextView) findViewById(R.id.tv_error);
             mTvOpera = (TextView) findViewById(R.id.tv_opera);
             mIvDel = (ImageView) findViewById(R.id.iv_del);
+            mIvEye = (ImageView) findViewById(R.id.iv_eye);
             rootView.setSelected(mEtInput.hasFocus());
             RxView.focusChanges(mEtInput)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -77,6 +80,19 @@ public class RegisterInput extends FrameLayout {
                             mEtInput.setText(null);
                         }
                     });
+            RxView.clicks(mIvEye)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(@NonNull Object o) throws Exception {
+                            if(mEtInput.getInputType() == InputType.TYPE_CLASS_TEXT) {
+                                mEtInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                            }else {
+                                mEtInput.setInputType(InputType.TYPE_CLASS_TEXT);
+                            }
+                            mEtInput.setSelection(mEtInput.getText().length());
+                        }
+                    });
             RxView.focusChanges(mEtInput)
                     .map(new Function<Boolean, Boolean>() {
                         @Override
@@ -92,6 +108,7 @@ public class RegisterInput extends FrameLayout {
             String btnText = typedArray.getString(R.styleable.RegisterInput_button_text);
             String hint = typedArray.getString(R.styleable.RegisterInput_hint);
             String value = typedArray.getString(R.styleable.RegisterInput_value);
+            boolean isShowEye = typedArray.getBoolean(R.styleable.RegisterInput_isShowEye, false);
 
             mTvInput.setText(name);
             mTvError.setText(error);
@@ -99,6 +116,7 @@ public class RegisterInput extends FrameLayout {
             mTvOpera.setVisibility(!TextUtils.isEmpty(btnText) ? VISIBLE : GONE);
             mEtInput.setHint(hint);
             mEtInput.setText(value);
+            mIvEye.setVisibility(isShowEye ? VISIBLE : GONE);
             typedArray.recycle();
 
         }

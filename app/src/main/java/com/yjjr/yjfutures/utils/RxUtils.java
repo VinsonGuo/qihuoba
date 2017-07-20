@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
+import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -47,6 +48,29 @@ public class RxUtils {
             @Override
             public ObservableSource<T> apply(@NonNull Observable<T> observable) {
                 return observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread());
+            }
+        };
+    }
+
+    /**
+     * 增加了统一的判断逻辑
+     */
+    public static <T extends BizResponse> ObservableTransformer<T, T> applyBizSchedulers() {
+        return new ObservableTransformer<T, T>() {
+            @Override
+            public ObservableSource<T> apply(@NonNull Observable<T> observable) {
+                return observable
+                        .map(new Function<T, T>() {
+                            @Override
+                            public T apply(@NonNull T t) throws Exception {
+                                if(t.getRcode() != 0) {
+                                    throw new RuntimeException("发生错误");
+                                }
+                                return t;
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread());
             }
         };

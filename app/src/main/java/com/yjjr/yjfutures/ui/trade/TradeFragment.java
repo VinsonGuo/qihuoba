@@ -66,6 +66,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private ProgressBar pbRight;
     private TextView tvLeft;
     private TextView tvRight;
+    private String leftText = "看涨";
+    private String rightText = "看跌";
     private TextView tvLeftArrow;
     private TextView tvRightArrow;
     private TextView tvCenter;
@@ -233,10 +235,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         if (quote == null) return;
         double change = quote.getChangeRate();
 //        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", change);
-        tvLeft.setText("看涨" + quote.getBidPrice());
+        tvLeft.setText(leftText + quote.getBidPrice());
         StringUtils.setOnlineTxArrow(tvLeftArrow, change);
 //        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", change);
-        tvRight.setText(quote.getBidPrice() + "看跌");
+        tvRight.setText(quote.getBidPrice() + rightText);
 
         StringUtils.setOnlineTxArrow(tvRightArrow, change);
 
@@ -333,6 +335,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         vgOrder.setVisibility(View.VISIBLE);
                         tvDirection.setText(holding.getBuySell() + Math.abs(holding.getQty()) + "手");
                         tvTotal.setText("持仓盈亏\n" + DoubleUtil.format2Decimal(holding.getUnrealizedPL()));
+                        if (TextUtils.equals(holding.getBuySell(), "买入")) {
+                            leftText = "追加";
+                            rightText = "平仓";
+                        } else {
+                            leftText = "平仓";
+                            rightText = "追加";
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -340,6 +349,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         LogUtils.e(throwable);
                         vgOrder.setVisibility(View.GONE);
                         vgSettlement.setVisibility(View.VISIBLE);
+                        leftText = "看涨";
+                        rightText = "看跌";
                     }
                 });
     }

@@ -11,10 +11,8 @@
     <declare-styleable name="headerView">
         <attr name="main_title" format="string"/>
         <attr name="sub_title" format="string"/>
-        <attr name="sub_backgroud" format="reference"/>
-        <attr name="sub_title_color" format="color"/>
-        <attr name="sub_title_disable_color" format="color"/>
-        <attr name="sub_back_icon" format="boolean"/>
+        <attr name="background_color" format="color"/>
+        <attr name="main_title_color" format="color"/>
     </declare-styleable>
 
     <declare-styleable name="ActionSheet">
@@ -42,6 +40,7 @@
         <attr name="button_text" format="string"/>
         <attr name="hint" format="string"/>
         <attr name="value" format="string"/>
+        <attr name="isShowEye" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="RegisterSelector">

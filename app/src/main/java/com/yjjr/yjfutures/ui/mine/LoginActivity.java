@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.ui.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,8 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.UserLoginRequest;
 import com.yjjr.yjfutures.model.UserLoginResponse;
+import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Login;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
@@ -24,8 +27,10 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
+import com.yjjr.yjfutures.widget.RegisterInput;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -51,11 +56,12 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void findViews() {
-        etUsername = (EditText) findViewById(R.id.et_username);
-        etPassword = (EditText) findViewById(R.id.et_password);
+        RegisterInput riUsername = (RegisterInput) findViewById(R.id.ri_phone);
+        RegisterInput riPassword = (RegisterInput) findViewById(R.id.ri_password);
+        etUsername = riUsername.getEtInput();
+        etPassword = riPassword.getEtInput();
+        etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         btnLogin = (Button) findViewById(R.id.btn_login);
-        ImageView iv1 = (ImageView) findViewById(R.id.iv_del1);
-        ImageView iv2 = (ImageView) findViewById(R.id.iv_del2);
         TextView tvRegister = (TextView) findViewById(R.id.tv_register);
         TextView tvForgetPwd = (TextView) findViewById(R.id.tv_forget_pwd);
 //        long account = LastInputSharePrefernce.getLastAccount(mContext);
@@ -71,54 +77,6 @@ public class LoginActivity extends BaseActivity {
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(RxView.selected(btnLogin));
-        RxTextView.textChanges(etUsername)
-                .map(new Function<CharSequence, Boolean>() {
-                    @Override
-                    public Boolean apply(@NonNull CharSequence charSequence) throws Exception {
-                        return !TextUtils.isEmpty(etUsername.getText());
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(RxView.visibility(iv1));
-        RxTextView.textChanges(etPassword)
-                .map(new Function<CharSequence, Boolean>() {
-                    @Override
-                    public Boolean apply(@NonNull CharSequence charSequence) throws Exception {
-                        return !TextUtils.isEmpty(etPassword.getText());
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(RxView.visibility(iv2));
-        RxView.focusChanges(etUsername)
-                .map(new Function<Boolean, Boolean>() {
-                    @Override
-                    public Boolean apply(@NonNull Boolean aBoolean) throws Exception {
-                        return aBoolean && !TextUtils.isEmpty(etUsername.getText());
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(RxView.visibility(iv1));
-        RxView.focusChanges(etPassword)
-                .map(new Function<Boolean, Boolean>() {
-                    @Override
-                    public Boolean apply(@NonNull Boolean aBoolean) throws Exception {
-                        return aBoolean && !TextUtils.isEmpty(etPassword.getText());
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(RxView.visibility(iv2));
-        iv1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etUsername.setText(null);
-            }
-        });
-        iv2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etPassword.setText(null);
-            }
-        });
         tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,8 +108,17 @@ public class LoginActivity extends BaseActivity {
         final String password = etPassword.getText().toString().trim();
 //        final String password = StringUtils.encodePassword(etPassword.getText().toString().trim());
         UserLoginRequest model = new UserLoginRequest(account, password, "Trader", "3.29");
-//        RxUtils.createSoapObservable("UserLogin", model, UserLoginResponse.class)
-        HttpManager.getHttpService().userLogin(account, password)
+        HttpManager.getBizService().login(account, password)
+                .flatMap(new Function<BizResponse<Login>, ObservableSource<UserLoginResponse>>() {
+                    @Override
+                    public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<Login> loginBizResponse) throws Exception {
+                        if(loginBizResponse.getRcode() != 0) {
+                            throw new RuntimeException("登录失败");
+                        }
+                        return HttpManager.getHttpService().userLogin(account, password);
+                    }
+                })
+//        HttpManager.getHttpService().userLogin(account, password)
                 .map(new Function<UserLoginResponse, UserLoginResponse>() {
                     @Override
                     public UserLoginResponse apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {

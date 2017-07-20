@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.ui.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.InputType;
 import android.view.View;
@@ -37,6 +38,20 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private Validator mValidator;
     private Button mBtnConfirm;
+    private TextView mOperaButton;
+
+    private CountDownTimer mCountDownTimer = new CountDownTimer(HttpConfig.SMS_TIME, 1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            mOperaButton.setText(((int) (millisUntilFinished / 1000)) + "秒");
+        }
+
+        @Override
+        public void onFinish() {
+            mOperaButton.setEnabled(true);
+            mOperaButton.setText(R.string.phone_verify_code);
+        }
+    };
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, RegisterActivity.class));
@@ -52,7 +67,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         RegisterInput riSmscode = (RegisterInput) findViewById(R.id.ri_smscode);
         RegisterInput riPassword = (RegisterInput) findViewById(R.id.ri_password);
         mBtnConfirm = (Button) findViewById(R.id.btn_confirm);
-        final TextView operaButton = riSmscode.getOperaButton();
+        mOperaButton = riSmscode.getOperaButton();
         mEtPhone = riPhone.getEtInput();
         mEtSmsCode = riSmscode.getEtInput();
         mEtPassword = riPassword.getEtInput();
@@ -65,18 +80,19 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
                 boolean matches = pattern.matcher(s.toString()).matches();
-                operaButton.setEnabled(matches);
+                mOperaButton.setEnabled(matches);
 
             }
         });
         findViewById(R.id.iv_back).setOnClickListener(this);
-        operaButton.setOnClickListener(new View.OnClickListener() {
+        mOperaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.show(mContext, "click");
+                mOperaButton.setEnabled(false);
+                mCountDownTimer.start();
             }
         });
-        operaButton.setEnabled(false);
+        mOperaButton.setEnabled(false);
         mBtnConfirm.setOnClickListener(this);
     }
 
@@ -104,5 +120,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             ToastUtils.show(mContext, message);
         }
         mBtnConfirm.setEnabled(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCountDownTimer.cancel();
     }
 }

@@ -3,16 +3,13 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                tools:background="@color/background_dark">
+                android:background="@drawable/shape_bg_bottom_line">
 
     <LinearLayout
         android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tv_error"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
-        android:background="@drawable/shape_bg_bottom_line">
+        android:layout_below="@id/tv_error">
 
         <TextView
             android:id="@+id/tv_input"
@@ -48,6 +45,13 @@
             android:layout_marginRight="4dp"
             android:scaleType="centerInside"
             android:src="@drawable/icon_input_delete"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_eye"
+            android:layout_width="20dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_height="match_parent"
             android:visibility="gone"/>
 
         <TextView

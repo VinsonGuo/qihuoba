@@ -70,7 +70,7 @@ public class TimeSharingplanFragment extends BaseFragment {
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mQuote = StaticStore.sQuoteMap.get(mSymbol);
-        mChart = new TimeSharingplanChart(mContext, StringUtils.getDigitByTick(mQuote.getTick()));
+        mChart = new TimeSharingplanChart(mContext, mQuote != null ? StringUtils.getDigitByTick(mQuote.getTick()) : 2);
         return mChart;
     }
 

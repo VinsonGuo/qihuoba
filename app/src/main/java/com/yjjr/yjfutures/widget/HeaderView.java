@@ -43,30 +43,28 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
     }
 
     private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
-        View view = LayoutInflater.from(context).inflate(R.layout.view_header, this);
-        mImage = (ImageView) view.findViewById(R.id.view_header_image_back);
-        mTextMainTitle = (TextView) view.findViewById(R.id.view_header_text_maintitle);
-        mTextSubtitle = (TextView) view.findViewById(R.id.view_header_text_subtitle);
+        LayoutInflater.from(context).inflate(R.layout.view_header, this);
+        View rootView = findViewById(R.id.root_view);
+        mImage = (ImageView) findViewById(R.id.view_header_image_back);
+        mTextMainTitle = (TextView) findViewById(R.id.view_header_text_maintitle);
+        mTextSubtitle = (TextView) findViewById(R.id.view_header_text_subtitle);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.headerView, defStyleAttr, 0);
 
         String mainTitle = a.getString(R.styleable.headerView_main_title);
         String subTitle = a.getString(R.styleable.headerView_sub_title);
-        int backgroundRes = a.getResourceId(R.styleable.headerView_sub_backgroud, R.drawable.transport);
-        boolean showImage = a.getBoolean(R.styleable.headerView_sub_back_icon, true);
-        int enableColor = a.getColor(R.styleable.headerView_sub_title_color, getResources().getColor(R.color.main_color));
-        int disableColor = a.getColor(R.styleable.headerView_sub_title_color, getResources().getColor(R.color.third_text_color));
-        int visibility = showImage ? View.VISIBLE : View.GONE;
-        mImage.setVisibility(visibility);
+        int bgColor = a.getColor(R.styleable.headerView_background_color, 0);
+        int mainTitleColor = a.getColor(R.styleable.headerView_main_title_color, ContextCompat.getColor(context,R.color.main_text_color));
+        if (bgColor != 0) {
+            rootView.setBackgroundColor(bgColor);
+        }
+
         mImage.setOnClickListener(this);
 
-        //暂时没夹功能，先隐藏
-        //mImage.setVisibility(View.GONE);
 
         mTextMainTitle.setText(mainTitle);
+        mTextMainTitle.setTextColor(mainTitleColor);
         mTextSubtitle.setText(subTitle);
-        mTextSubtitle.setBackgroundResource(backgroundRes);
-            mTextSubtitle.setTextColor(ContextCompat.getColor(context, R.color.color_666666));
 
         a.recycle();
     }
@@ -80,10 +78,6 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
         mTextMainTitle.setVisibility(visibility);
     }
 
-    public void setMainTitle(String text) {
-        mTextMainTitle.setText(text);
-    }
-
     public void setSubtitleVisible(int visible) {
         mTextSubtitle.setVisibility(visible);
     }
@@ -92,12 +86,12 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
         mTextSubtitle.setText(textRes);
     }
 
-    public void setSubtitleText(String textRes) {
-        mTextSubtitle.setText(textRes);
-    }
-
     public String getSubtitleText() {
         return mTextSubtitle.getText().toString();
+    }
+
+    public void setSubtitleText(String textRes) {
+        mTextSubtitle.setText(textRes);
     }
 
     public void setSubtitleBackground(int imageRes) {
@@ -114,6 +108,10 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
 
     public String getMainTitle() {
         return mTextMainTitle.getText().toString().trim();
+    }
+
+    public void setMainTitle(String text) {
+        mTextMainTitle.setText(text);
     }
 
     public void setOperateClickListener(OnClickListener listener) {

@@ -26,7 +26,7 @@ public class HttpManager {
         if (sRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sRetrofit = new Retrofit.Builder()
-                    .baseUrl("http://139.224.8.133:9100/WebService.asmx/")
+                    .baseUrl(HttpConfig.DOMAIN + ":9100/WebService.asmx/")
                     .client(client)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -40,7 +40,7 @@ public class HttpManager {
         if (sBizRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sBizRetrofit = new Retrofit.Builder()
-                    .baseUrl("http://139.224.8.133:9300/service/")
+                    .baseUrl(HttpConfig.DOMAIN + ":9300/service/")
                     .client(client)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -61,7 +61,7 @@ public class HttpManager {
     public static OkHttpClient getOkHttpClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return new OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(new StethoInterceptor()).build();
+        return new OkHttpClient.Builder().addInterceptor(interceptor).addNetworkInterceptor(new StethoInterceptor()).build();
     }
 
     public static HttpService getHttpService() {

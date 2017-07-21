@@ -12,7 +12,6 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.mine.LoginActivity;
-import com.yjjr.yjfutures.utils.ExceptionHandler;
 import com.yjjr.yjfutures.utils.LogUtils;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -42,7 +41,13 @@ public class BaseApplication extends Application implements Application.Activity
         JodaTimeAndroid.init(this);
         registerActivityLifecycleCallbacks(this);
         CrashReport.initCrashReport(getApplicationContext(), "97d5703386", BuildConfig.DEBUG);
-        Stetho.initializeWithDefaults(this);
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(
+                                Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(
+                                Stetho.defaultInspectorModulesProvider(this))
+                        .build());
 //        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 //        MobclickAgent.enableEncrypt(true);
 //        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
@@ -104,7 +109,7 @@ public class BaseApplication extends Application implements Application.Activity
         return !TextUtils.isEmpty(UserSharePrefernce.getAccount(this)) && UserSharePrefernce.isLogin(this);
     }
 
-    public void toLogin(Activity a) {
+    public void toLogin(Context a) {
         closeApplication();
         LoginActivity.startActivity(a);
     }
@@ -132,13 +137,13 @@ public class BaseApplication extends Application implements Application.Activity
         return mTradeToken;
     }
 
-    public void logout(Activity a) {
+    public void setTradeToken(String tradeToken) {
+        mTradeToken = tradeToken;
+    }
+
+    public void logout(Context a) {
         UserSharePrefernce.clearCache();
         mTradeToken = "";
         toLogin(a);
-    }
-
-    public void setTradeToken(String tradeToken) {
-        mTradeToken = tradeToken;
     }
 }

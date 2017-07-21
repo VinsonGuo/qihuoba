@@ -812,7 +812,6 @@
     <string name="no_read_message">"···"</string>
 
     <!--register activity -->
-    <string name="register_is_null">"邮箱、密码、昵称 不能为空"</string>
     <string name="register_failure">"注册失败"</string>
     <string name="register_input_email">"输入邮箱"</string>
     <string name="register_input_password">"输入密码"</string>
@@ -1334,4 +1333,9 @@
     <string name="pay_pwd">支付密码</string>
     <string name="find_login_password">找回登录密码</string>
     <string name="finish">完成</string>
+    <string name="old_password_equals_new_password">新密码与旧密码相同</string>
+    <string name="quit_login">退出登录</string>
+    <string name="zybzj">占用保证金</string>
+    <string name="jzc">净资产</string>
+    <string name="go_transfer">去转账</string>
 </resources>

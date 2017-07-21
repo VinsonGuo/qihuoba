@@ -167,19 +167,19 @@ public interface HttpService {
             @Query("ordertype") String ordertype);
 
     /**
+     * 9、获取未成交合约
+     http://139.224.8.133:9100/api/get_unfill_order.ashx
+     传参：account
+
+     */
+
+    /**
      * 8、获取未成交订单
      * http://139.224.8.133:9100/api/get_open_order.ashx
      * 传参：account
      */
     @GET("/api/get_open_order.ashx")
     Observable<List<OpenOrder>> getOpenOrder(@Query("account") String account);
-
-    /**
-     * 9、获取未成交合约
-     http://139.224.8.133:9100/api/get_unfill_order.ashx
-     传参：account
-
-     */
 
     /**
      * 10、获取已成交订单
@@ -212,6 +212,14 @@ public interface HttpService {
      */
     @GET("/api/get_symbols.ashx")
     Observable<List<Symbol>> getSymbols(@Query("account") String account);
+
+    /**
+     * 16、修改密码
+     * http://139.224.8.133:9100/api/change_password.ashx
+     * 传参：account,oldpassword,newpassword
+     */
+    @GET("/api/change_password.ashx")
+    Observable<CommonResponse> changePassword(@Query("account") String account, @Query("oldpassword") String oldpassword, @Query("newpassword") String newpassword);
 
     /**
      * 17、获取平仓单（结算单用）

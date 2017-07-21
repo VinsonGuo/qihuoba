@@ -1,5 +1,8 @@
 package com.yjjr.yjfutures.utils;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.yjjr.yjfutures.model.CommonResponse;
@@ -64,8 +67,16 @@ public class RxUtils {
                         .map(new Function<T, T>() {
                             @Override
                             public T apply(@NonNull T t) throws Exception {
-                                if(t.getRcode() != 0) {
-                                    throw new RuntimeException("发生错误");
+                                if (t.getRcode() != 0) {
+                                    throw new RuntimeException(t.getRmsg());
+                                }
+                                if (t.getRcode() == 99) {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            BaseApplication.getInstance().logout(BaseApplication.getInstance());
+                                        }
+                                    });
                                 }
                                 return t;
                             }

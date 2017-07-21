@@ -25,8 +25,6 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         findViewById(R.id.tv_pay_pwd).setOnClickListener(this);
         findViewById(R.id.tv_auth).setOnClickListener(this);
         findViewById(R.id.tv_deposit).setOnClickListener(this);
-        findViewById(R.id.tv_bind_phone).setOnClickListener(this);
-        findViewById(R.id.tv_login_pwd).setOnClickListener(this);
     }
 
     @Override
@@ -41,13 +39,6 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_deposit:
                 BindCardActivity.startActivity(mContext);
                 break;
-             case R.id.tv_bind_phone:
-                AlterPhoneActivity.startActivity(mContext);
-                break;
-            case R.id.tv_login_pwd:
-                AlterLoginPwdActivity.startActivity(mContext);
-                break;
-
         }
     }
 }

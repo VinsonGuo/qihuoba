@@ -3,55 +3,58 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:background="@color/chart_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/chart_background"
+    android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.mine.BindCardActivity">
 
     <com.yjjr.yjfutures.widget.HeaderView
         android:id="@+id/header_view"
-        app:main_title="添加支付宝"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-
-    <com.yjjr.yjfutures.widget.RegisterInput
-        android:id="@+id/ri_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:name="@string/real_name"/>
+        app:main_title="添加支付宝"/>
 
-    <com.yjjr.yjfutures.widget.RegisterInput
-        android:id="@+id/ri_idcard"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:name="@string/id_card_number"
-        />
+        android:background="@color/background_dark"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dp_10">
 
-    <com.yjjr.yjfutures.widget.RegisterSelector
-        android:id="@+id/rs_type"
-        app:name_text="开户类型"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <com.yjjr.yjfutures.widget.RegisterInput
+            android:id="@+id/ri_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hint="您的真实姓名"
+            app:name="@string/real_name"/>
 
-    <com.yjjr.yjfutures.widget.RegisterInput
-        android:id="@+id/ri_bank_number"
+
+        <com.yjjr.yjfutures.widget.RegisterInput
+            android:id="@+id/ri_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hint="请输入支付宝账号"
+            app:name="支付宝账号"
+            />
+
+        <com.yjjr.yjfutures.widget.RegisterInput
+            android:id="@+id/ri_confirm_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hint="请再次确认支付宝账号"
+            app:name="确认账号"
+            />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:name="@string/bank_code"
-        />
-
-    <com.yjjr.yjfutures.widget.RegisterSelector
-        android:id="@+id/rs_bank_name"
-        app:name_text="银行名称"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <com.yjjr.yjfutures.widget.RegisterSelector
-        android:id="@+id/rs_city"
-        app:name_text="开户城市"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+        android:layout_marginTop="@dimen/root_padding_15"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:background="@drawable/selector_common_btn_bg"
+        android:text="@string/next_step"
+        android:textColor="@color/selector_common_btn_text_color"/>
 </LinearLayout>

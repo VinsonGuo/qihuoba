@@ -1,6 +1,7 @@
 package com.yjjr.yjfutures.utils.http;
 
 import com.yjjr.yjfutures.model.UserLoginResponse;
+import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Login;
 
@@ -32,5 +33,5 @@ public interface BizService {
 
     @FormUrlEncoded
     @POST("user/bindAlipay")
-    Observable<BizResponse<Login>> bindAlipay(@Field("account") String account, @Field("alipay") String alipay);
+    Observable<BizResponse<Alipay>> bindAlipay(@Field("account") String account, @Field("alipay") String alipay);
 }

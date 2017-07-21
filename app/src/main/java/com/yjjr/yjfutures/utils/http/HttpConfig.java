@@ -10,6 +10,8 @@ public interface HttpConfig {
     String NAME_SPACE = "http://tempuri.org/";
     String SOAP_ACTION = "http://tempuri.org/IQuoteService/";
 
+    String DOMAIN = "http://www.qihuofa.com";
+
     /**
      * 手机号码的正则
      */
@@ -18,4 +20,5 @@ public interface HttpConfig {
      * 发送验证码的重试时间
      */
     long SMS_TIME = 60 * 1000;
+    String ALIPAY_ACCOUNT_CODE = "FKX02655U4OLYIE59HJ9CD";
 }

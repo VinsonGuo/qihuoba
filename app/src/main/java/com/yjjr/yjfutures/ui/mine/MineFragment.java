@@ -33,32 +33,20 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     private TextView tvYue;
     private TextView tvMargin;
-    private CustomPromptDialog mLogoutDialog;
+    private TextView tvNet;
 
     public MineFragment() {
         // Required empty public constructor
     }
 
     private void findViews(View v) {
-        mLogoutDialog = new CustomPromptDialog.Builder(mContext)
-                .setMessage("您确定退出当前账号吗？")
-                .isShowClose(true)
-                .setMessageDrawableId(R.drawable.ic_info)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        BaseApplication.getInstance().logout(getActivity());
-                    }
-                })
-                .create();
         TextView tvOne = (TextView) v.findViewById(R.id.tv_one);
         TextView tvTwo = (TextView) v.findViewById(R.id.tv_two);
         TextView tvThree = (TextView) v.findViewById(R.id.tv_three);
         TextView tvFour = (TextView) v.findViewById(R.id.tv_four);
-        TextView tvFive = (TextView) v.findViewById(R.id.tv_five);
         tvYue = (TextView) v.findViewById(R.id.tv_yue);
         tvMargin = (TextView) v.findViewById(R.id.tv_margin);
+        tvNet = (TextView) v.findViewById(R.id.tv_net);
         final SwipeRefreshLayout refresh = (SwipeRefreshLayout) v.findViewById(R.id.refresh);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -87,7 +75,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         tvTwo.setOnClickListener(this);
         tvThree.setOnClickListener(this);
         tvFour.setOnClickListener(this);
-        tvFive.setOnClickListener(this);
     }
 
     @Override
@@ -96,7 +83,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         findViews(v);
         v.findViewById(R.id.btn_login).setOnClickListener(this);
         v.findViewById(R.id.btn_register).setOnClickListener(this);
-        v.findViewById(R.id.tv_logout).setOnClickListener(this);
+        v.findViewById(R.id.tv_setting).setOnClickListener(this);
         v.findViewById(R.id.btn_deposit).setOnClickListener(this);
         v.findViewById(R.id.btn_withdraw).setOnClickListener(this);
         return v;
@@ -127,8 +114,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             case R.id.btn_register:
                 RegisterActivity.startActivity(mContext);
                 break;
-            case R.id.tv_logout:
-                mLogoutDialog.show();
+            case R.id.tv_setting:
+                SettingActivity.startActivity(mContext);
                 break;
             case R.id.tv_one:
                 FundDetailActivity.startActivity(mContext);
@@ -140,9 +127,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 WebActivity.startActivity(mContext, "http://www.baidu.com");
                 break;
             case R.id.tv_four:
-                WebActivity.startActivity(mContext, "http://www.baidu.com");
-                break;
-            case R.id.tv_five:
                 WebActivity.startActivity(mContext, "http://www.baidu.com");
                 break;
             case R.id.btn_deposit:

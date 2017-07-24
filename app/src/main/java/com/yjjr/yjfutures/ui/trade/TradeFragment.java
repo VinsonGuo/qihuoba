@@ -41,8 +41,8 @@ import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.NestRadioGroup;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
-import com.zaaach.toprightmenu.MenuItem;
-import com.zaaach.toprightmenu.TopRightMenu;
+import com.yjjr.yjfutures.widget.dropdownmenu.MenuItem;
+import com.yjjr.yjfutures.widget.dropdownmenu.TopRightMenu;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -183,11 +183,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         menuItems.add(new MenuItem(R.drawable.transport, "日线"));
         mTopRightMenu
                 .setWidth(220)      //默认宽度wrap_content
-                .setHeight(DisplayUtils.dip2px(mContext, 44 * menuItems.size()))
+                .setHeight(DisplayUtils.dip2px(mContext, 30 * menuItems.size()))
                 .showIcon(false)     //显示菜单图标，默认为true
                 .dimBackground(true)        //背景变暗，默认为true
                 .needAnimationStyle(true)   //显示动画，默认为true
-                .setAnimationStyle(R.style.TRM_ANIM_STYLE)
                 .addMenuList(menuItems)
                 .setOnMenuItemClickListener(new TopRightMenu.OnMenuItemClickListener() {
                     @Override

@@ -86,8 +86,12 @@ public class RegisterInput extends FrameLayout {
                         @Override
                         public void accept(@NonNull Object o) throws Exception {
                             if(mEtInput.getInputType() == InputType.TYPE_CLASS_TEXT) {
+                                // 不显示密码
+                                mIvEye.setImageResource(R.drawable.ic_eye);
                                 mEtInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                             }else {
+                                // 显示密码
+                                mIvEye.setImageResource(R.drawable.ic_eye_close);
                                 mEtInput.setInputType(InputType.TYPE_CLASS_TEXT);
                             }
                             mEtInput.setSelection(mEtInput.getText().length());

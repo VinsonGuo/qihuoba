@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_dark"
+    android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.mine.RegisterActivity">
 
 
@@ -19,25 +19,29 @@
         android:src="@drawable/drawable_header_back1"/>
 
     <TextView
-        android:textSize="30sp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="30dp"
-        android:text="@string/find_login_password"
-        android:gravity="center"
-        android:textColor="@color/main_text_color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/find_login_password"
+        android:textColor="@color/main_text_color"
+        android:textSize="30sp"/>
 
     <com.yjjr.yjfutures.widget.RegisterInput
         android:id="@+id/ri_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginRight="@dimen/root_padding_15"
         app:name="@string/phone_number_format"/>
 
     <com.yjjr.yjfutures.widget.RegisterInput
         android:id="@+id/ri_smscode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginRight="@dimen/root_padding_15"
         app:button_text="@string/activation_code"
         app:name="@string/activation_message_code"
         />
@@ -46,16 +50,20 @@
         android:id="@+id/ri_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:name="@string/set_password"
-        app:hint="@string/password_too_simple" />
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginRight="@dimen/root_padding_15"
+        app:hint="@string/password_too_simple"
+        app:name="@string/set_password"/>
 
 
     <Button
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginRight="@dimen/root_padding_15"
         android:layout_marginTop="30dp"
         android:background="@drawable/selector_common_btn_bg"
         android:text="@string/next_step"
-        android:textColor="@color/selector_common_btn_text_color" />
+        android:textColor="@color/selector_common_btn_text_color"/>
 </LinearLayout>

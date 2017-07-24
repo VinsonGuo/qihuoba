@@ -18,6 +18,7 @@
         android:id="@+id/ri_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:isShowEye="true"
         app:hint="请输入新登录密码"
         app:name="@string/login_pwd"/>
 

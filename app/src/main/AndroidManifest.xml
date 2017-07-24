@@ -93,6 +93,7 @@
         </activity>
         <activity
             android:name=".ui.mine.InputPayPwdActivity"
+            android:windowSoftInputMode="stateVisible"
             android:theme="@style/Theme.Transparent">
         </activity>
         <activity android:name=".ui.mine.SettingActivity">
@@ -100,6 +101,8 @@
         <activity android:name=".ui.trade.AlipayTransferActivity">
         </activity>
         <activity android:name=".ui.mine.GuideActivity">
+        </activity>
+        <activity android:name=".ui.mine.WithdrawActivity">
         </activity>
     </application>
 

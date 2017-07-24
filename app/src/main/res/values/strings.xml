@@ -1326,7 +1326,7 @@
     <string name="closeing">平仓中...</string>
     <string name="register_by_phone">手机号注册</string>
     <string name="djbzj">冻结保证金</string>
-    <string name="withdraw">提现</string>
+    <string name="withdraw">提款</string>
     <string name="set_trade_password">设置交易密码</string>
     <string name="auth_name">实名认证</string>
     <string name="login_pwd">登录密码</string>
@@ -1338,4 +1338,5 @@
     <string name="zybzj">占用保证金</string>
     <string name="jzc">净资产</string>
     <string name="go_transfer">去转账</string>
+    <string name="withdraw_recode">提款记录</string>
 </resources>

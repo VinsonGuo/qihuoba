@@ -133,7 +133,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 DepositActivity.startActivity(mContext);
                 break;
             case R.id.btn_withdraw:
-                InputPayPwdActivity.startActivity(mContext);
+                WithdrawActivity.startActivity(mContext);
                 break;
         }
     }

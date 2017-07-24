@@ -2,6 +2,7 @@ package com.yjjr.yjfutures.utils.http;
 
 import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Login;
 
 import io.reactivex.Observable;
@@ -46,4 +47,7 @@ public interface BizService {
     @FormUrlEncoded
     @POST("identityAuth/auth")
     Observable<BizResponse> auth(@Field("userName") String userName, @Field("idCardNo") String idCardNo);
+
+    @GET("user/queryFundsOverview")
+    Observable<BizResponse<Funds>> getFunds();
 }

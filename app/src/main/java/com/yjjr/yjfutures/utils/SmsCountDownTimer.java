@@ -6,12 +6,17 @@ import android.widget.TextView;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 
+import java.util.regex.Pattern;
+
 /**
  * Created by dell on 2017/7/24.
  */
 
 public class SmsCountDownTimer extends CountDownTimer {
+
     private TextView mTextView;
+    private Pattern pattern = Pattern.compile(HttpConfig.REG_PHONE);
+
     public SmsCountDownTimer(TextView tv) {
         super(HttpConfig.SMS_TIME, 1000);
         mTextView = tv;
@@ -24,7 +29,7 @@ public class SmsCountDownTimer extends CountDownTimer {
 
     @Override
     public void onFinish() {
-        mTextView.setEnabled(true);
+        mTextView.setEnabled(pattern.matcher(mTextView.getText().toString()).matches());
         mTextView.setText(R.string.phone_verify_code);
     }
 }

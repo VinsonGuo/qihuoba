@@ -21,6 +21,7 @@
         android:background="@drawable/shape_bg_bottom_line"
         android:paddingLeft="@dimen/dp_10"
         android:paddingRight="@dimen/dp_10"
+        app:isShowEye="true"
         app:hint="请输入原登录密码"
         app:name="@string/login_pwd"/>
 

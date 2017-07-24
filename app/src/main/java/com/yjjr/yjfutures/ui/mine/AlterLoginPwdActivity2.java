@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
@@ -54,7 +56,9 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
         headerView.bindActivity(mContext);
         final Button btnConfirm = (Button) findViewById(R.id.btn_confirm);
 
-        riPwd.getEtInput().addTextChangedListener(new TextWatcherAdapter(){
+        EditText etPassword = riPwd.getEtInput();
+        etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        etPassword.addTextChangedListener(new TextWatcherAdapter(){
             @Override
             public void afterTextChanged(Editable s) {
                 btnConfirm.setSelected(!TextUtils.isEmpty(s));

@@ -3,15 +3,18 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/background_dark"
-              android:gravity="center"
+              android:gravity="center_horizontal"
               android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_no_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableTop="@mipmap/ic_launcher_icon"
+        android:drawableTop="@drawable/ic_no_data"
+        android:drawablePadding="@dimen/dp_10"
+        android:layout_marginTop="100dp"
         android:text="暂无数据"
-        android:textColor="@color/main_text_color"
+        android:textColor="@color/third_text_color"
         android:textSize="@dimen/sp_14"/>
 
 </LinearLayout>

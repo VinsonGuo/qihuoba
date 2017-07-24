@@ -120,6 +120,11 @@ public class PositionListFragment extends ListFragment<Holding> {
         return adapter;
     }
 
+    @Override
+    protected String getNoDataText() {
+        return "您暂无商品持仓";
+    }
+
     private void closeAllOrder(List<Holding> data) {
         mProgressDialog.show();
         List<Observable<CommonResponse>> observables = new ArrayList<>();

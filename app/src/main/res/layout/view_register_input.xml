@@ -44,13 +44,13 @@
             android:layout_height="match_parent"
             android:layout_marginRight="4dp"
             android:scaleType="centerInside"
-            android:src="@drawable/icon_input_delete"
+            android:src="@drawable/selector_input_delete"
             android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/iv_eye"
             android:layout_width="20dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/ic_eye"
             android:layout_height="match_parent"
             android:visibility="gone"/>
 

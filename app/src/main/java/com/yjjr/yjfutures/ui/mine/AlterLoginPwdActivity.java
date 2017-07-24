@@ -9,10 +9,15 @@ import android.view.View;
 import android.widget.Button;
 
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class AlterLoginPwdActivity extends BaseActivity {
     public static void startActivity(Context context) {
@@ -23,6 +28,7 @@ public class AlterLoginPwdActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alter_login_pwd);
+        EventBus.getDefault().register(this);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         final RegisterInput riPwd = (RegisterInput) findViewById(R.id.ri_pwd);
         headerView.bindActivity(mContext);
@@ -41,5 +47,16 @@ public class AlterLoginPwdActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(FinishEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

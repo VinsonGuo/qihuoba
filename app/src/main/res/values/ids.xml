@@ -3,4 +3,5 @@
     <item name="statusbar_view" type="id"/>
     <item name="translucent_view" type="id"/>
     <item name="root_view" type="id"/>
+    <item name="viewpager" type="id"/>
 </resources>

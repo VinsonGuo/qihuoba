@@ -8,8 +8,11 @@ import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.MainActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class CommonSuccessActivity extends BaseActivity {
 
@@ -40,7 +43,8 @@ public class CommonSuccessActivity extends BaseActivity {
         tvFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.startActivity(mContext);
+                EventBus.getDefault().post(new FinishEvent());
+                finish();
             }
         });
     }

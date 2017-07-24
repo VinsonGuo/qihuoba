@@ -8,8 +8,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.widget.HeaderView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class AuthActivity extends BaseActivity {
 
@@ -21,6 +26,7 @@ public class AuthActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
+        EventBus.getDefault().register(this);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
         Button btnConfirm = (Button) findViewById(R.id.btn_confirm);
@@ -31,5 +37,17 @@ public class AuthActivity extends BaseActivity {
                 AuthInfoActivity.startActivity(mContext);
             }
         });
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(FinishEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

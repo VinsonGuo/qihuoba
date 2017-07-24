@@ -11,6 +11,7 @@ import android.widget.Button;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
@@ -24,6 +25,10 @@ import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -42,6 +47,7 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alter_login_pwd2);
+        EventBus.getDefault().register(this);
         final String oldPwd = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         final RegisterInput riPwd = (RegisterInput) findViewById(R.id.ri_pwd);
@@ -95,5 +101,16 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
                         });
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(FinishEvent event) {
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

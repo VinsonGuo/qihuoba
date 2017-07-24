@@ -16,6 +16,8 @@ import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Password;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.SmsCountDownTimer;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.widget.RegisterInput;
@@ -40,18 +42,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private Button mBtnConfirm;
     private TextView mOperaButton;
 
-    private CountDownTimer mCountDownTimer = new CountDownTimer(HttpConfig.SMS_TIME, 1000) {
-        @Override
-        public void onTick(long millisUntilFinished) {
-            mOperaButton.setText(((int) (millisUntilFinished / 1000)) + "秒");
-        }
-
-        @Override
-        public void onFinish() {
-            mOperaButton.setEnabled(true);
-            mOperaButton.setText(R.string.phone_verify_code);
-        }
-    };
+    private CountDownTimer mCountDownTimer;
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, RegisterActivity.class));
@@ -68,6 +59,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         RegisterInput riPassword = (RegisterInput) findViewById(R.id.ri_password);
         mBtnConfirm = (Button) findViewById(R.id.btn_confirm);
         mOperaButton = riSmscode.getOperaButton();
+        mCountDownTimer = new SmsCountDownTimer(mOperaButton);
         mEtPhone = riPhone.getEtInput();
         mEtSmsCode = riSmscode.getEtInput();
         mEtPassword = riPassword.getEtInput();
@@ -88,8 +80,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mOperaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOperaButton.setEnabled(false);
-                mCountDownTimer.start();
+                RxUtils.handleSendSms(mContext, mOperaButton, mCountDownTimer, mEtPhone.getText().toString().trim());
             }
         });
         mOperaButton.setEnabled(false);

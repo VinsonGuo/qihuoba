@@ -8,14 +8,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.model.UserLoginRequest;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Login;
@@ -107,13 +105,12 @@ public class LoginActivity extends BaseActivity {
 //        LastInputSharePrefernce.setLastAccount(mContext, account);
         final String password = etPassword.getText().toString().trim();
 //        final String password = StringUtils.encodePassword(etPassword.getText().toString().trim());
-        UserLoginRequest model = new UserLoginRequest(account, password, "Trader", "3.29");
         HttpManager.getBizService().login(account, password)
                 .flatMap(new Function<BizResponse<Login>, ObservableSource<UserLoginResponse>>() {
                     @Override
                     public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<Login> loginBizResponse) throws Exception {
-                        if(loginBizResponse.getRcode() != 0) {
-                            throw new RuntimeException("登录失败");
+                        if (loginBizResponse.getRcode() != 0) {
+                            throw new RuntimeException(loginBizResponse.getRmsg());
                         }
                         return HttpManager.getHttpService().userLogin(account, password);
                     }

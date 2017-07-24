@@ -1,31 +1,21 @@
 package com.yjjr.yjfutures.utils;
 
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
-import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.PropertyInfo;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
-
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -39,8 +29,6 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class RxUtils {
-
-    private static Gson sGson = new Gson();
 
     /**
      * io线程执行，主线程观察
@@ -67,9 +55,6 @@ public class RxUtils {
                         .map(new Function<T, T>() {
                             @Override
                             public T apply(@NonNull T t) throws Exception {
-                                if (t.getRcode() != 0) {
-                                    throw new RuntimeException(t.getRmsg());
-                                }
                                 if (t.getRcode() == 99) {
                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                                         @Override
@@ -77,6 +62,9 @@ public class RxUtils {
                                             BaseApplication.getInstance().logout(BaseApplication.getInstance());
                                         }
                                     });
+                                }
+                                if (t.getRcode() != 0) {
+                                    throw new RuntimeException(t.getRmsg());
                                 }
                                 return t;
                             }
@@ -87,149 +75,6 @@ public class RxUtils {
         };
     }
 
-    public static <T> Observable<T> createSoapObservable(final String methodName, final Object model, final Class<T> responseClz) {
-        return Observable.create(new ObservableOnSubscribe<T>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<T> e) throws Exception {
-                try {
-
-                    String url = HttpConfig.BASE_URL;
-                    // SOAP Action
-                    final String soapAction = HttpConfig.SOAP_ACTION + methodName;
-
-                    // 指定WebService的命名空间和调用的方法名
-                    SoapObject rpc = model2SoapObject(methodName, model);
-                    // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
-                    final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
-
-                    // 设置是否调用的是dotNet开发的WebService
-                    envelope.dotNet = true;
-                    // 等价于envelope.bodyOut = rpc;
-                    envelope.setOutputSoapObject(rpc);
-
-                    final HttpTransportSE transport = new HttpTransportSE(url);
-                    // 调用WebService
-                    LogUtils.d(rpc.toString());
-                    transport.call(soapAction, envelope);
-                    SoapObject result = (SoapObject) envelope.bodyIn;
-                    SoapObject s = (SoapObject) result.getProperty(0);
-                    T t = soapObject2Model(s, responseClz);
-                    e.onNext(t);
-                } catch (Exception ex) {
-                    e.onError(ex);
-                }
-            }
-        });
-    }
-
-
-    public static Observable<SoapObject> createSoapObservable2(final String methodName, final Object model) {
-        return Observable.create(new ObservableOnSubscribe<SoapObject>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<SoapObject> e) throws Exception {
-                try {
-
-                    String url = HttpConfig.BASE_URL;
-                    // SOAP Action
-                    final String soapAction = HttpConfig.SOAP_ACTION + methodName;
-
-                    // 指定WebService的命名空间和调用的方法名
-                    SoapObject rpc = model2SoapObject(methodName, model);
-                    // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
-                    final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
-
-                    // 设置是否调用的是dotNet开发的WebService
-                    envelope.dotNet = true;
-                    // 等价于envelope.bodyOut = rpc;
-                    envelope.setOutputSoapObject(rpc);
-
-                    final HttpTransportSE transport = new HttpTransportSE(url);
-                    // 调用WebService
-                    LogUtils.d(rpc.toString());
-                    transport.call(soapAction, envelope);
-                    SoapObject result = (SoapObject) envelope.bodyIn;
-                    LogUtils.d(result.toString());
-                    SoapObject s = (SoapObject) result.getProperty(0);
-                    e.onNext(s);
-                } catch (Exception ex) {
-                    e.onError(ex);
-                }
-            }
-        });
-    }
-
-    public static Observable<SoapObject> createSoapObservable3(final String methodName, final SoapObject rpc) {
-        return Observable.create(new ObservableOnSubscribe<SoapObject>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<SoapObject> e) throws Exception {
-                try {
-                    // 命名空间
-
-                    String url = HttpConfig.BASE_URL;
-                    // SOAP Action
-                    final String soapAction = HttpConfig.SOAP_ACTION + methodName;
-
-                    // 指定WebService的命名空间和调用的方法名
-                    // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
-                    final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER10);
-
-                    // 设置是否调用的是dotNet开发的WebService
-                    envelope.dotNet = true;
-                    // 等价于envelope.bodyOut = rpc;
-                    envelope.setOutputSoapObject(rpc);
-
-                    final HttpTransportSE transport = new HttpTransportSE(url);
-                    // 调用WebService
-                    LogUtils.d(rpc.toString());
-                    transport.call(soapAction, envelope);
-                    SoapObject result = (SoapObject) envelope.bodyIn;
-                    SoapObject s = (SoapObject) result.getProperty(0);
-                    LogUtils.d(s.toString());
-                    e.onNext(s);
-                } catch (Exception ex) {
-                    e.onError(ex);
-                }
-            }
-        });
-    }
-
-    public static SoapObject model2SoapObject(String methodName, Object o) throws Exception {
-
-        SoapObject rpc = new SoapObject(HttpConfig.NAME_SPACE, methodName);
-        Field[] declaredFields = o.getClass().getDeclaredFields();
-        for (Field field : declaredFields) {
-            field.setAccessible(true);
-            if ("serialVersionUID".equals(field.getName()) || field.getName().startsWith("$")) {
-                continue;
-            }
-            rpc.addProperty(field.getName(), field.get(o));
-        }
-        return rpc;
-    }
-
-    public static <T> T soapObject2Model(SoapObject soap, Class<T> clazz) throws Exception {
-        Map<Object, Object> map = new HashMap<>(10);
-        PropertyInfo pi = new PropertyInfo();
-        int count = soap.getPropertyCount();
-        for (int i = 0; i < count; i++) {
-            soap.getPropertyInfo(i, pi);
-            map.put(pi.getName(), soap.getProperty(i).toString());
-        }
-        JsonElement jsonElement = sGson.toJsonTree(map);
-        return sGson.fromJson(jsonElement, clazz);
-    }
-
-    public static <T> T soapObject2Model(SoapObject soap, Type type) throws Exception {
-        Map<Object, Object> map = new HashMap<>(10);
-        PropertyInfo pi = new PropertyInfo();
-        int count = soap.getPropertyCount();
-        for (int i = 0; i < count; i++) {
-            soap.getPropertyInfo(i, pi);
-            map.put(pi.getName(), soap.getProperty(i).toString());
-        }
-        JsonElement jsonElement = sGson.toJsonTree(map);
-        return sGson.fromJson(jsonElement, type);
-    }
 
     public static Consumer<? super Throwable> commonErrorConsumer() {
         return new Consumer<Throwable>() {
@@ -240,6 +85,9 @@ public class RxUtils {
         };
     }
 
+    /**
+     * 平仓请求
+     */
     public static Observable<CommonResponse> createCloseObservable(Holding holding) {
         return HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), holding.getSymbol(), StringUtils.getOppositeBuySell(holding.getBuySell()), 0, Math.abs(holding.getQty()), "市价")
                 .map(new Function<CommonResponse, CommonResponse>() {
@@ -249,6 +97,29 @@ public class RxUtils {
                             throw new RuntimeException(commonResponse.getMessage());
                         }
                         return commonResponse;
+                    }
+                });
+    }
+
+    /**
+     * 统一的发送验证码接口
+     */
+    public static void handleSendSms(final BaseActivity mContext, final View btn, final CountDownTimer timer, String phoneNumber) {
+        btn.setEnabled(false);
+        HttpManager.getBizService().sendSms(phoneNumber)
+                .compose(RxUtils.applyBizSchedulers())
+                .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse>() {
+                    @Override
+                    public void accept(@NonNull BizResponse bizResponse) throws Exception {
+                        timer.start();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        LogUtils.e(throwable);
+                        ToastUtils.show(mContext, throwable.getMessage());
+                        btn.setEnabled(true);
                     }
                 });
     }

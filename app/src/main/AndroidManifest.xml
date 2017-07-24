@@ -99,6 +99,8 @@
         </activity>
         <activity android:name=".ui.trade.AlipayTransferActivity">
         </activity>
+        <activity android:name=".ui.mine.GuideActivity">
+        </activity>
     </application>
 
 </manifest>

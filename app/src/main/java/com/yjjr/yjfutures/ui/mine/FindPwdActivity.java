@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.ui.mine;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.InputType;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Password;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.SmsCountDownTimer;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.widget.RegisterInput;
@@ -38,6 +41,8 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
     private Validator mValidator;
     private Button mBtnConfirm;
 
+    private CountDownTimer mCountDownTimer;
+
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, FindPwdActivity.class));
     }
@@ -53,6 +58,7 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
         RegisterInput riPassword = (RegisterInput) findViewById(R.id.ri_password);
         mBtnConfirm = (Button) findViewById(R.id.btn_confirm);
         final TextView operaButton = riSmscode.getOperaButton();
+        mCountDownTimer = new SmsCountDownTimer(operaButton);
         mEtPhone = riPhone.getEtInput();
         mEtSmsCode = riSmscode.getEtInput();
         mEtPassword = riPassword.getEtInput();
@@ -73,7 +79,7 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
         operaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.show(mContext, "click");
+                RxUtils.handleSendSms(mContext, operaButton, mCountDownTimer, mEtPhone.getText().toString().trim());
             }
         });
         operaButton.setEnabled(false);
@@ -104,5 +110,11 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
             ToastUtils.show(mContext, message);
         }
         mBtnConfirm.setEnabled(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCountDownTimer.cancel();
     }
 }

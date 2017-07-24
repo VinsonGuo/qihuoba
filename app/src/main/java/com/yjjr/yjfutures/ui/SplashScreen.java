@@ -9,10 +9,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.store.UserSharePrefernce;
+import com.yjjr.yjfutures.ui.mine.GuideActivity;
 import com.yjjr.yjfutures.ui.mine.LoginActivity;
 import com.yjjr.yjfutures.utils.SystemBarHelper;
 
@@ -36,9 +37,8 @@ public class SplashScreen extends BaseActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         resetStatusBar();
+        SystemBarHelper.immersiveStatusBar(this, 0);
         setContentView(R.layout.splash);
-        SystemBarHelper.immersiveStatusBar(this);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -95,10 +95,14 @@ public class SplashScreen extends BaseActivity {
     }
 
     private void startActivity() {
-        if(BaseApplication.getInstance().isLogin()) {
-            MainActivity.startActivity(mContext);
-        }else {
-            LoginActivity.startActivity(mContext);
+        if (UserSharePrefernce.isNeedShowGuide(mContext)) {
+            GuideActivity.startActivity(mContext);
+        } else {
+            if (BaseApplication.getInstance().isLogin()) {
+                MainActivity.startActivity(mContext);
+            } else {
+                LoginActivity.startActivity(mContext);
+            }
         }
         finishDelay();
     }

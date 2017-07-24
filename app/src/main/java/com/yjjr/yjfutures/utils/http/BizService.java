@@ -1,6 +1,5 @@
 package com.yjjr.yjfutures.utils.http;
 
-import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Login;
@@ -8,7 +7,9 @@ import com.yjjr.yjfutures.model.biz.Login;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 /**
  * 登录
@@ -34,4 +35,15 @@ public interface BizService {
     @FormUrlEncoded
     @POST("user/bindAlipay")
     Observable<BizResponse<Alipay>> bindAlipay(@Field("account") String account, @Field("alipay") String alipay);
+
+    @GET("sms/send")
+    Observable<BizResponse> sendSms(@Query("recNum") String recNum);
+
+    @FormUrlEncoded
+    @POST("user/setPayPwd")
+    Observable<BizResponse> setPayPwd(@Field("account") String account, @Field("payPwd") String payPwd, @Field("hisPayPwd") String hisPayPwd);
+
+    @FormUrlEncoded
+    @POST("identityAuth/auth")
+    Observable<BizResponse> auth(@Field("userName") String userName, @Field("idCardNo") String idCardNo);
 }

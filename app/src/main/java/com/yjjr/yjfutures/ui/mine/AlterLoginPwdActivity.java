@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.widget.HeaderView;
@@ -22,8 +23,16 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class AlterLoginPwdActivity extends BaseActivity {
-    public static void startActivity(Context context) {
-        context.startActivity(new Intent(context, AlterLoginPwdActivity.class));
+
+    public static final int TYPE_LOGIN_PWD = 0;
+    public static final int TYPE_TRADE_PWD = 1;
+
+    private int mType = 0;
+
+    public static void startActivity(Context context, int type) {
+        Intent intent = new Intent(context, AlterLoginPwdActivity.class);
+        intent.putExtra(Constants.CONTENT_PARAMETER, type);
+        context.startActivity(intent);
     }
 
     @Override
@@ -31,11 +40,17 @@ public class AlterLoginPwdActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alter_login_pwd);
         EventBus.getDefault().register(this);
+        mType = getIntent().getIntExtra(Constants.CONTENT_PARAMETER, 0);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         final RegisterInput riPwd = (RegisterInput) findViewById(R.id.ri_pwd);
         headerView.bindActivity(mContext);
         final Button btnConfirm = (Button) findViewById(R.id.btn_confirm);
         EditText etPassword = riPwd.getEtInput();
+        if(mType == TYPE_TRADE_PWD) {
+            headerView.setMainTitle(R.string.alter_trade_password);
+            riPwd.setName("输入密码");
+            etPassword.setHint("请输入原交易密码");
+        }
         etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         etPassword.addTextChangedListener(new TextWatcherAdapter(){
             @Override
@@ -47,7 +62,7 @@ public class AlterLoginPwdActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if(btnConfirm.isSelected()) {
-                    AlterLoginPwdActivity2.startActivity(mContext, riPwd.getValue());
+                    AlterLoginPwdActivity2.startActivity(mContext, riPwd.getValue(), mType);
                 }
             }
         });

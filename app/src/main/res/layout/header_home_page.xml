@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical">
 
-    <com.youth.banner.Banner
+    <com.bigkoo.convenientbanner.ConvenientBanner
         android:id="@+id/banner"
         android:layout_width="match_parent"
-        android:layout_height="160dp"/>
+        android:layout_height="165dp"
+        app:canLoop="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selector_common_press_bg"
-            android:drawablePadding="4dp"
+            android:drawablePadding="15dp"
             android:drawableTop="@drawable/ic_home1"
             android:gravity="center"
             android:text="@string/simulation_trade"/>
@@ -34,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selector_common_press_bg"
-            android:drawablePadding="4dp"
+            android:drawablePadding="15dp"
             android:drawableTop="@drawable/ic_home2"
             android:gravity="center"
             android:text="市场监管"/>
@@ -46,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selector_common_press_bg"
-            android:drawablePadding="4dp"
+            android:drawablePadding="15dp"
             android:drawableTop="@drawable/ic_home3"
             android:gravity="center"
             android:text="风险提示"/>

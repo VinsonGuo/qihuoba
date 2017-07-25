@@ -6,11 +6,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.RefreshEvent;
@@ -18,8 +22,6 @@ import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
-import com.youth.banner.Banner;
-import com.youth.banner.loader.ImageLoaderInterface;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,7 +36,7 @@ import java.util.List;
 public class HomePageFragment extends BaseFragment implements View.OnClickListener {
 
 
-    private Banner mBanner;
+    private ConvenientBanner<String> mBanner;
     private HomePageAdapter mAdapter;
 
     public HomePageFragment() {
@@ -51,31 +53,28 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home_page, container, false);
         RecyclerView rvList = (RecyclerView) v.findViewById(R.id.rv_list);
+        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new HomePageAdapter(null);
-        View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, rvList, false);
-        mBanner = (Banner) headerView.findViewById(R.id.banner);
-        headerView.findViewById(R.id.tv_title1).setOnClickListener(this);
-        mAdapter.addHeaderView(headerView);
-        mBanner.setImageLoader(new ImageLoaderInterface() {
-            @Override
-            public void displayImage(Context context, Object path, View imageView) {
-                ImageLoader.load(context, (String) path, (ImageView) imageView);
-            }
-
-            @Override
-            public View createImageView(Context context) {
-                return new ImageView(context);
-            }
-        });
         List<String> images = new ArrayList<>();
-        images.add("http://img1.imgtn.bdimg.com/it/u=1089399937,1684001946&fm=26&gp=0.jpg");
-        images.add("http://img3.imgtn.bdimg.com/it/u=3241219306,1400876595&fm=26&gp=0.jpg");
-        images.add("http://img4.imgtn.bdimg.com/it/u=787324823,4149955059&fm=26&gp=0.jpg");
-        mBanner.setImages(images);
-        mBanner.isAutoPlay(true);
-        mBanner.start();
+        images.add("http://static.rong360.com/gl/uploads/160408/128-16040Q4452CV.jpg");
+        images.add("http://p3.ifengimg.com/a/2016_47/a03456cb56dc1ad_size158_w538_h300.jpg");
+        images.add("http://pic.pimg.tw/chihlee8182/1429852839-2894784929.jpg");
+        View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, rvList, false);
+        mBanner = (ConvenientBanner<String>) headerView.findViewById(R.id.banner);
+        headerView.findViewById(R.id.tv_title1).setOnClickListener(this);
+        mBanner.setPages(new CBViewHolderCreator() {
+            @Override
+            public Object createHolder() {
+                return new ImageHolderView();
+            }
+        }, images);
 
+
+        mAdapter.addHeaderView(headerView);
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -97,7 +96,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
         if (mBanner != null) {
-            mBanner.startAutoPlay();
+            mBanner.startTurning(3000);
         }
     }
 
@@ -105,7 +104,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void onPause() {
         super.onPause();
         if (mBanner != null) {
-            mBanner.stopAutoPlay();
+            mBanner.stopTurning();
         }
     }
 
@@ -120,12 +119,30 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+        mAdapter.getData().clear();
+        mAdapter.getData().addAll(StaticStore.sQuoteMap.values());
+        mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.sQuoteMap.size());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    public class ImageHolderView implements Holder<String> {
+        private ImageView imageView;
+
+        @Override
+        public View createView(Context context) {
+            imageView = new ImageView(context);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            return imageView;
+        }
+
+        @Override
+        public void UpdateUI(Context context, final int position, String data) {
+            ImageLoader.load(context, data, imageView);
+        }
     }
 }

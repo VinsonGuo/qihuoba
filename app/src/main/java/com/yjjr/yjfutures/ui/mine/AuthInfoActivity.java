@@ -17,6 +17,7 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
+import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,6 +39,8 @@ public class AuthInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_info);
         EventBus.getDefault().register(this);
+        HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
+        headerView.bindActivity(mContext);
         final RegisterInput riName = (RegisterInput) findViewById(R.id.ri_name);
         final RegisterInput riCard = (RegisterInput) findViewById(R.id.ri_idcard);
         final Button btnConfirm = (Button) findViewById(R.id.btn_confirm);

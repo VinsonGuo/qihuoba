@@ -79,7 +79,7 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+        mAdapter.replaceData(StaticStore.sQuoteMap.values());
     }
 
     @Override

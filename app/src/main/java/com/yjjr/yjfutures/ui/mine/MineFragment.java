@@ -1,7 +1,6 @@
 package com.yjjr.yjfutures.ui.mine;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,8 +11,8 @@ import android.widget.TextView;
 
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.model.AccountInfo;
-import com.yjjr.yjfutures.ui.BaseApplication;
+import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DepositActivity;
@@ -21,7 +20,6 @@ import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
-import com.yjjr.yjfutures.widget.CustomPromptDialog;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -51,15 +49,18 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                HttpManager.getHttpService().getAccountInfo(BaseApplication.getInstance().getTradeToken())
-                        .compose(RxUtils.<AccountInfo>applySchedulers())
-                        .compose(MineFragment.this.<AccountInfo>bindUntilEvent(FragmentEvent.DESTROY))
-                        .subscribe(new Consumer<AccountInfo>() {
+                HttpManager.getBizService().getFunds()
+                        .retry()
+                        .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
+                        .compose(MineFragment.this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
+                        .subscribe(new Consumer<BizResponse<Funds>>() {
                             @Override
-                            public void accept(@NonNull AccountInfo accountInfo) throws Exception {
+                            public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
+                                Funds result = fundsBizResponse.getResult();
+                                tvYue.setText(DoubleUtil.format2Decimal(result.getAvailableFunds()));
+                                tvMargin.setText(DoubleUtil.format2Decimal(result.getFrozenMargin()));
+                                tvNet.setText(DoubleUtil.format2Decimal(result.getNetAssets()));
                                 refresh.setRefreshing(false);
-                                tvYue.setText(DoubleUtil.format2Decimal(accountInfo.getAvailableFund()));
-                                tvMargin.setText(DoubleUtil.format2Decimal(accountInfo.getFrozenMargin()));
                             }
                         }, new Consumer<Throwable>() {
                             @Override
@@ -92,15 +93,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected void initData() {
         super.initData();
-        HttpManager.getHttpService().getAccountInfo(BaseApplication.getInstance().getTradeToken())
+        HttpManager.getBizService().getFunds()
                 .retry()
-                .compose(RxUtils.<AccountInfo>applySchedulers())
-                .compose(this.<AccountInfo>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<AccountInfo>() {
+                .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
+                .compose(this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<Funds>>() {
                     @Override
-                    public void accept(@NonNull AccountInfo accountInfo) throws Exception {
-                        tvYue.setText(DoubleUtil.format2Decimal(accountInfo.getAvailableFund()));
-                        tvMargin.setText(DoubleUtil.format2Decimal(accountInfo.getFrozenMargin()));
+                    public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
+                        Funds result = fundsBizResponse.getResult();
+                        tvYue.setText(DoubleUtil.format2Decimal(result.getAvailableFunds()));
+                        tvMargin.setText(DoubleUtil.format2Decimal(result.getFrozenMargin()));
+                        tvNet.setText(DoubleUtil.format2Decimal(result.getNetAssets()));
                     }
                 }, RxUtils.commonErrorConsumer());
     }

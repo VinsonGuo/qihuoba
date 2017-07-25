@@ -9,13 +9,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
+import android.widget.TextView;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.NumberResult;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.mine.GuideActivity;
 import com.yjjr.yjfutures.ui.mine.LoginActivity;
+import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SystemBarHelper;
+import com.yjjr.yjfutures.utils.http.BizService;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -28,7 +37,7 @@ public class SplashScreen extends BaseActivity {
     /**
      * Duration of wait
      **/
-    private static final int SPLASH_DISPLAY_LENGTH = 1000;
+    private static final int SPLASH_DISPLAY_LENGTH = 2000;
 
     /**
      * Called when the activity is first created.
@@ -39,13 +48,31 @@ public class SplashScreen extends BaseActivity {
         resetStatusBar();
         SystemBarHelper.immersiveStatusBar(this, 0);
         setContentView(R.layout.splash);
+        TextView tvVersion = (TextView) findViewById(R.id.tv_version);
+        tvVersion.setText(String.format("V%s", BuildConfig.VERSION_NAME));
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 checkPermissions();
             }
         }, SPLASH_DISPLAY_LENGTH);
+        requestData();
 
+    }
+
+    private void requestData() {
+        HttpManager.getBizService().getSerivceInfo()
+                .compose(RxUtils.<BizResponse<NumberResult>>applyBizSchedulers())
+                .compose(this.<BizResponse<NumberResult>>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<NumberResult>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<NumberResult> numberResultBizResponse) throws Exception {
+                        NumberResult result = numberResultBizResponse.getResult();
+                        HttpConfig.SERVICE_PHONE = result.getServicePhone().getName();
+                        HttpConfig.QQ = result.getQq().getName();
+                        HttpConfig.COMPLAINT_PHONE = result.getComplaintPhone().getName();
+                    }
+                },RxUtils.commonErrorConsumer());
     }
 
     /**

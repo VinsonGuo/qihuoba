@@ -74,6 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/divider"
             android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="30dp"
             app:hint="请输入金额"
             app:name="充值金额"/>
 

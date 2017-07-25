@@ -5,16 +5,114 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/chart_background"
+    android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.AlipayTransferActivity">
 
     <com.yjjr.yjfutures.widget.HeaderView
         android:id="@+id/header_view"
-        app:main_title="@string/account_deposit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:main_title="@string/account_deposit"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_10"
+        android:text="第一步：手机打开支付宝APP"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_14"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_top_bottom_line"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawablePadding="10dp"
+            android:drawableTop="@drawable/ic_alipay_big"
+            android:gravity="center"
+            android:text="支付宝转账"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_transfer_arrow"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawablePadding="10dp"
+            android:drawableTop="@drawable/ic_transfer_big"
+            android:gravity="center"
+            android:text="选择转账到支付宝账户"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_14"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_10"
+        android:text="第二步：手机打开支付宝APP"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_14"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_top_bottom_line">
+
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:src="@mipmap/ic_launcher_icon"/>
+
+        <TextView
+            android:id="@+id/tv_account_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_icon"
+            android:layout_toRightOf="@id/iv_icon"
+            android:text="支付宝账户："
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_16"/>
+
+        <TextView
+            android:id="@+id/tv_account_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_account_name"
+            android:layout_below="@id/tv_account_name"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_16"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_account_name"
+            android:layout_below="@id/tv_account_value"
+            android:text="深圳前海有间金融有限公司"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_14"/>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btn_confirm"

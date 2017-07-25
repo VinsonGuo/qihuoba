@@ -34,7 +34,8 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 AuthActivity.startActivity(mContext);
                 break;
             case R.id.tv_pay_pwd:
-                SetTradePwdActivity.startActivity(mContext);
+//                SetTradePwdActivity.startActivity(mContext);
+                AlterLoginPwdActivity.startActivity(mContext, AlterLoginPwdActivity.TYPE_TRADE_PWD);
                 break;
             case R.id.tv_deposit:
                 BindCardActivity.startActivity(mContext);

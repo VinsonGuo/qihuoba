@@ -51,7 +51,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 AlterPhoneActivity.startActivity(mContext);
                 break;
             case R.id.tv_login_pwd:
-                AlterLoginPwdActivity.startActivity(mContext);
+                AlterLoginPwdActivity.startActivity(mContext, AlterLoginPwdActivity.TYPE_LOGIN_PWD);
                 break;
             case R.id.tv_logout:
                 mLogoutDialog.show();

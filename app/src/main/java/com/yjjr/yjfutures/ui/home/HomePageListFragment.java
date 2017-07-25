@@ -12,8 +12,6 @@ import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
-import com.youth.banner.Banner;
-import com.youth.banner.loader.ImageLoaderInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +22,13 @@ import java.util.List;
 
 public class HomePageListFragment extends ListFragment<Quote> implements View.OnClickListener {
 
-    private Banner mBanner;
+//    private Banner mBanner;
 
     @Override
     public BaseQuickAdapter<Quote, BaseViewHolder> getAdapter() {
         HomePageAdapter adapter = new HomePageAdapter(null);
         View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, mRvList, false);
-        mBanner = (Banner) headerView.findViewById(R.id.banner);
+       /* mBanner = (Banner) headerView.findViewById(R.id.banner);
         headerView.findViewById(R.id.tv_title1).setOnClickListener(this);
         adapter.addHeaderView(headerView);
         mBanner.setImageLoader(new ImageLoaderInterface() {
@@ -50,7 +48,7 @@ public class HomePageListFragment extends ListFragment<Quote> implements View.On
         images.add("http://img4.imgtn.bdimg.com/it/u=787324823,4149955059&fm=26&gp=0.jpg");
         mBanner.setImages(images);
         mBanner.isAutoPlay(true);
-        mBanner.start();
+        mBanner.start();*/
 
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -68,22 +66,6 @@ public class HomePageListFragment extends ListFragment<Quote> implements View.On
     @Override
     protected void loadData() {
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mBanner != null) {
-            mBanner.startAutoPlay();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mBanner != null) {
-            mBanner.stopAutoPlay();
-        }
     }
 
     @Override

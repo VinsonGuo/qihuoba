@@ -2,8 +2,10 @@ package com.yjjr.yjfutures.utils.http;
 
 import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.ChargeResult;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Login;
+import com.yjjr.yjfutures.model.biz.NumberResult;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -50,4 +52,10 @@ public interface BizService {
 
     @GET("user/queryFundsOverview")
     Observable<BizResponse<Funds>> getFunds();
+
+    @GET("dictionary/SERVICE_INFO")
+    Observable<BizResponse<NumberResult>> getSerivceInfo();
+
+    @GET("dictionary/RECHARGE_ACCOUNT")
+    Observable<BizResponse<ChargeResult>> getChargeInfo();
 }

@@ -20,11 +20,12 @@ import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FastTakeOrderEvent;
 import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
-import com.yjjr.yjfutures.model.AccountInfo;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.FastTakeOrderConfig;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
@@ -288,15 +289,17 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     protected void initData() {
         super.initData();
         getHolding();
-        HttpManager.getHttpService().getAccountInfo(BaseApplication.getInstance().getTradeToken())
+        HttpManager.getBizService().getFunds()
                 .retry()
-                .compose(RxUtils.<AccountInfo>applySchedulers())
-                .compose(this.<AccountInfo>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<AccountInfo>() {
+                .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
+                .compose(this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<Funds>>() {
                     @Override
-                    public void accept(@NonNull AccountInfo accountInfo) throws Exception {
-                        tvYueValue.setText(DoubleUtil.format2Decimal(accountInfo.getAvailableFund()));
-                        tvMarginValue.setText(DoubleUtil.format2Decimal(accountInfo.getFrozenMargin()));
+                    public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
+                        Funds result = fundsBizResponse.getResult();
+                        tvYueValue.setText(DoubleUtil.format2Decimal(result.getAvailableFunds()));
+                        tvMarginValue.setText(DoubleUtil.format2Decimal(result.getFrozenMargin()));
+//                        tvNetValue.setText(DoubleUtil.format2Decimal(result.getNetAssets()));
                     }
                 }, RxUtils.commonErrorConsumer());
     }

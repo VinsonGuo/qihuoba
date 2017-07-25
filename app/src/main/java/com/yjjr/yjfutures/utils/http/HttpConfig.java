@@ -5,20 +5,27 @@ package com.yjjr.yjfutures.utils.http;
  * Created by guoziwei on 2017/7/5.
  */
 
-public interface HttpConfig {
-    String BASE_URL = "http://139.224.8.133:9001/QuoteService/QuoteService/";
-    String NAME_SPACE = "http://tempuri.org/";
-    String SOAP_ACTION = "http://tempuri.org/IQuoteService/";
+public class HttpConfig {
 
-    String DOMAIN = "http://www.qihuofa.com";
+    public static final String DOMAIN = "http://www.qihuofa.com";
 
     /**
      * 手机号码的正则
      */
-    String REG_PHONE = "^0?(13[0-9]|15[012356789]|17[0678]|18[0-9]|14[57])[0-9]{8}$";
+    public static final String REG_PHONE = "^0?(13[0-9]|15[012356789]|17[0678]|18[0-9]|14[57])[0-9]{8}$";
     /**
      * 发送验证码的重试时间
      */
-    long SMS_TIME = 60 * 1000;
-    String ALIPAY_ACCOUNT_CODE = "FKX02655U4OLYIE59HJ9CD";
+    public static final long SMS_TIME = 60 * 1000;
+    public static String ALIPAY_ACCOUNT_CODE = "FKX02544EKPFEEKPCQSYC8";
+
+    /**
+     * 客服电话
+     */
+    public static String SERVICE_PHONE = "400-005-800";
+    public static String QQ = "888666888";
+    /**
+     * 投诉电话
+     */
+    public static String COMPLAINT_PHONE = "0755-68888628";
 }

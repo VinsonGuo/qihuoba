@@ -1328,6 +1328,7 @@
     <string name="djbzj">冻结保证金</string>
     <string name="withdraw">提款</string>
     <string name="set_trade_password">设置交易密码</string>
+    <string name="alter_trade_password">交易密码更改</string>
     <string name="auth_name">实名认证</string>
     <string name="login_pwd">登录密码</string>
     <string name="pay_pwd">支付密码</string>

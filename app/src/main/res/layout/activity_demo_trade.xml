@@ -7,14 +7,13 @@
     android:layout_height="match_parent"
     android:background="@color/chart_background"
     android:orientation="vertical"
-    tools:context="com.yjjr.yjfutures.ui.trade.OrderActivity">
+    tools:context="com.yjjr.yjfutures.ui.trade.DemoTradeActivity">
 
     <com.yjjr.yjfutures.widget.HeaderView
         android:id="@+id/header_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:main_title="@string/mine_order"
-        app:sub_title="@string/order_record"/>
+        app:main_title="模拟练习场地"/>
 
     <FrameLayout
         android:id="@+id/fl_container"
@@ -26,6 +25,6 @@
         android:id="@+id/trade_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_10"/>
-
+        android:layout_margin="@dimen/dp_10"
+        app:isDemo="true"/>
 </LinearLayout>

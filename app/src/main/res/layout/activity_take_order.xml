@@ -32,7 +32,6 @@
             android:padding="@dimen/root_padding_15">
             <TextView
                 android:id="@+id/tv_symbol"
-                style="@style/text_color_333333_14sp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -42,7 +41,6 @@
 
             <TextView
                 android:id="@+id/tv_info"
-                style="@style/text_color_333333_14sp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"

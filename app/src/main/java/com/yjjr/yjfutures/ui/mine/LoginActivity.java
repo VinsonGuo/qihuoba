@@ -21,10 +21,12 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.MainActivity;
+import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
+import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.RegisterInput;
 
 import io.reactivex.Observable;
@@ -40,9 +42,11 @@ public class LoginActivity extends BaseActivity {
     private EditText etUsername;
     private EditText etPassword;
     private Button btnLogin;
+    private CustomPromptDialog mCustomServiceDialog;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -50,6 +54,7 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mCustomServiceDialog = DialogUtils.createCustomServiceDialog(mContext);
         findViews();
     }
 
@@ -93,6 +98,12 @@ public class LoginActivity extends BaseActivity {
                 FindPwdActivity.startActivity(mContext);
             }
         });
+        findViewById(R.id.tv_contact).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCustomServiceDialog.show();
+            }
+        });
 
     }
 
@@ -115,7 +126,6 @@ public class LoginActivity extends BaseActivity {
                         return HttpManager.getHttpService().userLogin(account, password);
                     }
                 })
-//        HttpManager.getHttpService().userLogin(account, password)
                 .map(new Function<UserLoginResponse, UserLoginResponse>() {
                     @Override
                     public UserLoginResponse apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {

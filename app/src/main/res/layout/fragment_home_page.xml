@@ -12,6 +12,7 @@
         android:padding="@dimen/root_padding_10">
 
         <TextView
+            android:id="@+id/tv_customer_service"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -42,6 +43,11 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_20sp"/>
     </FrameLayout>
+
+    <com.yjjr.yjfutures.widget.LoadingView
+        android:id="@+id/load_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_list"

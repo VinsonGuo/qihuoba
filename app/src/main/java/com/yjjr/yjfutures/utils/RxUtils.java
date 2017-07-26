@@ -54,11 +54,12 @@ public class RxUtils {
                 return observable
                         .map(new Function<T, T>() {
                             @Override
-                            public T apply(@NonNull T t) throws Exception {
+                            public T apply(@NonNull final T t) throws Exception {
                                 if (t.getRcode() == 99) {
                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                                         @Override
                                         public void run() {
+                                            ToastUtils.show(BaseApplication.getInstance(), t.getRmsg());
                                             BaseApplication.getInstance().logout(BaseApplication.getInstance());
                                         }
                                     });

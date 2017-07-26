@@ -13,7 +13,7 @@
         android:gravity="center"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:background="@drawable/shape_bg_homepage_symbol"
         android:layout_marginRight="@dimen/root_padding_10"
         tools:text="CHY"/>

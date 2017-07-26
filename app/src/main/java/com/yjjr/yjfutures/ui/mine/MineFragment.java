@@ -1,6 +1,7 @@
 package com.yjjr.yjfutures.ui.mine;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,10 +17,14 @@ import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DepositActivity;
+import com.yjjr.yjfutures.utils.ActivityTools;
+import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
+import com.yjjr.yjfutures.widget.CustomPromptDialog;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -32,6 +37,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TextView tvYue;
     private TextView tvMargin;
     private TextView tvNet;
+    private CustomPromptDialog mCustomServiceDialog;
 
     public MineFragment() {
         // Required empty public constructor
@@ -50,7 +56,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             @Override
             public void onRefresh() {
                 HttpManager.getBizService().getFunds()
-                        .retry()
                         .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
                         .compose(MineFragment.this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
                         .subscribe(new Consumer<BizResponse<Funds>>() {
@@ -81,12 +86,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_mine, container, false);
+        mCustomServiceDialog = DialogUtils.createCustomServiceDialog(mContext);
         findViews(v);
         v.findViewById(R.id.btn_login).setOnClickListener(this);
         v.findViewById(R.id.btn_register).setOnClickListener(this);
         v.findViewById(R.id.tv_setting).setOnClickListener(this);
         v.findViewById(R.id.btn_deposit).setOnClickListener(this);
         v.findViewById(R.id.btn_withdraw).setOnClickListener(this);
+        v.findViewById(R.id.tv_customer_service).setOnClickListener(this);
         return v;
     }
 
@@ -94,7 +101,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     protected void initData() {
         super.initData();
         HttpManager.getBizService().getFunds()
-                .retry()
                 .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
                 .compose(this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<Funds>>() {
@@ -137,6 +143,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.btn_withdraw:
                 WithdrawActivity.startActivity(mContext);
+                break;
+            case R.id.tv_customer_service:
+                mCustomServiceDialog.show();
                 break;
         }
     }

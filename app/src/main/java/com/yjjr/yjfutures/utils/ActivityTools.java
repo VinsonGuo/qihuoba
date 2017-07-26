@@ -3,8 +3,10 @@ package com.yjjr.yjfutures.utils;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.RawRes;
 import android.telephony.TelephonyManager;
@@ -15,6 +17,36 @@ import android.view.WindowManager;
  * Created by hou on 2015/9/11.
  */
 public class ActivityTools {
+
+    private static MediaPlayer mMediaPlayer;
+    /**
+     * 打开后60s不提示声音
+     */
+    private static boolean is60Second = false;
+
+
+   /* public static void playSound(Context context, @RawRes int res) {
+        try {
+            if (SettingSharePrefernce.isTraderSound(context)) {
+                MediaPlayer.create(context, res).start();
+                AudioPlayer player = new AudioPlayer();
+                player.play(context, res);
+//                int id = soundPool.load(context, res, 1);
+//                soundPool.play(id, 1, 1, 0, 5, 1);
+            }
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
+    }*/
+
+    static {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                is60Second = true;
+            }
+        }, 60 * 1000);
+    }
 
     public static void setFullscreen(Activity a, boolean fullscreen) {
         WindowManager.LayoutParams attrs = a.getWindow().getAttributes();
@@ -49,38 +81,6 @@ public class ActivityTools {
         return null;
     }
 
-
-   /* public static void playSound(Context context, @RawRes int res) {
-        try {
-            if (SettingSharePrefernce.isTraderSound(context)) {
-                MediaPlayer.create(context, res).start();
-                AudioPlayer player = new AudioPlayer();
-                player.play(context, res);
-//                int id = soundPool.load(context, res, 1);
-//                soundPool.play(id, 1, 1, 0, 5, 1);
-            }
-        } catch (Exception e) {
-            LogUtils.e(e);
-        }
-    }*/
-
-
-    private static MediaPlayer mMediaPlayer;
-
-    /**
-     * 打开后60s不提示声音
-     */
-    private static boolean is60Second = false;
-
-    static {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                is60Second = true;
-            }
-        }, 60 * 1000);
-    }
-
     private static void stop() {
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
@@ -109,5 +109,12 @@ public class ActivityTools {
 
     public static float getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static void toDialer(Context context, String phone) {
+        String uri = "tel:" + phone.trim();
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse(uri));
+        context.startActivity(intent);
     }
 }

@@ -25,6 +25,7 @@ import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
 import com.yjjr.yjfutures.ui.mine.MineFragment;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.LoadingView;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
@@ -43,8 +44,9 @@ import io.reactivex.functions.Function;
 
 public class MainActivity extends BaseActivity {
 
-    private LoadingView mLoadingView;
+    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private Timer mTimer = new Timer();
+    private long mBackPressed;
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
@@ -54,135 +56,13 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mLoadingView = (LoadingView) findViewById(R.id.load_view);
-        mLoadingView.setOnReloadListener(new LoadingView.OnReloadListener() {
-            @Override
-            public void onReload() {
-                loadData();
-            }
-        });
-        loadData();
-    }
-
-    private void loadData() {
-        //如果交易token为null，先获取token
-        if (TextUtils.isEmpty(BaseApplication.getInstance().getTradeToken())) {
-            final String account = UserSharePrefernce.getAccount(mContext);
-            final String password = UserSharePrefernce.getPassword(mContext);
-//            HttpManager.getHttpService().userLogin(account, password )
-            HttpManager.getBizService().login(account, password)
-                    .flatMap(new Function<BizResponse<Login>, ObservableSource<UserLoginResponse>>() {
-                        @Override
-                        public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<Login> loginBizResponse) throws Exception {
-                            if(loginBizResponse.getRcode() != 0) {
-                                throw new RuntimeException("登录失败");
-                            }
-                            return HttpManager.getHttpService().userLogin(account, password);
-                        }
-                    })
-                    .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
-                        @Override
-                        public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
-                            if (userLoginResponse.getReturnCode() != 1) {
-                                BaseApplication.getInstance().logout(mContext);
-                            }
-                            BaseApplication.getInstance().setTradeToken(userLoginResponse.getCid());
-                            return HttpManager.getHttpService().getSymbols(BaseApplication.getInstance().getTradeToken());
-                        }
-                    })
-                    .flatMap(new Function<List<Symbol>, ObservableSource<List<Quote>>>() {
-                        @Override
-                        public ObservableSource<List<Quote>> apply(@NonNull List<Symbol> symbols) throws Exception {
-                            StringBuilder symbol = new StringBuilder();
-                            StringBuilder exchange = new StringBuilder();
-                            for (int i = 0; i < symbols.size(); i++) {
-                                symbol.append(symbols.get(i).getSymbol());
-                                exchange.append(symbols.get(i).getExchange());
-                                if (i < symbols.size() - 1) {
-                                    symbol.append(",");
-                                    exchange.append(",");
-                                }
-                            }
-                            StaticStore.sSymbols = symbol.toString();
-                            StaticStore.sExchange = exchange.toString();
-                            return HttpManager.getHttpService().getQuoteList(symbol.toString(), exchange.toString());
-                        }
-                    })
-                    .map(new Function<List<Quote>, Boolean>() {
-                        @Override
-                        public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
-                            for (Quote quote : quotes) {
-                                StaticStore.sQuoteMap.put(quote.getSymbol(), quote);
-                            }
-                            return true;
-                        }
-                    })
-                    .compose(RxUtils.<Boolean>applySchedulers())
-                    .compose(this.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
-                    .subscribe(new Consumer<Boolean>() {
-                        @Override
-                        public void accept(@NonNull Boolean symbols) throws Exception {
-                            initViews();
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception {
-                            LogUtils.e(throwable);
-                            mLoadingView.loadFail();
-                        }
-                    });
-        } else {
-            HttpManager.getHttpService().getSymbols(BaseApplication.getInstance().getTradeToken())
-                    .flatMap(new Function<List<Symbol>, ObservableSource<List<Quote>>>() {
-                        @Override
-                        public ObservableSource<List<Quote>> apply(@NonNull List<Symbol> symbols) throws Exception {
-                            StringBuilder symbol = new StringBuilder();
-                            StringBuilder exchange = new StringBuilder();
-                            for (int i = 0; i < symbols.size(); i++) {
-                                symbol.append(symbols.get(i).getSymbol());
-                                exchange.append(symbols.get(i).getExchange());
-                                if (i < symbols.size() - 1) {
-                                    symbol.append(",");
-                                    exchange.append(",");
-                                }
-                                StaticStore.sSymbols = symbol.toString();
-                                StaticStore.sExchange = exchange.toString();
-                            }
-                            return HttpManager.getHttpService().getQuoteList(symbol.toString(), exchange.toString());
-                        }
-                    })
-                    .map(new Function<List<Quote>, Boolean>() {
-                        @Override
-                        public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
-                            for (Quote quote : quotes) {
-                                StaticStore.sQuoteMap.put(quote.getSymbol(), quote);
-                            }
-                            return true;
-                        }
-                    })
-                    .compose(RxUtils.<Boolean>applySchedulers())
-                    .compose(this.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
-                    .subscribe(new Consumer<Boolean>() {
-                        @Override
-                        public void accept(@NonNull Boolean symbols) throws Exception {
-                            initViews();
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception {
-                            LogUtils.e(throwable);
-                            mLoadingView.loadFail();
-                        }
-                    });
-        }
+        initViews();
     }
 
     private void initViews() {
         AlphaTabsIndicator bottomBar = (AlphaTabsIndicator) findViewById(R.id.alphaIndicator);
         final NoTouchScrollViewpager viewPager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
-        mLoadingView.setVisibility(View.GONE);
-        viewPager.setVisibility(View.VISIBLE);
-        Fragment[] fragments = {new HomePageFragment(), new MarketPriceFragment(), new FoundFragment(), new MineFragment()};
+        Fragment[] fragments = {new HomePageFragment(), MarketPriceFragment.newInstance(true), new FoundFragment(), new MineFragment()};
         viewPager.setOffscreenPageLimit(fragments.length);
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         bottomBar.setViewPager(viewPager);
@@ -191,7 +71,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void run() {
                 DateTime dateTime = new DateTime();
-                if(dateTime.getSecondOfMinute() == 1) {
+                if (dateTime.getSecondOfMinute() == 1) {
                     EventBus.getDefault().post(new OneMinuteEvent());
                 }
                 HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
@@ -221,6 +101,17 @@ public class MainActivity extends BaseActivity {
         }, 3000, 1000);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+            super.onBackPressed();
+            return;
+        } else {
+            ToastUtils.show(mContext, R.string.click_more_exit);
+        }
+
+        mBackPressed = System.currentTimeMillis();
+    }
 
     @Override
     protected void onDestroy() {

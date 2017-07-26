@@ -112,6 +112,17 @@
             android:text="深圳前海有间金融有限公司"
             android:textColor="@color/second_text_color"
             android:textSize="@dimen/sp_14"/>
+
+        <TextView
+            android:id="@+id/tv_copy"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/copy"
+            android:textColor="@color/main_color"
+            android:textSize="@dimen/sp_14"
+            android:layout_marginRight="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 
     <Button

@@ -47,4 +47,8 @@
         <attr name="name_text" format="string"/>
         <attr name="error_text" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="TradeInfoView">
+        <attr name="isDemo" format="boolean"/>
+    </declare-styleable>
 </resources>

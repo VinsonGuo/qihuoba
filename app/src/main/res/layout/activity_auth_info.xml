@@ -11,38 +11,42 @@
 
     <com.yjjr.yjfutures.widget.HeaderView
         android:id="@+id/header_view"
-        app:main_title="@string/auth_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <com.yjjr.yjfutures.widget.RegisterInput
-        android:id="@+id/ri_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_10"
-        app:hint="您的真实姓名"
-        app:name="@string/real_name"/>
+        app:main_title="@string/auth_name"/>
 
-    <com.yjjr.yjfutures.widget.RegisterInput
-        android:id="@+id/ri_idcard"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_10"
-        app:name="@string/id_card_number"
-        app:hint="18位身份证号"/>
+        android:background="@drawable/shape_bg_bottom_line"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dp_10">
 
+        <com.yjjr.yjfutures.widget.RegisterInput
+            android:id="@+id/ri_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hint="您的真实姓名"
+            app:name="@string/real_name"/>
+
+
+        <com.yjjr.yjfutures.widget.RegisterInput
+            android:id="@+id/ri_idcard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hint="18位身份证号"
+            app:name="@string/id_card_number"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"
-        android:textColor="@color/selector_common_btn_text_color"
+        android:layout_marginTop="20dp"
         android:background="@drawable/selector_common_btn_bg"
-        android:text="@string/next_step"/>
+        android:text="@string/next_step"
+        android:textColor="@color/selector_common_btn_text_color"/>
 
 </LinearLayout>

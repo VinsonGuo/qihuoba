@@ -65,6 +65,13 @@ public class DoubleUtil {
         return instance.format(d);
     }
 
+    public static String formatDecimal(Double d) {
+        NumberFormat instance = DecimalFormat.getInstance();
+        instance.setMinimumFractionDigits(2);
+        instance.setMaximumFractionDigits(8);
+        return instance.format(d);
+    }
+
 
     public static String format6Decimal(Double d) {
         return new DecimalFormat("######0.000000").format(d);

@@ -18,6 +18,9 @@
         android:id="@+id/ri_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:background="@drawable/shape_bg_bottom_line"
         app:isShowEye="true"
         app:hint="请输入新登录密码"
         app:name="@string/login_pwd"/>
@@ -27,7 +30,9 @@
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
         android:textColor="@color/selector_common_btn_text_color"
         android:background="@drawable/selector_common_btn_bg"
         android:text="@string/next_step"/>

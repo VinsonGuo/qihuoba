@@ -1,5 +1,6 @@
 package com.yjjr.yjfutures.ui.home;
 
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
@@ -21,6 +22,14 @@ import java.util.Map;
 public class HomePageAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
 
     private Map<String, String> mDescMap = new HashMap<>(10);
+    private int[] colors = {
+            Color.parseColor("#ff5656"),
+            Color.parseColor("#925593"),
+            Color.parseColor("#bd6959"),
+            Color.parseColor("#bda5ce"),
+            Color.parseColor("#8097c1"),
+            Color.parseColor("#c7c577"),
+            Color.parseColor("#12ba9a")};
 
     public HomePageAdapter(@Nullable List<Quote> data) {
         super(R.layout.item_home_page, data);
@@ -65,10 +74,12 @@ public class HomePageAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
         helper.setText(R.id.tv_title, item.getSymbolname())
                 .setText(R.id.tv_desc, symbol)
                 .setText(R.id.tv_icon, title);
+        int colorIndex = (helper.getLayoutPosition()-getHeaderLayoutCount()) % (colors.length - 1);
+        helper.setTextColor(R.id.tv_icon, colors[colorIndex]);
         TextView tvInfo = helper.getView(R.id.tv_info);
         double change = item.getChangeRate();
         String changeText = change == 0 ? "-" : DoubleUtil.format2Decimal(change) + "%";
-        tvInfo.setText(DoubleUtil.format2Decimal(item.getLastPrice()) + "\n" + changeText);
+        tvInfo.setText(DoubleUtil.formatDecimal(item.getLastPrice()) + "\n" + changeText);
         tvInfo.setTextColor(ContextCompat.getColor(mContext, change > 0 ? R.color.main_color_red : R.color.main_color_green));
     }
 }

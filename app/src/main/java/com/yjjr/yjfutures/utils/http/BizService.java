@@ -58,4 +58,8 @@ public interface BizService {
 
     @GET("dictionary/RECHARGE_ACCOUNT")
     Observable<BizResponse<ChargeResult>> getChargeInfo();
+
+    @FormUrlEncoded
+    @POST("user/validPayPwd")
+    Observable<BizResponse> validPayPwd(@Field("account") String account, @Field("payPwd") String payPwd);
 }

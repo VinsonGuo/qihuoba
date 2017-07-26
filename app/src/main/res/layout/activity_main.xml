@@ -8,17 +8,10 @@
     android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.MainActivity">
 
-    <com.yjjr.yjfutures.widget.LoadingView
-        android:id="@+id/load_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-
-        android:layout_weight="1"/>
     <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
         android:layout_weight="1"/>
 
     <com.yinglan.alphatabs.AlphaTabsIndicator

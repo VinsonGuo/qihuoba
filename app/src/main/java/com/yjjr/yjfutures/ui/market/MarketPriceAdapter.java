@@ -28,7 +28,7 @@ public class MarketPriceAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> 
             double change = item.getChangeRate();
             helper.setText(R.id.tv_symbol_name, item.getSymbolname())
                     .setText(R.id.tv_symbol, item.getSymbol())
-                    .setText(R.id.tv_price, item.getLastPrice() == 0 ? "-" : DoubleUtil.format2Decimal(item.getLastPrice()))
+                    .setText(R.id.tv_price, item.getLastPrice() == 0 ? "-" : DoubleUtil.formatDecimal(item.getLastPrice()))
                     .setText(R.id.tv_trade_amount, item.getVol() + "");
             TextView tvChange = helper.getView(R.id.tv_change);
             TextView tvPrice = helper.getView(R.id.tv_price);

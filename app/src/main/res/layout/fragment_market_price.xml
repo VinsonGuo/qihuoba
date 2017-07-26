@@ -7,7 +7,7 @@
               tools:context="com.yjjr.yjfutures.ui.market.MarketPriceFragment">
 
     <TextView
-        style="@style/text_color_333333_17sp"
+        android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
         android:gravity="center"

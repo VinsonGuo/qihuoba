@@ -35,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="20dp"
             app:hint="请输入金额"
             app:name="提款金额"/>
 

@@ -3,6 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:background="@color/background"
               android:orientation="vertical">
 
     <com.bigkoo.convenientbanner.ConvenientBanner
@@ -15,7 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/root_padding_10">
+        android:background="@color/white"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp">
 
         <TextView
             android:id="@+id/tv_title1"
@@ -34,7 +37,7 @@
             style="@style/text_color_333333_14sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:background="@drawable/selector_common_press_bg"
             android:drawablePadding="15dp"
             android:drawableTop="@drawable/ic_home2"
@@ -59,19 +62,22 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/shape_bg_bottom_line_white"
+        android:layout_marginTop="@dimen/dp_10"
         android:paddingBottom="@dimen/root_padding_10"
+        android:gravity="center"
         android:paddingLeft="@dimen/root_padding_15"
         android:paddingTop="@dimen/root_padding_10">
 
         <View
             android:layout_width="2dp"
-            android:layout_height="match_parent"
+            android:layout_height="14dp"
             android:background="@color/third_text_color"/>
 
         <TextView
             style="@style/text_color_333333_16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_14"
             android:layout_marginLeft="@dimen/root_padding_10"
             android:text="国际期货"/>
     </LinearLayout>

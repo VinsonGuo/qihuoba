@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,28 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.model.Symbol;
+import com.yjjr.yjfutures.model.UserLoginResponse;
+import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Login;
 import com.yjjr.yjfutures.store.StaticStore;
+import com.yjjr.yjfutures.store.UserSharePrefernce;
+import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
+import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
+import com.yjjr.yjfutures.utils.DialogUtils;
+import com.yjjr.yjfutures.utils.LogUtils;
+import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
+import com.yjjr.yjfutures.widget.CustomPromptDialog;
+import com.yjjr.yjfutures.widget.LoadingView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -29,6 +46,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.ObservableSource;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * "主页"
@@ -38,6 +60,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     private ConvenientBanner<String> mBanner;
     private HomePageAdapter mAdapter;
+    private CustomPromptDialog mCustomServiceDialog;
+    private LoadingView mLoadingView;
 
     public HomePageFragment() {
         // Required empty public constructor
@@ -52,6 +76,15 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home_page, container, false);
+        mCustomServiceDialog = DialogUtils.createCustomServiceDialog(mContext);
+
+        mLoadingView = (LoadingView) v.findViewById(R.id.load_view);
+        mLoadingView.setOnReloadListener(new LoadingView.OnReloadListener() {
+            @Override
+            public void onReload() {
+                loadData();
+            }
+        });
         RecyclerView rvList = (RecyclerView) v.findViewById(R.id.rv_list);
         RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
         if (animator instanceof SimpleItemAnimator) {
@@ -82,7 +115,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             }
         });
         rvList.setAdapter(mAdapter);
-
+        v.findViewById(R.id.tv_customer_service).setOnClickListener(this);
         return v;
     }
 
@@ -90,6 +123,121 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     protected void initData() {
         super.initData();
         mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+        loadData();
+    }
+
+    private void loadData() {
+        //如果交易token为null，先获取token
+        if (TextUtils.isEmpty(BaseApplication.getInstance().getTradeToken())) {
+            final String account = UserSharePrefernce.getAccount(mContext);
+            final String password = UserSharePrefernce.getPassword(mContext);
+            HttpManager.getBizService().login(account, password)
+                    .flatMap(new Function<BizResponse<Login>, ObservableSource<UserLoginResponse>>() {
+                        @Override
+                        public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<Login> loginBizResponse) throws Exception {
+                            if (loginBizResponse.getRcode() != 0) {
+                                throw new RuntimeException("登录失败");
+                            }
+                            return HttpManager.getHttpService().userLogin(account, password);
+                        }
+                    })
+                    .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
+                        @Override
+                        public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
+                            if (userLoginResponse.getReturnCode() != 1) {
+                                BaseApplication.getInstance().logout(mContext);
+                            }
+                            BaseApplication.getInstance().setTradeToken(userLoginResponse.getCid());
+                            return HttpManager.getHttpService().getSymbols(BaseApplication.getInstance().getTradeToken());
+                        }
+                    })
+                    .flatMap(new Function<List<Symbol>, ObservableSource<List<Quote>>>() {
+                        @Override
+                        public ObservableSource<List<Quote>> apply(@NonNull List<Symbol> symbols) throws Exception {
+                            StringBuilder symbol = new StringBuilder();
+                            StringBuilder exchange = new StringBuilder();
+                            for (int i = 0; i < symbols.size(); i++) {
+                                symbol.append(symbols.get(i).getSymbol());
+                                exchange.append(symbols.get(i).getExchange());
+                                if (i < symbols.size() - 1) {
+                                    symbol.append(",");
+                                    exchange.append(",");
+                                }
+                            }
+                            StaticStore.sSymbols = symbol.toString();
+                            StaticStore.sExchange = exchange.toString();
+                            return HttpManager.getHttpService().getQuoteList(symbol.toString(), exchange.toString());
+                        }
+                    })
+                    .map(new Function<List<Quote>, Boolean>() {
+                        @Override
+                        public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
+                            for (Quote quote : quotes) {
+                                StaticStore.sQuoteMap.put(quote.getSymbol(), quote);
+                            }
+                            return true;
+                        }
+                    })
+                    .compose(RxUtils.<Boolean>applySchedulers())
+                    .compose(this.<Boolean>bindUntilEvent(FragmentEvent.DESTROY))
+                    .subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(@NonNull Boolean symbols) throws Exception {
+                            mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+                            mLoadingView.setVisibility(View.GONE);
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception {
+                            LogUtils.e(throwable);
+                            mLoadingView.loadFail();
+                        }
+                    });
+        } else {
+            HttpManager.getHttpService().getSymbols(BaseApplication.getInstance().getTradeToken())
+                    .flatMap(new Function<List<Symbol>, ObservableSource<List<Quote>>>() {
+                        @Override
+                        public ObservableSource<List<Quote>> apply(@NonNull List<Symbol> symbols) throws Exception {
+                            StringBuilder symbol = new StringBuilder();
+                            StringBuilder exchange = new StringBuilder();
+                            for (int i = 0; i < symbols.size(); i++) {
+                                symbol.append(symbols.get(i).getSymbol());
+                                exchange.append(symbols.get(i).getExchange());
+                                if (i < symbols.size() - 1) {
+                                    symbol.append(",");
+                                    exchange.append(",");
+                                }
+                                StaticStore.sSymbols = symbol.toString();
+                                StaticStore.sExchange = exchange.toString();
+                            }
+                            return HttpManager.getHttpService().getQuoteList(symbol.toString(), exchange.toString());
+                        }
+                    })
+                    .map(new Function<List<Quote>, Boolean>() {
+                        @Override
+                        public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
+                            for (Quote quote : quotes) {
+                                StaticStore.sQuoteMap.put(quote.getSymbol(), quote);
+                            }
+                            return true;
+                        }
+                    })
+                    .compose(RxUtils.<Boolean>applySchedulers())
+                    .compose(this.<Boolean>bindUntilEvent(FragmentEvent.DESTROY))
+                    .subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(@NonNull Boolean symbols) throws Exception {
+                            mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+                            mLoadingView.setVisibility(View.GONE);
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception {
+                            LogUtils.e(throwable);
+                            mLoadingView.loadFail();
+                        }
+                    });
+        }
     }
 
     @Override
@@ -110,10 +258,13 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.tv_title1) {
-            if (mAdapter.getData().size() > 0) {
-                TradeActivity.startActivity(mContext, mAdapter.getData().get(0).getSymbol());
-            }
+        switch (v.getId()) {
+            case R.id.tv_customer_service:
+                mCustomServiceDialog.show();
+                break;
+            case R.id.tv_title1:
+                DemoTradeActivity.startActivity(mContext);
+                break;
         }
     }
 

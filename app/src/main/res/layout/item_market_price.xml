@@ -56,12 +56,11 @@
 
         <TextView
             android:id="@+id/tv_change"
-            android:layout_width="46dp"
+            android:layout_width="50dp"
             android:gravity="center"
-            android:layout_height="wrap_content"
+            android:layout_height="19dp"
             android:layout_gravity="right"
             android:background="@drawable/shape_red_border_bg"
-            android:padding="4dp"
             tools:text="+0.22%"
             android:textColor="@color/main_color_red"
             android:textSize="10sp"/>

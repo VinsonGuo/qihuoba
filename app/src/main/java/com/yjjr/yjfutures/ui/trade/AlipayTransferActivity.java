@@ -1,8 +1,9 @@
 package com.yjjr.yjfutures.ui.trade;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +14,6 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.ChargeResult;
 import com.yjjr.yjfutures.model.biz.Info;
-import com.yjjr.yjfutures.model.biz.NumberResult;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.utils.AlipayUtil;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -42,12 +42,22 @@ public class AlipayTransferActivity extends BaseActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!btnConfirm.isSelected())return;
-                if(AlipayUtil.hasInstalledAlipayClient(mContext)) {
+                if (!btnConfirm.isSelected()) return;
+                if (AlipayUtil.hasInstalledAlipayClient(mContext)) {
                     AlipayUtil.startAlipayClient(mContext, HttpConfig.ALIPAY_ACCOUNT_CODE);
-                }else {
-                    ToastUtils.show(mContext,"您还没安装支付宝，请在应用市场下载");
+                } else {
+                    ToastUtils.show(mContext, "您还没安装支付宝，请在应用市场下载");
                 }
+            }
+        });
+
+        findViewById(R.id.tv_copy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText(getString(R.string.app_name), tvAccountValue.getText());
+                clipboard.setPrimaryClip(clip);
+                ToastUtils.show(mContext, R.string.copy_success);
             }
         });
 
@@ -62,6 +72,6 @@ public class AlipayTransferActivity extends BaseActivity {
                         HttpConfig.ALIPAY_ACCOUNT_CODE = info.getNameEn();
                         tvAccountValue.setText(info.getName());
                     }
-                },RxUtils.commonErrorConsumer());
+                }, RxUtils.commonErrorConsumer());
     }
 }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.yjjr.yjfutures.ui.mine.WithdrawDetailActivity">
+
+    <com.yjjr.yjfutures.widget.HeaderView
+        android:id="@+id/header_view"
+        app:main_title="提现记录"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <fragment
+        android:id="@+id/withdraw_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.yjjr.yjfutures.ui.mine.WithdrawDetailFragment"/>
+
+</LinearLayout>

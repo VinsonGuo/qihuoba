@@ -96,6 +96,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvChangeRate;
     private CustomPromptDialog mCloseSuccessDialog;
     private CustomPromptDialog mCloseDialog;
+    private HeaderView mHeaderView;
 
 
     public TradeFragment() {
@@ -233,6 +234,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     private void fillViews(Quote quote) {
         if (quote == null) return;
+        mHeaderView.setMainTitle(quote.getSymbolname());
         double change = quote.getChangeRate();
 //        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", change);
         tvLeft.setText(leftText + quote.getBidPrice());
@@ -256,9 +258,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
 
     private void findViews(View v) {
-        HeaderView headerView = (HeaderView) v.findViewById(R.id.header_view);
-        headerView.bindActivity(getActivity());
-        headerView.setMainTitle(mSymbol);
+        mHeaderView = (HeaderView) v.findViewById(R.id.header_view);
+        mHeaderView.bindActivity(getActivity());
         rgNav = (NestRadioGroup) v.findViewById(R.id.rg_nav);
         pbLeft = (ProgressBar) v.findViewById(R.id.pb_left);
         pbRight = (ProgressBar) v.findViewById(R.id.pb_right);
@@ -406,7 +407,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 DepositActivity.startActivity(mContext);
                 break;
             case R.id.tv_kchart:
-                mTopRightMenu.showAsDropDown(mTvKchart);
+                mTopRightMenu.showAsDropDown(mTvKchart,0, DisplayUtils.dip2px(mContext, 10));
                 break;
         }
     }

@@ -79,12 +79,12 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
                 if(!btnConfirm.isSelected()) {
                     return;
                 }
-                btnConfirm.setSelected(false);
                 final String newPwd = riPwd.getValue();
                 if(TextUtils.equals(oldPwd, newPwd)) {
                     ToastUtils.show(mContext, R.string.old_password_equals_new_password);
                     return;
                 }
+                btnConfirm.setSelected(false);
                 if(type == AlterLoginPwdActivity.TYPE_LOGIN_PWD) {
                     findLoginPwd(newPwd, oldPwd, btnConfirm);
                 }else if(type == AlterLoginPwdActivity.TYPE_TRADE_PWD){

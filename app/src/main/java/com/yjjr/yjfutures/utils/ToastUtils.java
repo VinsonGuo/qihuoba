@@ -44,23 +44,24 @@ public class ToastUtils {
                     sToast = Toast.makeText(context,
                             content,
                             Toast.LENGTH_SHORT);
-                    View toastView = LayoutInflater.from(context).inflate(R.layout.view_toast, null);
-                    TextView tv = (TextView) toastView.findViewById(R.id.tv_title);
-                    TextView tvDesc = (TextView) toastView.findViewById(R.id.tv_desc);
-                    tv.setText(content);
-                    tvDesc.setVisibility(TextUtils.isEmpty(desc) ? View.GONE : View.VISIBLE);
-                    tvDesc.setText(desc);
-                    sToast.setView(toastView);
-                    sToast.setGravity(Gravity.FILL, 0, 0);
+//                    View toastView = LayoutInflater.from(context).inflate(R.layout.view_toast, null);
+//                    TextView tv = (TextView) toastView.findViewById(R.id.tv_title);
+//                    TextView tvDesc = (TextView) toastView.findViewById(R.id.tv_desc);
+//                    tv.setText(content);
+//                    tvDesc.setVisibility(TextUtils.isEmpty(desc) ? View.GONE : View.VISIBLE);
+//                    tvDesc.setText(desc);
+//                    sToast.setView(toastView);
+//                    sToast.setGravity(Gravity.FILL, 0, 0);
 //                    sToast.setGravity(Gravity.CENTER,0,0);
                 } else {
-                    View toastView = LayoutInflater.from(context).inflate(R.layout.view_toast, null);
-                    TextView tv = (TextView) toastView.findViewById(R.id.tv_title);
-                    TextView tvDesc = (TextView) toastView.findViewById(R.id.tv_desc);
-                    tv.setText(content);
-                    tvDesc.setVisibility(TextUtils.isEmpty(desc) ? View.GONE : View.VISIBLE);
-                    tvDesc.setText(desc);
-                    sToast.setView(toastView);
+//                    View toastView = LayoutInflater.from(context).inflate(R.layout.view_toast, null);
+//                    TextView tv = (TextView) toastView.findViewById(R.id.tv_title);
+//                    TextView tvDesc = (TextView) toastView.findViewById(R.id.tv_desc);
+//                    tv.setText(content);
+//                    tvDesc.setVisibility(TextUtils.isEmpty(desc) ? View.GONE : View.VISIBLE);
+//                    tvDesc.setText(desc);
+//                    sToast.setView(toastView);
+                    sToast.setText(content);
                 }
                 sToast.show();
             }

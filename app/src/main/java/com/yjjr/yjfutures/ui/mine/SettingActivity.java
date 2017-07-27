@@ -41,6 +41,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 .create();
         findViewById(R.id.tv_bind_phone).setOnClickListener(this);
         findViewById(R.id.tv_login_pwd).setOnClickListener(this);
+        findViewById(R.id.tv_help).setOnClickListener(this);
         findViewById(R.id.tv_logout).setOnClickListener(this);
     }
 
@@ -52,6 +53,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.tv_login_pwd:
                 AlterLoginPwdActivity.startActivity(mContext, AlterLoginPwdActivity.TYPE_LOGIN_PWD);
+                break;
+            case R.id.tv_help:
+                HelpCenterActivity.startActivity(mContext);
                 break;
             case R.id.tv_logout:
                 mLogoutDialog.show();

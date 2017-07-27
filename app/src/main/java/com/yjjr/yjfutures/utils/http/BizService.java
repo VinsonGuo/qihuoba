@@ -1,10 +1,13 @@
 package com.yjjr.yjfutures.utils.http;
 
 import com.yjjr.yjfutures.model.biz.Alipay;
+import com.yjjr.yjfutures.model.biz.AssetRecord;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.ChargeResult;
+import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Funds;
-import com.yjjr.yjfutures.model.biz.Login;
+import com.yjjr.yjfutures.model.biz.PageResponse;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.model.biz.NumberResult;
 
 import io.reactivex.Observable;
@@ -12,6 +15,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -33,7 +37,7 @@ import retrofit2.http.Query;
 public interface BizService {
     @FormUrlEncoded
     @POST("user/login")
-    Observable<BizResponse<Login>> login(@Field("account") String account, @Field("password") String password);
+    Observable<BizResponse<UserInfo>> login(@Field("account") String account, @Field("password") String password);
 
     @FormUrlEncoded
     @POST("user/bindAlipay")
@@ -62,4 +66,11 @@ public interface BizService {
     @FormUrlEncoded
     @POST("user/validPayPwd")
     Observable<BizResponse> validPayPwd(@Field("account") String account, @Field("payPwd") String payPwd);
+
+    @FormUrlEncoded
+    @POST("trader/getContractInfo")
+    Observable<BizResponse<ContractInfo>> getContractInfo(@Field("symbol") String symbol);
+
+    @POST("user/queryAssetRecord/{start}/{count}")
+    Observable<PageResponse<AssetRecord>> getAssetRecord(@Path("start") int start,@Path("count") int count);
 }

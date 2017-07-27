@@ -4,28 +4,57 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FastTakeOrderEvent;
 import com.yjjr.yjfutures.model.FastTakeOrderConfig;
+import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.ContractInfo;
+import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.DisplayUtils;
+import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
 
 import org.greenrobot.eventbus.EventBus;
 
-public class FastTakeOrderActivity extends BaseActivity {
+import java.util.Map;
+
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+
+public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
 
 
     private CustomPromptDialog mDialog;
+    private String mSymbol;
+    private TextView mTvStopWin;
+    private TextView mTvMargin;
+    private TextView mTvTradeFee;
+    private TextView mTvExchange;
+    private RadioGroup mRgSl;
+    private TextView mTvInfo;
 
     public static void startActivity(Context context, String symbol) {
         Intent intent = new Intent(context, FastTakeOrderActivity.class);
@@ -46,10 +75,17 @@ public class FastTakeOrderActivity extends BaseActivity {
                     }
                 })
                 .create();
-        final String symbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
+        mSymbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         final Button btnOpen = (Button) findViewById(R.id.btn_open);
         final RadioGroup rg = (RadioGroup) findViewById(R.id.rg_hand);
+        mTvStopWin = (TextView) findViewById(R.id.tv_stop_win);
+        mTvMargin = (TextView) findViewById(R.id.bzj_value);
+        mTvTradeFee = (TextView) findViewById(R.id.trade_fee_value);
+        mTvInfo = (TextView) findViewById(R.id.tv_info);
+        mTvExchange = (TextView) findViewById(R.id.tv_exchange);
+        mRgSl = (RadioGroup) findViewById(R.id.rg_sl);
+        mRgSl.setOnCheckedChangeListener(this);
         AppCompatCheckBox checkBox = (AppCompatCheckBox) findViewById(R.id.cb_check);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -57,9 +93,16 @@ public class FastTakeOrderActivity extends BaseActivity {
                 btnOpen.setSelected(isChecked);
             }
         });
-        final FastTakeOrderConfig fastTakeOrder = UserSharePrefernce.getFastTakeOrder(mContext, symbol);
+        findViewById(R.id.tv_agreement).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WebActivity.startActivity(mContext, HttpConfig.URL_AGREEMENT1);
+            }
+        });
+        final FastTakeOrderConfig fastTakeOrder = UserSharePrefernce.getFastTakeOrder(mContext, mSymbol);
         btnOpen.setText(fastTakeOrder != null ? "关闭" : "开启");
         headerView.bindActivity(mContext);
+        headerView.setMainTitle(mSymbol);
         btnOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,9 +139,71 @@ public class FastTakeOrderActivity extends BaseActivity {
                     }
                     config.setQty(qty);
                 }
-                UserSharePrefernce.setFastTakeOrder(mContext, symbol, config);
+                UserSharePrefernce.setFastTakeOrder(mContext, mSymbol, config);
                 EventBus.getDefault().post(new FastTakeOrderEvent(config != null));
             }
         });
+        requestData();
+    }
+
+    /**
+     * <RadioButton
+     * android:id="@+id/rb_sl_1"
+     * android:layout_width="46dp"
+     * android:layout_height="17dp"
+     * android:background="@drawable/selector_trade_rb_bg"
+     * android:button="@null"
+     * android:gravity="center"
+     * android:text="$170"
+     * android:textColor="@color/selector_trade_rb_text_color"
+     * android:textSize="12sp"/>
+     */
+    private RadioButton createRadioButton(String name, Double tag) {
+        RadioButton rb = new RadioButton(mContext);
+        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(DisplayUtils.dip2px(mContext, 46), DisplayUtils.dip2px(mContext, 17));
+        lp.leftMargin = DisplayUtils.dip2px(mContext, 4);
+        rb.setLayoutParams(lp);
+        rb.setBackgroundResource(R.drawable.selector_trade_rb_bg);
+        rb.setButtonDrawable(null);
+        rb.setGravity(Gravity.CENTER);
+        rb.setText(name);
+        rb.setTextColor(ContextCompat.getColor(mContext, R.color.selector_trade_rb_text_color));
+        rb.setTextSize(12);
+        rb.setTag(tag);
+        return rb;
+    }
+
+    private void requestData() {
+        HttpManager.getBizService().getContractInfo(mSymbol)
+                .compose(RxUtils.<BizResponse<ContractInfo>>applyBizSchedulers())
+                .compose(mContext.<BizResponse<ContractInfo>>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<ContractInfo>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<ContractInfo> response) throws Exception {
+                        ContractInfo result = response.getResult();
+                        mTvInfo.setText(String.format("持仓至%s自动平仓", result.getEndTradeTime()));
+                        mTvStopWin.setText(String.format("=触发止损*%s", result.getMaxProfitMultiply()));
+                        Map<String, Double> map = result.getLossLevel();
+                        for (Map.Entry<String, Double> next : map.entrySet()) {
+                            mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
+                        }
+                        mTvTradeFee.setText(DoubleUtil.formatDecimal(result.getTransactionFee()));
+                        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+                        mTvExchange.setText(mSymbol + "按" + quote.getCurrency() + "交易，平台按人民币结算，汇率为" + result.getCnyExchangeRate());
+                    }
+                }, RxUtils.commonErrorConsumer());
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        int childCount = group.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            RadioButton rb = (RadioButton) group.getChildAt(i);
+            if (rb.isChecked()) {
+                Double d = (Double) rb.getTag();
+                mTvMargin.setText(DoubleUtil.formatDecimal(d));
+                break;
+            }
+        }
     }
 }

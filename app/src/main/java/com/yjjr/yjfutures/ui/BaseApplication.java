@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import com.facebook.stetho.Stetho;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.yjjr.yjfutures.BuildConfig;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.mine.LoginActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -28,6 +29,7 @@ public class BaseApplication extends Application implements Application.Activity
     private static BaseApplication sInstance;
     private List<Activity> mActivities = new ArrayList<>();
     private String mTradeToken = "";
+    private UserInfo mUserInfo;
 
     public static BaseApplication getInstance() {
         return sInstance;
@@ -144,6 +146,15 @@ public class BaseApplication extends Application implements Application.Activity
     public void logout(Context a) {
         UserSharePrefernce.clearCache();
         mTradeToken = "";
+        mUserInfo = null;
         toLogin(a);
+    }
+
+    public UserInfo getUserInfo() {
+        return mUserInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        mUserInfo = userInfo;
     }
 }

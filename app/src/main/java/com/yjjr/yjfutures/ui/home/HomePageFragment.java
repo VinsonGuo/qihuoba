@@ -17,7 +17,6 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.RefreshEvent;
@@ -25,16 +24,18 @@ import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
-import com.yjjr.yjfutures.model.biz.Login;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
+import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
@@ -99,6 +100,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, rvList, false);
         mBanner = (ConvenientBanner<String>) headerView.findViewById(R.id.banner);
         headerView.findViewById(R.id.tv_title1).setOnClickListener(this);
+        headerView.findViewById(R.id.tv_title2).setOnClickListener(this);
+        headerView.findViewById(R.id.tv_title3).setOnClickListener(this);
         mBanner.setPages(new CBViewHolderCreator() {
             @Override
             public Object createHolder() {
@@ -132,12 +135,13 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             final String account = UserSharePrefernce.getAccount(mContext);
             final String password = UserSharePrefernce.getPassword(mContext);
             HttpManager.getBizService().login(account, password)
-                    .flatMap(new Function<BizResponse<Login>, ObservableSource<UserLoginResponse>>() {
+                    .flatMap(new Function<BizResponse<UserInfo>, ObservableSource<UserLoginResponse>>() {
                         @Override
-                        public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<Login> loginBizResponse) throws Exception {
+                        public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
                             if (loginBizResponse.getRcode() != 0) {
                                 throw new RuntimeException("登录失败");
                             }
+                            BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
                             return HttpManager.getHttpService().userLogin(account, password);
                         }
                     })
@@ -264,6 +268,12 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.tv_title1:
                 DemoTradeActivity.startActivity(mContext);
+                break;
+            case R.id.tv_title2:
+                WebActivity.startActivity(mContext, HttpConfig.URL_SUPERVISE);
+                break;
+            case R.id.tv_title3:
+                WebActivity.startActivity(mContext, HttpConfig.URL_DISCLOSURE);
                 break;
         }
     }

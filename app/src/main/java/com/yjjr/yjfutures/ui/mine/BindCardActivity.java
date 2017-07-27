@@ -17,6 +17,7 @@ import com.mobsandgeeks.saripaar.annotation.Password;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
@@ -28,6 +29,8 @@ import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -113,6 +116,7 @@ public class BindCardActivity extends BaseActivity {
                                         .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
+                                                EventBus.getDefault().post(new UpdateUserInfoEvent());
                                                 dialog.dismiss();
                                                 finish();
                                                 if (!response.getResult().isExistPayPwd()) {

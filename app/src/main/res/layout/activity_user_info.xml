@@ -41,13 +41,14 @@
                 android:textSize="@dimen/sp_14"/>
 
             <TextView
+                android:id="@+id/tv_name"
                 style="@style/text_color_666666_12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:layout_gravity="right"
                 android:layout_marginRight="26dp"
                 android:gravity="center"
-                tools:text="审核中"/>
+                android:text="@string/unbind"/>
         </FrameLayout>
 
         <FrameLayout
@@ -70,13 +71,14 @@
                 android:textSize="@dimen/sp_14"/>
 
             <TextView
+                android:id="@+id/tv_card"
                 style="@style/text_color_666666_12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:layout_gravity="right"
                 android:layout_marginRight="26dp"
                 android:gravity="center"
-                tools:text="审核中"/>
+                android:text="@string/add"/>
         </FrameLayout>
 
 
@@ -84,14 +86,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                style="@style/text_color_666666_12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="26dp"
-                android:gravity="center"
-                tools:text="审核中"/>
 
             <TextView
                 android:id="@+id/tv_pay_pwd"
@@ -107,6 +101,17 @@
                 android:text="@string/pay_pwd"
                 android:textColor="@color/main_text_color"
                 android:textSize="@dimen/sp_14"/>
+
+
+            <TextView
+                android:id="@+id/tv_pwd"
+                style="@style/text_color_666666_12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="26dp"
+                android:gravity="center"
+                android:text="@string/add"/>
         </FrameLayout>
 
 

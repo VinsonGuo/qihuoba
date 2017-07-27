@@ -4,18 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.Checked;
 import com.mobsandgeeks.saripaar.annotation.Password;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SmsCountDownTimer;
 import com.yjjr.yjfutures.utils.ToastUtils;
@@ -35,8 +39,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @com.mobsandgeeks.saripaar.annotation.Pattern(regex = "[0-9]{6}", messageResId = R.string.verification_type_error)
     private EditText mEtSmsCode;
 
-    @Password(min = 6, scheme = Password.Scheme.ALPHA_NUMERIC, messageResId = R.string.password_too_simple)
+    @Password(min = 6, scheme = Password.Scheme.ANY, messageResId = R.string.password_too_simple)
     private EditText mEtPassword;
+
+    @Checked(messageResId = R.string.please_agree_and_select_protocal)
+    private AppCompatCheckBox mCheckBox;
 
     private Validator mValidator;
     private Button mBtnConfirm;
@@ -63,6 +70,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mEtPhone = riPhone.getEtInput();
         mEtSmsCode = riSmscode.getEtInput();
         mEtPassword = riPassword.getEtInput();
+        mCheckBox = (AppCompatCheckBox) findViewById(R.id.cb_check);
+        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mValidator.validate();
+            }
+        });
         mEtPhone.setInputType(InputType.TYPE_CLASS_PHONE);
         mEtSmsCode.setInputType(InputType.TYPE_CLASS_NUMBER);
         mEtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -85,6 +99,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         });
         mOperaButton.setEnabled(false);
         mBtnConfirm.setOnClickListener(this);
+        findViewById(R.id.tv_agreement).setOnClickListener(this);
     }
 
     @Override
@@ -96,12 +111,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.btn_confirm:
                 mValidator.validate();
                 break;
+            case R.id.tv_agreement:
+                WebActivity.startActivity(mContext, HttpConfig.URL_AGREEMENT);
+                break;
         }
     }
 
     @Override
     public void onValidationSucceeded() {
-        mBtnConfirm.setEnabled(true);
+        mBtnConfirm.setSelected(true);
     }
 
     @Override
@@ -110,7 +128,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             String message = errors.get(0).getCollatedErrorMessage(mContext);
             ToastUtils.show(mContext, message);
         }
-        mBtnConfirm.setEnabled(false);
+        mBtnConfirm.setSelected(false);
     }
 
     @Override

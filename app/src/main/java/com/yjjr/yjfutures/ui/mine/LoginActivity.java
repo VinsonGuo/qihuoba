@@ -16,7 +16,7 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
-import com.yjjr.yjfutures.model.biz.Login;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
@@ -117,12 +117,13 @@ public class LoginActivity extends BaseActivity {
         final String password = etPassword.getText().toString().trim();
 //        final String password = StringUtils.encodePassword(etPassword.getText().toString().trim());
         HttpManager.getBizService().login(account, password)
-                .flatMap(new Function<BizResponse<Login>, ObservableSource<UserLoginResponse>>() {
+                .flatMap(new Function<BizResponse<UserInfo>, ObservableSource<UserLoginResponse>>() {
                     @Override
-                    public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<Login> loginBizResponse) throws Exception {
+                    public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
                         if (loginBizResponse.getRcode() != 0) {
                             throw new RuntimeException(loginBizResponse.getRmsg());
                         }
+                        BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
                         return HttpManager.getHttpService().userLogin(account, password);
                     }
                 })

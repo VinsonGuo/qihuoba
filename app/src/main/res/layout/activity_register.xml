@@ -56,7 +56,6 @@
         app:isShowEye="true"
         app:name="@string/set_password"/>
 
-
     <Button
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
@@ -67,4 +66,35 @@
         android:background="@drawable/selector_common_btn_bg"
         android:text="@string/register"
         android:textColor="@color/selector_common_btn_text_color"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/cb_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:text="@string/read_and_agree"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_16"
+            app:buttonTint="@color/main_text_color"/>
+
+        <TextView
+            android:id="@+id/tv_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-15dp"
+            android:text="《期货吧用户服务协议》"
+            android:textColor="@color/main_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
 </LinearLayout>

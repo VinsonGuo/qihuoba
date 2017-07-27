@@ -22,7 +22,7 @@ import com.yjjr.yjfutures.widget.LoadingView;
 
 public abstract class ListFragment<T> extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {
 
-    protected int mPage = 0;
+    protected int mPage = 1;
     protected RecyclerView mRvList;
     protected SwipeRefreshLayout mRefreshLayout;
     protected LoadingView mLoadView;
@@ -44,8 +44,10 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
         mAdapter = getAdapter();
         if (mAdapter.isLoadMoreEnable()) {
             mAdapter.setOnLoadMoreListener(this, mRvList);
+            mRvList.setAdapter(mAdapter);
+        }else {
+            mAdapter.bindToRecyclerView(mRvList);
         }
-        mAdapter.bindToRecyclerView(mRvList);
         View noDataView = inflater.inflate(R.layout.view_list_empty, mRvList, false);
         TextView tvNoData= (TextView) noDataView.findViewById(R.id.tv_no_data);
         tvNoData.setText(getNoDataText());
@@ -79,12 +81,14 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
 
     @Override
     public void onRefresh() {
-        mPage = 0;
-        initData();
+        mPage = 1;
+        mAdapter.getData().clear();
+        loadData();
     }
 
     @Override
     public void onLoadMoreRequested() {
         mPage++;
+        loadData();
     }
 }

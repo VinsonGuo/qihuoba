@@ -11,9 +11,9 @@
 
     <com.yjjr.yjfutures.widget.HeaderView
         android:id="@+id/header_view"
-        app:main_title="@string/symbol"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:main_title="@string/symbol"/>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -41,7 +41,6 @@
                 android:padding="@dimen/root_padding_15">
 
                 <TextView
-                    style="@style/text_color_333333_14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -131,7 +130,6 @@
                 android:padding="@dimen/root_padding_15">
 
                 <TextView
-                    style="@style/text_color_333333_14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -140,6 +138,7 @@
                     android:textSize="@dimen/sp_14"/>
 
                 <TextView
+                    android:id="@+id/tv_stop_win"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -161,7 +160,6 @@
 
                 <TextView
                     android:id="@+id/textView"
-                    style="@style/text_color_333333_14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -171,70 +169,11 @@
 
 
                 <RadioGroup
+                    android:id="@+id/rg_sl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/rb_sl_1"
-                        android:layout_width="46dp"
-                        android:layout_height="17dp"
-                        android:background="@drawable/selector_trade_rb_bg"
-                        android:button="@null"
-                        android:checked="true"
-                        android:gravity="center"
-                        android:text="$170"
-                        android:textColor="@color/selector_trade_rb_text_color"
-                        android:textSize="12sp"/>
-
-                    <RadioButton
-                        android:id="@+id/rb_sl_2"
-                        android:layout_width="46dp"
-                        android:layout_height="17dp"
-                        android:layout_marginLeft="4dp"
-                        android:background="@drawable/selector_trade_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="$240"
-                        android:textColor="@color/selector_trade_rb_text_color"
-                        android:textSize="12sp"/>
-                    <RadioButton
-                        android:id="@+id/rb_sl_3"
-                        android:layout_width="46dp"
-                        android:layout_height="17dp"
-                        android:layout_marginLeft="4dp"
-                        android:background="@drawable/selector_trade_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="$330"
-                        android:textColor="@color/selector_trade_rb_text_color"
-                        android:textSize="12sp"/>
-
-                    <RadioButton
-                        android:id="@+id/rb_sl_4"
-                        android:layout_width="46dp"
-                        android:layout_height="17dp"
-                        android:layout_marginLeft="4dp"
-                        android:background="@drawable/selector_trade_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="$470"
-                        android:textColor="@color/selector_trade_rb_text_color"
-                        android:textSize="12sp"/>
-
-                    <RadioButton
-                        android:id="@+id/rb_sl_5"
-                        android:layout_width="46dp"
-                        android:layout_height="17dp"
-                        android:layout_marginLeft="4dp"
-                        android:background="@drawable/selector_trade_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="$670"
-                        android:textColor="@color/selector_trade_rb_text_color"
-                        android:textSize="12sp"/>
-                </RadioGroup>
+                    android:orientation="horizontal"/>
             </LinearLayout>
 
 
@@ -251,6 +190,35 @@
 
                 <TextView
                     style="@style/text_color_333333_14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/exchange_rate"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/sp_14"/>
+
+                <TextView
+                    android:id="@+id/tv_exchange"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/sp_14"
+                    tools:text="$123"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_divider_small"
+                android:background="@color/divider_color"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center"
+                android:padding="@dimen/root_padding_15">
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -263,9 +231,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:text="$123"
                     android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/sp_14"/>
+                    android:textSize="@dimen/sp_14"
+                    tools:text="$123"/>
             </LinearLayout>
 
             <View
@@ -280,7 +248,6 @@
                 android:padding="@dimen/root_padding_15">
 
                 <TextView
-                    style="@style/text_color_333333_14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -293,42 +260,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:text="$123"
                     android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/sp_14"/>
+                    android:textSize="@dimen/sp_14"
+                    tools:text="$123"/>
             </LinearLayout>
 
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/common_divider_small"
-                android:background="@color/divider_color"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:gravity="center"
-                android:padding="@dimen/root_padding_15">
-
-                <TextView
-                    android:id="@+id/textView2"
-                    style="@style/text_color_333333_14sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/total_pay"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/sp_14"/>
-
-                <TextView
-                    android:id="@+id/total_pay_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="$123"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/sp_14"/>
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -354,7 +290,6 @@
         android:gravity="center"
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
-        android:text="持仓至明天凌晨自动平仓"
         android:textColor="@color/main_text_color"/>
 
     <Button
@@ -386,11 +321,12 @@
             app:buttonTint="@color/main_text_color"/>
 
         <TextView
+            android:id="@+id/tv_agreement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="-15dp"
-            android:text="《投资人用点买人合作协议》"
-            android:textColor="@color/third_text_color"
+            android:text="《投资人与点买人合作协议》"
+            android:textColor="@color/main_color"
             android:textSize="@dimen/sp_12"/>
     </LinearLayout>
 </LinearLayout>

@@ -75,6 +75,21 @@
     </FrameLayout>
 
     <TextView
+        android:id="@+id/tv_help"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingRight="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_10"
+        android:background="@drawable/shape_bg_bottom_line"
+        android:drawableRight="@drawable/icon_right_arrow"
+        android:gravity="center_vertical"
+        android:text="@string/help_center"
+        android:drawableLeft="@drawable/ic_lock1"
+        android:drawablePadding="@dimen/dp_10"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_14"/>
+
+    <TextView
         android:id="@+id/tv_logout"
         android:background="@drawable/shape_bg_bottom_line"
         android:text="@string/quit_login"

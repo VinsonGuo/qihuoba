@@ -4,19 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.Quote;
-import com.yjjr.yjfutures.model.Symbol;
-import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
-import com.yjjr.yjfutures.model.biz.Login;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.found.FoundFragment;
@@ -27,17 +24,17 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
-import com.yjjr.yjfutures.widget.LoadingView;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -56,6 +53,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBus.getDefault().register(this);
         initViews();
     }
 
@@ -113,9 +111,25 @@ public class MainActivity extends BaseActivity {
         mBackPressed = System.currentTimeMillis();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(UpdateUserInfoEvent event) {
+        final String account = UserSharePrefernce.getAccount(mContext);
+        final String password = UserSharePrefernce.getPassword(mContext);
+        HttpManager.getBizService().login(account, password)
+                .compose(RxUtils.<BizResponse<UserInfo>>applyBizSchedulers())
+                .compose(this.<BizResponse<UserInfo>>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<UserInfo>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<UserInfo> response) throws Exception {
+                        BaseApplication.getInstance().setUserInfo(response.getResult());
+                    }
+                }, RxUtils.commonErrorConsumer());
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         mTimer.cancel();
     }
 }

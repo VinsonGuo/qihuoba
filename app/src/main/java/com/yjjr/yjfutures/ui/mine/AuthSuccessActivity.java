@@ -30,4 +30,10 @@ public class AuthSuccessActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        EventBus.getDefault().post(new FinishEvent());
+        super.onBackPressed();
+    }
 }

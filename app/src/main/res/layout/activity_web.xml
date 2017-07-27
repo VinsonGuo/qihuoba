@@ -7,6 +7,7 @@
     android:id="@+id/root_view"
     android:orientation="vertical"
     android:layout_height="match_parent"
+    android:background="@color/chart_background"
     tools:context="com.yjjr.yjfutures.ui.WebActivity">
 
     <com.yjjr.yjfutures.widget.HeaderView

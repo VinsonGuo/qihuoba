@@ -150,7 +150,6 @@
                 android:padding="@dimen/root_padding_15">
 
                 <TextView
-                    style="@style/text_color_333333_14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -159,6 +158,7 @@
                     android:textSize="@dimen/sp_14"/>
 
                 <TextView
+                    android:id="@+id/tv_stop_win"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -190,70 +190,11 @@
 
 
                 <RadioGroup
+                    android:id="@+id/rg_sl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/rb_sl_1"
-                        android:layout_width="46dp"
-                        android:layout_height="17dp"
-                        android:background="@drawable/selector_trade_rb_bg"
-                        android:button="@null"
-                        android:checked="true"
-                        android:gravity="center"
-                        android:text="$170"
-                        android:textColor="@color/selector_trade_rb_text_color"
-                        android:textSize="12sp"/>
-
-                    <RadioButton
-                        android:id="@+id/rb_sl_2"
-                        android:layout_width="46dp"
-                        android:layout_height="17dp"
-                        android:layout_marginLeft="4dp"
-                        android:background="@drawable/selector_trade_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="$240"
-                        android:textColor="@color/selector_trade_rb_text_color"
-                        android:textSize="12sp"/>
-                    <RadioButton
-                        android:id="@+id/rb_sl_3"
-                        android:layout_width="46dp"
-                        android:layout_height="17dp"
-                        android:layout_marginLeft="4dp"
-                        android:background="@drawable/selector_trade_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="$330"
-                        android:textColor="@color/selector_trade_rb_text_color"
-                        android:textSize="12sp"/>
-
-                    <RadioButton
-                        android:id="@+id/rb_sl_4"
-                        android:layout_width="46dp"
-                        android:layout_height="17dp"
-                        android:layout_marginLeft="4dp"
-                        android:background="@drawable/selector_trade_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="$470"
-                        android:textColor="@color/selector_trade_rb_text_color"
-                        android:textSize="12sp"/>
-
-                    <RadioButton
-                        android:id="@+id/rb_sl_5"
-                        android:layout_width="46dp"
-                        android:layout_height="17dp"
-                        android:layout_marginLeft="4dp"
-                        android:background="@drawable/selector_trade_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="$670"
-                        android:textColor="@color/selector_trade_rb_text_color"
-                        android:textSize="12sp"/>
-                </RadioGroup>
+                    android:orientation="horizontal"/>
             </LinearLayout>
 
 
@@ -269,7 +210,6 @@
                 android:padding="@dimen/root_padding_15">
 
                 <TextView
-                    style="@style/text_color_333333_14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -282,7 +222,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:text="$123"
+                    tools:text="$123"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>
             </LinearLayout>
@@ -299,7 +239,6 @@
                 android:padding="@dimen/root_padding_15">
 
                 <TextView
-                    style="@style/text_color_333333_14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -312,48 +251,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:text="$123"
+                    tools:text="$123"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>
             </LinearLayout>
 
-
-            <View
+            <TextView
+                android:id="@+id/tv_exchange"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/common_divider_small"
-                android:background="@color/divider_color"/>
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/root_padding_15"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_12"/>
 
-            <LinearLayout
+
+            <TextView
+                android:id="@+id/tv_price"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:padding="@dimen/root_padding_15">
-
-                <TextView
-                    android:id="@+id/textView2"
-                    style="@style/text_color_333333_14sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="@string/total_pay"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/sp_14"/>
-
-                <TextView
-                    android:id="@+id/total_pay_value"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="$123"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/sp_14"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/common_divider_small"
-                android:background="@color/divider_color"/>
-
+                android:padding="4dp"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_14"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -373,4 +292,30 @@
         android:background="@drawable/selector_common_btn_bg"
         android:textColor="@color/selector_common_btn_text_color"
         android:text="@string/confirm"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/cb_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:text="@string/read_and_agree"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_16"
+            app:buttonTint="@color/main_text_color"/>
+
+        <TextView
+            android:id="@+id/tv_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-15dp"
+            android:text="《投资人与点买人合作协议》"
+            android:textColor="@color/main_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
 </LinearLayout>

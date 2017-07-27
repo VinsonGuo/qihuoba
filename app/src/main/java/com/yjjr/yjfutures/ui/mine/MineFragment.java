@@ -1,7 +1,6 @@
 package com.yjjr.yjfutures.ui.mine;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,7 +16,6 @@ import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DepositActivity;
-import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -136,7 +134,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 WebActivity.startActivity(mContext, "http://www.baidu.com");
                 break;
             case R.id.tv_four:
-                WebActivity.startActivity(mContext, "http://www.baidu.com");
+                WebActivity.startActivity(mContext, HttpConfig.URL_DISCLOSURE);
                 break;
             case R.id.btn_deposit:
                 DepositActivity.startActivity(mContext);

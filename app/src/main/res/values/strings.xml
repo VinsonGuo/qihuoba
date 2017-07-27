@@ -1340,4 +1340,14 @@
     <string name="jzc">净资产</string>
     <string name="go_transfer">去转账</string>
     <string name="withdraw_recode">提款记录</string>
+    <string name="supervise">相关监管</string>
+    <string name="service_agreement">资金托管服务协议</string>
+    <string name="policy_agreement">隐私政策</string>
+    <string name="disclosure_agreement">风险披露</string>
+    <string name="disclaimer_agreement">免责声明</string>
+    <string name="agreement3">期货吧客户协议</string>
+    <string name="agreement2">资金托管服务协议</string>
+    <string name="agreement1">投资人与点买人合作协议</string>
+    <string name="add">添加</string>
+    <string name="unbind">未绑定</string>
 </resources>

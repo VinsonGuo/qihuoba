@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chart_background"
+    android:orientation="vertical"
+    tools:context="com.yjjr.yjfutures.ui.mine.HelpCenterActivity">
+
+    <com.yjjr.yjfutures.widget.HeaderView
+        android:id="@+id/header_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:main_title="@string/help_center"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_bg_top_bottom_line"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/root_padding_15">
+
+
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/common_divider_small"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:drawableRight="@drawable/icon_right_arrow"
+                android:gravity="center_vertical"
+                android:paddingRight="@dimen/root_padding_10"
+                android:text="期货吧用户服务协议"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/common_divider_small"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:drawableRight="@drawable/icon_right_arrow"
+                android:gravity="center_vertical"
+                android:paddingRight="@dimen/root_padding_10"
+                android:text="@string/agreement1"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/tv3"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/common_divider_small"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:drawableRight="@drawable/icon_right_arrow"
+                android:gravity="center_vertical"
+                android:paddingRight="@dimen/root_padding_10"
+                android:text="@string/agreement2"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/tv4"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/common_divider_small"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:drawableRight="@drawable/icon_right_arrow"
+                android:gravity="center_vertical"
+                android:paddingRight="@dimen/root_padding_10"
+                android:text="@string/agreement3"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/tv5"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/common_divider_small"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:drawableRight="@drawable/icon_right_arrow"
+                android:gravity="center_vertical"
+                android:paddingRight="@dimen/root_padding_10"
+                android:text="@string/disclaimer_agreement"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/tv6"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/common_divider_small"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:drawableRight="@drawable/icon_right_arrow"
+                android:gravity="center_vertical"
+                android:paddingRight="@dimen/root_padding_10"
+                android:text="@string/disclosure_agreement"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/tv7"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/common_divider_small"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:drawableRight="@drawable/icon_right_arrow"
+                android:gravity="center_vertical"
+                android:paddingRight="@dimen/root_padding_10"
+                android:text="@string/policy_agreement"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/tv8"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/common_divider_small"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:drawableRight="@drawable/icon_right_arrow"
+                android:gravity="center_vertical"
+                android:paddingRight="@dimen/root_padding_10"
+                android:text="@string/service_agreement"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/tv9"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/common_divider_small"
+                android:background="@drawable/shape_bg_bottom_line"
+                android:drawableRight="@drawable/icon_right_arrow"
+                android:gravity="center_vertical"
+                android:paddingRight="@dimen/root_padding_10"
+                android:text="@string/supervise"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

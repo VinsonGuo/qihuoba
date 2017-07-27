@@ -11,8 +11,11 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.FinishEvent;
+import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
@@ -62,6 +65,7 @@ public class AuthInfoActivity extends BaseActivity {
                             .subscribe(new Consumer<BizResponse>() {
                                 @Override
                                 public void accept(@NonNull BizResponse bizResponse) throws Exception {
+                                    EventBus.getDefault().post(new UpdateUserInfoEvent());
                                     AuthSuccessActivity.startActivity(mContext);
                                 }
                             }, new Consumer<Throwable>() {
@@ -75,6 +79,16 @@ public class AuthInfoActivity extends BaseActivity {
                 }
             }
         });
+
+        // 已经设置过实名认证，显示设置过的值
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if(userInfo != null && userInfo.isIdentityAuth()) {
+            riName.setText(userInfo.getName());
+            riCard.setText(userInfo.getIdcard());
+            riName.setEditable(false);
+            riCard.setEditable(false);
+            btnConfirm.setVisibility(View.GONE);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

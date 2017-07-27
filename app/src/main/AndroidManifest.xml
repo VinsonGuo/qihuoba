@@ -108,6 +108,8 @@
         </activity>
         <activity android:name=".ui.trade.DemoTradeActivity">
         </activity>
+        <activity android:name=".ui.mine.HelpCenterActivity">
+        </activity>
     </application>
 
 </manifest>

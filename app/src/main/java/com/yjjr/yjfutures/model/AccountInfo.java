@@ -33,7 +33,7 @@ public class AccountInfo {
      * IP : 139.224.8.133
      * LastdayEquity : 1506019.315
      * LastdayEquitySpecified : true
-     * Login : Yes
+     * UserInfo : Yes
      * Margin : 0.0
      * MarginSpecified : true
      * MarginRate : 1.0
@@ -316,7 +316,7 @@ public class AccountInfo {
                 ", FrozenMargin=" + FrozenMargin +
                 ", IP='" + IP + '\'' +
                 ", LastdayEquity=" + LastdayEquity +
-                ", Login='" + Login + '\'' +
+                ", UserInfo='" + Login + '\'' +
                 ", Margin=" + Margin +
                 ", MarginRate=" + MarginRate +
                 ", Name='" + Name + '\'' +

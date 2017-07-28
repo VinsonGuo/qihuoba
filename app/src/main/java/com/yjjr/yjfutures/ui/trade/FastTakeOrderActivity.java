@@ -93,6 +93,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                 btnOpen.setSelected(isChecked);
             }
         });
+        checkBox.setChecked(true);
         findViewById(R.id.tv_agreement).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

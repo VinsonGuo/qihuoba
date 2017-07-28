@@ -25,6 +25,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.Quote;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -471,5 +472,22 @@ public class StringUtils {
     public static int getDigitByTick(double tick) {
         String s = String.valueOf(tick);
         return s.length() - 1;
+    }
+
+    public static String getRuleName(Quote quote) {
+        String title;
+        String symbol = quote.getSymbol();
+        switch (quote.getExchange()) {
+            case "DTB":
+                title = symbol.substring(1, 4);
+                break;
+            case "HKFE":
+                title = symbol.substring(0, 3);
+                break;
+            default:
+                title = symbol.substring(0, 2);
+                break;
+        }
+        return title;
     }
 }

@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,23 +59,11 @@ public class HomePageAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, Quote item) {
-        String title;
-        String symbol = item.getSymbol();
-        switch (item.getExchange()) {
-            case "DTB":
-                title = symbol.substring(1, 4);
-                break;
-            case "HKFE":
-                title = symbol.substring(0, 3);
-                break;
-            default:
-                title = symbol.substring(0, 2);
-                break;
-        }
+        String title = StringUtils.getRuleName(item);
         helper.setText(R.id.tv_title, item.getSymbolname())
-                .setText(R.id.tv_desc, symbol)
+                .setText(R.id.tv_desc, item.getSymbol())
                 .setText(R.id.tv_icon, title);
-        int colorIndex = (helper.getLayoutPosition()-getHeaderLayoutCount()) % (colors.length - 1);
+        int colorIndex = (helper.getLayoutPosition() - getHeaderLayoutCount()) % (colors.length - 1);
         helper.setTextColor(R.id.tv_icon, colors[colorIndex]);
         TextView tvInfo = helper.getView(R.id.tv_info);
         double change = item.getChangeRate();

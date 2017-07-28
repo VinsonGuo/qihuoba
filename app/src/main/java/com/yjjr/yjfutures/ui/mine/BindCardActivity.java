@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,8 +21,10 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
@@ -72,6 +75,11 @@ public class BindCardActivity extends BaseActivity {
         RegisterInput riNumber = (RegisterInput) findViewById(R.id.ri_number);
         RegisterInput riConfirmNumber = (RegisterInput) findViewById(R.id.ri_confirm_number);
         final Button btnConfirm = (Button) findViewById(R.id.btn_confirm);
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if (userInfo != null && !TextUtils.isEmpty(userInfo.getName())) {
+            riName.setText(userInfo.getName());
+            riName.setEditable(false);
+        }
         mEtName = riName.getEtInput();
         mEtNumber = riNumber.getEtInput();
         mEtConfirmNumber = riConfirmNumber.getEtInput();

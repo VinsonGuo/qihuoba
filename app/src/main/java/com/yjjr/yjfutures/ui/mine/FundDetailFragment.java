@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.model.biz.AssetRecord;
+import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.PageResponse;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -24,22 +25,22 @@ public class FundDetailFragment extends ListFragment<AssetRecord> {
     @Override
     protected void loadData() {
         HttpManager.getBizService().getAssetRecord(mPage, 10)
-                .compose(RxUtils.<PageResponse<AssetRecord>>applySchedulers())
-                .compose(this.<PageResponse<AssetRecord>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<PageResponse<AssetRecord>>() {
+                .compose(RxUtils.<BizResponse<PageResponse<AssetRecord>>>applyBizSchedulers())
+                .compose(this.<BizResponse<PageResponse<AssetRecord>>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<PageResponse<AssetRecord>>>() {
                     @Override
-                    public void accept(@NonNull PageResponse<AssetRecord> response) throws Exception {
-                        mAdapter.addData(response.getList());
+                    public void accept(@NonNull BizResponse<PageResponse<AssetRecord>> response) throws Exception {
+                        PageResponse<AssetRecord> result = response.getResult();
+                        mAdapter.addData(result.getList());
                         loadDataFinish();
-                        mAdapter.loadMoreComplete();
-                        if(mAdapter.getData().size() >= response.getTotal()) {
+                        if(mAdapter.getData().size() >= result.getTotal()) {
                             mAdapter.loadMoreEnd();
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        mAdapter.loadMoreFail();
+                        loadFailed();
                     }
                 });
     }

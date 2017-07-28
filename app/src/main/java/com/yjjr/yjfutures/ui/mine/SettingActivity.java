@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
@@ -27,6 +29,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
+        TextView tvPhone = (TextView) findViewById(R.id.tv_phone);
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if (userInfo != null) {
+            tvPhone.setText(userInfo.getMobileNo());
+        }
         mLogoutDialog = new CustomPromptDialog.Builder(mContext)
                 .setMessage("您确定退出当前账号吗？")
                 .isShowClose(true)

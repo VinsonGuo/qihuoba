@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.utils.http;
 import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.AssetRecord;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.CashRecord;
 import com.yjjr.yjfutures.model.biz.ChargeResult;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Funds;
@@ -72,5 +73,8 @@ public interface BizService {
     Observable<BizResponse<ContractInfo>> getContractInfo(@Field("symbol") String symbol);
 
     @POST("user/queryAssetRecord/{start}/{count}")
-    Observable<PageResponse<AssetRecord>> getAssetRecord(@Path("start") int start,@Path("count") int count);
+    Observable<BizResponse<PageResponse<AssetRecord>>> getAssetRecord(@Path("start") int start,@Path("count") int count);
+
+    @POST("user/queryCashRecord/{start}/{count}")
+    Observable<BizResponse<PageResponse<CashRecord>>> getCashRecord(@Path("start") int start, @Path("count") int count);
 }

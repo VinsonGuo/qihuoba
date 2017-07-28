@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.widget.LoadingView;
 
 /**
@@ -45,11 +44,11 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
         if (mAdapter.isLoadMoreEnable()) {
             mAdapter.setOnLoadMoreListener(this, mRvList);
             mRvList.setAdapter(mAdapter);
-        }else {
+        } else {
             mAdapter.bindToRecyclerView(mRvList);
         }
         View noDataView = inflater.inflate(R.layout.view_list_empty, mRvList, false);
-        TextView tvNoData= (TextView) noDataView.findViewById(R.id.tv_no_data);
+        TextView tvNoData = (TextView) noDataView.findViewById(R.id.tv_no_data);
         tvNoData.setText(getNoDataText());
         mAdapter.setEmptyView(noDataView);
         mRefreshLayout.setOnRefreshListener(this);
@@ -71,6 +70,18 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     protected void loadDataFinish() {
         mLoadView.setVisibility(View.GONE);
         mRefreshLayout.setRefreshing(false);
+        mAdapter.loadMoreComplete();
+    }
+
+    protected void loadFailed() {
+        mLoadView.setVisibility(View.VISIBLE);
+        mRefreshLayout.setRefreshing(false);
+        if (mPage == 1) {
+            mLoadView.loadFail();
+        } else {
+            mAdapter.loadMoreFail();
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     protected void setManager() {

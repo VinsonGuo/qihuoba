@@ -82,7 +82,7 @@ public class AuthInfoActivity extends BaseActivity {
 
         // 已经设置过实名认证，显示设置过的值
         UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
-        if(userInfo != null && userInfo.isIdentityAuth()) {
+        if(userInfo != null && !TextUtils.isEmpty(userInfo.getIdcard())) {
             riName.setText(userInfo.getName());
             riCard.setText(userInfo.getIdcard());
             riName.setEditable(false);

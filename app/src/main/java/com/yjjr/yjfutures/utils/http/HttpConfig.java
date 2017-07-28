@@ -58,4 +58,6 @@ public class HttpConfig {
     public static final String URL_POLICY = "http://www.qihuofa.com:9100/serviceInfo/policy.html";
     public static final String URL_SERVICE = "http://www.qihuofa.com:9100/serviceInfo/service.html";
     public static final String URL_SUPERVISE = "http://www.qihuofa.com:9100/serviceInfo/supervise.html";
+
+    public static final String URL_RULE = "http://www.qihuofa.com:9100/serviceInfo/%srules.html";
 }

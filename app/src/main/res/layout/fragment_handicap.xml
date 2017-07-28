@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/second_text_color"
+            android:textColor="@color/main_color_red"
             android:textSize="@dimen/sp_14"
             tools:text="123456"/>
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:textColor="@color/second_text_color"
+            android:textColor="@color/main_color_red"
             android:textSize="@dimen/sp_14"
             tools:text="123456"/>
     </LinearLayout>
@@ -71,7 +71,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/second_text_color"
+            android:textColor="@color/main_color_red"
             android:textSize="@dimen/sp_14"
             tools:text="1234"/>
 
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:textColor="@color/second_text_color"
+            android:textColor="@color/main_color_red"
             android:textSize="@dimen/sp_14"
             tools:text="123456"/>
     </LinearLayout>
@@ -115,7 +115,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/second_text_color"
+            android:textColor="@color/main_color_red"
             android:textSize="@dimen/sp_14"
             tools:text="123456"/>
 
@@ -134,7 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:textColor="@color/second_text_color"
+            android:textColor="@color/main_color_red"
             android:textSize="@dimen/sp_14"
             tools:text="123456"/>
     </LinearLayout>
@@ -159,7 +159,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/second_text_color"
+            android:textColor="@color/third_text_color"
             android:textSize="@dimen/sp_14"
             tools:text="123456"/>
 

@@ -14,6 +14,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
@@ -46,13 +47,13 @@ public class AlterLoginPwdActivity extends BaseActivity {
         headerView.bindActivity(mContext);
         final Button btnConfirm = (Button) findViewById(R.id.btn_confirm);
         EditText etPassword = riPwd.getEtInput();
-        if(mType == TYPE_TRADE_PWD) {
+        if (mType == TYPE_TRADE_PWD) {
             headerView.setMainTitle(R.string.alter_trade_password);
             riPwd.setName("输入密码");
             etPassword.setHint("请输入原交易密码");
         }
         etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        etPassword.addTextChangedListener(new TextWatcherAdapter(){
+        etPassword.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 btnConfirm.setSelected(!TextUtils.isEmpty(s));
@@ -61,7 +62,14 @@ public class AlterLoginPwdActivity extends BaseActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(btnConfirm.isSelected()) {
+                if (btnConfirm.isSelected()) {
+                    if (mType == AlterLoginPwdActivity.TYPE_TRADE_PWD) {
+                        // 交易密码必须为6位
+                        if (riPwd.getValue().length() != 6) {
+                            ToastUtils.show(mContext, "交易密码必须为6位");
+                            return;
+                        }
+                    }
                     AlterLoginPwdActivity2.startActivity(mContext, riPwd.getValue(), mType);
                 }
             }

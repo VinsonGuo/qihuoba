@@ -66,8 +66,6 @@ public class HelpCenterActivity extends BaseActivity implements View.OnClickList
             case R.id.tv9:
                 WebActivity.startActivity(mContext, HttpConfig.URL_SUPERVISE);
                 break;
-
-
         }
     }
 }

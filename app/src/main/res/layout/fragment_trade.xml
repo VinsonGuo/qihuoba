@@ -313,7 +313,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
             android:textColor="@color/main_text_color"
-            android:textSize="30sp"/>
+            android:textSize="28sp"/>
 
         <TextView
             android:id="@+id/tv_right_arrow"
@@ -322,7 +322,7 @@
             android:layout_gravity="center_vertical|right"
             android:layout_marginRight="20dp"
             android:textColor="@color/main_text_color"
-            android:textSize="30sp"/>
+            android:textSize="28sp"/>
 
         <TextView
             android:id="@+id/tv_center"

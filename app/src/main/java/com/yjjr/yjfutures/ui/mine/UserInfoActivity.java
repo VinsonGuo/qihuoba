@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -45,10 +46,12 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         if(userInfo.isExistPayPwd()) {
             mTvPwd.setText(R.string.modify);
         }
-        if(userInfo.isIdentityAuth()) {
+        if(!TextUtils.isEmpty(userInfo.getIdcard())) {
             mTvName.setText(userInfo.getName());
         }
-        // // TODO: 2017/7/27 验证是否有支付宝账户
+        if(!TextUtils.isEmpty(userInfo.getAlipay())) {
+            mTvCard.setText(R.string.modify);
+        }
     }
 
     @Override
@@ -57,7 +60,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
         if(userInfo == null) return;
         switch (v.getId()) {
             case R.id.tv_auth:
-                if(userInfo.isIdentityAuth()) {
+                if(!TextUtils.isEmpty(userInfo.getIdcard())) {
                     AuthInfoActivity.startActivity(mContext);
                 }else {
                     AuthActivity.startActivity(mContext);

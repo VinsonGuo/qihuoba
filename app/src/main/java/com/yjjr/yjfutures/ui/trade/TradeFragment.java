@@ -31,12 +31,14 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
+import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
@@ -147,8 +149,14 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
-        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        final Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         findViews(v);
+        mHeaderView.setOperateClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WebActivity.startActivity(mContext, String.format(HttpConfig.URL_RULE, StringUtils.getRuleName(quote)));
+            }
+        });
         mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol);
         Fragment[] fragments = {/*TickChartFragment.newInstance(mSymbol)*/new Fragment(), TimeSharingplanFragment.newInstance(mSymbol),
                 mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol)};
@@ -184,7 +192,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         menuItems.add(new MenuItem(R.drawable.transport, "1小时"));
         menuItems.add(new MenuItem(R.drawable.transport, "日线"));
         mTopRightMenu
-                .setWidth(220)      //默认宽度wrap_content
+                .setWidth(DisplayUtils.dip2px(mContext, 100))      //默认宽度wrap_content
                 .setHeight(DisplayUtils.dip2px(mContext, 30 * menuItems.size()))
                 .showIcon(false)     //显示菜单图标，默认为true
                 .dimBackground(true)        //背景变暗，默认为true
@@ -407,7 +415,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 DepositActivity.startActivity(mContext);
                 break;
             case R.id.tv_kchart:
-                mTopRightMenu.showAsDropDown(mTvKchart,0, DisplayUtils.dip2px(mContext, 10));
+                mTopRightMenu.showAsDropDown(mTvKchart, 0, DisplayUtils.dip2px(mContext, 10));
                 break;
         }
     }

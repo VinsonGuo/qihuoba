@@ -15,9 +15,9 @@ public class UserInfo {
     private String account;
     private String name;
     private String password;
+    private String alipay;
     private String mobileNo;
     private String idcard;
-    private boolean identityAuth;
     private boolean existPayPwd;
 
 
@@ -45,14 +45,6 @@ public class UserInfo {
         this.password = password;
     }
 
-    public boolean isIdentityAuth() {
-        return identityAuth;
-    }
-
-    public void setIdentityAuth(boolean identityAuth) {
-        this.identityAuth = identityAuth;
-    }
-
     public boolean isExistPayPwd() {
         return existPayPwd;
     }
@@ -77,15 +69,23 @@ public class UserInfo {
         this.mobileNo = mobileNo;
     }
 
+    public String getAlipay() {
+        return alipay;
+    }
+
+    public void setAlipay(String alipay) {
+        this.alipay = alipay;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
                 "account='" + account + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
+                ", alipay='" + alipay + '\'' +
                 ", mobileNo='" + mobileNo + '\'' +
                 ", idcard='" + idcard + '\'' +
-                ", identityAuth=" + identityAuth +
                 ", existPayPwd=" + existPayPwd +
                 '}';
     }

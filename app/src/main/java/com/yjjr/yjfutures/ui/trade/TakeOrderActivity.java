@@ -116,6 +116,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                 btnConfirm.setSelected(isChecked);
             }
         });
+        cbCheck.setChecked(true);
         btnConfirm.setOnClickListener(this);
         findViewById(R.id.tv_agreement).setOnClickListener(this);
         requestData();

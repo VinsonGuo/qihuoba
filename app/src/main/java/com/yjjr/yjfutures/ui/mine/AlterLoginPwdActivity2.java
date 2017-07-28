@@ -88,6 +88,12 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
                 if(type == AlterLoginPwdActivity.TYPE_LOGIN_PWD) {
                     findLoginPwd(newPwd, oldPwd, btnConfirm);
                 }else if(type == AlterLoginPwdActivity.TYPE_TRADE_PWD){
+                    // 交易密码必须为6位
+                    if(newPwd.length() != 6 || oldPwd.length() != 6) {
+                        ToastUtils.show(mContext, "交易密码必须为6位");
+                        btnConfirm.setSelected(true);
+                        return;
+                    }
                     findTradePwd(newPwd, oldPwd, btnConfirm);
                 }
             }

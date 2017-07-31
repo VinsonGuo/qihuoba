@@ -51,6 +51,7 @@
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/common_btn_text_size"
         android:layout_marginTop="@dimen/root_padding_15"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"

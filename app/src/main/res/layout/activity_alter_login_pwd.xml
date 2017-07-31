@@ -33,6 +33,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"
+        android:textSize="@dimen/common_btn_text_size"
         android:textColor="@color/selector_common_btn_text_color"
         android:background="@drawable/selector_common_btn_bg"
         android:text="@string/next_step"/>

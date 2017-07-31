@@ -47,7 +47,7 @@ public class HttpManager {
         if (sBizRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sBizRetrofit = new Retrofit.Builder()
-                    .baseUrl(HttpConfig.DOMAIN + ":9300/service/")
+                    .baseUrl(HttpConfig.BIZ_HOST + "/service/")
                     .client(client)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())

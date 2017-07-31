@@ -7,10 +7,13 @@ import com.yjjr.yjfutures.model.biz.CashRecord;
 import com.yjjr.yjfutures.model.biz.ChargeResult;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Funds;
+import com.yjjr.yjfutures.model.biz.Info;
 import com.yjjr.yjfutures.model.biz.PageResponse;
 import com.yjjr.yjfutures.model.biz.Update;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.model.biz.NumberResult;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -64,6 +67,9 @@ public interface BizService {
 
     @GET("dictionary/RECHARGE_ACCOUNT")
     Observable<BizResponse<ChargeResult>> getChargeInfo();
+
+    @GET("dictionary/list/BANNER_IMG")
+    Observable<BizResponse<List<Info>>> getBanner();
 
     @FormUrlEncoded
     @POST("user/validPayPwd")

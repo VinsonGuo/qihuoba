@@ -53,7 +53,6 @@ public class HomePageListFragment extends ListFragment<Quote> implements View.On
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                TradeActivity.startActivity(mContext,"USD");
             }
         });
 
@@ -71,7 +70,6 @@ public class HomePageListFragment extends ListFragment<Quote> implements View.On
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.tv_title1) {
-            TradeActivity.startActivity(mContext,"Test");
         }
     }
 }

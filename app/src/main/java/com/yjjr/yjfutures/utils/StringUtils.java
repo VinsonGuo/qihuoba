@@ -18,18 +18,17 @@ package com.yjjr.yjfutures.utils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Base64;
 import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.Quote;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.regex.Matcher;
@@ -493,7 +492,12 @@ public class StringUtils {
     }
 
     public static CharSequence formatUnrealizePL(Context context, double unrealizedPL) {
-        int color =  unrealizedPL < 0 ? R.color.main_color_green : R.color.main_color_red;
+        int color = unrealizedPL < 0 ? R.color.main_color_green : R.color.main_color_red;
         return SpannableUtil.getStringByColor(context, DoubleUtil.format2Decimal(unrealizedPL), color);
+    }
+
+    public static String randomTrader() {
+        String s = Base64.encodeToString(String.valueOf(System.currentTimeMillis()).getBytes(), Base64.DEFAULT);
+        return s.substring(s.length() - 9, s.length() - 3).toUpperCase();
     }
 }

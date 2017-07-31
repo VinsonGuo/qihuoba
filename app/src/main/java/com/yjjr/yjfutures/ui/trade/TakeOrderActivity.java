@@ -33,6 +33,7 @@ import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -66,11 +67,13 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     private TextView mTvExchange;
     private TextView mTvPrice;
     private String mBuySell;
+    private boolean mIsDemo;
 
-    public static void startActivity(Context context, String symbol, int type) {
+    public static void startActivity(Context context, String symbol, int type, boolean isDemo) {
         Intent intent = new Intent(context, TakeOrderActivity.class);
         intent.putExtra(Constants.CONTENT_PARAMETER, symbol);
         intent.putExtra(Constants.CONTENT_PARAMETER_2, type);
+        intent.putExtra(Constants.CONTENT_PARAMETER_3, isDemo);
         context.startActivity(intent);
     }
 
@@ -81,6 +84,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         Intent intent = getIntent();
         mSymbol = intent.getStringExtra(Constants.CONTENT_PARAMETER);
         mType = intent.getIntExtra(Constants.CONTENT_PARAMETER_2, TYPE_BUY);
+        mIsDemo = intent.getBooleanExtra(Constants.CONTENT_PARAMETER_3, false);
         mBuySell = mType == TYPE_BUY ? "买入" : "卖出";
         mDialog = new CustomPromptDialog.Builder(mContext)
                 .setMessage(mBuySell + "委托成功")
@@ -102,6 +106,8 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         mTvExchange = (TextView) findViewById(R.id.tv_exchange);
         mRgHand = (RadioGroup) findViewById(R.id.rg_hand);
         mRgSl = (RadioGroup) findViewById(R.id.rg_sl);
+        TextView tvDesc = (TextView) findViewById(R.id.tv_desc);
+        tvDesc.setText(mIsDemo?"操纵盘，实盘交易实时为您自动匹配合作投资人，执行您的指令，并与您共享收益共担风险。": StringUtils.randomTrader()+"为您本笔交易合作投资人，执行您的交易指令，并与您共享收益共担风险。");
         mRgSl.setOnCheckedChangeListener(this);
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(false);
@@ -109,6 +115,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         headerView.bindActivity(mContext);
         headerView.setMainTitle(mBuySell + "委托");
         final Button btnConfirm = (Button) findViewById(R.id.btn_confirm);
+        btnConfirm.setText(mType == TYPE_BUY ? "确定买涨" : "确定买跌");
         AppCompatCheckBox cbCheck = (AppCompatCheckBox) findViewById(R.id.cb_check);
         cbCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -164,6 +171,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                         for (Map.Entry<String, Double> next : map.entrySet()) {
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
                         }
+                        ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
                         mTvTradeFee.setText(DoubleUtil.formatDecimal(result.getTransactionFee()));
                         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
                         mTvExchange.setText(mSymbol + "按" + quote.getCurrency() + "交易，平台按人民币结算，汇率为" + result.getCnyExchangeRate());

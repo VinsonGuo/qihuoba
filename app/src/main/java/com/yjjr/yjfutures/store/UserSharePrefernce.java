@@ -20,7 +20,6 @@ public class UserSharePrefernce {
     public static final String IS_LOGIN = "is_login";
     public static final String ACCOUNT = "account";
     public static final String IS_REAL_ACCOUNT = "is_real_account";
-    public static final String IS_NEED_SHOW_GUIDE = "is_need_show_guide";
     public static final String TOKEN = "token";
     public static final String PASSWORD = "password";
     public static final String ACCOUNT_INFO = "account_info";
@@ -72,20 +71,6 @@ public class UserSharePrefernce {
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
                 Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(IS_REAL_ACCOUNT, false);
-    }
-
-    public static void setNeedShowGuide(Context ctx, boolean token) {
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(IS_NEED_SHOW_GUIDE, token);
-        editor.apply();
-    }
-
-    public static boolean isNeedShowGuide(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(TOKEN_SHAREPREF_NAME,
-                Context.MODE_PRIVATE);
-        return sharedPreferences.getBoolean(IS_NEED_SHOW_GUIDE, true);
     }
 
 

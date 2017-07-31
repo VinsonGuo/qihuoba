@@ -73,7 +73,7 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        TradeActivity.startActivity(mContext, mAdapter.getData().get(position).getSymbol());
+        TradeActivity.startActivity(mContext, mAdapter.getData().get(position).getSymbol(), !mShowTitle);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

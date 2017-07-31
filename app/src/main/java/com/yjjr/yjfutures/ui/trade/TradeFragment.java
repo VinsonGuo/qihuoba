@@ -403,7 +403,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     //快速下单
                     takeOrder(fastTakeOrder, "买入");
                 } else {
-                    TakeOrderActivity.startActivity(mContext, mSymbol, TakeOrderActivity.TYPE_BUY);
+                    TakeOrderActivity.startActivity(mContext, mSymbol, TakeOrderActivity.TYPE_BUY, mIsDemo);
                 }
                 break;
             case R.id.tv_right:
@@ -411,7 +411,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     //快速下单
                     takeOrder(fastTakeOrder, "卖出");
                 } else {
-                    TakeOrderActivity.startActivity(mContext, mSymbol, TakeOrderActivity.TYPE_SELL);
+                    TakeOrderActivity.startActivity(mContext, mSymbol, TakeOrderActivity.TYPE_SELL, mIsDemo);
                 }
                 break;
             case R.id.tv_center:

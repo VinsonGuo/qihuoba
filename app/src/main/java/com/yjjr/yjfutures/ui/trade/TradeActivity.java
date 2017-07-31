@@ -15,9 +15,10 @@ import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
 public class TradeActivity extends BaseActivity {
 
-    public static void startActivity(Context context, String symbol) {
+    public static void startActivity(Context context, String symbol, boolean isDemo) {
         Intent intent = new Intent(context, TradeActivity.class);
         intent.putExtra(Constants.CONTENT_PARAMETER, symbol);
+        intent.putExtra(Constants.CONTENT_PARAMETER_2, isDemo);
         context.startActivity(intent);
     }
 
@@ -26,8 +27,9 @@ public class TradeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trade);
         String symbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
+        boolean isDemo = getIntent().getBooleanExtra(Constants.CONTENT_PARAMETER_2, false);
         final NoTouchScrollViewpager viewpager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
-        Fragment[] fragments = {TradeFragment.newInstance(false, symbol), new OrderFragment()};
+        Fragment[] fragments = {TradeFragment.newInstance(isDemo, symbol), new OrderFragment()};
         viewpager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         RadioGroup rgNav = (RadioGroup) findViewById(R.id.rg_nav);
         rgNav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

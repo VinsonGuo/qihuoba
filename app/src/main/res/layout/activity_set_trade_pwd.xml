@@ -48,6 +48,7 @@
         android:layout_marginBottom="14dp"
         android:layout_marginLeft="@dimen/root_padding_15"
         android:layout_marginRight="@dimen/root_padding_15"
+        android:textSize="@dimen/common_btn_text_size"
         android:background="@drawable/selector_common_btn_bg"
         android:textColor="@color/selector_common_btn_text_color"
         android:layout_width="match_parent"

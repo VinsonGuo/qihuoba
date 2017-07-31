@@ -39,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:textSize="@dimen/common_btn_text_size"
         android:background="@drawable/selector_common_btn_bg"
         android:text="@string/login"
         android:textColor="@color/selector_common_btn_text_color"/>

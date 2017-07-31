@@ -302,7 +302,7 @@
         android:paddingLeft="70dp"
         android:paddingRight="70dp"
         android:text="@string/fast_order"
-        android:textSize="18sp"/>
+        android:textSize="@dimen/common_btn_text_size"/>
 
     <LinearLayout
         android:layout_width="match_parent"

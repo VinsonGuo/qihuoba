@@ -24,6 +24,7 @@ import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Info;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
@@ -59,7 +60,7 @@ import io.reactivex.functions.Function;
 public class HomePageFragment extends BaseFragment implements View.OnClickListener {
 
 
-    private ConvenientBanner<String> mBanner;
+    private ConvenientBanner<Info> mBanner;
     private HomePageAdapter mAdapter;
     private CustomPromptDialog mCustomServiceDialog;
     private LoadingView mLoadingView;
@@ -93,28 +94,17 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         }
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new HomePageAdapter(null);
-        List<String> images = new ArrayList<>();
-        images.add("http://static.rong360.com/gl/uploads/160408/128-16040Q4452CV.jpg");
-        images.add("http://p3.ifengimg.com/a/2016_47/a03456cb56dc1ad_size158_w538_h300.jpg");
-        images.add("http://pic.pimg.tw/chihlee8182/1429852839-2894784929.jpg");
         View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, rvList, false);
-        mBanner = (ConvenientBanner<String>) headerView.findViewById(R.id.banner);
+        mBanner = (ConvenientBanner<Info>) headerView.findViewById(R.id.banner);
         headerView.findViewById(R.id.tv_title1).setOnClickListener(this);
         headerView.findViewById(R.id.tv_title2).setOnClickListener(this);
         headerView.findViewById(R.id.tv_title3).setOnClickListener(this);
-        mBanner.setPages(new CBViewHolderCreator() {
-            @Override
-            public Object createHolder() {
-                return new ImageHolderView();
-            }
-        }, images);
-
 
         mAdapter.addHeaderView(headerView);
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                TradeActivity.startActivity(mContext, mAdapter.getData().get(position).getSymbol());
+                TradeActivity.startActivity(mContext, mAdapter.getData().get(position).getSymbol(), false);
             }
         });
         rvList.setAdapter(mAdapter);
@@ -242,6 +232,23 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         }
                     });
         }
+        //获得banner
+        HttpManager.getBizService().getBanner()
+                .compose(RxUtils.<BizResponse<List<Info>>>applyBizSchedulers())
+                .compose(this.<BizResponse<List<Info>>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<List<Info>>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<List<Info>> listBizResponse) throws Exception {
+                        List<Info> images = new ArrayList<>();
+                        images.addAll(listBizResponse.getResult());
+                        mBanner.setPages(new CBViewHolderCreator() {
+                            @Override
+                            public Object createHolder() {
+                                return new ImageHolderView();
+                            }
+                        }, images);
+                    }
+                }, RxUtils.commonErrorConsumer());
     }
 
     @Override
@@ -270,7 +277,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 DemoTradeActivity.startActivity(mContext);
                 break;
             case R.id.tv_title2:
-                WebActivity.startActivity(mContext, HttpConfig.URL_SUPERVISE);
+                WebActivity.startActivity(mContext, HttpConfig.URL_QUALIFICATION);
                 break;
             case R.id.tv_title3:
                 WebActivity.startActivity(mContext, HttpConfig.URL_DISCLOSURE);
@@ -291,7 +298,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         EventBus.getDefault().unregister(this);
     }
 
-    public class ImageHolderView implements Holder<String> {
+    public class ImageHolderView implements Holder<Info> {
         private ImageView imageView;
 
         @Override
@@ -302,8 +309,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         }
 
         @Override
-        public void UpdateUI(Context context, final int position, String data) {
-            ImageLoader.load(context, data, imageView);
+        public void UpdateUI(Context context, final int position, Info data) {
+            ImageLoader.load(context, HttpConfig.BIZ_HOST + data.getName(), imageView);
         }
     }
 }

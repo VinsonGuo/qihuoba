@@ -7,12 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.store.ConfigSharePrefernce;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.MainActivity;
+import com.yjjr.yjfutures.widget.CustomPromptDialog;
 
 public class GuideFragment extends BaseFragment implements View.OnClickListener {
 
@@ -80,7 +83,7 @@ public class GuideFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        UserSharePrefernce.setNeedShowGuide(mContext, false);
+        ConfigSharePrefernce.setVersionCode(mContext, BuildConfig.VERSION_CODE);
         if (BaseApplication.getInstance().isLogin()) {
             MainActivity.startActivity(mContext);
         } else {

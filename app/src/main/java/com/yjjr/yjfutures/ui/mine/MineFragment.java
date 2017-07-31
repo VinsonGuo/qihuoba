@@ -11,8 +11,11 @@ import android.widget.TextView;
 
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
+import com.yjjr.yjfutures.model.biz.UserInfo;
+import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DepositActivity;
@@ -23,6 +26,10 @@ import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -60,9 +67,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             @Override
                             public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
                                 Funds result = fundsBizResponse.getResult();
-                                tvYue.setText(DoubleUtil.format2Decimal(result.getAvailableFunds()));
-                                tvMargin.setText(DoubleUtil.format2Decimal(result.getFrozenMargin()));
-                                tvNet.setText(DoubleUtil.format2Decimal(result.getNetAssets()));
+                                tvYue.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getAvailableFunds()));
+                                tvMargin.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getFrozenMargin()));
+                                tvNet.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getNetAssets()));
                                 refresh.setRefreshing(false);
                             }
                         }, new Consumer<Throwable>() {
@@ -84,6 +91,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_mine, container, false);
+        EventBus.getDefault().register(this);
         mCustomServiceDialog = DialogUtils.createCustomServiceDialog(mContext);
         findViews(v);
         v.findViewById(R.id.btn_login).setOnClickListener(this);
@@ -105,15 +113,22 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
                         Funds result = fundsBizResponse.getResult();
-                        tvYue.setText(DoubleUtil.format2Decimal(result.getAvailableFunds()));
-                        tvMargin.setText(DoubleUtil.format2Decimal(result.getFrozenMargin()));
-                        tvNet.setText(DoubleUtil.format2Decimal(result.getNetAssets()));
+                        tvYue.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getAvailableFunds()));
+                        tvMargin.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getFrozenMargin()));
+                        tvNet.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getNetAssets()));
                     }
                 }, RxUtils.commonErrorConsumer());
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(SendOrderEvent event) {
+        initData();
+    }
+
     @Override
     public void onClick(View v) {
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if(userInfo == null) return;
         switch (v.getId()) {
             case R.id.btn_login:
                 LoginActivity.startActivity(mContext);
@@ -140,11 +155,21 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 DepositActivity.startActivity(mContext);
                 break;
             case R.id.btn_withdraw:
-                WithdrawActivity.startActivity(mContext);
+                if(userInfo.isExistPayPwd()) {
+                    WithdrawActivity.startActivity(mContext);
+                }else {
+                    SetTradePwdActivity.startActivity(mContext);
+                }
                 break;
             case R.id.tv_customer_service:
                 mCustomServiceDialog.show();
                 break;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -32,19 +32,19 @@
 
         <ImageView
             android:id="@+id/iv_alipay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="@dimen/root_padding_15"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="@dimen/root_padding_15"
             android:src="@drawable/ic_alipay"/>
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_alignTop="@id/iv_alipay"
             android:layout_toRightOf="@id/iv_alipay"
             android:text="支付宝转账"
             android:textColor="@color/main_text_color"
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_title"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/iv_alipay"
             android:text="手机支付，免手续费"
             android:textColor="@color/second_text_color"
@@ -101,5 +101,32 @@
         android:background="@drawable/selector_common_btn_bg"
         android:text="@string/next_step"
         android:textColor="@color/selector_common_btn_text_color"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/root_padding_15"
+        android:gravity="center"
+        android:text="到账时间"
+        android:textColor="@color/second_text_color"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/root_padding_10"
+        android:gravity="center"
+        android:text="09:00-24:00 (30分钟内到账)\n24点以后 (次日09:00前到账)"
+        android:textColor="@color/second_text_color"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/tv_contact_service"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="如需急转账，请"
+        android:textColor="@color/second_text_color"
+        android:textSize="12sp"/>
 
 </LinearLayout>

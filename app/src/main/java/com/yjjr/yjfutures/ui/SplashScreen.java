@@ -22,7 +22,6 @@ import com.yjjr.yjfutures.ui.mine.GuideActivity;
 import com.yjjr.yjfutures.ui.mine.LoginActivity;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SystemBarHelper;
-import com.yjjr.yjfutures.utils.http.BizService;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 
@@ -53,7 +52,9 @@ public class SplashScreen extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                checkPermissions();
+                if (!isFinishing()) {
+                    checkPermissions();
+                }
             }
         }, SPLASH_DISPLAY_LENGTH);
         requestData();
@@ -72,7 +73,7 @@ public class SplashScreen extends BaseActivity {
                         HttpConfig.QQ = result.getQq().getName();
                         HttpConfig.COMPLAINT_PHONE = result.getComplaintPhone().getName();
                     }
-                },RxUtils.commonErrorConsumer());
+                }, RxUtils.commonErrorConsumer());
     }
 
     /**
@@ -122,6 +123,9 @@ public class SplashScreen extends BaseActivity {
     }
 
     private void startActivity() {
+        if (isFinishing()) {
+            return;
+        }
         if (UserSharePrefernce.isNeedShowGuide(mContext)) {
             GuideActivity.startActivity(mContext);
         } else {

@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 
 import java.util.HashMap;
@@ -59,16 +60,20 @@ public class HomePageAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, Quote item) {
-        String title = StringUtils.getRuleName(item);
-        helper.setText(R.id.tv_title, item.getSymbolname())
-                .setText(R.id.tv_desc, item.getSymbol())
-                .setText(R.id.tv_icon, title);
-        int colorIndex = (helper.getLayoutPosition() - getHeaderLayoutCount()) % (colors.length - 1);
-        helper.setTextColor(R.id.tv_icon, colors[colorIndex]);
-        TextView tvInfo = helper.getView(R.id.tv_info);
-        double change = item.getChangeRate();
-        String changeText = change == 0 ? "-" : DoubleUtil.format2Decimal(change) + "%";
-        tvInfo.setText(DoubleUtil.formatDecimal(item.getLastPrice()) + "\n" + changeText);
-        tvInfo.setTextColor(ContextCompat.getColor(mContext, change > 0 ? R.color.main_color_red : R.color.main_color_green));
+        try {
+            String title = StringUtils.getRuleName(item);
+            helper.setText(R.id.tv_title, item.getSymbolname())
+                    .setText(R.id.tv_desc, item.getSymbol())
+                    .setText(R.id.tv_icon, title);
+            int colorIndex = (helper.getLayoutPosition() - getHeaderLayoutCount()) % (colors.length - 1);
+            helper.setTextColor(R.id.tv_icon, colors[colorIndex]);
+            TextView tvInfo = helper.getView(R.id.tv_info);
+            double change = item.getChangeRate();
+            String changeText = change == 0 ? "-" : DoubleUtil.format2Decimal(change) + "%";
+            tvInfo.setText(DoubleUtil.formatDecimal(item.getLastPrice()) + "\n" + changeText);
+            tvInfo.setTextColor(ContextCompat.getColor(mContext, change > 0 ? R.color.main_color_red : R.color.main_color_green));
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
     }
 }

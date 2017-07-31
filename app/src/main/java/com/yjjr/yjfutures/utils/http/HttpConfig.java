@@ -7,7 +7,8 @@ package com.yjjr.yjfutures.utils.http;
 
 public class HttpConfig {
 
-    public static final String DOMAIN = "http://www.qihuofa.com";
+    //    public static final String DOMAIN = "http://www.qihuofa.com";
+    public static final String DOMAIN = "https://dev.qihuofa.com";
 
     /**
      * 手机号码的正则
@@ -17,18 +18,6 @@ public class HttpConfig {
      * 发送验证码的重试时间
      */
     public static final long SMS_TIME = 60 * 1000;
-
-    public static String ALIPAY_ACCOUNT_CODE = "FKX02544EKPFEEKPCQSYC8";
-    /**
-     * 客服电话
-     */
-    public static String SERVICE_PHONE = "400-005-800";
-    public static String QQ = "888666888";
-    /**
-     * 投诉电话
-     */
-    public static String COMPLAINT_PHONE = "0755-68888628";
-
     /**
      * 《期货吧用户服务协议》
      * http://www.qihuofa.com:9100/serviceInfo/agreement.html
@@ -49,15 +38,24 @@ public class HttpConfig {
      * 《相关监管》
      * http://www.qihuofa.com:9100/serviceInfo/supervise.html
      */
-    public static final String URL_AGREEMENT = "http://www.qihuofa.com:9100/serviceInfo/agreement.html";
-    public static final String URL_AGREEMENT1 = "http://www.qihuofa.com:9100/serviceInfo/agreement1.html";
-    public static final String URL_AGREEMENT2 = "http://www.qihuofa.com:9100/serviceInfo/agreement2.html";
-    public static final String URL_AGREEMENT3 = "http://www.qihuofa.com:9100/serviceInfo/agreement3.html";
-    public static final String URL_DISCLAIMER = "http://www.qihuofa.com:9100/serviceInfo/disclaimer.html";
-    public static final String URL_DISCLOSURE = "http://www.qihuofa.com:9100/serviceInfo/disclosure.html";
-    public static final String URL_POLICY = "http://www.qihuofa.com:9100/serviceInfo/policy.html";
-    public static final String URL_SERVICE = "http://www.qihuofa.com:9100/serviceInfo/service.html";
-    public static final String URL_SUPERVISE = "http://www.qihuofa.com:9100/serviceInfo/supervise.html";
-
-    public static final String URL_RULE = "http://www.qihuofa.com:9100/serviceInfo/%srules.html";
+    public static final String URL_AGREEMENT = DOMAIN + ":9100/serviceInfo/agreement.html";
+    public static final String URL_AGREEMENT1 = DOMAIN + ":9100/serviceInfo/agreement1.html";
+    public static final String URL_AGREEMENT2 = DOMAIN + ":9100/serviceInfo/agreement2.html";
+    public static final String URL_AGREEMENT3 = DOMAIN + ":9100/serviceInfo/agreement3.html";
+    public static final String URL_DISCLAIMER = DOMAIN + ":9100/serviceInfo/disclaimer.html";
+    public static final String URL_DISCLOSURE = DOMAIN + ":9100/serviceInfo/disclosure.html";
+    public static final String URL_POLICY = DOMAIN + ":9100/serviceInfo/policy.html";
+    public static final String URL_SERVICE = DOMAIN + ":9100/serviceInfo/service.html";
+    public static final String URL_SUPERVISE = DOMAIN + ":9100/serviceInfo/supervise.html";
+    public static final String URL_RULE = DOMAIN + ":9100/serviceInfo/%srules.html";
+    public static String ALIPAY_ACCOUNT_CODE = "FKX02544EKPFEEKPCQSYC8";
+    /**
+     * 客服电话
+     */
+    public static String SERVICE_PHONE = "400-005-800";
+    public static String QQ = "888666888";
+    /**
+     * 投诉电话
+     */
+    public static String COMPLAINT_PHONE = "0755-68888628";
 }

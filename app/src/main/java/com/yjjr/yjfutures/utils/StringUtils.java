@@ -18,6 +18,7 @@ package com.yjjr.yjfutures.utils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -489,5 +490,10 @@ public class StringUtils {
                 break;
         }
         return title;
+    }
+
+    public static CharSequence formatUnrealizePL(Context context, double unrealizedPL) {
+        int color =  unrealizedPL < 0 ? R.color.main_color_green : R.color.main_color_red;
+        return SpannableUtil.getStringByColor(context, DoubleUtil.format2Decimal(unrealizedPL), color);
     }
 }

@@ -67,7 +67,7 @@ public class DoubleUtil {
 
     public static String formatDecimal(Double d) {
         NumberFormat instance = DecimalFormat.getInstance();
-        instance.setMinimumFractionDigits(2);
+        instance.setMinimumFractionDigits(0);
         instance.setMaximumFractionDigits(8);
         return instance.format(d);
     }

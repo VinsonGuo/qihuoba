@@ -64,7 +64,7 @@ import io.reactivex.functions.Predicate;
 
 public class TradeFragment extends BaseFragment implements View.OnClickListener {
 
-    private boolean mIsNeedBack;
+    private boolean mIsDemo;
     private ProgressBar pbLeft;
     private ProgressBar pbRight;
     private TextView tvLeft;
@@ -89,6 +89,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvYueValue;
     private TextView tvMarginValue;
     private TextView tvTotal;
+    private View colorView;
     /**
      * 持仓的对象
      */
@@ -105,10 +106,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         // Required empty public constructor
     }
 
-    public static TradeFragment newInstance(boolean isNeedBack, String symbol) {
+    public static TradeFragment newInstance(boolean isDemo, String symbol) {
         TradeFragment fragment = new TradeFragment();
         Bundle args = new Bundle();
-        args.putBoolean(Constants.CONTENT_PARAMETER, isNeedBack);
+        args.putBoolean(Constants.CONTENT_PARAMETER, isDemo);
         args.putString(Constants.CONTENT_PARAMETER_2, symbol);
         fragment.setArguments(args);
         return fragment;
@@ -119,7 +120,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
         if (getArguments() != null) {
-            mIsNeedBack = getArguments().getBoolean(Constants.CONTENT_PARAMETER);
+            mIsDemo = getArguments().getBoolean(Constants.CONTENT_PARAMETER);
             mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER_2);
         }
         mCloseSuccessDialog = new CustomPromptDialog.Builder(mContext)
@@ -245,10 +246,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         mHeaderView.setMainTitle(quote.getSymbolname());
         double change = quote.getChangeRate();
 //        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", change);
-        tvLeft.setText(leftText + quote.getBidPrice());
+        tvLeft.setText(leftText + DoubleUtil.formatDecimal(quote.getBidPrice()));
         StringUtils.setOnlineTxArrow(tvLeftArrow, change);
 //        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", change);
-        tvRight.setText(quote.getBidPrice() + rightText);
+        tvRight.setText(DoubleUtil.formatDecimal(quote.getBidPrice()) + rightText);
 
         StringUtils.setOnlineTxArrow(tvRightArrow, change);
 
@@ -286,6 +287,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvYueValue = (TextView) v.findViewById(R.id.tv_yue_value);
         tvMarginValue = (TextView) v.findViewById(R.id.tv_margin_value);
         tvTotal = (TextView) v.findViewById(R.id.tv_total);
+        colorView = v.findViewById(R.id.view_color);
         tvPrice = (TextView) v.findViewById(R.id.tv_price);
         tvChange = (TextView) v.findViewById(R.id.tv_change);
         tvChangeRate = (TextView) v.findViewById(R.id.tv_change_rate);
@@ -345,13 +347,17 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         vgSettlement.setVisibility(View.GONE);
                         vgOrder.setVisibility(View.VISIBLE);
                         tvDirection.setText(holding.getBuySell() + Math.abs(holding.getQty()) + "手");
-                        tvTotal.setText("持仓盈亏\n" + DoubleUtil.format2Decimal(holding.getUnrealizedPL()));
+                        tvTotal.setText(TextUtils.concat("持仓盈亏\n", StringUtils.formatUnrealizePL(mContext, holding.getUnrealizedPL())));
                         if (TextUtils.equals(holding.getBuySell(), "买入")) {
                             leftText = "追加";
                             rightText = "平仓";
+                            tvDirection.setTextColor(ContextCompat.getColor(mContext,R.color.main_color_red));
+                            colorView.setBackgroundResource(R.drawable.shape_online_tx_red);
                         } else {
                             leftText = "平仓";
                             rightText = "追加";
+                            tvDirection.setTextColor(ContextCompat.getColor(mContext,R.color.main_color_green));
+                            colorView.setBackgroundResource(R.drawable.shape_online_tx_green);
                         }
                     }
                 }, new Consumer<Throwable>() {

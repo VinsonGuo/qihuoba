@@ -80,12 +80,21 @@
         android:visibility="gone"
         android:padding="@dimen/root_padding_10">
 
+        <View
+            android:id="@+id/view_color"
+            android:background="@drawable/shape_online_tx_green"
+            android:layout_marginTop="4dp"
+            android:layout_width="50dp"
+            android:layout_alignLeft="@+id/tv_direction"
+            android:layout_alignRight="@+id/tv_direction"
+            android:layout_height="10dp"/>
 
         <TextView
             android:id="@+id/tv_direction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_below="@id/view_color"
+            android:layout_marginTop="6dp"
             android:layout_marginLeft="@dimen/root_padding_10"
             android:textColor="@color/main_color_green"
             android:textSize="@dimen/sp_14"
@@ -98,6 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
             tools:text="持仓盈亏\n1000"
             android:textColor="@color/main_text_color"
             android:textSize="@dimen/sp_14"/>

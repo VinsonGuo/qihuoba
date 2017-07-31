@@ -7,12 +7,14 @@ import android.support.v4.app.Fragment;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
+import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Update;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
@@ -20,6 +22,7 @@ import com.yjjr.yjfutures.ui.found.FoundFragment;
 import com.yjjr.yjfutures.ui.home.HomePageFragment;
 import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
 import com.yjjr.yjfutures.ui.mine.MineFragment;
+import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
@@ -55,6 +58,20 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
         initViews();
+        checkUpdate();
+    }
+
+    private void checkUpdate() {
+        HttpManager.getBizService().checkUpdate(BuildConfig.VERSION_NAME)
+                .compose(RxUtils.<BizResponse<Update>>applyBizSchedulers())
+                .compose(this.<BizResponse<Update>>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<Update>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<Update> response) throws Exception {
+                        Update result = response.getResult();
+                        DialogUtils.createUpdateDialog(mContext, result).show();
+                    }
+                }, RxUtils.commonErrorConsumer());
     }
 
     private void initViews() {

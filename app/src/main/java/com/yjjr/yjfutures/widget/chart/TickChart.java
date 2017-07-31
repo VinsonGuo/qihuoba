@@ -33,7 +33,6 @@ public class TickChart extends RelativeLayout {
     private Context mContext;
     private int candleIncreaseColor = getResources().getColor(R.color.third_text_color);
     private int candleGridColor = getResources().getColor(R.color.color_333333);
-    private int digits = 3;
     private int mTextColor = getResources().getColor(R.color.second_text_color);
 
     public TickChart(Context context) {
@@ -114,7 +113,7 @@ public class TickChart extends RelativeLayout {
     }
 
     private void setupSettingParameter() {
-        RealPriceMarkerView mv = new RealPriceMarkerView(mContext, digits);
+        RealPriceMarkerView mv = new RealPriceMarkerView(mContext);
         mChart.setMarker(mv);
 
         mChart.setDescription(null);
@@ -136,13 +135,6 @@ public class TickChart extends RelativeLayout {
         rightAxis.enableGridDashedLine(20, 5, 0);
         rightAxis.setDrawAxisLine(false);
         rightAxis.setDrawGridLines(true);
-        rightAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return DoubleUtil.formatDecimal((double) value, digits);
-            }
-        });
-
         Legend legend = mChart.getLegend();
         legend.setEnabled(false);
 

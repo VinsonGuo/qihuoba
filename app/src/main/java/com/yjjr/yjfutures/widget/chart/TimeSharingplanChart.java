@@ -43,7 +43,6 @@ public class TimeSharingplanChart extends RelativeLayout {
     private int candleIncreaseColor = getResources().getColor(R.color.third_text_color);
     private int candleGridColor = getResources().getColor(R.color.color_333333);
     private int mTextColor = getResources().getColor(R.color.second_text_color);
-    private int digits = 3;
     private boolean isIdle = true;
     private DateTime mStartTime;
     private IAxisValueFormatter xValueFormatter = new IAxisValueFormatter() {
@@ -53,9 +52,8 @@ public class TimeSharingplanChart extends RelativeLayout {
             return DateUtils.formatTime(time.getMillis());
         }
     };
-    public TimeSharingplanChart(Context context,int digits) {
+    public TimeSharingplanChart(Context context) {
         super(context);
-        this.digits = digits;
         init(context);
     }
 
@@ -188,7 +186,7 @@ public class TimeSharingplanChart extends RelativeLayout {
     private void setupSettingParameter() {
         mChart.setDrawGridBackground(false);
         mChart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.chart_background));
-        RealPriceMarkerView mv = new RealPriceMarkerView(mContext, digits);
+        RealPriceMarkerView mv = new RealPriceMarkerView(mContext);
         mv.setChartView(mChart);
         mChart.setMarker(mv);
         mChart.setNoDataText(getContext().getString(R.string.loading));

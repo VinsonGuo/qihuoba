@@ -70,7 +70,7 @@ public class TimeSharingplanFragment extends BaseFragment {
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mQuote = StaticStore.sQuoteMap.get(mSymbol);
-        mChart = new TimeSharingplanChart(mContext, mQuote != null ? StringUtils.getDigitByTick(mQuote.getTick()) : 2);
+        mChart = new TimeSharingplanChart(mContext);
         return mChart;
     }
 
@@ -125,7 +125,7 @@ public class TimeSharingplanFragment extends BaseFragment {
     public void onEvent(RefreshEvent event) {
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         if (mChart != null && quote != null) {
-            mChart.refreshEntry((float) quote.getBidPrice());
+            mChart.refreshEntry((float) quote.getLastPrice());
         }
     }
 

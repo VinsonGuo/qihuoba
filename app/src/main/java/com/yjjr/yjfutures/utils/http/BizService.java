@@ -8,6 +8,7 @@ import com.yjjr.yjfutures.model.biz.ChargeResult;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.PageResponse;
+import com.yjjr.yjfutures.model.biz.Update;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.model.biz.NumberResult;
 
@@ -67,6 +68,10 @@ public interface BizService {
     @FormUrlEncoded
     @POST("user/validPayPwd")
     Observable<BizResponse> validPayPwd(@Field("account") String account, @Field("payPwd") String payPwd);
+
+    @FormUrlEncoded
+    @POST("version/checkUpdate/android")
+    Observable<BizResponse<Update>> checkUpdate(@Field("version") String version);
 
     @FormUrlEncoded
     @POST("trader/getContractInfo")

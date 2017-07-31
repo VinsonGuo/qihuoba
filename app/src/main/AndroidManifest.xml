@@ -45,70 +45,133 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.BigPhotoActivity"/>
-        <activity android:name=".ui.trade.TradeActivity"/>
-        <activity android:name=".ui.mine.LoginActivity">
+        <activity
+            android:name=".ui.BigPhotoActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.trade.TradeActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.mine.LoginActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.trade.TakeOrderActivity">
+        <activity
+            android:name=".ui.trade.TakeOrderActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.trade.OrderActivity">
+        <activity
+            android:name=".ui.trade.OrderActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.trade.FastTakeOrderActivity">
+        <activity
+            android:name=".ui.trade.FastTakeOrderActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.trade.DepositActivity">
+        <activity
+            android:name=".ui.trade.DepositActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.WebActivity">
+        <activity
+            android:name=".ui.WebActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.UploadCardActivity">
+        <activity
+            android:name=".ui.mine.UploadCardActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.trade.OrderDetailActivity">
+        <activity
+            android:name=".ui.trade.OrderDetailActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.trade.SettlementActivity">
+        <activity
+            android:name=".ui.trade.SettlementActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.RegisterActivity">
+        <activity
+            android:name=".ui.mine.RegisterActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.SetTradePwdActivity">
+        <activity
+            android:name=".ui.mine.SetTradePwdActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.UserInfoActivity">
+        <activity
+            android:name=".ui.mine.UserInfoActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.AuthActivity">
+        <activity
+            android:name=".ui.mine.AuthActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.FindPwdActivity">
+        <activity
+            android:name=".ui.mine.FindPwdActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.FundDetailActivity">
+        <activity
+            android:name=".ui.mine.FundDetailActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.AuthInfoActivity">
+        <activity
+            android:name=".ui.mine.AuthInfoActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.AuthSuccessActivity">
+        <activity
+            android:name=".ui.mine.AuthSuccessActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.CommonSuccessActivity">
+        <activity
+            android:name=".ui.mine.CommonSuccessActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.BindCardActivity">
+        <activity
+            android:name=".ui.mine.BindCardActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.AlterPhoneActivity">
+        <activity
+            android:name=".ui.mine.AlterPhoneActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.AlterLoginPwdActivity">
+        <activity
+            android:name=".ui.mine.AlterLoginPwdActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.AlterLoginPwdActivity2">
+        <activity
+            android:name=".ui.mine.AlterLoginPwdActivity2"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ui.mine.InputPayPwdActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="stateVisible">
         </activity>
-        <activity android:name=".ui.mine.SettingActivity">
+        <activity
+            android:name=".ui.mine.SettingActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.trade.AlipayTransferActivity">
+        <activity
+            android:name=".ui.trade.AlipayTransferActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.GuideActivity">
+        <activity
+            android:name=".ui.mine.GuideActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.WithdrawActivity">
+        <activity
+            android:name=".ui.mine.WithdrawActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.WithdrawDetailActivity">
+        <activity
+            android:name=".ui.mine.WithdrawDetailActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.trade.DemoTradeActivity">
+        <activity
+            android:name=".ui.trade.DemoTradeActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.mine.HelpCenterActivity">
+        <activity
+            android:name=".ui.mine.HelpCenterActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

@@ -19,11 +19,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="@dimen/root_padding_15"
-        android:layout_marginTop="8dp"
-        android:text="选择充值方式"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="@string/available_balance"
         android:textColor="@color/main_text_color"
         android:textSize="@dimen/sp_14"/>
+
+    <TextView
+        android:id="@+id/tv_yue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        tools:text="3600"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/third_text_color"
+        android:textSize="@dimen/sp_16"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -59,13 +69,13 @@
             android:layout_marginLeft="@dimen/dp_10"/>
         <ImageView
             android:id="@+id/iv_alipay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_below="@id/divider"
-            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/root_padding_15"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="@dimen/root_padding_15"
             android:src="@drawable/ic_alipay"/>
 
         <TextView
@@ -83,7 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_title"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/iv_alipay"
             android:text="手机支付，免手续费"
             android:textColor="@color/second_text_color"
@@ -103,4 +113,13 @@
         android:background="@drawable/selector_common_btn_bg"
         android:text="@string/confirm"
         android:textColor="@color/selector_common_btn_text_color"/>
+
+    <TextView
+        android:layout_marginTop="@dimen/root_padding_15"
+        android:textColor="@color/second_text_color"
+        android:textSize="12sp"
+        android:text="每日提现次数限2次\n提现处理时间为8:30-17:00\n到账时间以银行为准，节假日延后处理"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

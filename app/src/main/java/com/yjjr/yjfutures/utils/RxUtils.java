@@ -8,12 +8,15 @@ import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.http.HttpManager;
+
+import org.greenrobot.eventbus.EventBus;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -56,13 +59,7 @@ public class RxUtils {
                             @Override
                             public T apply(@NonNull final T t) throws Exception {
                                 if (t.getRcode() == 99) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ToastUtils.show(BaseApplication.getInstance(), t.getRmsg());
-                                            BaseApplication.getInstance().logout(BaseApplication.getInstance());
-                                        }
-                                    });
+                                    EventBus.getDefault().post(new UpdateUserInfoEvent());
                                 }
                                 if (t.getRcode() != 0) {
                                     throw new RuntimeException(t.getRmsg());

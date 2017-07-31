@@ -24,13 +24,11 @@ public class RealPriceMarkerView extends MarkerView {
 
     private int dataSet1Color = getResources().getColor(R.color.main_color_red);
     private int dataSet2Color = getResources().getColor(R.color.main_color);
-    private int digital;
 
 
-    public RealPriceMarkerView(Context context, int digital) {
+    public RealPriceMarkerView(Context context) {
         super(context, R.layout.view_mp_real_price_marker);
         tvContent = (TextView) findViewById(R.id.tvContent);
-        this.digital = digital;
     }
 
     @Override
@@ -39,10 +37,10 @@ public class RealPriceMarkerView extends MarkerView {
         int color = dataIndex == 0 ? dataSet1Color : dataSet2Color;
         tvContent.setBackgroundColor(color);
         float value = e.getY();
-        String parsedValue = null;
-        if (digital > 0)
-            parsedValue = DoubleUtil.formatDecimal((double) value, digital);
-        tvContent.setText(parsedValue);
+//        String parsedValue = null;
+//        if (digital > 0)
+//            parsedValue = DoubleUtil.formatDecimal((double) value, digital);
+        tvContent.setText(value+"");
         super.refreshContent(e, highlight);
     }
 

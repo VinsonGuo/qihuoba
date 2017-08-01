@@ -29,7 +29,7 @@
             <item
                 android:bottom="@dimen/common_divider_small">
                 <shape>
-                    <solid android:color="@color/color_5_ffffff"/>
+                    <solid android:color="@color/color_111111"/>
                 </shape>
             </item>
         </layer-list>

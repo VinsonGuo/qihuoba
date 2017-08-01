@@ -38,13 +38,13 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="15dp"
         android:ellipsize="end"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:gravity="center"
         android:lines="1"
         android:textColor="@color/main_text_color"
-        android:textSize="17sp"
+        android:textSize="13sp"
         />
 </RelativeLayout>

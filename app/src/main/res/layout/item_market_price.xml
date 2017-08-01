@@ -6,7 +6,10 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center"
-    android:padding="@dimen/root_padding_15"
+    android:paddingLeft="@dimen/root_padding_15"
+    android:paddingRight="@dimen/root_padding_15"
+    android:paddingTop="18dp"
+    android:paddingBottom="8dp"
     tools:background="@color/chart_background">
 
     <LinearLayout
@@ -23,7 +26,7 @@
             android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/tv_symbol"
-            android:textSize="@dimen/sp_12"
+            android:textSize="11sp"
             android:textColor="@color/second_text_color"
             tools:text="HS123"
             android:layout_marginTop="4dp"
@@ -37,7 +40,9 @@
         android:layout_weight="1"
         android:textColor="@color/main_color_red"
         android:gravity="center"
-        android:text="12345"
+        android:paddingLeft="@dimen/dp_10"
+        tools:text="12345"
+        android:textSize="@dimen/text_size_15sp"
         android:layout_height="wrap_content"/>
 
     <TextView
@@ -47,6 +52,8 @@
         android:textColor="@color/main_text_color"
         android:gravity="center"
         tools:text="12345"
+        android:paddingLeft="30dp"
+        android:textSize="@dimen/text_size_15sp"
         android:layout_height="wrap_content"/>
 
     <FrameLayout
@@ -63,6 +70,6 @@
             android:background="@drawable/shape_red_border_bg"
             tools:text="+0.22%"
             android:textColor="@color/main_color_red"
-            android:textSize="10sp"/>
+            android:textSize="9sp"/>
     </FrameLayout>
 </LinearLayout>

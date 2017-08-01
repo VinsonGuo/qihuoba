@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
+import com.umeng.analytics.MobclickAgent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.utils.InputMethodUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -90,11 +91,15 @@ public class BaseActivity extends RxAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart(TAG);
+        MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        MobclickAgent.onPageEnd(TAG);
+        MobclickAgent.onPause(this);
     }
 
     @Override

@@ -71,6 +71,9 @@ public interface BizService {
     @GET("dictionary/list/BANNER_IMG")
     Observable<BizResponse<List<Info>>> getBanner();
 
+    @GET("dictionary/list/WELCOME_IMG")
+    Observable<BizResponse<List<Info>>> getWelcomImg();
+
     @FormUrlEncoded
     @POST("user/validPayPwd")
     Observable<BizResponse> validPayPwd(@Field("account") String account, @Field("payPwd") String payPwd);
@@ -82,6 +85,13 @@ public interface BizService {
     @FormUrlEncoded
     @POST("trader/getContractInfo")
     Observable<BizResponse<ContractInfo>> getContractInfo(@Field("symbol") String symbol);
+
+    @FormUrlEncoded
+    @POST("user/rechargeApply")
+    Observable<BizResponse> rechargeApply(@Field("money") String money,@Field("accountType") String accountType);
+    @FormUrlEncoded
+    @POST("user/extractApply")
+    Observable<BizResponse> extractApply(@Field("money") String money,@Field("accountType") String accountType);
 
     @POST("user/queryAssetRecord/{start}/{count}")
     Observable<BizResponse<PageResponse<AssetRecord>>> getAssetRecord(@Path("start") int start,@Path("count") int count);

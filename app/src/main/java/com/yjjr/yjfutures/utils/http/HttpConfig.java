@@ -42,6 +42,8 @@ public class HttpConfig {
      * https://dev.qihuofa.com:9100/serviceInfo/qualification.html
      * 关于我们
      * https://dev.qihuofa.com:9100/serviceInfo/about.html
+     * 新手指导
+     * https://dev.qihuofa.com:9100/serviceInfo/guide.html
      */
     public static final String URL_AGREEMENT = DOMAIN + ":9100/serviceInfo/agreement.html";
     public static final String URL_AGREEMENT1 = DOMAIN + ":9100/serviceInfo/agreement1.html";
@@ -54,6 +56,7 @@ public class HttpConfig {
     public static final String URL_SUPERVISE = DOMAIN + ":9100/serviceInfo/supervise.html";
     public static final String URL_QUALIFICATION = DOMAIN + ":9100/serviceInfo/qualification.html";
     public static final String URL_ABOUT = DOMAIN + ":9100/serviceInfo/about.html";
+    public static final String URL_GUIDE = DOMAIN + ":9100/serviceInfo/guide1.html";
     public static final String URL_RULE = DOMAIN + ":9100/serviceInfo/%srules.html";
 
 

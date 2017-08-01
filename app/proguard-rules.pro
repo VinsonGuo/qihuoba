@@ -48,12 +48,6 @@
  public void *(android.view.View);
 }
 
-
--keepclassmembers enum * {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
-}
-
 -keep class * implements android.os.Parcelable {
   public static final android.os.Parcelable$Creator *;
 }
@@ -171,7 +165,16 @@
 
 -dontwarn org.android.agoo.**
 -keep class org.android.agoo.** {*;}
-
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+-keep public class com.yjjr.yjfutures.R$*{
+public static final int *;
+}
+-keepclassmembers enum * {
+     public static **[] values();
+     public static ** valueOf(java.lang.String);
+ }
 #-dontwarn com.just.library.**
 #-keep com.just.library.** {*;}
 

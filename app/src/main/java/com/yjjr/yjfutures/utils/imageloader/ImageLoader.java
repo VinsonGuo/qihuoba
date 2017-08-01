@@ -18,7 +18,7 @@ import com.bumptech.glide.request.RequestListener;
 public class ImageLoader {
     public static void load(Context context, String url, ImageView imageView) {
         if (TextUtils.isEmpty(url)) return;
-        Glide.with(context).load(Uri.parse(url)).into(imageView);
+        Glide.with(context).load(Uri.parse(url)).dontAnimate().into(imageView);
     }
 
     public static void load(Context context, String url, ImageView imageView, RequestListener<? super Uri, GlideDrawable> listener) {

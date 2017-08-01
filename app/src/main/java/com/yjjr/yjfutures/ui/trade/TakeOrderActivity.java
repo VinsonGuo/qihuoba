@@ -144,13 +144,13 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     private RadioButton createRadioButton(String name, Double tag) {
         RadioButton rb = new RadioButton(mContext);
         ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(DisplayUtils.dip2px(mContext, 46), DisplayUtils.dip2px(mContext, 17));
-        lp.leftMargin = DisplayUtils.dip2px(mContext, 4);
+        lp.leftMargin = DisplayUtils.dip2px(mContext, 8);
         rb.setLayoutParams(lp);
         rb.setBackgroundResource(R.drawable.selector_trade_rb_bg);
         rb.setButtonDrawable(null);
         rb.setGravity(Gravity.CENTER);
         rb.setText(name);
-        rb.setTextColor(ContextCompat.getColor(mContext, R.color.selector_trade_rb_text_color));
+        rb.setTextColor(ContextCompat.getColorStateList(mContext, R.color.selector_trade_rb_text_color));
         rb.setTextSize(12);
         rb.setTag(tag);
         return rb;

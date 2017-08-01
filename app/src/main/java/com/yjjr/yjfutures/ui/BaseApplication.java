@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.facebook.stetho.Stetho;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.analytics.MobclickAgent;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
@@ -51,9 +52,9 @@ public class BaseApplication extends Application implements Application.Activity
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
 //        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
-//        MobclickAgent.enableEncrypt(true);
-//        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
-//        MobclickAgent.setCheckDevice(false);
+        MobclickAgent.enableEncrypt(true);
+        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
+        MobclickAgent.setCheckDevice(false);
     }
 
     @Override

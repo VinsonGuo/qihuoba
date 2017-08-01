@@ -3,7 +3,9 @@ package com.yjjr.yjfutures.utils;
 
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
+import com.umeng.analytics.MobclickAgent;
 import com.yjjr.yjfutures.BuildConfig;
+import com.yjjr.yjfutures.ui.BaseApplication;
 
 public class LogUtils {
     public static void init() {
@@ -24,6 +26,7 @@ public class LogUtils {
 
     public static void e(Throwable throwable) {
         Logger.e(throwable, null);
+        MobclickAgent.reportError(BaseApplication.getInstance(), throwable);
     }
 
     public static void w(String msg, Object... args) {

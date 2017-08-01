@@ -15,6 +15,7 @@ public class Funds {
     private double availableFunds;
     private double frozenMargin;
     private double netAssets;
+    private double extractMoney;
 
     public double getAvailableFunds() {
         return availableFunds;
@@ -40,12 +41,21 @@ public class Funds {
         this.netAssets = netAssets;
     }
 
+    public double getExtractMoney() {
+        return extractMoney;
+    }
+
+    public void setExtractMoney(double extractMoney) {
+        this.extractMoney = extractMoney;
+    }
+
     @Override
     public String toString() {
         return "Funds{" +
                 "availableFunds=" + availableFunds +
                 ", frozenMargin=" + frozenMargin +
                 ", netAssets=" + netAssets +
+                ", extractMoney=" + extractMoney +
                 '}';
     }
 }

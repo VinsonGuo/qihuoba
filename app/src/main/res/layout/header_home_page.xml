@@ -42,7 +42,7 @@
             android:drawablePadding="15dp"
             android:drawableTop="@drawable/ic_home2"
             android:gravity="center"
-            android:text="市场监管"/>
+            android:text="监管资质"/>
 
         <TextView
             android:id="@+id/tv_title3"
@@ -62,8 +62,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/shape_bg_bottom_line_white"
-        android:layout_marginTop="@dimen/dp_10"
-        android:paddingBottom="@dimen/root_padding_10"
+        android:layout_marginTop="12dp"
+        android:paddingBottom="12dp"
         android:gravity="center"
         android:paddingLeft="@dimen/root_padding_15"
         android:paddingTop="@dimen/root_padding_10">
@@ -74,10 +74,10 @@
             android:background="@color/third_text_color"/>
 
         <TextView
-            style="@style/text_color_333333_16sp"
+            android:textColor="@color/color_333333"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_14"
+            android:textSize="@dimen/sp_16"
             android:layout_marginLeft="@dimen/root_padding_10"
             android:text="国际期货"/>
     </LinearLayout>

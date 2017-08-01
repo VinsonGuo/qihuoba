@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -16,6 +17,7 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Info;
 import com.yjjr.yjfutures.model.biz.NumberResult;
 import com.yjjr.yjfutures.store.ConfigSharePrefernce;
 import com.yjjr.yjfutures.ui.mine.GuideActivity;
@@ -24,6 +26,9 @@ import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SystemBarHelper;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
+import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
+
+import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -37,6 +42,7 @@ public class SplashScreen extends BaseActivity {
      * Duration of wait
      **/
     private static final int SPLASH_DISPLAY_LENGTH = 2000;
+    private ImageView mIvSplash;
 
     /**
      * Called when the activity is first created.
@@ -49,6 +55,7 @@ public class SplashScreen extends BaseActivity {
         setContentView(R.layout.splash);
         TextView tvVersion = (TextView) findViewById(R.id.tv_version);
         tvVersion.setText(String.format("V%s", BuildConfig.VERSION_NAME));
+        mIvSplash = (ImageView) findViewById(R.id.iv_splash);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -72,6 +79,16 @@ public class SplashScreen extends BaseActivity {
                         HttpConfig.SERVICE_PHONE = result.getServicePhone().getName();
                         HttpConfig.QQ = result.getQq().getName();
                         HttpConfig.COMPLAINT_PHONE = result.getComplaintPhone().getName();
+                    }
+                }, RxUtils.commonErrorConsumer());
+        HttpManager.getBizService().getWelcomImg()
+                .compose(RxUtils.<BizResponse<List<Info>>>applyBizSchedulers())
+                .compose(this.<BizResponse<List<Info>>>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<List<Info>>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<List<Info>> listBizResponse) throws Exception {
+                        Info info = listBizResponse.getResult().get(0);
+                        ImageLoader.load(mContext, HttpConfig.BIZ_HOST + info.getName(), mIvSplash);
                     }
                 }, RxUtils.commonErrorConsumer());
     }

@@ -109,6 +109,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         });
         rvList.setAdapter(mAdapter);
         v.findViewById(R.id.tv_customer_service).setOnClickListener(this);
+        v.findViewById(R.id.tv_guide).setOnClickListener(this);
         return v;
     }
 
@@ -129,6 +130,9 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         @Override
                         public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
                             if (loginBizResponse.getRcode() != 0) {
+                                if(loginBizResponse.getRcode() == 1) { // 账号密法错误，重新登录
+                                    BaseApplication.getInstance().logout(mContext);
+                                }
                                 throw new RuntimeException("登录失败");
                             }
                             BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
@@ -138,7 +142,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                     .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
                         @Override
                         public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
-                            if (userLoginResponse.getReturnCode() != 1) {
+                            if (userLoginResponse.getReturnCode() != 1) {// 账号密法错误，重新登录
                                 BaseApplication.getInstance().logout(mContext);
                             }
                             BaseApplication.getInstance().setTradeToken(userLoginResponse.getCid());
@@ -272,6 +276,9 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         switch (v.getId()) {
             case R.id.tv_customer_service:
                 mCustomServiceDialog.show();
+                break;
+            case R.id.tv_guide:
+                WebActivity.startActivity(mContext, HttpConfig.URL_GUIDE);
                 break;
             case R.id.tv_title1:
                 DemoTradeActivity.startActivity(mContext);

@@ -19,7 +19,6 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
-import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.chart.TimeSharingplanChart;
 
@@ -33,6 +32,7 @@ import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
 /**
@@ -77,8 +77,22 @@ public class TimeSharingplanFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
-        final DateTime dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+        DateTime dateTime;
+        if (mQuote.getAskPrice() < 0) { //未开盘，数据加载前一天的
+            dateTime = new DateTime().minusDays(1).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+        } else {
+            dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+        }
         HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()))
+                .map(new Function<List<HisData>, List<HisData>>() {
+                    @Override
+                    public List<HisData> apply(@NonNull List<HisData> hisDatas) throws Exception {
+                        if (hisDatas == null || hisDatas.isEmpty()) {
+                            throw new RuntimeException("数据为空");
+                        }
+                        return hisDatas;
+                    }
+                })
                 .compose(RxUtils.<List<HisData>>applySchedulers())
                 .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<HisData>>() {

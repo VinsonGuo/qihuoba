@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.ui.home;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -47,30 +48,32 @@ public class HomePageAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
          恒指HSI
          A50
          */
-        mDescMap.put("CL", "");
-        mDescMap.put("GC", "");
-        mDescMap.put("SI", "");
-        mDescMap.put("NG", "");
-        mDescMap.put("ES", "");
-        mDescMap.put("NQ", "");
-        mDescMap.put("DAX", "");
-        mDescMap.put("HSI", "");
-        mDescMap.put("A50", "");
+        mDescMap.put("CL", "1500元炒正宗美原油");
+        mDescMap.put("GC", "国际黄金，全球热门");
+        mDescMap.put("SI", "投资者青睐的避嫌品种");
+        mDescMap.put("NG", "国际大宗，连续交易");
+        mDescMap.put("ES", "交易量大，流动性好");
+        mDescMap.put("NQ", "最强科技指数，投机性高");
+        mDescMap.put("DAX", "振幅大，收益高");
+        mDescMap.put("HSI", "香港恒生指数 每点50港币");
+        mDescMap.put("CN", "A股市场风险对冲利器");
     }
 
     @Override
     protected void convert(BaseViewHolder helper, Quote item) {
         try {
             String title = StringUtils.getRuleName(item);
+            String des = mDescMap.get(title);
             helper.setText(R.id.tv_title, item.getSymbolname())
-                    .setText(R.id.tv_desc, item.getSymbol())
+                    .setText(R.id.tv_desc, des)
                     .setText(R.id.tv_icon, title);
             int colorIndex = (helper.getLayoutPosition() - getHeaderLayoutCount()) % (colors.length - 1);
             helper.setTextColor(R.id.tv_icon, colors[colorIndex]);
             TextView tvInfo = helper.getView(R.id.tv_info);
-            double change = item.getChangeRate();
-            String changeText = change == 0 ? "-" : DoubleUtil.format2Decimal(change) + "%";
+            double changeRate = item.getChangeRate();
+            String changeText = changeRate == 0 ? "-" : DoubleUtil.format2Decimal(changeRate) + "%";
             tvInfo.setText(DoubleUtil.formatDecimal(item.getLastPrice()) + "\n" + changeText);
+            double change = item.getChange();
             tvInfo.setTextColor(ContextCompat.getColor(mContext, change > 0 ? R.color.main_color_red : R.color.main_color_green));
         } catch (Exception e) {
             LogUtils.e(e);

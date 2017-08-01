@@ -46,6 +46,7 @@ import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
 /**
@@ -223,7 +224,12 @@ public class CandleStickChartFragment extends BaseFragment {
     public void loadDataByType(String type) {
         mType = type;
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
-        DateTime dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+        DateTime dateTime;
+        if (quote.getAskPrice() < 0) { //未开盘，数据加载前一天的
+            dateTime = new DateTime().minusDays(1).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+        } else {
+            dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+        }
         if (DAY.equals(type)) {
             dateTime = dateTime.minusYears(1);
         } else if (MIN15.equals(type) || MIN5.equals(type)) {
@@ -232,6 +238,15 @@ public class CandleStickChartFragment extends BaseFragment {
             dateTime = dateTime.minusMonths(1);
         }
         HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)
+                .map(new Function<List<HisData>, List<HisData>>() {
+                    @Override
+                    public List<HisData> apply(@NonNull List<HisData> hisDatas) throws Exception {
+                        if (hisDatas == null || hisDatas.isEmpty()) {
+                            throw new RuntimeException("数据为空");
+                        }
+                        return hisDatas;
+                    }
+                })
                 .compose(RxUtils.<List<HisData>>applySchedulers())
                 .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<HisData>>() {

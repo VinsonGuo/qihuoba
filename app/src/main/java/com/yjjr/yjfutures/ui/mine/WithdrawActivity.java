@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
@@ -15,8 +17,11 @@ import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.trade.AlipayTransferActivity;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
@@ -47,7 +52,9 @@ public class WithdrawActivity extends BaseActivity {
         mTvYue = (TextView) findViewById(R.id.tv_yue);
         headerView.bindActivity(mContext);
         final RegisterInput riMoney = (RegisterInput) findViewById(R.id.ri_money);
-        riMoney.getEtInput().addTextChangedListener(new TextWatcherAdapter() {
+        EditText etMoney = riMoney.getEtInput();
+        etMoney.setInputType(InputType.TYPE_CLASS_NUMBER);
+        etMoney.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 mBtnConfirm.setSelected(!TextUtils.isEmpty(s));
@@ -58,7 +65,24 @@ public class WithdrawActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mBtnConfirm.isSelected()) {
-                    InputPayPwdActivity.startActivity(mContext, riMoney.getValue());
+                    mBtnConfirm.setSelected(false);
+                    HttpManager.getBizService().extractApply(riMoney.getValue(), "alipay")
+                            .compose(RxUtils.applyBizSchedulers())
+                            .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
+                            .subscribe(new Consumer<BizResponse>() {
+                                @Override
+                                public void accept(@NonNull BizResponse response) throws Exception {
+                                    AlipayTransferActivity.startActivity(mContext);
+                                    finish();
+                                }
+                            }, new Consumer<Throwable>() {
+                                @Override
+                                public void accept(@NonNull Throwable throwable) throws Exception {
+                                    LogUtils.e(throwable);
+                                    mBtnConfirm.setSelected(true);
+                                    ToastUtils.show(mContext, throwable.getMessage());
+                                }
+                            });
                 }
             }
         });
@@ -81,7 +105,7 @@ public class WithdrawActivity extends BaseActivity {
                     @Override
                     public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
                         Funds result = fundsBizResponse.getResult();
-                        mTvYue.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getAvailableFunds()));
+                        mTvYue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds() - result.getExtractMoney()));
                     }
                 }, RxUtils.commonErrorConsumer());
     }

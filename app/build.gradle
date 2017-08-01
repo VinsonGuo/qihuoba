@@ -85,5 +85,6 @@ dependencies {
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     compile 'com.jungly:gridPasswordView:0.3'
     compile 'com.bigkoo:convenientbanner:2.0.5'
+    compile 'com.umeng.analytics:analytics:6.1.1'
     testCompile 'junit:junit:4.12'
 }

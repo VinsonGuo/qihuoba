@@ -249,7 +249,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvLeft.setText(leftText + DoubleUtil.formatDecimal(quote.getBidPrice()));
         StringUtils.setOnlineTxArrow(tvLeftArrow, change);
 //        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", change);
-        tvRight.setText(DoubleUtil.formatDecimal(quote.getBidPrice()) + rightText);
+        tvRight.setText(DoubleUtil.formatDecimal(quote.getAskPrice()) + rightText);
 
         StringUtils.setOnlineTxArrow(tvRightArrow, change);
 

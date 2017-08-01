@@ -162,13 +162,13 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
     private RadioButton createRadioButton(String name, Double tag) {
         RadioButton rb = new RadioButton(mContext);
         ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(DisplayUtils.dip2px(mContext, 46), DisplayUtils.dip2px(mContext, 17));
-        lp.leftMargin = DisplayUtils.dip2px(mContext, 4);
+        lp.leftMargin = DisplayUtils.dip2px(mContext, 8);
         rb.setLayoutParams(lp);
         rb.setBackgroundResource(R.drawable.selector_trade_rb_bg);
         rb.setButtonDrawable(null);
         rb.setGravity(Gravity.CENTER);
         rb.setText(name);
-        rb.setTextColor(ContextCompat.getColor(mContext, R.color.selector_trade_rb_text_color));
+        rb.setTextColor(ContextCompat.getColorStateList(mContext, R.color.selector_trade_rb_text_color));
         rb.setTextSize(12);
         rb.setTag(tag);
         return rb;
@@ -188,6 +188,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                         for (Map.Entry<String, Double> next : map.entrySet()) {
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
                         }
+                        ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
                         mTvTradeFee.setText(DoubleUtil.formatDecimal(result.getTransactionFee()));
                         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
                         mTvExchange.setText(mSymbol + "按" + quote.getCurrency() + "交易，平台按人民币结算，汇率为" + result.getCnyExchangeRate());

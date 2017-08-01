@@ -19,6 +19,7 @@
             android:background="@drawable/selector_common_press_bg"
             android:drawableLeft="@drawable/ic_customer_service"
             android:gravity="center"
+            android:layout_marginTop="2dp"
             android:text="@string/main_customer"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"/>
@@ -30,6 +31,7 @@
             android:layout_gravity="center_vertical|right"
             android:background="@drawable/selector_common_press_bg"
             android:gravity="center"
+            android:layout_marginTop="2dp"
             android:text="@string/setting"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"/>
@@ -60,22 +62,23 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/textView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/jzc"
                     android:layout_marginTop="@dimen/dp_10"
+                    android:gravity="center"
+                    android:text="@string/jzc"
                     android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/sp_16"
-                    android:gravity="center"/>
+                    android:textSize="@dimen/text_size_15sp"/>
 
                 <TextView
                     android:id="@+id/tv_net"
                     android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="6dp"
                     android:textColor="@color/third_text_color"
-                    android:textSize="24sp"
+                    android:textSize="30sp"
                     tools:text="1234"/>
 
                 <LinearLayout
@@ -95,16 +98,16 @@
                             android:layout_height="wrap_content"
                             android:text="可用余额"
                             android:textColor="@color/main_text_color"
-                            android:textSize="@dimen/sp_16"/>
+                            android:textSize="@dimen/text_size_15sp"/>
 
                         <TextView
                             android:id="@+id/tv_yue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="20dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="6dp"
                             android:textColor="@color/third_text_color"
-                            android:textSize="@dimen/text_size_16sp"
+                            android:textSize="18sp"
                             tools:text="1234"/>
 
                         <Button
@@ -124,8 +127,8 @@
                     <View
                         android:layout_width="@dimen/common_divider_small"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
                         android:layout_marginBottom="45dp"
                         android:layout_marginTop="20dp"
                         android:background="@color/divider_color"/>
@@ -140,16 +143,16 @@
                             android:layout_height="wrap_content"
                             android:text="@string/zybzj"
                             android:textColor="@color/main_text_color"
-                            android:textSize="@dimen/sp_16"/>
+                            android:textSize="@dimen/text_size_15sp"/>
 
                         <TextView
                             android:id="@+id/tv_margin"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="20dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="6dp"
                             android:textColor="@color/second_text_color"
-                            android:textSize="@dimen/text_size_16sp"
+                            android:textSize="18sp"
                             tools:text="1234"/>
 
                         <Button
@@ -233,7 +236,7 @@
                             android:id="@+id/tv_one"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:layout_marginRight="@dimen/root_padding_10"
+                            android:paddingRight="@dimen/root_padding_10"
                             android:layout_marginTop="@dimen/common_divider_small"
                             android:background="@drawable/shape_bg_bottom_line"
                             android:drawableLeft="@drawable/ic_trade_detail"
@@ -262,7 +265,7 @@
                             android:id="@+id/tv_two"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:layout_marginRight="@dimen/root_padding_10"
+                            android:paddingRight="@dimen/root_padding_10"
                             android:background="@drawable/shape_bg_bottom_line"
                             android:drawableLeft="@drawable/ic_user_info"
                             android:drawablePadding="10dp"
@@ -291,7 +294,7 @@
                             android:id="@+id/tv_three"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:layout_marginRight="@dimen/root_padding_10"
+                            android:paddingRight="@dimen/root_padding_10"
                             android:background="@drawable/shape_bg_bottom_line"
                             android:drawableLeft="@drawable/ic_about_us"
                             android:drawablePadding="10dp"
@@ -328,7 +331,7 @@
                             android:id="@+id/tv_four"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:layout_marginRight="@dimen/root_padding_10"
+                            android:paddingRight="@dimen/root_padding_10"
                             android:background="@drawable/shape_bg_bottom_line"
                             android:drawableLeft="@drawable/ic_risk_info"
                             android:drawablePadding="10dp"

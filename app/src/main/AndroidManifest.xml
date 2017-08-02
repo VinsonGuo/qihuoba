@@ -33,8 +33,12 @@
         <meta-data
             android:name="com.yjjr.yjfutures.utils.imageloader.AppGlideModule"
             android:value="GlideModule"/>
-        <meta-data android:value="597fd6f29f06fd70360000c0" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="official" android:name="UMENG_CHANNEL"/>
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="597fd6f29f06fd70360000c0"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="official"/>
 
         <activity
             android:name=".ui.MainActivity"
@@ -174,6 +178,8 @@
         <activity
             android:name=".ui.mine.HelpCenterActivity"
             android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".ui.found.NoticeActivity">
         </activity>
     </application>
 

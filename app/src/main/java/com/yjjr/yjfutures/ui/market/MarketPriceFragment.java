@@ -30,6 +30,9 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
 
 
     private MarketPriceAdapter mAdapter;
+    /**
+     * true为真实账户
+     */
     private boolean mShowTitle = true;
 
     public MarketPriceFragment() {
@@ -68,7 +71,11 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
 
     @Override
     protected void initData() {
-        mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+        if(mShowTitle) {
+            mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+        }else {
+            mAdapter.replaceData(StaticStore.sDemoQuoteMap.values());
+        }
     }
 
     @Override
@@ -78,7 +85,11 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        mAdapter.replaceData(StaticStore.sQuoteMap.values());
+        if(mShowTitle) {
+            mAdapter.replaceData(StaticStore.sQuoteMap.values());
+        }else {
+            mAdapter.replaceData(StaticStore.sDemoQuoteMap.values());
+        }
     }
 
     @Override

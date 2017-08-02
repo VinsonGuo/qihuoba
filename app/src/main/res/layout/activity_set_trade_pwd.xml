@@ -54,13 +54,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <android.support.v7.widget.AppCompatCheckBox
-        android:id="@id/cb_check"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="@dimen/root_padding_15"
-        android:layout_marginRight="@dimen/root_padding_15"
-        app:buttonTint="@color/white"
-        android:textColor="@color/second_text_color"
-        android:text="我已阅读并同意"
-        android:layout_height="wrap_content"/>
 </LinearLayout>

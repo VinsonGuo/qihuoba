@@ -4,13 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.HideRedDotEvent;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.BizResponse;
@@ -47,6 +51,7 @@ public class MainActivity extends BaseActivity {
     private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private Timer mTimer = new Timer();
     private long mBackPressed;
+    private AlphaTabsIndicator mBottomBar;
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
@@ -74,13 +79,24 @@ public class MainActivity extends BaseActivity {
                 }, RxUtils.commonErrorConsumer());
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ShowRedDotEvent event) {
+        mBottomBar.getTabView(2).showPoint();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(HideRedDotEvent event) {
+        mBottomBar.getTabView(2).removeShow();
+    }
+
     private void initViews() {
-        AlphaTabsIndicator bottomBar = (AlphaTabsIndicator) findViewById(R.id.alphaIndicator);
+        mBottomBar = (AlphaTabsIndicator) findViewById(R.id.alphaIndicator);
         final NoTouchScrollViewpager viewPager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
         Fragment[] fragments = {new HomePageFragment(), MarketPriceFragment.newInstance(true), new FoundFragment(), new MineFragment()};
         viewPager.setOffscreenPageLimit(fragments.length);
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
-        bottomBar.setViewPager(viewPager);
+        mBottomBar.setViewPager(viewPager);
 
         mTimer.schedule(new TimerTask() {
             @Override
@@ -88,6 +104,9 @@ public class MainActivity extends BaseActivity {
                 DateTime dateTime = new DateTime();
                 if (dateTime.getSecondOfMinute() == 1) {
                     EventBus.getDefault().post(new OneMinuteEvent());
+                }
+                if (TextUtils.isEmpty(StaticStore.sSymbols)) {
+                    return;
                 }
                 HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
                         .map(new Function<List<Quote>, List<Quote>>() {

@@ -81,6 +81,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                         });
             }
         });
+        TextView tvTitle = (TextView) v.findViewById(R.id.tv_title);
+        if(BaseApplication.getInstance().getUserInfo() != null) {
+            tvTitle.setText(BaseApplication.getInstance().getUserInfo().getName());
+        }
 
         tvOne.setOnClickListener(this);
         tvTwo.setOnClickListener(this);

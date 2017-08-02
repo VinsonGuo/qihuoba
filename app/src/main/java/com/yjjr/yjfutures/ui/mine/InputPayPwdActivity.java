@@ -17,8 +17,10 @@ import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
 
+import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 public class InputPayPwdActivity extends RxActivity {
 
@@ -55,12 +57,20 @@ public class InputPayPwdActivity extends RxActivity {
 
     private void validPwd(String pwd, final String money) {
         HttpManager.getBizService().validPayPwd(UserSharePrefernce.getAccount(mContext), pwd)
+                .flatMap(new Function<BizResponse, ObservableSource<BizResponse>>() {
+                    @Override
+                    public ObservableSource<BizResponse> apply(@NonNull BizResponse response) throws Exception {
+                        if (response.getRcode() != 0) {
+                            throw new RuntimeException("支付密码输入错误");
+                        }
+                        return HttpManager.getBizService().extractApply(money, "alipay");
+                    }
+                })
                 .compose(RxUtils.applyBizSchedulers())
                 .compose(this.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse>() {
                     @Override
                     public void accept(@NonNull BizResponse response) throws Exception {
-                        ToastUtils.show(mContext, "提现完成");
                         CommonSuccessActivity.startActivity(mContext, "申请提款完成", "提款金额", money);
                         finish();
                     }
@@ -68,7 +78,7 @@ public class InputPayPwdActivity extends RxActivity {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         LogUtils.e(throwable);
-                        ToastUtils.show(mContext, "支付密码输入错误");
+                        ToastUtils.show(mContext, throwable.getMessage());
                         mPasswordView.clearPassword();
                     }
                 });

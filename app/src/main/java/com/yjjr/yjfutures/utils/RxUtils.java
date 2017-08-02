@@ -86,8 +86,8 @@ public class RxUtils {
     /**
      * 平仓请求
      */
-    public static Observable<CommonResponse> createCloseObservable(Holding holding) {
-        return HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), holding.getSymbol(), StringUtils.getOppositeBuySell(holding.getBuySell()), 0, Math.abs(holding.getQty()), "市价")
+    public static Observable<CommonResponse> createCloseObservable(boolean isDemo,Holding holding) {
+        return HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(isDemo), holding.getSymbol(), StringUtils.getOppositeBuySell(holding.getBuySell()), 0, Math.abs(holding.getQty()), "市价")
                 .map(new Function<CommonResponse, CommonResponse>() {
                     @Override
                     public CommonResponse apply(@NonNull CommonResponse commonResponse) throws Exception {

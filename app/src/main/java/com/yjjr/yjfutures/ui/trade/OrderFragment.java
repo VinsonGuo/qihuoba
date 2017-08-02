@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
@@ -27,11 +28,23 @@ import io.reactivex.functions.Consumer;
 public class OrderFragment extends BaseFragment {
 
     private TradeInfoView mTradeInfoView;
+    private boolean mIsDemo;
+
+    public static OrderFragment newInstance(boolean isDemo) {
+        OrderFragment fragment = new OrderFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(Constants.CONTENT_PARAMETER, isDemo);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        if (getArguments() != null) {
+            mIsDemo = getArguments().getBoolean(Constants.CONTENT_PARAMETER);
+        }
     }
 
     @Override
@@ -43,7 +56,7 @@ public class OrderFragment extends BaseFragment {
         headerView.setOperateClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SettlementActivity.startActivity(mContext);
+                SettlementActivity.startActivity(mContext, mIsDemo);
             }
         });
         return v;
@@ -53,7 +66,7 @@ public class OrderFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
-        PositionListFragment positionListFragment = new PositionListFragment();
+        PositionListFragment positionListFragment = PositionListFragment.newInstance(mIsDemo);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, positionListFragment)
                 .commit();
         positionListFragment.setUserVisibleHint(true);

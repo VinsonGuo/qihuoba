@@ -39,6 +39,7 @@
             android:layout_weight="1"
             android:paddingTop="12dp"
             android:paddingBottom="4dp"
+            app:badgeBackgroundColor="@color/main_color_red"
             app:tabIconNormal="@drawable/ic_trade"
             app:tabIconSelected="@drawable/ic_trade_active"
             app:tabText="@string/trade"

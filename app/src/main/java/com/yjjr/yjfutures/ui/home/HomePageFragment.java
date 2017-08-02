@@ -20,6 +20,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
@@ -134,6 +135,11 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                                     BaseApplication.getInstance().logout(mContext);
                                 }
                                 throw new RuntimeException("登录失败");
+                            }
+
+                            // 如果有未读通知，点亮小红点
+                            if(loginBizResponse.getResult().isExistUnreadNotice()) {
+                                EventBus.getDefault().post(new ShowRedDotEvent());
                             }
                             BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
                             return HttpManager.getHttpService().userLogin(account, password);

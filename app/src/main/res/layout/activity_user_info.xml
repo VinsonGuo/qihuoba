@@ -18,6 +18,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_bottom_line"
+        android:paddingLeft="@dimen/root_padding_15"
         android:orientation="vertical">
 
         <FrameLayout
@@ -28,13 +30,11 @@
                 android:id="@+id/tv_auth"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="@dimen/common_divider_small"
-                android:background="@drawable/shape_bg_bottom_line"
+                android:background="@drawable/shape_bg_top_bottom_line"
                 android:drawableLeft="@drawable/ic_user_info2"
                 android:drawablePadding="@dimen/dp_10"
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
                 android:text="@string/auth_name"
                 android:textColor="@color/main_text_color"
@@ -64,7 +64,6 @@
                 android:drawablePadding="@dimen/dp_10"
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
                 android:text="支付宝账户"
                 android:textColor="@color/main_text_color"
@@ -96,7 +95,6 @@
                 android:drawablePadding="@dimen/dp_10"
                 android:drawableRight="@drawable/icon_right_arrow"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
                 android:text="@string/pay_pwd"
                 android:textColor="@color/main_text_color"
@@ -117,7 +115,4 @@
 
     </LinearLayout>
 
-
-    <View
-        style="@style/style_divider"/>
 </LinearLayout>

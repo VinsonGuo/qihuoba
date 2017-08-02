@@ -8,6 +8,7 @@ import com.yjjr.yjfutures.model.biz.ChargeResult;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Info;
+import com.yjjr.yjfutures.model.biz.Notice;
 import com.yjjr.yjfutures.model.biz.PageResponse;
 import com.yjjr.yjfutures.model.biz.Update;
 import com.yjjr.yjfutures.model.biz.UserInfo;
@@ -98,4 +99,7 @@ public interface BizService {
 
     @POST("user/queryCashRecord/{start}/{count}")
     Observable<BizResponse<PageResponse<CashRecord>>> getCashRecord(@Path("start") int start, @Path("count") int count);
+
+    @POST("notice/list/{start}/{count}")
+    Observable<BizResponse<PageResponse<Notice>>> getNotice(@Path("start") int start, @Path("count") int count);
 }

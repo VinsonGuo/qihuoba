@@ -13,6 +13,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
@@ -22,6 +23,7 @@ import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
@@ -49,11 +51,24 @@ public class PositionListFragment extends ListFragment<Holding> {
     private ProgressDialog mProgressDialog;
     private CustomPromptDialog mCloseAllDialog;
     private CustomPromptDialog mSuccessDialog;
+    private boolean mIsDemo;
+
+    public static PositionListFragment newInstance(boolean isDemo) {
+        PositionListFragment fragment = new PositionListFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(Constants.CONTENT_PARAMETER, isDemo);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        if (getArguments() != null) {
+            mIsDemo = getArguments().getBoolean(Constants.CONTENT_PARAMETER);
+        }
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage(getString(R.string.closeing));
         mProgressDialog.setCancelable(false);
@@ -129,7 +144,7 @@ public class PositionListFragment extends ListFragment<Holding> {
         mProgressDialog.show();
         List<Observable<CommonResponse>> observables = new ArrayList<>();
         for (Holding holding : data) {
-            observables.add(RxUtils.createCloseObservable(holding));
+            observables.add(RxUtils.createCloseObservable(mIsDemo, holding));
         }
         Observable.zip(observables, new Function<Object[], String>() {
 
@@ -166,7 +181,7 @@ public class PositionListFragment extends ListFragment<Holding> {
 
     private void closeOrder(Holding holding) {
         mProgressDialog.show();
-        RxUtils.createCloseObservable(holding)
+        RxUtils.createCloseObservable(mIsDemo, holding)
                 .delay(1, TimeUnit.SECONDS)
                 .compose(RxUtils.<CommonResponse>applySchedulers())
                 .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
@@ -189,7 +204,7 @@ public class PositionListFragment extends ListFragment<Holding> {
 
     @Override
     protected void loadData() {
-        HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken())
+        HttpManager.getHttpService(mIsDemo).getHolding(BaseApplication.getInstance().getTradeToken(mIsDemo))
                 .compose(RxUtils.<List<Holding>>applySchedulers())
                 .compose(this.<List<Holding>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<Holding>>() {
@@ -205,7 +220,7 @@ public class PositionListFragment extends ListFragment<Holding> {
                         }
                         mAdapter.setNewData(list);
                         mTvProfit.setText(DoubleUtil.format2Decimal(profit));
-                        mTvProfit.setTextColor(ContextCompat.getColor(mContext, profit > 0 ? R.color.main_color_red : R.color.main_color_green));
+                        mTvProfit.setTextColor(StringUtils.getProfitColor(mContext, profit));
                         loadDataFinish();
                     }
                 }, new Consumer<Throwable>() {

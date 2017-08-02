@@ -10,6 +10,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
+import com.yjjr.yjfutures.utils.StringUtils;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class MarketPriceAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> 
             double changeRate = item.getChangeRate();
             helper.setText(R.id.tv_symbol_name, item.getSymbolname())
                     .setText(R.id.tv_symbol, item.getSymbol())
-                    .setText(R.id.tv_price, item.getLastPrice() == 0 ? "-" : DoubleUtil.formatDecimal(item.getLastPrice()))
+                    .setText(R.id.tv_price, item.getLastPrice() == 0 ? "-" : StringUtils.getStringByTick(item.getLastPrice(), item.getTick()))
                     .setText(R.id.tv_trade_amount, item.getVol() + "");
             TextView tvChange = helper.getView(R.id.tv_change);
             TextView tvPrice = helper.getView(R.id.tv_price);

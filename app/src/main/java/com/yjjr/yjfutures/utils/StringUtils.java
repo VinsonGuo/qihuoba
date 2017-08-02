@@ -18,6 +18,7 @@ package com.yjjr.yjfutures.utils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -283,6 +284,10 @@ public class StringUtils {
         }
         tv.setText(String.format(Locale.getDefault(), "%.1f", value));
     }*/
+    public static String getStringByTick(double num, double tick) {
+        int digit = getDigitByTick(tick);
+        return getStringByDigits(num, digit);
+    }
 
     /**
      * 根据精度得到一个小数的字符串
@@ -470,8 +475,14 @@ public class StringUtils {
     }
 
     public static int getDigitByTick(double tick) {
+        if (tick == 1) {
+            return 0;
+        }
         String s = String.valueOf(tick);
-        return s.length() - 1;
+        if (TextUtils.isEmpty(s)) {
+            return 0;
+        }
+        return s.length() - 2;
     }
 
     public static String getRuleName(Quote quote) {
@@ -492,12 +503,37 @@ public class StringUtils {
     }
 
     public static CharSequence formatUnrealizePL(Context context, double unrealizedPL) {
-        int color = unrealizedPL < 0 ? R.color.main_color_green : R.color.main_color_red;
+        int color;
+        if (unrealizedPL == 0) {
+            color = R.color.main_text_color;
+        } else if (unrealizedPL > 0) {
+            color = R.color.main_color_red;
+
+        } else {
+            color = R.color.main_color_green;
+
+        }
         return SpannableUtil.getStringByColor(context, DoubleUtil.format2Decimal(unrealizedPL), color);
     }
 
     public static String randomTrader() {
         String s = Base64.encodeToString(String.valueOf(System.currentTimeMillis()).getBytes(), Base64.DEFAULT);
-        return s.substring(s.length() - 9, s.length() - 3).toUpperCase();
+        String name = s.substring(s.length() - 9, s.length() - 3).toUpperCase();
+        String id = String.format("(ID:%s)", (int) (Math.random() * 100000));
+        return name + id;
+    }
+
+    public static int getProfitColor(Context context, double item) {
+        int color;
+        if (item == 0) {
+            color = R.color.main_text_color;
+        } else if (item > 0) {
+            color = R.color.main_color_red;
+
+        } else {
+            color = R.color.main_color_green;
+
+        }
+        return ContextCompat.getColor(context, color);
     }
 }

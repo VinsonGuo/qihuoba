@@ -29,7 +29,14 @@ import java.util.List;
 public class BaseApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private static BaseApplication sInstance;
     private List<Activity> mActivities = new ArrayList<>();
+    /**
+     * 真实用户的cid
+     */
     private String mTradeToken = "";
+    /**
+     * 模拟用户的cid
+     */
+    private String mDemoTradeToken = "";
     private UserInfo mUserInfo;
 
     public static BaseApplication getInstance() {
@@ -144,6 +151,17 @@ public class BaseApplication extends Application implements Application.Activity
         mTradeToken = tradeToken;
     }
 
+    public String getTradeToken(boolean isDemo) {
+        if (isDemo) {
+            return mDemoTradeToken;
+        }
+        return mTradeToken;
+    }
+
+    public void setDemoTradeToken(String demoTradeToken) {
+        mDemoTradeToken = demoTradeToken;
+    }
+
     public void logout(Context a) {
         UserSharePrefernce.clearCache();
         mTradeToken = "";
@@ -158,4 +176,5 @@ public class BaseApplication extends Application implements Application.Activity
     public void setUserInfo(UserInfo userInfo) {
         mUserInfo = userInfo;
     }
+
 }

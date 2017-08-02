@@ -19,6 +19,7 @@ public class UserInfo {
     private String mobileNo;
     private String idcard;
     private boolean existPayPwd;
+    private boolean isExistUnreadNotice;
 
 
     public String getAccount() {
@@ -77,6 +78,14 @@ public class UserInfo {
         this.alipay = alipay;
     }
 
+    public boolean isExistUnreadNotice() {
+        return isExistUnreadNotice;
+    }
+
+    public void setExistUnreadNotice(boolean existUnreadNotice) {
+        isExistUnreadNotice = existUnreadNotice;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
@@ -87,6 +96,7 @@ public class UserInfo {
                 ", mobileNo='" + mobileNo + '\'' +
                 ", idcard='" + idcard + '\'' +
                 ", existPayPwd=" + existPayPwd +
+                ", isExistUnreadNotice=" + isExistUnreadNotice +
                 '}';
     }
 }

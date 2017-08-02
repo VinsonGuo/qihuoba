@@ -29,7 +29,7 @@ public class TradeActivity extends BaseActivity {
         String symbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
         boolean isDemo = getIntent().getBooleanExtra(Constants.CONTENT_PARAMETER_2, false);
         final NoTouchScrollViewpager viewpager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
-        Fragment[] fragments = {TradeFragment.newInstance(isDemo, symbol), new OrderFragment()};
+        Fragment[] fragments = {TradeFragment.newInstance(isDemo, symbol), OrderFragment.newInstance(isDemo)};
         viewpager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         RadioGroup rgNav = (RadioGroup) findViewById(R.id.rg_nav);
         rgNav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

@@ -28,12 +28,14 @@ public class HttpManager {
     private static volatile HttpService sHttpService;
     private static volatile Retrofit sBizRetrofit;
     private static volatile BizService sBizService;
+    private static volatile Retrofit sDemoRetrofit;
+    private static volatile HttpService sDemoHttpService;
 
     public static Retrofit getInstance() {
         if (sRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sRetrofit = new Retrofit.Builder()
-                    .baseUrl(HttpConfig.DOMAIN + ":9100/WebService.asmx/")
+                    .baseUrl(HttpConfig.DOMAIN + ":9100/")
                     .client(client)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -41,6 +43,20 @@ public class HttpManager {
                     .build();
         }
         return sRetrofit;
+    }
+
+    public static Retrofit getDemoInstance() {
+        if (sDemoRetrofit == null) {
+            OkHttpClient client = getOkHttpClient();
+            sDemoRetrofit = new Retrofit.Builder()
+                    .baseUrl(HttpConfig.DEMO_HOST + ":9100/")
+                    .client(client)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return sDemoRetrofit;
     }
 
     public static Retrofit getBizInstance() {
@@ -82,6 +98,25 @@ public class HttpManager {
                 return cookies != null ? cookies : new ArrayList<Cookie>();
             }
         }).build();
+    }
+
+    /**
+     * 获取交易服务器接口
+     *
+     * @param isDemo 是否是模拟账户
+     */
+    public static HttpService getHttpService(boolean isDemo) {
+        if (isDemo) {
+            if (sDemoHttpService == null) {
+                sDemoHttpService = getDemoInstance().create(HttpService.class);
+            }
+            return sDemoHttpService;
+        } else {
+            if (sHttpService == null) {
+                sHttpService = getInstance().create(HttpService.class);
+            }
+            return sHttpService;
+        }
     }
 
     public static HttpService getHttpService() {

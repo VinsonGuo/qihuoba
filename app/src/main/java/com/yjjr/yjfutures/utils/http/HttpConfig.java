@@ -10,6 +10,8 @@ public class HttpConfig {
     //    public static final String DOMAIN = "http://www.qihuofa.com";
     public static final String DOMAIN = "https://dev.qihuofa.com";
 
+    public static final String DEMO_HOST = "https://demo.qihuofa.com";
+
     public static final String BIZ_HOST = DOMAIN + ":9300";
     /**
      * 手机号码的正则
@@ -58,6 +60,7 @@ public class HttpConfig {
     public static final String URL_ABOUT = DOMAIN + ":9100/serviceInfo/about.html";
     public static final String URL_GUIDE = DOMAIN + ":9100/serviceInfo/guide1.html";
     public static final String URL_RULE = DOMAIN + ":9100/serviceInfo/%srules.html";
+
 
 
     public static String ALIPAY_ACCOUNT_CODE = "FKX02544EKPFEEKPCQSYC8";

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -143,8 +144,10 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
      */
     private RadioButton createRadioButton(String name, Double tag) {
         RadioButton rb = new RadioButton(mContext);
-        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(DisplayUtils.dip2px(mContext, 46), DisplayUtils.dip2px(mContext, 17));
-        lp.leftMargin = DisplayUtils.dip2px(mContext, 8);
+//        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(DisplayUtils.dip2px(mContext, 46), DisplayUtils.dip2px(mContext, 17));
+//        lp.leftMargin = DisplayUtils.dip2px(mContext, 8);
+        RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(DisplayUtils.dip2px(mContext, 46), DisplayUtils.dip2px(mContext, 17));
+        lp.setMargins(DisplayUtils.dip2px(mContext, 8),0,0,0);
         rb.setLayoutParams(lp);
         rb.setBackgroundResource(R.drawable.selector_trade_rb_bg);
         rb.setButtonDrawable(null);
@@ -200,7 +203,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                     qty = 5;
                 }
 
-                HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价")
+                HttpManager.getHttpService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价")
                         .map(new Function<CommonResponse, CommonResponse>() {
                             @Override
                             public CommonResponse apply(@NonNull CommonResponse commonResponse) throws Exception {

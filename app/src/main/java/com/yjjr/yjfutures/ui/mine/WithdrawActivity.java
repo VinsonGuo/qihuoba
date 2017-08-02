@@ -65,24 +65,7 @@ public class WithdrawActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mBtnConfirm.isSelected()) {
-                    mBtnConfirm.setSelected(false);
-                    HttpManager.getBizService().extractApply(riMoney.getValue(), "alipay")
-                            .compose(RxUtils.applyBizSchedulers())
-                            .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
-                            .subscribe(new Consumer<BizResponse>() {
-                                @Override
-                                public void accept(@NonNull BizResponse response) throws Exception {
-                                    AlipayTransferActivity.startActivity(mContext);
-                                    finish();
-                                }
-                            }, new Consumer<Throwable>() {
-                                @Override
-                                public void accept(@NonNull Throwable throwable) throws Exception {
-                                    LogUtils.e(throwable);
-                                    mBtnConfirm.setSelected(true);
-                                    ToastUtils.show(mContext, throwable.getMessage());
-                                }
-                            });
+                    InputPayPwdActivity.startActivity(mContext, riMoney.getValue());
                 }
             }
         });

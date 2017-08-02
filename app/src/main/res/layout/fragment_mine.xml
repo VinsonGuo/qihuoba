@@ -37,10 +37,11 @@
             android:textSize="@dimen/sp_14"/>
 
         <TextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="期货大师"
+            tools:text="期货大师"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_20sp"/>
     </FrameLayout>
@@ -117,8 +118,8 @@
                             android:background="@drawable/shape_third_text_color_border_bg"
                             android:drawableLeft="@drawable/ic_deposit"
                             android:drawablePadding="6dp"
-                            android:paddingLeft="30dp"
-                            android:paddingRight="30dp"
+                            android:paddingLeft="32dp"
+                            android:paddingRight="32dp"
                             android:text="@string/deposit"
                             android:textColor="@color/third_text_color"
                             android:textSize="@dimen/sp_16"/>
@@ -162,8 +163,8 @@
                             android:background="@drawable/selector_trade_bottom_rb_bg"
                             android:drawableLeft="@drawable/ic_withdraw"
                             android:drawablePadding="6dp"
-                            android:paddingLeft="30dp"
-                            android:paddingRight="30dp"
+                            android:paddingLeft="32dp"
+                            android:paddingRight="32dp"
                             android:text="@string/withdraw"
                             android:textColor="@color/selector_trade_bottom_rb_color"
                             android:textSize="@dimen/sp_16"/>

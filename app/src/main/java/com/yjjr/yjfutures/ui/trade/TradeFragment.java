@@ -100,6 +100,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private CustomPromptDialog mCloseSuccessDialog;
     private CustomPromptDialog mCloseDialog;
     private HeaderView mHeaderView;
+    /**
+     * 买、卖的View，休市时隐藏
+     */
+    private View tradeView;
 
 
     public TradeFragment() {
@@ -246,12 +250,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         mHeaderView.setMainTitle(quote.getSymbolname());
         double change = quote.getChangeRate();
 //        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", change);
-        tvLeft.setText(leftText + DoubleUtil.formatDecimal(quote.getBidPrice()));
-        StringUtils.setOnlineTxArrow(tvLeftArrow, change);
+        tvLeft.setText(leftText + StringUtils.getStringByTick(quote.getBidPrice(), quote.getTick()));
+//        StringUtils.setOnlineTxArrow(tvLeftArrow, change);
 //        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", change);
-        tvRight.setText(DoubleUtil.formatDecimal(quote.getAskPrice()) + rightText);
+        tvRight.setText(StringUtils.getStringByTick(quote.getAskPrice(), quote.getTick()) + rightText);
 
-        StringUtils.setOnlineTxArrow(tvRightArrow, change);
+//        StringUtils.setOnlineTxArrow(tvRightArrow, change);
 
         int allSize = quote.getBidSize() + quote.getAskSize();
         if (allSize != 0) {
@@ -260,9 +264,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         }
         tvLeftPb.setText(String.valueOf(quote.getBidSize()));
         tvRightPb.setText(String.valueOf(quote.getAskSize()));
-        tvPrice.setText(quote.getLastPrice() + "");
+        tvPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(),quote.getTick()));
         tvChange.setText(DoubleUtil.format2Decimal(quote.getChange()));
         tvChangeRate.setText(DoubleUtil.format2Decimal(quote.getChangeRate()) + "%");
+        if (quote.getAskPrice() == -1 && quote.getBidPrice() == -1) {
+            tradeView.setVisibility(View.GONE);
+        }
     }
 
 
@@ -291,6 +298,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvPrice = (TextView) v.findViewById(R.id.tv_price);
         tvChange = (TextView) v.findViewById(R.id.tv_change);
         tvChangeRate = (TextView) v.findViewById(R.id.tv_change_rate);
+        tradeView = v.findViewById(R.id.trade_view);
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage(getString(R.string.online_transaction_in_order));
         mProgressDialog.setCancelable(false);
@@ -316,7 +324,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void getHolding() {
-        HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken())
+        HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken(mIsDemo))
                 .flatMap(new Function<List<Holding>, ObservableSource<Holding>>() {
                     @Override
                     public ObservableSource<Holding> apply(@NonNull List<Holding> holdings) throws Exception {
@@ -351,12 +359,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         if (TextUtils.equals(holding.getBuySell(), "买入")) {
                             leftText = "追加";
                             rightText = "平仓";
-                            tvDirection.setTextColor(ContextCompat.getColor(mContext,R.color.main_color_red));
+                            tvDirection.setTextColor(ContextCompat.getColor(mContext, R.color.main_color_red));
                             colorView.setBackgroundResource(R.drawable.shape_online_tx_red);
                         } else {
                             leftText = "平仓";
                             rightText = "追加";
-                            tvDirection.setTextColor(ContextCompat.getColor(mContext,R.color.main_color_green));
+                            tvDirection.setTextColor(ContextCompat.getColor(mContext, R.color.main_color_green));
                             colorView.setBackgroundResource(R.drawable.shape_online_tx_green);
                         }
                     }
@@ -429,7 +437,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private void closeAllOrder() {
         if (mHolding == null) return;
         mProgressDialog.show();
-        RxUtils.createCloseObservable(mHolding)
+        RxUtils.createCloseObservable(mIsDemo, mHolding)
                 .delay(1, TimeUnit.SECONDS)
                 .compose(RxUtils.<CommonResponse>applySchedulers())
                 .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
@@ -452,7 +460,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     private void takeOrder(FastTakeOrderConfig order, final String type) {
         mProgressDialog.show();
-        HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(), mSymbol, type, 0, Math.abs(order.getQty()), "市价")
+        HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, type, 0, Math.abs(order.getQty()), "市价")
                 .delay(1, TimeUnit.SECONDS)
                 .compose(RxUtils.<CommonResponse>applySchedulers())
                 .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))

@@ -8,53 +8,82 @@ import android.os.Parcelable;
  */
 
 public class Quote implements Parcelable {
+    public static final Parcelable.Creator<Quote> CREATOR = new Parcelable.Creator<Quote>() {
+        @Override
+        public Quote createFromParcel(Parcel source) {
+            return new Quote(source);
+        }
+
+        @Override
+        public Quote[] newArray(int size) {
+            return new Quote[size];
+        }
+    };
     private int askSize;
-
     private double Lastclose;
-
     private double openinterest;
-
     private double Change;
-
     private String SecurityType;
-
     private String TradingTime;
-
     private int Vol;
-
     private double Tick;
-
     private double open;
-
     private double ChangeRate;
-
     private String Exchange;
-
     private String Symbolname;
-
     private double AskPrice;
-
     private double ExchangeRate;
-
     private int BidSize;
-
     private String Symbol;
-
     private double LastSize;
-
     private double LastPrice;
-
     private double BidPrice;
-
     private double high;
-
     private int Multiple;
-
     private double low;
-
     private String Currency;
+    /**
+     * 是否持仓，根据需求加的字段
+     */
+    private boolean isHolding;
 
-    private boolean Shortable;
+    public Quote() {
+    }
+
+    protected Quote(Parcel in) {
+        this.askSize = in.readInt();
+        this.Lastclose = in.readDouble();
+        this.openinterest = in.readDouble();
+        this.Change = in.readDouble();
+        this.SecurityType = in.readString();
+        this.TradingTime = in.readString();
+        this.Vol = in.readInt();
+        this.Tick = in.readDouble();
+        this.open = in.readDouble();
+        this.ChangeRate = in.readDouble();
+        this.Exchange = in.readString();
+        this.Symbolname = in.readString();
+        this.AskPrice = in.readDouble();
+        this.ExchangeRate = in.readDouble();
+        this.BidSize = in.readInt();
+        this.Symbol = in.readString();
+        this.LastSize = in.readDouble();
+        this.LastPrice = in.readDouble();
+        this.BidPrice = in.readDouble();
+        this.high = in.readDouble();
+        this.Multiple = in.readInt();
+        this.low = in.readDouble();
+        this.Currency = in.readString();
+        this.isHolding = in.readByte() != 0;
+    }
+
+    public boolean isHolding() {
+        return isHolding;
+    }
+
+    public void setHolding(boolean holding) {
+        isHolding = holding;
+    }
 
     public int getAskSize() {
         return askSize;
@@ -240,16 +269,6 @@ public class Quote implements Parcelable {
         Currency = currency;
     }
 
-    public boolean isShortable() {
-        return Shortable;
-    }
-
-    public void setShortable(boolean shortable) {
-        Shortable = shortable;
-    }
-
-
-
     @Override
     public String toString() {
         return "Quote{" +
@@ -276,7 +295,7 @@ public class Quote implements Parcelable {
                 ", Multiple=" + Multiple +
                 ", low=" + low +
                 ", Currency='" + Currency + '\'' +
-                ", Shortable=" + Shortable +
+                ", isHolding=" + isHolding +
                 '}';
     }
 
@@ -310,48 +329,6 @@ public class Quote implements Parcelable {
         dest.writeInt(this.Multiple);
         dest.writeDouble(this.low);
         dest.writeString(this.Currency);
-        dest.writeByte(this.Shortable ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isHolding ? (byte) 1 : (byte) 0);
     }
-
-    public Quote() {
-    }
-
-    protected Quote(Parcel in) {
-        this.askSize = in.readInt();
-        this.Lastclose = in.readDouble();
-        this.openinterest = in.readDouble();
-        this.Change = in.readDouble();
-        this.SecurityType = in.readString();
-        this.TradingTime = in.readString();
-        this.Vol = in.readInt();
-        this.Tick = in.readDouble();
-        this.open = in.readDouble();
-        this.ChangeRate = in.readDouble();
-        this.Exchange = in.readString();
-        this.Symbolname = in.readString();
-        this.AskPrice = in.readDouble();
-        this.ExchangeRate = in.readDouble();
-        this.BidSize = in.readInt();
-        this.Symbol = in.readString();
-        this.LastSize = in.readDouble();
-        this.LastPrice = in.readDouble();
-        this.BidPrice = in.readDouble();
-        this.high = in.readDouble();
-        this.Multiple = in.readInt();
-        this.low = in.readDouble();
-        this.Currency = in.readString();
-        this.Shortable = in.readByte() != 0;
-    }
-
-    public static final Parcelable.Creator<Quote> CREATOR = new Parcelable.Creator<Quote>() {
-        @Override
-        public Quote createFromParcel(Parcel source) {
-            return new Quote(source);
-        }
-
-        @Override
-        public Quote[] newArray(int size) {
-            return new Quote[size];
-        }
-    };
 }

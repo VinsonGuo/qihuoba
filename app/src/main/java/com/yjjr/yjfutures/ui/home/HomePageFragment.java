@@ -17,10 +17,13 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
+import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
@@ -48,6 +51,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import io.reactivex.ObservableSource;
@@ -189,6 +193,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         public void accept(@NonNull Boolean symbols) throws Exception {
                             mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
                             mLoadingView.setVisibility(View.GONE);
+                            getHolding();
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -259,6 +264,29 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         }, images);
                     }
                 }, RxUtils.commonErrorConsumer());
+        getHolding();
+    }
+
+    private void getHolding() {
+        HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken())
+                .compose(RxUtils.<List<Holding>>applySchedulers())
+                .compose(this.<List<Holding>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<List<Holding>>() {
+                    @Override
+                    public void accept(@NonNull List<Holding> holdings) throws Exception {
+                        //将持仓的品种保存起来
+                        StaticStore.sHoldSet = new HashSet<>();
+                        for (Holding holding : holdings) {
+                            if(holding.getQty() == 0) continue;
+                            StaticStore.sHoldSet.add(holding.getSymbol());
+                        }
+                    }
+                }, RxUtils.commonErrorConsumer());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(SendOrderEvent event) {
+        getHolding();
     }
 
     @Override

@@ -4,57 +4,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingBottom="8dp"
     android:paddingLeft="@dimen/root_padding_15"
     android:paddingRight="@dimen/root_padding_15"
     android:paddingTop="18dp"
-    android:paddingBottom="8dp"
     tools:background="@color/chart_background">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_weight="1">
+
         <TextView
             android:id="@+id/tv_symbol_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textColor="@color/main_text_color"
             android:textSize="@dimen/sp_14"
-            tools:text="恒指期货"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            tools:text="恒指期货"/>
+
+        <View
+            android:id="@+id/reddot"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@id/tv_symbol_name"
+            android:background="@drawable/shape_reddot_bg"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/tv_symbol"
-            android:textSize="11sp"
-            android:textColor="@color/second_text_color"
-            tools:text="HS123"
-            android:layout_marginTop="4dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_symbol_name"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/second_text_color"
+            android:textSize="11sp"
+            tools:text="HS123"/>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_price"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="@color/main_color_red"
         android:gravity="center"
         android:paddingLeft="@dimen/dp_10"
-        tools:text="12345"
+        android:textColor="@color/main_color_red"
         android:textSize="@dimen/text_size_15sp"
-        android:layout_height="wrap_content"/>
+        tools:text="12345"/>
 
     <TextView
         android:id="@+id/tv_trade_amount"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="@color/main_text_color"
         android:gravity="center"
-        tools:text="12345"
         android:paddingLeft="30dp"
+        android:textColor="@color/main_text_color"
         android:textSize="@dimen/text_size_15sp"
-        android:layout_height="wrap_content"/>
+        tools:text="12345"/>
 
     <FrameLayout
         android:layout_width="0dp"
@@ -64,12 +76,12 @@
         <TextView
             android:id="@+id/tv_change"
             android:layout_width="50dp"
-            android:gravity="center"
             android:layout_height="19dp"
             android:layout_gravity="right"
             android:background="@drawable/shape_red_border_bg"
-            tools:text="+0.22%"
+            android:gravity="center"
             android:textColor="@color/main_color_red"
-            android:textSize="9sp"/>
+            android:textSize="9sp"
+            tools:text="+0.22%"/>
     </FrameLayout>
 </LinearLayout>

@@ -36,6 +36,7 @@ import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
@@ -103,7 +104,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     /**
      * 买、卖的View，休市时隐藏
      */
-    private View tradeView;
+    private View tradeView1;
+    private View tradeView2;
+    private View tradeView3;
+    /**
+     * 休市信息，休市时显示出来
+     */
+    private TextView tvRest;
 
 
     public TradeFragment() {
@@ -156,6 +163,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
         final Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         findViews(v);
+        if (quote.getAskPrice() == -1 && quote.getBidPrice() == -1) { // 休市的状态
+            tradeView1.setVisibility(View.GONE);
+            tradeView2.setVisibility(View.GONE);
+            tradeView3.setVisibility(View.GONE);
+            tvRest.setVisibility(View.VISIBLE);
+            tvRest.setText(TextUtils.concat(SpannableUtil.getStringBySize("休市中", 1.4f), String.format("\n下一个交易时间段：%s", quote.getTradingTime())));
+        }
         mHeaderView.setOperateClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -264,12 +278,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         }
         tvLeftPb.setText(String.valueOf(quote.getBidSize()));
         tvRightPb.setText(String.valueOf(quote.getAskSize()));
-        tvPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(),quote.getTick()));
+        tvPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()));
         tvChange.setText(DoubleUtil.format2Decimal(quote.getChange()));
         tvChangeRate.setText(DoubleUtil.format2Decimal(quote.getChangeRate()) + "%");
-        if (quote.getAskPrice() == -1 && quote.getBidPrice() == -1) {
-            tradeView.setVisibility(View.GONE);
-        }
     }
 
 
@@ -298,7 +309,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvPrice = (TextView) v.findViewById(R.id.tv_price);
         tvChange = (TextView) v.findViewById(R.id.tv_change);
         tvChangeRate = (TextView) v.findViewById(R.id.tv_change_rate);
-        tradeView = v.findViewById(R.id.trade_view);
+        tradeView1 = v.findViewById(R.id.trade_view1);
+        tradeView2 = v.findViewById(R.id.trade_view2);
+        tradeView3 = v.findViewById(R.id.trade_view3);
+        tvRest = (TextView) v.findViewById(R.id.tv_rest);
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage(getString(R.string.online_transaction_in_order));
         mProgressDialog.setCancelable(false);

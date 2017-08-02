@@ -30,7 +30,8 @@ public class MarketPriceAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> 
             helper.setText(R.id.tv_symbol_name, item.getSymbolname())
                     .setText(R.id.tv_symbol, item.getSymbol())
                     .setText(R.id.tv_price, item.getLastPrice() == 0 ? "-" : StringUtils.getStringByTick(item.getLastPrice(), item.getTick()))
-                    .setText(R.id.tv_trade_amount, item.getVol() + "");
+                    .setText(R.id.tv_trade_amount, item.getVol() + "")
+                    .setVisible(R.id.reddot, item.isHolding());
             TextView tvChange = helper.getView(R.id.tv_change);
             TextView tvPrice = helper.getView(R.id.tv_price);
             tvChange.setText(changeRate == 0 ? "-" : DoubleUtil.format2Decimal(changeRate) + "%");

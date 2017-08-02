@@ -227,6 +227,7 @@ public class PositionListFragment extends ListFragment<Holding> {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         LogUtils.e(throwable);
+                        loadFailed();
                     }
                 });
 

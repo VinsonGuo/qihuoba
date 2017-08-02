@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
@@ -14,8 +13,10 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.HideRedDotEvent;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
+import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Update;
@@ -38,7 +39,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -64,6 +70,7 @@ public class MainActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         initViews();
         checkUpdate();
+        startPoll();
     }
 
     private void checkUpdate() {
@@ -97,7 +104,9 @@ public class MainActivity extends BaseActivity {
         viewPager.setOffscreenPageLimit(fragments.length);
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
         mBottomBar.setViewPager(viewPager);
+    }
 
+    private void startPoll() {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -112,8 +121,11 @@ public class MainActivity extends BaseActivity {
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override
                             public List<Quote> apply(@NonNull List<Quote> quotes) throws Exception {
+                                Map<String, Quote> quoteMap = StaticStore.sQuoteMap;
                                 for (Quote quote : quotes) {
-                                    StaticStore.sQuoteMap.put(quote.getSymbol(), quote);
+                                    //设置一下商品是否持仓
+                                    quote.setHolding(StaticStore.sHoldSet.contains(quote.getSymbol()));
+                                    quoteMap.put(quote.getSymbol(), quote);
                                 }
                                 return quotes;
                             }
@@ -132,7 +144,7 @@ public class MainActivity extends BaseActivity {
                             }
                         });
             }
-        }, 3000, 1000);
+        }, 0, 1000);
     }
 
     @Override
@@ -146,6 +158,7 @@ public class MainActivity extends BaseActivity {
 
         mBackPressed = System.currentTimeMillis();
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(UpdateUserInfoEvent event) {

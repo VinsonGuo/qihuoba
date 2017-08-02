@@ -96,7 +96,7 @@ public class DemoTradeActivity extends BaseActivity {
 
     private void loadData() {
         final String account = UserSharePrefernce.getAccount(mContext);
-        final String password = UserSharePrefernce.getPassword(mContext);
+        final String password = /*UserSharePrefernce.getPassword(mContext)*/"123456";
         HttpManager.getHttpService(true).userLogin(account, password)
                 .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
                     @Override

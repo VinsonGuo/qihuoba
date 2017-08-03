@@ -1,5 +1,6 @@
 package com.yjjr.yjfutures.ui.mine;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public class LoginActivity extends BaseActivity {
     private EditText etPassword;
     private Button btnLogin;
     private CustomPromptDialog mCustomServiceDialog;
+    private ProgressDialog mLoginDialog;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -55,6 +57,9 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mCustomServiceDialog = DialogUtils.createCustomServiceDialog(mContext);
+        mLoginDialog = new ProgressDialog(mContext);
+        mLoginDialog.setMessage(getString(R.string.login_in));
+        mLoginDialog.setCancelable(false);
         findViews();
     }
 
@@ -112,6 +117,7 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         btnLogin.setSelected(false);
+        mLoginDialog.show();
         final String account = etUsername.getText().toString().trim();
 //        LastInputSharePrefernce.setLastAccount(mContext, account);
         final String password = etPassword.getText().toString().trim();
@@ -141,6 +147,7 @@ public class LoginActivity extends BaseActivity {
                 .subscribe(new Consumer<UserLoginResponse>() {
                     @Override
                     public void accept(@NonNull UserLoginResponse userLoginResponse) throws Exception {
+                        mLoginDialog.dismiss();
                         UserSharePrefernce.setLogin(mContext, true);
                         UserSharePrefernce.setAccount(mContext, account);
                         UserSharePrefernce.setPassword(mContext, password);
@@ -151,6 +158,7 @@ public class LoginActivity extends BaseActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        mLoginDialog.dismiss();
                         LogUtils.e(throwable);
                         btnLogin.setSelected(true);
                         ToastUtils.show(mContext, throwable.getMessage());

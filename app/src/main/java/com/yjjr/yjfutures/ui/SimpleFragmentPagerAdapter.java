@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.ui;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/3/15.
  */
-public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
+public class SimpleFragmentPagerAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> mFragments;
     private List<String> mTitles;
 
@@ -51,4 +52,5 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
         }
         return super.getPageTitle(position);
     }
+
 }

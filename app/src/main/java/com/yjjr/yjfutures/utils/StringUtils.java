@@ -508,12 +508,11 @@ public class StringUtils {
             color = R.color.main_text_color;
         } else if (unrealizedPL > 0) {
             color = R.color.main_color_red;
-
         } else {
             color = R.color.main_color_green;
 
         }
-        return SpannableUtil.getStringByColor(context, DoubleUtil.format2Decimal(unrealizedPL), color);
+        return SpannableUtil.getStringByColor(context, getProfitText(unrealizedPL), color);
     }
 
     public static String randomTrader() {
@@ -535,5 +534,9 @@ public class StringUtils {
 
         }
         return ContextCompat.getColor(context, color);
+    }
+
+    public static String getProfitText(double unrealizedPL) {
+        return (unrealizedPL > 0 ? "+" : "") + DoubleUtil.format2Decimal(unrealizedPL);
     }
 }

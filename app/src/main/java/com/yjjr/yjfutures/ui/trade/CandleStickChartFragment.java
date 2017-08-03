@@ -34,6 +34,7 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -140,6 +141,13 @@ public class CandleStickChartFragment extends BaseFragment {
         rightAxis.setGridLineWidth(0.5f);
 
         rightAxis.enableGridDashedLine(20, 5, 0);
+        final Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        rightAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return StringUtils.getStringByTick(value, quote.getTick());
+            }
+        });
 //        rightAxis.setDrawAxisLine(false);
 
         YAxis left = mChart.getAxisLeft();

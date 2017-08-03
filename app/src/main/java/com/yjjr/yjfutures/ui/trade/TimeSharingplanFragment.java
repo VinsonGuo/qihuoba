@@ -70,7 +70,7 @@ public class TimeSharingplanFragment extends BaseFragment {
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mQuote = StaticStore.sQuoteMap.get(mSymbol);
-        mChart = new TimeSharingplanChart(mContext);
+        mChart = new TimeSharingplanChart(mContext, mQuote.getTick());
         return mChart;
     }
 
@@ -114,6 +114,9 @@ public class TimeSharingplanFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(OneMinuteEvent event) {
+        if(mQuote == null || mQuote.isRest()) {
+            return;
+        }
         //一分钟更新一下数据
         HisData hisData = mDatas.get(mDatas.size() - 1);
         HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), hisData.getsDate())

@@ -11,6 +11,8 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
+import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
 
@@ -62,7 +64,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 AlterLoginPwdActivity.startActivity(mContext, AlterLoginPwdActivity.TYPE_LOGIN_PWD);
                 break;
             case R.id.tv_help:
-                HelpCenterActivity.startActivity(mContext);
+//                HelpCenterActivity.startActivity(mContext);
+                WebActivity.startActivity(mContext, HttpConfig.URL_HELP);
                 break;
             case R.id.tv_logout:
                 mLogoutDialog.show();

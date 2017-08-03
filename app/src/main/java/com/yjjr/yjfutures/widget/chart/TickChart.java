@@ -113,7 +113,7 @@ public class TickChart extends RelativeLayout {
     }
 
     private void setupSettingParameter() {
-        RealPriceMarkerView mv = new RealPriceMarkerView(mContext);
+        RealPriceMarkerView mv = new RealPriceMarkerView(mContext, 0.1);
         mChart.setMarker(mv);
 
         mChart.setDescription(null);

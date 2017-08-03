@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/tv_stop_lose"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_direction"
             tools:text="止损额\t123"
@@ -67,7 +67,7 @@
 
         <TextView
             android:id="@+id/tv_stop_win"
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_stop_lose"
             android:layout_marginTop="@dimen/root_padding_10"
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/tv_current_price"
             android:layout_toLeftOf="@+id/tv_yuan"
-            android:text="+288"
+            tools:text="+288"
             android:textColor="@color/main_color_green"
             android:textSize="20sp"/>
 
@@ -104,7 +104,7 @@
             android:layout_alignBottom="@id/tv_stop_lose"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/tv_stop_lose"
-            tools:text="开仓价\t123"
+            tools:text="开仓价\t123123456"
             android:textColor="@color/second_text_color"
             android:textSize="@dimen/sp_14"/>
 

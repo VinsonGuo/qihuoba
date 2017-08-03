@@ -12,6 +12,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.StringUtils;
 
 /**
  * Custom implementation of the MarkerView.
@@ -20,14 +21,16 @@ import com.yjjr.yjfutures.utils.DoubleUtil;
  */
 public class RealPriceMarkerView extends MarkerView {
 
+    private final double mTick;
     private TextView tvContent;
 
     private int dataSet1Color = getResources().getColor(R.color.main_color_red);
     private int dataSet2Color = getResources().getColor(R.color.main_color);
 
 
-    public RealPriceMarkerView(Context context) {
+    public RealPriceMarkerView(Context context, double tick) {
         super(context, R.layout.view_mp_real_price_marker);
+        mTick = tick;
         tvContent = (TextView) findViewById(R.id.tvContent);
     }
 
@@ -37,10 +40,7 @@ public class RealPriceMarkerView extends MarkerView {
         int color = dataIndex == 0 ? dataSet1Color : dataSet2Color;
         tvContent.setBackgroundColor(color);
         float value = e.getY();
-//        String parsedValue = null;
-//        if (digital > 0)
-//            parsedValue = DoubleUtil.formatDecimal((double) value, digital);
-        tvContent.setText(value+"");
+        tvContent.setText(StringUtils.getStringByTick(value, mTick));
         super.refreshContent(e, highlight);
     }
 

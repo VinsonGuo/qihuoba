@@ -36,7 +36,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @com.mobsandgeeks.saripaar.annotation.Pattern(regex = HttpConfig.REG_PHONE, messageResId = R.string.phone_num_illegal)
     private EditText mEtPhone;
 
-    @com.mobsandgeeks.saripaar.annotation.Pattern(regex = "[0-9]{6}", messageResId = R.string.verification_type_error)
+    @com.mobsandgeeks.saripaar.annotation.Pattern(regex = "[0-9]{4}", messageResId = R.string.verification_type_error)
     private EditText mEtSmsCode;
 
     @Password(min = 6, scheme = Password.Scheme.ANY, messageResId = R.string.password_too_simple)
@@ -126,7 +126,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     public void onValidationFailed(List<ValidationError> errors) {
         if (errors.size() > 0) {
             String message = errors.get(0).getCollatedErrorMessage(mContext);
-            ToastUtils.show(mContext, message);
+//            ToastUtils.show(mContext, message);
         }
         mBtnConfirm.setSelected(false);
     }

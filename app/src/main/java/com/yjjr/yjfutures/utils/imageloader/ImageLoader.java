@@ -18,12 +18,19 @@ import com.bumptech.glide.request.RequestListener;
 public class ImageLoader {
     public static void load(Context context, String url, ImageView imageView) {
         if (TextUtils.isEmpty(url)) return;
-        Glide.with(context).load(Uri.parse(url)).dontAnimate().into(imageView);
+        Glide.with(context)
+                .load(Uri.parse(url))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
     }
 
     public static void load(Context context, String url, ImageView imageView, RequestListener<? super Uri, GlideDrawable> listener) {
         if (TextUtils.isEmpty(url)) return;
-        Glide.with(context).load(Uri.parse(url)).listener(listener).into(imageView);
+        Glide.with(context)
+                .load(Uri.parse(url))
+                .listener(listener)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
     }
 
     public static void loadFile(Context context, String imagePath, ImageView imageView) {

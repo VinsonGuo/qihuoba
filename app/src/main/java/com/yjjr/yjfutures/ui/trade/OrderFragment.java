@@ -59,6 +59,12 @@ public class OrderFragment extends BaseFragment {
                 SettlementActivity.startActivity(mContext, mIsDemo);
             }
         });
+        headerView.setBackImageClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
         return v;
     }
 

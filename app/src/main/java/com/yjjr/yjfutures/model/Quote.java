@@ -269,6 +269,10 @@ public class Quote implements Parcelable {
         Currency = currency;
     }
 
+    public boolean isRest() {
+        return AskPrice == -1 && BidPrice == -1;
+    }
+
     @Override
     public String toString() {
         return "Quote{" +

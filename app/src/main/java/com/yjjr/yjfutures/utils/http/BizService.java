@@ -9,10 +9,10 @@ import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Info;
 import com.yjjr.yjfutures.model.biz.Notice;
+import com.yjjr.yjfutures.model.biz.NumberResult;
 import com.yjjr.yjfutures.model.biz.PageResponse;
 import com.yjjr.yjfutures.model.biz.Update;
 import com.yjjr.yjfutures.model.biz.UserInfo;
-import com.yjjr.yjfutures.model.biz.NumberResult;
 
 import java.util.List;
 
@@ -89,13 +89,29 @@ public interface BizService {
 
     @FormUrlEncoded
     @POST("user/rechargeApply")
-    Observable<BizResponse> rechargeApply(@Field("money") String money,@Field("accountType") String accountType);
+    Observable<BizResponse> rechargeApply(@Field("money") String money, @Field("accountType") String accountType);
+
     @FormUrlEncoded
     @POST("user/extractApply")
-    Observable<BizResponse> extractApply(@Field("money") String money,@Field("accountType") String accountType);
+    Observable<BizResponse> extractApply(@Field("money") String money, @Field("accountType") String accountType);
+
+    /**
+     * 修改手机号码接口
+     */
+    @FormUrlEncoded
+    @POST("user/resetMobile")
+    Observable<BizResponse> resetMobile(@Field("recNum") String recNum, @Field("code") String code);
+
+
+    /**
+     * 忘记密码重置密码
+     */
+    @FormUrlEncoded
+    @POST("user/resetPwd")
+    Observable<BizResponse> resetPwd(@Field("account") String account, @Field("password") String password, @Field("code") String code);
 
     @POST("user/queryAssetRecord/{start}/{count}")
-    Observable<BizResponse<PageResponse<AssetRecord>>> getAssetRecord(@Path("start") int start,@Path("count") int count);
+    Observable<BizResponse<PageResponse<AssetRecord>>> getAssetRecord(@Path("start") int start, @Path("count") int count);
 
     @POST("user/queryCashRecord/{start}/{count}")
     Observable<BizResponse<PageResponse<CashRecord>>> getCashRecord(@Path("start") int start, @Path("count") int count);

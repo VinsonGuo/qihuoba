@@ -14,6 +14,10 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
+    <View
+        style="@style/style_divider"
+        android:background="#313131"/>
+
     <com.yinglan.alphatabs.AlphaTabsIndicator
         android:id="@+id/alphaIndicator"
         android:layout_width="match_parent"
@@ -25,8 +29,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingTop="12dp"
             android:paddingBottom="4dp"
+            android:paddingTop="12dp"
             app:tabIconNormal="@drawable/ic_home"
             app:tabIconSelected="@drawable/ic_home_active"
             app:tabText="@string/home_page"
@@ -37,8 +41,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingTop="12dp"
             android:paddingBottom="4dp"
+            android:paddingTop="12dp"
             app:badgeBackgroundColor="@color/main_color_red"
             app:tabIconNormal="@drawable/ic_trade"
             app:tabIconSelected="@drawable/ic_trade_active"
@@ -50,8 +54,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingTop="12dp"
             android:paddingBottom="4dp"
+            android:paddingTop="12dp"
             app:tabIconNormal="@drawable/ic_found"
             app:tabIconSelected="@drawable/ic_found_active"
             app:tabText="@string/found"
@@ -62,8 +66,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingTop="12dp"
             android:paddingBottom="4dp"
+            android:paddingTop="12dp"
             app:tabIconNormal="@drawable/ic_mine"
             app:tabIconSelected="@drawable/ic_mine_active"
             app:tabText="@string/mine"

@@ -1,13 +1,17 @@
 package com.yjjr.yjfutures.ui.found;
 
+import android.view.View;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.CashRecord;
 import com.yjjr.yjfutures.model.biz.Notice;
 import com.yjjr.yjfutures.model.biz.PageResponse;
 import com.yjjr.yjfutures.ui.ListFragment;
+import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.mine.WithdrawDetailAdapter;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -48,6 +52,11 @@ public class NoticeListFragment extends ListFragment<Notice> {
     public BaseQuickAdapter<Notice, BaseViewHolder> getAdapter() {
         NoticeAdapter adapter = new NoticeAdapter(null);
         adapter.setEnableLoadMore(true);
+        mRvList.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
+            }
+        });
         return adapter;
     }
 }

@@ -30,7 +30,7 @@
                 android:id="@+id/tv_auth"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:background="@drawable/shape_bg_top_bottom_line"
+                android:background="@drawable/shape_bg_bottom_line"
                 android:drawableLeft="@drawable/ic_user_info2"
                 android:drawablePadding="@dimen/dp_10"
                 android:drawableRight="@drawable/icon_right_arrow"

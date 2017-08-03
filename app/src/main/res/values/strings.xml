@@ -353,7 +353,7 @@
     <string name="me_at_weibo">\@我的评论</string>
     <string name="sure_to_exit">确定退出</string>
     <string name="verification_cannot_null">验证码不能为空</string>
-    <string name="verification_type_error">请输入6位纯数字验证码</string>
+    <string name="verification_type_error">请输入4位纯数字验证码</string>
     <string name="password_length_error">密码长度不对，请输入6-16位密码</string>
     <string name="please_input_complete_content">请确认验证码或者密码输入完全</string>
     <string name="send_request">发送请求中...</string>

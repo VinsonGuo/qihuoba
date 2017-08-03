@@ -8,8 +8,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.CloseOrder;
-import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.SpannableUtil;
+import com.yjjr.yjfutures.utils.StringUtils;
 
 import java.util.List;
 
@@ -34,21 +34,26 @@ public class SettlementListAdapter extends BaseQuickAdapter<CloseOrder, BaseView
         TextView tvPrice = helper.getView(R.id.tv_price);
         tvPrice.setText(getPriceColor(item.getRealizedPL(), item.getRealizedPL() * mExchange));
         TextView tvDirection = helper.getView(R.id.tv_direction);
-        if(TextUtils.equals(buySell, "买入")){
+        if (TextUtils.equals(buySell, "买入")) {
             tvDirection.setText("看涨");
             tvDirection.setBackgroundResource(R.drawable.shape_online_tx_red);
-        }else {
+        } else {
             tvDirection.setText("看跌");
             tvDirection.setBackgroundResource(R.drawable.shape_online_tx_green);
         }
     }
 
     private CharSequence getPriceColor(double y, double d) {
-        String symbol = y >= 0 ? "+" : "";
-        int color = y > 0 ? R.color.main_color_red : R.color.main_color_green;
+        int color;
+        if (y == 0) {
+            color = R.color.main_text_color;
+        } else if (y > 0) {
+            color = R.color.main_color_red;
+        } else {
+            color = R.color.main_color_green;
+        }
         return TextUtils.concat(
-                SpannableUtil.getStringByColor(mContext, symbol, color),
-                SpannableUtil.getOnlinePriceString(mContext, DoubleUtil.format2Decimal(y), y),
+                SpannableUtil.getOnlinePriceString(mContext, StringUtils.getProfitText(y), y),
                 SpannableUtil.getStringBySize(SpannableUtil.getStringByColor(mContext, "\n($" + d + ")", color), 0.8f));
     }
 

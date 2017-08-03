@@ -15,6 +15,7 @@ public class Notice {
     private long date;
     private int id;
     private String title;
+    private String content;
 
     public long getDate() {
         return date;
@@ -38,5 +39,13 @@ public class Notice {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

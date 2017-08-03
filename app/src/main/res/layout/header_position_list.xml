@@ -11,6 +11,7 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="持仓总收益(人民币)"
         android:textColor="@color/main_text_color"
         android:textSize="@dimen/sp_12"/>
@@ -31,10 +32,11 @@
         android:id="@+id/tv_close"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/shape_bg_one_click_close"
         android:layout_alignParentRight="true"
-        android:textSize="12sp"
+        android:layout_alignTop="@id/tv_title"
+        android:background="@drawable/shape_bg_one_click_close"
         android:gravity="center"
         android:text="@string/one_click_position"
-        android:textColor="@color/third_text_color"/>
+        android:textColor="@color/third_text_color"
+        android:textSize="12sp"/>
 </RelativeLayout>

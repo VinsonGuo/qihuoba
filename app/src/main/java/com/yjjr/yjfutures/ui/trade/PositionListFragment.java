@@ -219,7 +219,7 @@ public class PositionListFragment extends ListFragment<Holding> {
                             }
                         }
                         mAdapter.setNewData(list);
-                        mTvProfit.setText(DoubleUtil.format2Decimal(profit));
+                        mTvProfit.setText(StringUtils.getProfitText(profit));
                         mTvProfit.setTextColor(StringUtils.getProfitColor(mContext, profit));
                         loadDataFinish();
                     }

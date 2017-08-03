@@ -1,8 +1,7 @@
 package com.yjjr.yjfutures.ui.trade;
 
-import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -11,8 +10,8 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
-import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
+import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.StringUtils;
 
 import java.util.List;
@@ -30,12 +29,12 @@ public class PositionListAdapter extends BaseQuickAdapter<Holding, BaseViewHolde
     protected void convert(BaseViewHolder helper, Holding item) {
         try {
             Quote quote = StaticStore.sQuoteMap.get(item.getSymbol());
-            helper.setText(R.id.tv_symbol, quote.getSymbol() + "-" + quote.getSymbolname())
-                    .setText(R.id.tv_open_price, "开仓价\t" + DoubleUtil.formatDecimal(item.getAvgPrice()))
-                    .setText(R.id.tv_current_price, "当前价\t" + DoubleUtil.formatDecimal(item.getMarketPrice()))
+            helper.setText(R.id.tv_symbol, quote.getSymbolname())
+                    .setText(R.id.tv_open_price, TextUtils.concat("开仓价\t", SpannableUtil.getStringByColor(mContext, StringUtils.getStringByTick(item.getAvgPrice(), quote.getTick()), R.color.main_text_color)))
+                    .setText(R.id.tv_current_price, TextUtils.concat("当前价\t", SpannableUtil.getStringByColor(mContext, StringUtils.getStringByTick(item.getMarketPrice(), quote.getTick()), R.color.main_text_color)))
                     .setText(R.id.tv_stop_lose, "止损价\t")
                     .setText(R.id.tv_stop_win, "止盈价\t")
-                    .setText(R.id.tv_profit, DoubleUtil.format2Decimal(item.getUnrealizedPL()))
+                    .setText(R.id.tv_profit, StringUtils.getProfitText(item.getUnrealizedPL()))
                     .setText(R.id.tv_hand, item.getBuySell() + Math.abs(item.getQty()) + "手")
                     .addOnClickListener(R.id.tv_close_order);
             TextView tvHand = helper.getView(R.id.tv_hand);

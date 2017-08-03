@@ -72,8 +72,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvRight;
     private String leftText = "看涨";
     private String rightText = "看跌";
-    private TextView tvLeftArrow;
-    private TextView tvRightArrow;
     private TextView tvCenter;
     private ProgressDialog mProgressDialog;
     private NoTouchScrollViewpager mViewpager;
@@ -163,7 +161,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
         final Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         findViews(v);
-        if (quote.getAskPrice() == -1 && quote.getBidPrice() == -1) { // 休市的状态
+        if (quote.isRest()) { // 休市的状态
             tradeView1.setVisibility(View.GONE);
             tradeView2.setVisibility(View.GONE);
             tradeView3.setVisibility(View.GONE);
@@ -248,6 +246,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 });
         tvCenter.setText(UserSharePrefernce.getFastTakeOrder(mContext, mSymbol) != null ? R.string.opened : R.string.closed);
         fillViews(quote);
+        mHeaderView.setMainTitle(quote.getSymbolname());
         tvLeft.setOnClickListener(this);
         tvRight.setOnClickListener(this);
         v.findViewById(R.id.tv_center).setOnClickListener(this);
@@ -261,15 +260,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     private void fillViews(Quote quote) {
         if (quote == null) return;
-        mHeaderView.setMainTitle(quote.getSymbolname());
-        double change = quote.getChangeRate();
-//        StringUtils.setOnlineTxTextStyleLeft(tvLeft, quote.getBidPrice() + "", change);
-        tvLeft.setText(leftText + StringUtils.getStringByTick(quote.getBidPrice(), quote.getTick()));
-//        StringUtils.setOnlineTxArrow(tvLeftArrow, change);
-//        StringUtils.setOnlineTxTextStyleRight(tvRight, quote.getAskPrice() + "", change);
-        tvRight.setText(StringUtils.getStringByTick(quote.getAskPrice(), quote.getTick()) + rightText);
-
-//        StringUtils.setOnlineTxArrow(tvRightArrow, change);
+        tvLeft.setText(leftText + StringUtils.getStringByTick(quote.getAskPrice(), quote.getTick()));
+        tvRight.setText(StringUtils.getStringByTick(quote.getBidPrice(), quote.getTick()) + rightText);
 
         int allSize = quote.getBidSize() + quote.getAskSize();
         if (allSize != 0) {
@@ -294,8 +286,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvRight = (TextView) v.findViewById(R.id.tv_right);
         tvLeftPb = (TextView) v.findViewById(R.id.tv_left_pb);
         tvRightPb = (TextView) v.findViewById(R.id.tv_right_pb);
-        tvLeftArrow = (TextView) v.findViewById(R.id.tv_left_arrow);
-        tvRightArrow = (TextView) v.findViewById(R.id.tv_right_arrow);
         tvCenter = (TextView) v.findViewById(R.id.tv_center);
         mViewpager = (NoTouchScrollViewpager) v.findViewById(R.id.viewpager);
         mTvKchart = (TextView) v.findViewById(R.id.tv_kchart);

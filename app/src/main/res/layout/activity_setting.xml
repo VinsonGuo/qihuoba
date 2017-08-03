@@ -24,6 +24,7 @@
         android:background="@drawable/shape_bg_top_bottom_line">
 
     <FrameLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -61,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:paddingRight="@dimen/dp_10"
-            android:background="@drawable/shape_bg_bottom_line"
+            android:background="@drawable/shape_bg_top_bottom_line"
             android:drawableRight="@drawable/icon_right_arrow"
             android:gravity="center_vertical"
             android:text="@string/login_pwd"

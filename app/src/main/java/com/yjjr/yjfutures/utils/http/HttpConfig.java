@@ -59,6 +59,8 @@ public class HttpConfig {
     public static final String URL_QUALIFICATION = DOMAIN + ":9100/serviceInfo/qualification.html";
     public static final String URL_ABOUT = DOMAIN + ":9100/serviceInfo/about.html";
     public static final String URL_GUIDE = DOMAIN + ":9100/serviceInfo/guide1.html";
+    public static final String URL_CSCENTER = DOMAIN + ":9100/serviceInfo/CScenter.html";
+    public static final String URL_HELP = DOMAIN + ":9100/serviceInfo/help.html";
     public static final String URL_RULE = DOMAIN + ":9100/serviceInfo/%srules.html";
 
 

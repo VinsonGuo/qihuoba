@@ -23,6 +23,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/root_padding_15"
+            android:paddingRight="@dimen/root_padding_15"
             android:orientation="vertical">
 
             <TextView
@@ -38,7 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:gravity="center"
-                android:padding="@dimen/root_padding_15">
+                android:paddingTop="@dimen/root_padding_15"
+                android:paddingBottom="@dimen/root_padding_15">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -127,7 +130,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:gravity="center"
-                android:padding="@dimen/root_padding_15">
+                android:paddingTop="@dimen/root_padding_15"
+                android:paddingBottom="@dimen/root_padding_15">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -156,7 +160,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:gravity="center"
-                android:padding="@dimen/root_padding_15">
+                android:paddingTop="@dimen/root_padding_15"
+                android:paddingBottom="@dimen/root_padding_15">
 
                 <TextView
                     android:id="@+id/textView"
@@ -186,7 +191,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:gravity="center"
-                android:padding="@dimen/root_padding_15">
+                android:paddingTop="@dimen/root_padding_15"
+                android:paddingBottom="@dimen/root_padding_15">
 
                 <TextView
                     style="@style/text_color_333333_14sp"
@@ -216,7 +222,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:gravity="center"
-                android:padding="@dimen/root_padding_15">
+                android:paddingTop="@dimen/root_padding_15"
+                android:paddingBottom="@dimen/root_padding_15">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -245,7 +252,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:gravity="center"
-                android:padding="@dimen/root_padding_15">
+                android:paddingTop="@dimen/root_padding_15"
+                android:paddingBottom="@dimen/root_padding_15">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -275,7 +283,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="1.2"
-                android:padding="@dimen/root_padding_15"
+                android:paddingTop="@dimen/root_padding_15"
+                android:paddingBottom="@dimen/root_padding_15"
                 android:text="说明：\n1.一旦开启，点击购买\n2.适当操作，理性投资"
                 android:textColor="@color/second_text_color"
                 android:textSize="@dimen/sp_12"/>
@@ -294,13 +303,14 @@
 
     <Button
         android:id="@+id/btn_open"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/selector_common_btn_bg"
         android:drawableLeft="@drawable/ic_fast_order_dark"
-        android:paddingLeft="70dp"
-        android:paddingRight="70dp"
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_marginRight="@dimen/root_padding_15"
+        android:paddingLeft="120dp"
+        android:paddingRight="120dp"
         android:text="@string/fast_order"
         android:textSize="@dimen/common_btn_text_size"/>
 

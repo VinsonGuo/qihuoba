@@ -3,8 +3,10 @@ package com.yjjr.yjfutures.ui.trade;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.yjjr.yjfutures.R;
@@ -14,6 +16,9 @@ import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
 public class TradeActivity extends BaseActivity {
+
+    private NoTouchScrollViewpager mViewpager;
+    private RadioGroup mRgNav;
 
     public static void startActivity(Context context, String symbol, boolean isDemo) {
         Intent intent = new Intent(context, TradeActivity.class);
@@ -26,24 +31,42 @@ public class TradeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trade);
-        String symbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
-        boolean isDemo = getIntent().getBooleanExtra(Constants.CONTENT_PARAMETER_2, false);
-        final NoTouchScrollViewpager viewpager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
-        Fragment[] fragments = {TradeFragment.newInstance(isDemo, symbol), OrderFragment.newInstance(isDemo)};
-        viewpager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
-        RadioGroup rgNav = (RadioGroup) findViewById(R.id.rg_nav);
-        rgNav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        final String symbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
+        final boolean isDemo = getIntent().getBooleanExtra(Constants.CONTENT_PARAMETER_2, false);
+        mViewpager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
+        Fragment[] fragments = new Fragment[]{TradeFragment.newInstance(isDemo, symbol), OrderFragment.newInstance(isDemo)};
+        mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
+        mRgNav = (RadioGroup) findViewById(R.id.rg_nav);
+        mRgNav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId) {
                     case R.id.rb_market:
-                        viewpager.setCurrentItem(0, false);
+                        mViewpager.setCurrentItem(0, false);
                         break;
                     case R.id.rb_order:
-                        viewpager.setCurrentItem(1, false);
+                        mViewpager.setCurrentItem(1, false);
                         break;
                 }
             }
         });
+
+        /*new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFragments[0] = TradeFragment.newInstance(isDemo, "CLU7");
+                mAdapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
+                mViewpager.setAdapter(mAdapter);
+            }
+        },3000);*/
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mViewpager.getCurrentItem() == 0) {
+            super.onBackPressed();
+        }else {
+            ((RadioButton)mRgNav.getChildAt(0)).setChecked(true);
+        }
     }
 }

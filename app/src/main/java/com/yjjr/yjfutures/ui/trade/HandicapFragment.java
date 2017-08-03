@@ -14,6 +14,7 @@ import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.StringUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -74,15 +75,15 @@ public class HandicapFragment extends BaseFragment {
 
     private void fillView() {
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
-        tvHigh.setText(DoubleUtil.format2Decimal(quote.getHigh()));
-        tvLastPrice.setText(DoubleUtil.format2Decimal(quote.getLastPrice()));
-        tvOpen.setText(DoubleUtil.format2Decimal(quote.getOpen()));
-        tvChange.setText(DoubleUtil.format2Decimal(quote.getChange()));
-        tvHigh.setText(DoubleUtil.format2Decimal(quote.getHigh()));
+        tvHigh.setText(StringUtils.getStringByTick(quote.getHigh(), quote.getTick()));
+        tvLastPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()));
+        tvOpen.setText(StringUtils.getStringByTick(quote.getOpen(), quote.getTick()));
+        tvChange.setText(StringUtils.getStringByTick(quote.getChange(), quote.getTick()));
+        tvHigh.setText(StringUtils.getStringByTick(quote.getHigh(), quote.getTick()));
         tvChangeRate.setText(DoubleUtil.format2Decimal(quote.getChangeRate()) + "%");
-        tvLow.setText(DoubleUtil.format2Decimal(quote.getLow()));
+        tvLow.setText(StringUtils.getStringByTick(quote.getLow(), quote.getTick()));
         tvVol.setText(quote.getVol() + "");
-        tvLastClose.setText(DoubleUtil.format2Decimal(quote.getLastclose()));
+        tvLastClose.setText(StringUtils.getStringByTick(quote.getLastclose(), quote.getTick()));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

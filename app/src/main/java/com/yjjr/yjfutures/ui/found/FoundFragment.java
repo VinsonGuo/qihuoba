@@ -12,6 +12,7 @@ import com.yjjr.yjfutures.event.HideRedDotEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -63,7 +64,7 @@ public class FoundFragment extends BaseFragment implements View.OnClickListener 
                 WebActivity.startActivity(mContext, "http://www.baidu.com");
                 break;
             case R.id.root_view3:
-                WebActivity.startActivity(mContext, "http://www.baidu.com");
+                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER);
                 break;
             case R.id.root_view4:
                 WebActivity.startActivity(mContext, "http://www.baidu.com");

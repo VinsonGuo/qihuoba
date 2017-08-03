@@ -11,20 +11,31 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Password;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SmsCountDownTimer;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 public class FindPwdActivity extends BaseActivity implements View.OnClickListener, Validator.ValidationListener {
 
@@ -32,10 +43,10 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
     @com.mobsandgeeks.saripaar.annotation.Pattern(regex = HttpConfig.REG_PHONE, messageResId = R.string.phone_num_illegal)
     private EditText mEtPhone;
 
-    @com.mobsandgeeks.saripaar.annotation.Pattern(regex = "[0-9]{6}", messageResId = R.string.verification_type_error)
+    @com.mobsandgeeks.saripaar.annotation.Pattern(regex = "[0-9]{4}", messageResId = R.string.verification_type_error)
     private EditText mEtSmsCode;
 
-    @Password(min = 6, scheme = Password.Scheme.ALPHA_NUMERIC, messageResId = R.string.password_too_simple)
+    @Password(min = 6, scheme = Password.Scheme.ANY, messageResId = R.string.password_too_simple)
     private EditText mEtPassword;
 
     private Validator mValidator;
@@ -72,7 +83,6 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
                 super.afterTextChanged(s);
                 boolean matches = pattern.matcher(s.toString()).matches();
                 operaButton.setEnabled(matches);
-
             }
         });
         findViewById(R.id.iv_back).setOnClickListener(this);
@@ -84,6 +94,15 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
         });
         operaButton.setEnabled(false);
         mBtnConfirm.setOnClickListener(this);
+        Observable.merge(RxTextView.textChanges(mEtPhone),RxTextView.textChanges(mEtSmsCode),RxTextView.textChanges(mEtPassword))
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<CharSequence>() {
+                    @Override
+                    public void accept(@NonNull CharSequence charSequence) throws Exception {
+                        mValidator.validate();
+                    }
+                });
     }
 
     @Override
@@ -93,23 +112,45 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.btn_confirm:
-                mValidator.validate();
+                findPwd();
                 break;
+        }
+    }
+
+    private void findPwd() {
+        if(mBtnConfirm.isSelected()) {
+            mBtnConfirm.setSelected(false);
+            HttpManager.getBizService().resetPwd(mEtPhone.getText().toString(),mEtPassword.getText().toString(),mEtSmsCode.getText().toString())
+                    .compose(RxUtils.applyBizSchedulers())
+                    .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
+                    .subscribe(new Consumer<BizResponse>() {
+                        @Override
+                        public void accept(@NonNull BizResponse response) throws Exception {
+                            ToastUtils.show(mContext, response.getRmsg());
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception {
+                            LogUtils.e(throwable);
+                            mBtnConfirm.setSelected(true);
+                            ToastUtils.show(mContext, throwable.getMessage());
+                        }
+                    });
         }
     }
 
     @Override
     public void onValidationSucceeded() {
-        mBtnConfirm.setEnabled(true);
+        mBtnConfirm.setSelected(true);
     }
 
     @Override
     public void onValidationFailed(List<ValidationError> errors) {
         if (errors.size() > 0) {
             String message = errors.get(0).getCollatedErrorMessage(mContext);
-            ToastUtils.show(mContext, message);
+//            ToastUtils.show(mContext, message);
         }
-        mBtnConfirm.setEnabled(false);
+        mBtnConfirm.setSelected(false);
     }
 
     @Override

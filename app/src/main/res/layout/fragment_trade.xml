@@ -273,11 +273,11 @@
             tools:text="5"/>
 
         <TextView
-            style="@style/text_color_333333_14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:textSize="@dimen/sp_12"
             android:text="买卖量"
             android:textColor="@color/third_text_color"/>
 
@@ -336,25 +336,20 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_left_arrow"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
-            android:text="↑"
-            android:textColor="@color/main_text_color"
-            android:textSize="28sp"/>
+            android:src="@drawable/up_arrow"/>
 
-        <TextView
+        <ImageView
             android:id="@+id/tv_right_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
             android:layout_marginRight="20dp"
-            android:text="↓"
-            android:textColor="@color/main_text_color"
-            android:textSize="28sp"/>
+            android:src="@drawable/down_arrow"/>
 
         <TextView
             android:id="@+id/tv_center"

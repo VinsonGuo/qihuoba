@@ -8,7 +8,7 @@
     <color name="tab_unselect_color">@color/second_text_color</color>
     <color name="main_color">#5daeea</color>
     <color name="main_color_red">#ff3b30</color>
-    <color name="main_color_green">#68dc7b</color>
+    <color name="main_color_green">#4cd964</color>
     <color name="link_color">#002f9a</color>
     <color name="multiple_image_select_primaryDark">@color/main_color</color>
     <color name="multiple_image_select_primary">@color/main_color</color>
@@ -28,6 +28,8 @@
     <color name="second_text_color">#b7b7b7</color>
     <color name="third_text_color">#be945c</color>
     <color name="forth_text_color">#333333</color>
+    <color name="radio_color_small">#798595</color>
+
     <color name="color_20_ffffff">#33ffffff</color>
     <color name="half_white">#80FFFFFF</color>
     <color name="mine_title_line">#3e3e3e</color>

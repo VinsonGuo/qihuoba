@@ -61,18 +61,22 @@ public class HttpConfig {
     public static final String URL_GUIDE = DOMAIN + ":9100/serviceInfo/guide1.html";
     public static final String URL_CSCENTER = DOMAIN + ":9100/serviceInfo/CScenter.html";
     public static final String URL_HELP = DOMAIN + ":9100/serviceInfo/help.html";
+    public static final String URL_PROMOTION = DOMAIN + ":9100/serviceInfo/promotion.html";
+    public static final String URL_WARNING = DOMAIN + ":9100/serviceInfo/warning.html";
     public static final String URL_RULE = DOMAIN + ":9100/serviceInfo/%srules.html";
 
+
+    public static final String URL_NOTICE = DOMAIN + ":9300/service/notice/html/";
 
 
     public static String ALIPAY_ACCOUNT_CODE = "FKX02544EKPFEEKPCQSYC8";
     /**
      * 客服电话
      */
-    public static String SERVICE_PHONE = "400-005-800";
+    public static String SERVICE_PHONE = "0755-86534610";
     public static String QQ = "888666888";
     /**
      * 投诉电话
      */
-    public static String COMPLAINT_PHONE = "0755-68888628";
+    public static String COMPLAINT_PHONE = "0755-86534610";
 }

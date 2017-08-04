@@ -31,20 +31,22 @@ public class DialogUtils {
     }
 
     public static CustomPromptDialog createUpdateDialog(final Context context, final Update update) {
+        int android = update.getAndroid();
+        boolean isForceUpdate = android == -1;
         CustomPromptDialog dialog = new CustomPromptDialog.Builder(context)
-                .isShowClose(true)
+                .isShowClose(!isForceUpdate)
                 .setMessage(update.getAndroidDesc())
-                .setMessageDrawableId(R.drawable.ic_found_service)
+                .setMessageDrawableId(R.drawable.ic_info)
                 .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(update.getUpdateUrl()));
+                        i.setData(Uri.parse(HttpConfig.BIZ_HOST + update.getUpdateUrl()));
                         context.startActivity(i);
                     }
                 })
                 .create();
-        dialog.setCancelable(false);
+        dialog.setCancelable(!isForceUpdate);
         return dialog;
     }
 }

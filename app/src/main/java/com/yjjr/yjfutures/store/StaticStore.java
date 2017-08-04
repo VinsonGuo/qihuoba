@@ -23,5 +23,6 @@ public class StaticStore {
     public static Map<String, Quote> sDemoQuoteMap = new LinkedHashMap<>();
     public static String sDemoSymbols;
     public static String sDemoExchange;
+    public static Set<String> sDemoHoldSet = new HashSet<>();
 
 }

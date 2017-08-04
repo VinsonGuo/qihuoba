@@ -4,6 +4,7 @@ package com.yjjr.yjfutures.ui.mine;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TextView tvYue;
     private TextView tvMargin;
     private TextView tvNet;
-    private CustomPromptDialog mCustomServiceDialog;
 
     public MineFragment() {
         // Required empty public constructor
@@ -67,9 +67,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                             @Override
                             public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
                                 Funds result = fundsBizResponse.getResult();
-                                tvYue.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getAvailableFunds()));
-                                tvMargin.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getFrozenMargin()));
-                                tvNet.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getNetAssets()));
+                                tvYue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
+                                tvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
+                                tvNet.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getNetAssets()));
                                 refresh.setRefreshing(false);
                             }
                         }, new Consumer<Throwable>() {
@@ -82,7 +82,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
             }
         });
         TextView tvTitle = (TextView) v.findViewById(R.id.tv_title);
-        if(BaseApplication.getInstance().getUserInfo() != null) {
+        if (BaseApplication.getInstance().getUserInfo() != null) {
             tvTitle.setText(BaseApplication.getInstance().getUserInfo().getName());
         }
 
@@ -96,7 +96,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_mine, container, false);
         EventBus.getDefault().register(this);
-        mCustomServiceDialog = DialogUtils.createCustomServiceDialog(mContext);
         findViews(v);
         v.findViewById(R.id.btn_login).setOnClickListener(this);
         v.findViewById(R.id.btn_register).setOnClickListener(this);
@@ -117,9 +116,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                     @Override
                     public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
                         Funds result = fundsBizResponse.getResult();
-                        tvYue.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getAvailableFunds()));
-                        tvMargin.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getFrozenMargin()));
-                        tvNet.setText(getString(R.string.rmb_symbol)+ DoubleUtil.format2Decimal(result.getNetAssets()));
+                        tvYue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
+                        tvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
+                        tvNet.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getNetAssets()));
                     }
                 }, RxUtils.commonErrorConsumer());
     }
@@ -132,7 +131,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
-        if(userInfo == null) return;
+        if (userInfo == null) return;
         switch (v.getId()) {
             case R.id.btn_login:
                 LoginActivity.startActivity(mContext);
@@ -156,17 +155,27 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 WebActivity.startActivity(mContext, HttpConfig.URL_DISCLOSURE);
                 break;
             case R.id.btn_deposit:
-                DepositActivity.startActivity(mContext);
+                if (TextUtils.isEmpty(userInfo.getIdcard())) {
+                    AuthActivity.startActivity(mContext);
+                } else if (TextUtils.isEmpty(userInfo.getAlipay())) {
+                    BindCardActivity.startActivity(mContext);
+                } else {
+                    DepositActivity.startActivity(mContext);
+                }
                 break;
             case R.id.btn_withdraw:
-                if(userInfo.isExistPayPwd()) {
+                if (TextUtils.isEmpty(userInfo.getIdcard())) {
+                    AuthActivity.startActivity(mContext);
+                } else if (TextUtils.isEmpty(userInfo.getAlipay())) {
+                    BindCardActivity.startActivity(mContext);
+                } else if (userInfo.isExistPayPwd()) {
                     WithdrawActivity.startActivity(mContext);
-                }else {
+                } else {
                     SetTradePwdActivity.startActivity(mContext);
                 }
                 break;
             case R.id.tv_customer_service:
-                mCustomServiceDialog.show();
+                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
                 break;
         }
     }

@@ -67,7 +67,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     private ConvenientBanner<Info> mBanner;
     private HomePageAdapter mAdapter;
-    private CustomPromptDialog mCustomServiceDialog;
     private LoadingView mLoadingView;
 
     public HomePageFragment() {
@@ -83,7 +82,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home_page, container, false);
-        mCustomServiceDialog = DialogUtils.createCustomServiceDialog(mContext);
 
         mLoadingView = (LoadingView) v.findViewById(R.id.load_view);
         mLoadingView.setOnReloadListener(new LoadingView.OnReloadListener() {
@@ -309,7 +307,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_customer_service:
-                mCustomServiceDialog.show();
+                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
                 break;
             case R.id.tv_guide:
                 WebActivity.startActivity(mContext, HttpConfig.URL_GUIDE);
@@ -321,7 +319,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 WebActivity.startActivity(mContext, HttpConfig.URL_QUALIFICATION);
                 break;
             case R.id.tv_title3:
-                WebActivity.startActivity(mContext, HttpConfig.URL_DISCLOSURE);
+                WebActivity.startActivity(mContext, HttpConfig.URL_WARNING);
                 break;
         }
     }
@@ -350,8 +348,16 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         }
 
         @Override
-        public void UpdateUI(Context context, final int position, Info data) {
+        public void UpdateUI(Context context, final int position, final Info data) {
             ImageLoader.load(context, HttpConfig.BIZ_HOST + data.getName(), imageView);
+            if(!TextUtils.isEmpty(data.getValue())) {
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        WebActivity.startActivity(mContext, data.getValue());
+                    }
+                });
+            }
         }
     }
 }

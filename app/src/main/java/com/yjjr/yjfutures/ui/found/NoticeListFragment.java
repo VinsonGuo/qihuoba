@@ -1,19 +1,20 @@
 package com.yjjr.yjfutures.ui.found;
 
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.BizResponse;
-import com.yjjr.yjfutures.model.biz.CashRecord;
 import com.yjjr.yjfutures.model.biz.Notice;
 import com.yjjr.yjfutures.model.biz.PageResponse;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
-import com.yjjr.yjfutures.ui.mine.WithdrawDetailAdapter;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 
 import io.reactivex.annotations.NonNull;
@@ -35,7 +36,7 @@ public class NoticeListFragment extends ListFragment<Notice> {
                         PageResponse<Notice> result = response.getResult();
                         mAdapter.addData(result.getList());
                         loadDataFinish();
-                        if(mAdapter.getData().size() >= result.getTotal()) {
+                        if (mAdapter.getData().size() >= result.getTotal()) {
                             mAdapter.loadMoreEnd();
                         }
                     }
@@ -55,8 +56,16 @@ public class NoticeListFragment extends ListFragment<Notice> {
         mRvList.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
+                WebActivity.startActivity(mContext, HttpConfig.URL_NOTICE + mAdapter.getData().get(position).getId());
             }
         });
         return adapter;
+    }
+
+
+    @Override
+    protected void setManager() {
+        super.setManager();
+        mRvList.setBackgroundColor(ContextCompat.getColor(mContext, R.color.chart_background));
     }
 }

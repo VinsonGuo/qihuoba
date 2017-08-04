@@ -21,6 +21,7 @@ public class Info {
     private int id;
     private String nameEn;
     private String type;
+    private String value;
 
     public String getName() {
         return name;
@@ -70,6 +71,14 @@ public class Info {
         this.type = type;
     }
 
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     @Override
     public String toString() {
         return "Info{" +
@@ -79,6 +88,7 @@ public class Info {
                 ", id=" + id +
                 ", nameEn='" + nameEn + '\'' +
                 ", type='" + type + '\'' +
+                ", value='" + value + '\'' +
                 '}';
     }
 }

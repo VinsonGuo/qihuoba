@@ -127,6 +127,7 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
                         @Override
                         public void accept(@NonNull BizResponse response) throws Exception {
                             ToastUtils.show(mContext, response.getRmsg());
+                            finish();
                         }
                     }, new Consumer<Throwable>() {
                         @Override

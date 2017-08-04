@@ -13,10 +13,8 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.HideRedDotEvent;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.RefreshEvent;
-import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
-import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Update;
@@ -39,12 +37,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -81,7 +75,9 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void accept(@NonNull BizResponse<Update> response) throws Exception {
                         Update result = response.getResult();
-                        DialogUtils.createUpdateDialog(mContext, result).show();
+                        if (result.getAndroid() != 0) {
+                            DialogUtils.createUpdateDialog(mContext, result).show();
+                        }
                     }
                 }, RxUtils.commonErrorConsumer());
     }

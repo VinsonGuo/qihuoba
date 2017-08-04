@@ -166,7 +166,7 @@ public class RegisterInput extends FrameLayout {
     }
 
     public String getValue() {
-        return mEtInput.getText().toString();
+        return mEtInput.getText().toString().trim();
     }
 
     public void setValue(long value) {

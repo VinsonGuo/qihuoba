@@ -72,7 +72,7 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
     @Override
     protected void initData() {
         if(mShowTitle) {
-            mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+            mAdapter.replaceData(StaticStore.sQuoteMap.values());
         }else {
             mAdapter.replaceData(StaticStore.sDemoQuoteMap.values());
         }

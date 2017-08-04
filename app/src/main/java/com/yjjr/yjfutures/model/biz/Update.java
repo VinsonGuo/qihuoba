@@ -18,6 +18,9 @@ public class Update {
     private String androidDesc;
     private String verNo;
 
+    /**
+     * -1 强制更新   1 可选更新 0 无更新提示
+     */
     public int getAndroid() {
         return android;
     }

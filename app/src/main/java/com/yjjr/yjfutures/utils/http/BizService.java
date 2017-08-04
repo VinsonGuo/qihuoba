@@ -110,6 +110,14 @@ public interface BizService {
     @POST("user/resetPwd")
     Observable<BizResponse> resetPwd(@Field("account") String account, @Field("password") String password, @Field("code") String code);
 
+
+    /**
+     * 注册
+     */
+    @FormUrlEncoded
+    @POST("user/register")
+    Observable<BizResponse> register(@Field("account") String account, @Field("password") String password, @Field("code") String code);
+
     @POST("user/queryAssetRecord/{start}/{count}")
     Observable<BizResponse<PageResponse<AssetRecord>>> getAssetRecord(@Path("start") int start, @Path("count") int count);
 

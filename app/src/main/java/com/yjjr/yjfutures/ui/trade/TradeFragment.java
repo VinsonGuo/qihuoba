@@ -194,7 +194,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         break;
                 }
                 mTvKchart.setBackgroundResource(R.drawable.shape_trade_rb_bg_unchecked);
-                mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.second_text_color));
+                mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.radio_color_small));
+                mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null,null,ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow),null);
             }
         });
         ((RadioButton) rgNav.getChildAt(1)).setChecked(true);
@@ -222,6 +223,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mTvKchart.setText(menuItems.get(position).getText());
                         mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.main_text_color));
                         mTvKchart.setBackgroundResource(R.drawable.shape_trade_rb_bg_checked);
+                        mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null,null,ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow_white),null);
                         mViewpager.setCurrentItem(2, false);
                         String type = CandleStickChartFragment.MIN;
                         switch (position) {
@@ -375,7 +377,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
                         vgOrder.setVisibility(View.GONE);
                         vgSettlement.setVisibility(View.VISIBLE);
                         leftText = "看涨";

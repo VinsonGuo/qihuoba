@@ -13,22 +13,33 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Checked;
 import com.mobsandgeeks.saripaar.annotation.Password;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SmsCountDownTimer;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, Validator.ValidationListener {
 
@@ -100,6 +111,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mOperaButton.setEnabled(false);
         mBtnConfirm.setOnClickListener(this);
         findViewById(R.id.tv_agreement).setOnClickListener(this);
+        Observable.merge(RxTextView.textChanges(mEtPhone), RxTextView.textChanges(mEtSmsCode), RxTextView.textChanges(mEtPassword))
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<CharSequence>() {
+                    @Override
+                    public void accept(@NonNull CharSequence charSequence) throws Exception {
+                        mValidator.validate();
+                    }
+                });
     }
 
     @Override
@@ -109,11 +129,34 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.btn_confirm:
-                mValidator.validate();
+                register();
                 break;
             case R.id.tv_agreement:
                 WebActivity.startActivity(mContext, HttpConfig.URL_AGREEMENT);
                 break;
+        }
+    }
+
+    private void register() {
+        if (mBtnConfirm.isSelected()) {
+            mBtnConfirm.setSelected(false);
+            HttpManager.getBizService().register(mEtPhone.getText().toString(), mEtPassword.getText().toString(), mEtSmsCode.getText().toString())
+                    .compose(RxUtils.applyBizSchedulers())
+                    .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
+                    .subscribe(new Consumer<BizResponse>() {
+                        @Override
+                        public void accept(@NonNull BizResponse response) throws Exception {
+                            ToastUtils.show(mContext, response.getRmsg());
+                            finish();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception {
+                            LogUtils.e(throwable);
+                            mBtnConfirm.setSelected(true);
+                            ToastUtils.show(mContext, throwable.getMessage());
+                        }
+                    });
         }
     }
 

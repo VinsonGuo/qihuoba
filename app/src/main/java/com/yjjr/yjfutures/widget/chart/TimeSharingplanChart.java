@@ -105,12 +105,6 @@ public class TimeSharingplanChart extends RelativeLayout {
 
     }
 
-    public void addLastEntry() {
-        LineData data = mChart.getData();
-        ILineDataSet setSell = data.getDataSetByIndex(DATA_SET_SELL);
-        Entry bid = setSell.getEntryForIndex(setSell.getEntryCount() - 1);
-        refreshChart(bid.getY());
-    }
 
     public void refreshEntry(float bid) {
         if (bid <= 0) {

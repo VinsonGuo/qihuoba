@@ -2,7 +2,6 @@ package com.yjjr.yjfutures.ui.mine;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -42,14 +41,14 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     protected void onResume() {
         super.onResume();
         UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
-        if(userInfo == null) return;
-        if(userInfo.isExistPayPwd()) {
+        if (userInfo == null) return;
+        if (userInfo.isExistPayPwd()) {
             mTvPwd.setText(R.string.modify);
         }
-        if(!TextUtils.isEmpty(userInfo.getIdcard())) {
+        if (!TextUtils.isEmpty(userInfo.getIdcard())) {
             mTvName.setText(userInfo.getName());
         }
-        if(!TextUtils.isEmpty(userInfo.getAlipay())) {
+        if (!TextUtils.isEmpty(userInfo.getAlipay())) {
             mTvCard.setText(R.string.modify);
         }
     }
@@ -57,24 +56,28 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
-        if(userInfo == null) return;
+        if (userInfo == null) return;
         switch (v.getId()) {
             case R.id.tv_auth:
-                if(!TextUtils.isEmpty(userInfo.getIdcard())) {
+                if (!TextUtils.isEmpty(userInfo.getIdcard())) {
                     AuthInfoActivity.startActivity(mContext);
-                }else {
+                } else {
                     AuthActivity.startActivity(mContext);
                 }
                 break;
             case R.id.tv_pay_pwd:
-                if(userInfo.isExistPayPwd()) {
+                if (userInfo.isExistPayPwd()) {
                     AlterLoginPwdActivity.startActivity(mContext, AlterLoginPwdActivity.TYPE_TRADE_PWD);
-                }else {
+                } else {
                     SetTradePwdActivity.startActivity(mContext);
                 }
                 break;
             case R.id.tv_deposit:
-                BindCardActivity.startActivity(mContext);
+                if (!TextUtils.isEmpty(userInfo.getIdcard())) {
+                    BindCardActivity.startActivity(mContext);
+                } else {
+                    AuthActivity.startActivity(mContext);
+                }
                 break;
         }
     }

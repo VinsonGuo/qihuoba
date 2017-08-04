@@ -22,10 +22,12 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.MainActivity;
+import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.RegisterInput;
@@ -43,7 +45,6 @@ public class LoginActivity extends BaseActivity {
     private EditText etUsername;
     private EditText etPassword;
     private Button btnLogin;
-    private CustomPromptDialog mCustomServiceDialog;
     private ProgressDialog mLoginDialog;
 
     public static void startActivity(Context context) {
@@ -56,7 +57,6 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mCustomServiceDialog = DialogUtils.createCustomServiceDialog(mContext);
         mLoginDialog = new ProgressDialog(mContext);
         mLoginDialog.setMessage(getString(R.string.login_in));
         mLoginDialog.setCancelable(false);
@@ -106,7 +106,7 @@ public class LoginActivity extends BaseActivity {
         findViewById(R.id.tv_contact).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCustomServiceDialog.show();
+                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
             }
         });
 

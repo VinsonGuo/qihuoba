@@ -75,11 +75,14 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
 
     protected void loadFailed() {
         mLoadView.setVisibility(View.VISIBLE);
+        mLoadView.loadFail();
         mRefreshLayout.setRefreshing(false);
-        if (mPage == 1) {
-            mLoadView.loadFail();
-        } else {
-            mAdapter.loadMoreFail();
+        if (mAdapter.isLoadMoreEnable()) {
+            if (mPage == 1) {
+                mLoadView.loadFail();
+            } else {
+                mAdapter.loadMoreFail();
+            }
         }
         mAdapter.notifyDataSetChanged();
     }

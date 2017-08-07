@@ -78,8 +78,13 @@ public class TimeSharingplanFragment extends BaseFragment {
     protected void initData() {
         super.initData();
         DateTime dateTime;
-        if (mQuote.getAskPrice() < 0) { //未开盘，数据加载前一天的
-            dateTime = new DateTime().minusDays(1).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+        if (mQuote.isRest()) { //未开盘，数据加载前一天的
+            dateTime = new DateTime();
+            if (dateTime.getDayOfWeek() == 1 || dateTime.getDayOfWeek() == 7) { //星期一、星期天前一天还是没数据，要加载星期五的
+                dateTime = dateTime.minusDays(1).withDayOfWeek(5).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+            } else {
+                dateTime = dateTime.minusDays(1).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+            }
         } else {
             dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
         }
@@ -114,7 +119,7 @@ public class TimeSharingplanFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(OneMinuteEvent event) {
-        if(mQuote == null || mQuote.isRest()) {
+        if (mQuote == null || mQuote.isRest()) {
             return;
         }
         //一分钟更新一下数据

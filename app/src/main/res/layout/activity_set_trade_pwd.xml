@@ -36,10 +36,9 @@
         app:gpvLineColor="@color/divider_color"
         app:gpvLineWidth="1dp"
         app:gpvPasswordLength="6"
-        app:gpvPasswordTransformation="*"
         app:gpvPasswordType="numberPassword"
         app:gpvTextColor="#999999"
-        app:gpvTextSize="25sp"/>
+        app:gpvTextSize="10sp"/>
 
     <Button
         android:id="@+id/btn_confirm"

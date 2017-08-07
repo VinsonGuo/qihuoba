@@ -1,5 +1,6 @@
 package com.yjjr.yjfutures.utils.http;
 
+import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.AssetRecord;
 import com.yjjr.yjfutures.model.biz.BizResponse;
@@ -126,4 +127,7 @@ public interface BizService {
 
     @POST("notice/list/{start}/{count}")
     Observable<BizResponse<PageResponse<Notice>>> getNotice(@Path("start") int start, @Path("count") int count);
+
+    @POST("trader/closedOrderList/{start}/{count}")
+    Observable<BizResponse<List<CloseOrder>>> getCloseOrder(@Path("start") int start, @Path("count") int count);
 }

@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.CloseOrder;
+import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.StringUtils;
 
@@ -19,7 +20,6 @@ import java.util.List;
 
 public class SettlementListAdapter extends BaseQuickAdapter<CloseOrder, BaseViewHolder> {
 
-    private double mExchange;
 
     public SettlementListAdapter(@Nullable List<CloseOrder> data) {
         super(R.layout.item_settlement_list, data);
@@ -28,11 +28,11 @@ public class SettlementListAdapter extends BaseQuickAdapter<CloseOrder, BaseView
     @Override
     protected void convert(BaseViewHolder helper, CloseOrder item) {
         String buySell = item.getOpenBuySell();
-        helper.setText(R.id.tv_time, item.getCloseDate().replace('T', '\n'))
+        helper.setText(R.id.tv_time, DateUtils.formatData(item.getCloseDate()).replace(' ', '\n'))
                 .setText(R.id.tv_info, item.getSymbol() + "\t" + Math.abs(item.getQty()) + "手")
                 .setText(R.id.tv_type, buySell);
         TextView tvPrice = helper.getView(R.id.tv_price);
-        tvPrice.setText(getPriceColor(item.getRealizedPL(), item.getRealizedPL() * mExchange));
+        tvPrice.setText(getPriceColor(item.getRealizedPL_CNY(), item.getRealizedPL()));
         TextView tvDirection = helper.getView(R.id.tv_direction);
         if (TextUtils.equals(buySell, "买入")) {
             tvDirection.setText("看涨");
@@ -57,7 +57,4 @@ public class SettlementListAdapter extends BaseQuickAdapter<CloseOrder, BaseView
                 SpannableUtil.getStringBySize(SpannableUtil.getStringByColor(mContext, "\n($" + d + ")", color), 0.8f));
     }
 
-    public void setExchange(double exchange) {
-        mExchange = exchange;
-    }
 }

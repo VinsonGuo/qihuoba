@@ -11,14 +11,17 @@ import android.widget.LinearLayout;
 
 import com.just.library.AgentWeb;
 import com.just.library.ChromeClientCallbackManager;
+import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.widget.HeaderView;
 
 public class WebActivity extends BaseActivity {
 
     public static final int TYPE_CSCENTER = 1;
+    public static final int TYPE_SHARE = 2;
 
     private AgentWeb mAgentWeb;
 
@@ -39,21 +42,28 @@ public class WebActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
-        String url = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
-        int type = getIntent().getIntExtra(Constants.CONTENT_PARAMETER_2, 0);
+        final String url = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
+        final int type = getIntent().getIntExtra(Constants.CONTENT_PARAMETER_2, 0);
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.root_view);
         final HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
         headerView.setMainTitle(url);
         if (type == TYPE_CSCENTER) { //客服中心
             headerView.getSubTitle().setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(mContext, R.drawable.ic_cscenter_phone), null, null, null);
-            headerView.setOperateClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DialogUtils.createCustomServiceDialog(mContext).show();
-                }
-            });
+        }else if(type == TYPE_SHARE) { //推广赚钱
+            headerView.getSubTitle().setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(mContext, R.drawable.ic_share), null, null, null);
         }
+        headerView.setOperateClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (type == TYPE_CSCENTER) {
+                    DialogUtils.createCustomServiceDialog(mContext).show();
+                } else if (type == TYPE_SHARE) {
+                    ActivityTools.share(mContext, getString(R.string.app_name), url);
+                }
+            }
+        });
+
         headerView.setBackImageClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

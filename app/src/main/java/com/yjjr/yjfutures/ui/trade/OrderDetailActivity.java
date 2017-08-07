@@ -11,7 +11,9 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.widget.HeaderView;
 
 /**
@@ -55,17 +57,18 @@ public class OrderDetailActivity extends BaseActivity {
     private void fillViews(CloseOrder order) {
         headerView.bindActivity(mContext);
         tvDirection.setText(TextUtils.equals(order.getOpenBuySell(), "买入")?"看涨":"看跌");
-        tvProfitYuan.setText(DoubleUtil.format2Decimal(order.getRealizedPL()));
-        int color = order.getRealizedPL() > 0 ? R.color.main_color_red : R.color.main_color_green;
-        tvProfitYuan.setTextColor(ContextCompat.getColor(mContext, color));
-        tvProfitDollar.setTextColor(ContextCompat.getColor(mContext, color));
+        tvProfitYuan.setText(DoubleUtil.format2Decimal(order.getRealizedPL_CNY()));
+        int color = StringUtils.getProfitColor(mContext, order.getRealizedPL());
+        tvProfitYuan.setTextColor(color);
+        tvProfitDollar.setTextColor(color);
+        tvProfitDollar.setText(DoubleUtil.format2Decimal(order.getRealizedPL())+String.format("汇率(%s)",order.getExchange()));
         tvTradeSymbol.setText(order.getSymbol());
         tvTradeNum.setText(order.getQty()+"");
         tvBuyPrice.setText(DoubleUtil.format2Decimal(order.getOpenPrice()));
         tvSellPrice.setText(DoubleUtil.format2Decimal(order.getClosePrice()));
-        tvBuyTime.setText(order.getOpenDate());
-        tvSellTime.setText(order.getCloseDate());
-        tvTicket.setText(order.getFilledID());
+        tvBuyTime.setText(DateUtils.formatData(order.getOpenDate()));
+        tvSellTime.setText(DateUtils.formatData(order.getCloseDate()));
+//        tvTicket.setText(order.getFilledID());
 
     }
 

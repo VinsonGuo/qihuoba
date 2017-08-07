@@ -11,6 +11,7 @@ import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.model.CloseOrder;
+import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
@@ -64,7 +65,7 @@ public class SettlementListFragment extends ListFragment<CloseOrder> {
 
     @Override
     protected void loadData() {
-        long dataTime = new DateTime().minusYears(1).getMillis();
+        /*long dataTime = new DateTime().minusYears(1).getMillis();
         HttpManager.getHttpService(mIsDemo).getCloseOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), DateUtils.formatData(dataTime), DateUtils.formatData(System.currentTimeMillis()))
                 .compose(RxUtils.<List<CloseOrder>>applySchedulers())
                 .compose(this.<List<CloseOrder>>bindUntilEvent(FragmentEvent.DESTROY))
@@ -79,6 +80,22 @@ public class SettlementListFragment extends ListFragment<CloseOrder> {
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         LogUtils.e(throwable);
                         mLoadView.loadFail();
+                    }
+                });*/
+        HttpManager.getBizService().getCloseOrder(1,1000)
+                .compose(RxUtils.<BizResponse<List<CloseOrder>>>applyBizSchedulers())
+                .compose(this.<BizResponse<List<CloseOrder>>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<List<CloseOrder>>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<List<CloseOrder>> listBizResponse) throws Exception {
+                        mAdapter.setNewData(listBizResponse.getResult());
+                        loadDataFinish();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        LogUtils.e(throwable);
+                        loadFailed();
                     }
                 });
     }

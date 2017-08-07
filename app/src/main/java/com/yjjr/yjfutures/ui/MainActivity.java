@@ -113,6 +113,9 @@ public class MainActivity extends BaseActivity {
                 if (TextUtils.isEmpty(StaticStore.sSymbols)) {
                     return;
                 }
+                if (BaseApplication.getInstance().isBackground()) {
+                    return;
+                }
                 HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override

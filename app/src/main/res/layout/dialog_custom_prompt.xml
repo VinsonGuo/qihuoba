@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="fill_parent"
              android:layout_height="fill_parent"
-             xmlns:tools="http://schemas.android.com/tools"
              android:clickable="true"
              android:orientation="vertical"
              android:padding="20.0dip">
@@ -26,50 +26,50 @@
         <FrameLayout
             android:id="@+id/content"
             android:layout_width="fill_parent"
-            android:minWidth="300dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:minWidth="300dp">
 
 
             <TextView
                 android:id="@+id/message"
-                android:textSize="@dimen/sp_16"
-                android:textColor="@color/color_333333"
-                tools:text="test"
                 android:layout_width="fill_parent"
-                android:drawablePadding="@dimen/dp_10"
+                android:layout_height="match_parent"
                 android:background="@color/transparent"
-                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/dp_10"
                 android:gravity="center"
-                android:minHeight="80.0dip"
+                android:minHeight="100dp"
                 android:paddingBottom="15.0dip"
                 android:paddingLeft="20.0dip"
                 android:paddingRight="20.0dip"
-                android:paddingTop="15.0dip"/>
+                android:paddingTop="15.0dip"
+                android:textColor="@color/color_333333"
+                android:textSize="@dimen/sp_16"
+                tools:text="test"/>
 
             <ImageView
                 android:id="@+id/iv_close"
-                android:layout_margin="15dp"
-                android:layout_gravity="right"
-                android:src="@drawable/ic_close"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_margin="15dp"
+                android:src="@drawable/ic_close"
+                android:visibility="gone"/>
         </FrameLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/common_divider_small"
             android:background="@color/color_dbdce4"/>
+
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="40.0dip"
+            android:layout_height="50dp"
             android:layout_gravity="bottom"
             android:gravity="center"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/negativeButton"
-                style="@style/text_color_333333_15sp"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -77,11 +77,11 @@
                 android:gravity="center"
                 android:text="@string/cancel"
                 android:textColor="@color/color_333333"
+                android:textSize="18sp"
                 />
 
             <Button
                 android:id="@+id/positiveButton"
-                style="@style/text_color_333333_15sp"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -89,6 +89,7 @@
                 android:gravity="center"
                 android:text="@string/sure"
                 android:textColor="@color/third_text_color"
+                android:textSize="18sp"
                 />
         </LinearLayout>
     </LinearLayout>

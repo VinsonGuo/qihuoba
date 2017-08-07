@@ -233,8 +233,13 @@ public class CandleStickChartFragment extends BaseFragment {
         mType = type;
         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
         DateTime dateTime;
-        if (quote.getAskPrice() < 0) { //未开盘，数据加载前一天的
-            dateTime = new DateTime().minusDays(1).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+        if (quote.isRest()) { //未开盘，数据加载前一天的
+            dateTime = new DateTime();
+            if (dateTime.getDayOfWeek() == 1 || dateTime.getDayOfWeek() == 7) { //星期一、星期天前一天还是没数据，要加载星期五的
+                dateTime = dateTime.minusDays(1).withDayOfWeek(5).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+            } else {
+                dateTime = dateTime.minusDays(1).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+            }
         } else {
             dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
         }
@@ -291,7 +296,6 @@ public class CandleStickChartFragment extends BaseFragment {
 
         set1.setDrawIcons(false);
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
-//        set1.setColor(Color.rgb(80, 80, 80));
         set1.setShadowColor(Color.DKGRAY);
         set1.setShadowWidth(0.7f);
         set1.setDecreasingColor(ContextCompat.getColor(getContext(), R.color.main_color_green));
@@ -307,7 +311,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
         mChart.setData(data);
         mChart.notifyDataSetChanged();
-        mChart.setVisibleXRange(40, 10); // allow 20 values to be displayed at once on the x-axis, not more
+        mChart.setVisibleXRange(100, 20); // allow 20 values to be displayed at once on the x-axis, not more
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
     }
 

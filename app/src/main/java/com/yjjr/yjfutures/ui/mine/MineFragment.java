@@ -152,7 +152,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 WebActivity.startActivity(mContext, HttpConfig.URL_ABOUT);
                 break;
             case R.id.tv_four:
-                WebActivity.startActivity(mContext, HttpConfig.URL_DISCLOSURE);
+                WebActivity.startActivity(mContext, HttpConfig.URL_WARNING);
                 break;
             case R.id.btn_deposit:
                 if (TextUtils.isEmpty(userInfo.getIdcard())) {

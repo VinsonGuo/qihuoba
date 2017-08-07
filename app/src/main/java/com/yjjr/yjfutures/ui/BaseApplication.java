@@ -2,6 +2,7 @@ package com.yjjr.yjfutures.ui;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
@@ -29,6 +30,7 @@ import java.util.List;
 public class BaseApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private static BaseApplication sInstance;
     private List<Activity> mActivities = new ArrayList<>();
+    private boolean isBackground = false;
     /**
      * 真实用户的cid
      */
@@ -41,6 +43,10 @@ public class BaseApplication extends Application implements Application.Activity
 
     public static BaseApplication getInstance() {
         return sInstance;
+    }
+
+    public boolean isBackground() {
+        return isBackground;
     }
 
     @Override
@@ -83,7 +89,9 @@ public class BaseApplication extends Application implements Application.Activity
 
     @Override
     public void onActivityResumed(Activity activity) {
-
+        if (isBackground) {
+            isBackground = false;
+        }
     }
 
     @Override
@@ -104,6 +112,15 @@ public class BaseApplication extends Application implements Application.Activity
     @Override
     public void onActivityDestroyed(Activity activity) {
         mActivities.remove(activity);
+    }
+
+    @Override
+    public void onTrimMemory(final int level) {
+        super.onTrimMemory(level);
+        if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+            // Get called every-time when application went to background.
+            isBackground = true;
+        }
     }
 
     public void closeApplication() {

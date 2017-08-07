@@ -117,4 +117,12 @@ public class ActivityTools {
         intent.setData(Uri.parse(uri));
         context.startActivity(intent);
     }
+
+    public static void share(Context context,String content, String url) {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_SUBJECT, content);
+        i.putExtra(Intent.EXTRA_TEXT, url);
+        context.startActivity(Intent.createChooser(i, content));
+    }
 }

@@ -67,7 +67,7 @@ public class FoundFragment extends BaseFragment implements View.OnClickListener 
                 WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
                 break;
             case R.id.root_view4:
-                WebActivity.startActivity(mContext, HttpConfig.URL_PROMOTION);
+                WebActivity.startActivity(mContext, HttpConfig.URL_PROMOTION, WebActivity.TYPE_SHARE);
                 break;
         }
     }

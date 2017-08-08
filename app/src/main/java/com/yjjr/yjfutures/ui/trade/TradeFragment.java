@@ -32,6 +32,7 @@ import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -330,7 +331,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void getHolding() {
-        HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken(mIsDemo))
+        HttpManager.getHttpService(mIsDemo).getHolding(BaseApplication.getInstance().getTradeToken(mIsDemo))
                 .flatMap(new Function<List<Holding>, ObservableSource<Holding>>() {
                     @Override
                     public ObservableSource<Holding> apply(@NonNull List<Holding> holdings) throws Exception {
@@ -465,7 +466,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     private void takeOrder(FastTakeOrderConfig order, final String type) {
         mProgressDialog.show();
-        HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, type, 0, Math.abs(order.getQty()), "市价")
+       /* HttpManager.getHttpService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, type, 0, Math.abs(order.getQty()), "市价")
                 .delay(1, TimeUnit.SECONDS)
                 .compose(RxUtils.<CommonResponse>applySchedulers())
                 .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
@@ -482,6 +483,26 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                                 })
                                 .create()
                                 .show();
+                        mProgressDialog.dismiss();
+                        EventBus.getDefault().post(new SendOrderEvent());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        LogUtils.e(throwable);
+                        mProgressDialog.dismiss();
+                        ToastUtils.show(mContext, throwable.getMessage());
+                    }
+                });*/
+        HttpManager.getBizService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, type, 0, Math.abs(order.getQty()), "市价",
+                order.getStopLose(), order.getStopWin())
+                .delay(1, TimeUnit.SECONDS)
+                .compose(RxUtils.<BizResponse<CommonResponse>>applyBizSchedulers())
+                .compose(this.<BizResponse<CommonResponse>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<CommonResponse>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<CommonResponse> commonResponse) throws Exception {
+                        DialogUtils.createTakeOrderSuccessDialog(mContext, type).show();
                         mProgressDialog.dismiss();
                         EventBus.getDefault().post(new SendOrderEvent());
                     }

@@ -13,6 +13,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
 public class TradeActivity extends BaseActivity {
@@ -24,7 +25,9 @@ public class TradeActivity extends BaseActivity {
         Intent intent = new Intent(context, TradeActivity.class);
         intent.putExtra(Constants.CONTENT_PARAMETER, symbol);
         intent.putExtra(Constants.CONTENT_PARAMETER_2, isDemo);
-        context.startActivity(intent);
+        if(HttpConfig.IS_OPEN_TRADE) {
+            context.startActivity(intent);
+        }
     }
 
     @Override

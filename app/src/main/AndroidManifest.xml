@@ -175,11 +175,8 @@
             android:name=".ui.trade.DemoTradeActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity
-            android:name=".ui.mine.HelpCenterActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".ui.found.NoticeActivity">
+        <activity android:name=".ui.found.NoticeActivity"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 

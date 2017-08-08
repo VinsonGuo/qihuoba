@@ -10,7 +10,6 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -55,6 +54,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
     private TextView mTvExchange;
     private RadioGroup mRgSl;
     private TextView mTvInfo;
+    private ContractInfo mContractInfo;
 
     public static void startActivity(Context context, String symbol) {
         Intent intent = new Intent(context, FastTakeOrderActivity.class);
@@ -107,7 +107,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
         btnOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!btnOpen.isSelected()) {
+                if (!btnOpen.isSelected() || mContractInfo == null) {
                     return;
                 }
                 if (TextUtils.equals(btnOpen.getText(), "关闭")) {
@@ -139,6 +139,10 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                             break;
                     }
                     config.setQty(qty);
+                    double sl = Double.parseDouble(mTvMargin.getText().toString().replaceAll(",", "").trim());
+                    double stopWin = sl * mContractInfo.getMaxProfitMultiply();
+                    config.setStopLose(sl);
+                    config.setStopWin(stopWin);
                 }
                 UserSharePrefernce.setFastTakeOrder(mContext, mSymbol, config);
                 EventBus.getDefault().post(new FastTakeOrderEvent(config != null));
@@ -161,10 +165,8 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
      */
     private RadioButton createRadioButton(String name, Double tag) {
         RadioButton rb = new RadioButton(mContext);
-//        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(DisplayUtils.dip2px(mContext, 46), DisplayUtils.dip2px(mContext, 17));
-//        lp.leftMargin = DisplayUtils.dip2px(mContext, 8);
         RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(DisplayUtils.dip2px(mContext, 46), DisplayUtils.dip2px(mContext, 17));
-        lp.setMargins(DisplayUtils.dip2px(mContext, 8),0,0,0);
+        lp.setMargins(DisplayUtils.dip2px(mContext, 8), 0, 0, 0);
         rb.setLayoutParams(lp);
         rb.setBackgroundResource(R.drawable.selector_trade_rb_bg);
         rb.setButtonDrawable(null);
@@ -183,17 +185,17 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                 .subscribe(new Consumer<BizResponse<ContractInfo>>() {
                     @Override
                     public void accept(@NonNull BizResponse<ContractInfo> response) throws Exception {
-                        ContractInfo result = response.getResult();
-                        mTvInfo.setText(String.format("持仓至%s自动平仓", result.getEndTradeTime()));
-                        mTvStopWin.setText(String.format("=触发止损*%s", result.getMaxProfitMultiply()));
-                        Map<String, Double> map = result.getLossLevel();
+                        mContractInfo = response.getResult();
+                        mTvInfo.setText(String.format("持仓至%s自动平仓", mContractInfo.getEndTradeTime()));
+                        mTvStopWin.setText(String.format("=触发止损*%s", mContractInfo.getMaxProfitMultiply()));
+                        Map<String, Double> map = mContractInfo.getLossLevel();
                         for (Map.Entry<String, Double> next : map.entrySet()) {
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
-                        mTvTradeFee.setText(DoubleUtil.formatDecimal(result.getTransactionFee()));
+                        mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee()));
                         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
-                        mTvExchange.setText(""+result.getCnyExchangeRate());
+                        mTvExchange.setText("" + mContractInfo.getCnyExchangeRate());
                     }
                 }, RxUtils.commonErrorConsumer());
     }

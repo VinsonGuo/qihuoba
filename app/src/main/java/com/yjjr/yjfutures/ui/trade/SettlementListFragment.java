@@ -82,7 +82,7 @@ public class SettlementListFragment extends ListFragment<CloseOrder> {
                         mLoadView.loadFail();
                     }
                 });*/
-        HttpManager.getBizService().getCloseOrder(1,1000)
+        HttpManager.getBizService(mIsDemo).getCloseOrder(1,1000)
                 .compose(RxUtils.<BizResponse<List<CloseOrder>>>applyBizSchedulers())
                 .compose(this.<BizResponse<List<CloseOrder>>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<List<CloseOrder>>>() {

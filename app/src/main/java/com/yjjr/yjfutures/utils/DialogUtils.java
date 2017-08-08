@@ -49,4 +49,16 @@ public class DialogUtils {
         dialog.setCancelable(!isForceUpdate);
         return dialog;
     }
+
+    public static CustomPromptDialog createTakeOrderSuccessDialog(final Context context, String type) {
+        return new CustomPromptDialog.Builder(context)
+                .setMessage(type + "委托成功")
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+    }
 }

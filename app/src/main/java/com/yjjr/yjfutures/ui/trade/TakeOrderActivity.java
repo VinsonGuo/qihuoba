@@ -10,10 +10,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -48,7 +46,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 public class TakeOrderActivity extends BaseActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
@@ -69,6 +66,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     private TextView mTvPrice;
     private String mBuySell;
     private boolean mIsDemo;
+    private ContractInfo mContractInfo;
 
     public static void startActivity(Context context, String symbol, int type, boolean isDemo) {
         Intent intent = new Intent(context, TakeOrderActivity.class);
@@ -108,7 +106,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         mRgHand = (RadioGroup) findViewById(R.id.rg_hand);
         mRgSl = (RadioGroup) findViewById(R.id.rg_sl);
         TextView tvDesc = (TextView) findViewById(R.id.tv_desc);
-        tvDesc.setText(mIsDemo?"操纵盘，实盘交易实时为您自动匹配合作投资人，执行您的指令，并与您共享收益共担风险。": StringUtils.randomTrader()+"为您本笔交易合作投资人，执行您的交易指令，并与您共享收益共担风险。");
+        tvDesc.setText(mIsDemo ? "操纵盘，实盘交易实时为您自动匹配合作投资人，执行您的指令，并与您共享收益共担风险。" : StringUtils.randomTrader() + "为您本笔交易合作投资人，执行您的交易指令，并与您共享收益共担风险。");
         mRgSl.setOnCheckedChangeListener(this);
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(false);
@@ -144,10 +142,8 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
      */
     private RadioButton createRadioButton(String name, Double tag) {
         RadioButton rb = new RadioButton(mContext);
-//        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(DisplayUtils.dip2px(mContext, 46), DisplayUtils.dip2px(mContext, 17));
-//        lp.leftMargin = DisplayUtils.dip2px(mContext, 8);
         RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(DisplayUtils.dip2px(mContext, 46), DisplayUtils.dip2px(mContext, 17));
-        lp.setMargins(DisplayUtils.dip2px(mContext, 8),0,0,0);
+        lp.setMargins(DisplayUtils.dip2px(mContext, 8), 0, 0, 0);
         rb.setLayoutParams(lp);
         rb.setBackgroundResource(R.drawable.selector_trade_rb_bg);
         rb.setButtonDrawable(null);
@@ -166,18 +162,18 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                 .subscribe(new Consumer<BizResponse<ContractInfo>>() {
                     @Override
                     public void accept(@NonNull BizResponse<ContractInfo> response) throws Exception {
-                        ContractInfo result = response.getResult();
-                        mTvSymbol.setText(result.getSymbol() + "-" + result.getSymbolName());
-                        mTvInfo.setText(String.format("持仓至%s自动平仓", result.getEndTradeTime()));
-                        mTvStopWin.setText(String.format("=触发止损*%s", result.getMaxProfitMultiply()));
-                        Map<String, Double> map = result.getLossLevel();
+                        mContractInfo = response.getResult();
+                        mTvSymbol.setText(mContractInfo.getSymbol() + "-" + mContractInfo.getSymbolName());
+                        mTvInfo.setText(String.format("持仓至%s自动平仓", mContractInfo.getEndTradeTime()));
+                        mTvStopWin.setText(String.format("=触发止损*%s", mContractInfo.getMaxProfitMultiply()));
+                        Map<String, Double> map = mContractInfo.getLossLevel();
                         for (Map.Entry<String, Double> next : map.entrySet()) {
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
-                        mTvTradeFee.setText(DoubleUtil.formatDecimal(result.getTransactionFee()));
+                        mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee()));
                         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
-                        mTvExchange.setText(mSymbol + "按" + quote.getCurrency() + "交易，平台按人民币结算，汇率为" + result.getCnyExchangeRate());
+                        mTvExchange.setText(mSymbol + "按" + quote.getCurrency() + "交易，平台按人民币结算，汇率为" + mContractInfo.getCnyExchangeRate());
                         mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, quote.getLastPrice()));
                     }
                 }, RxUtils.commonErrorConsumer());
@@ -187,7 +183,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_confirm:
-                if (!v.isSelected()) return;
+                if (!v.isSelected() || mContractInfo == null) return;
                 mProgressDialog.show();
                 int qty = 1;
                 int id = mRgHand.getCheckedRadioButtonId();
@@ -203,7 +199,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                     qty = 5;
                 }
 
-                HttpManager.getHttpService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价")
+               /* HttpManager.getHttpService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价")
                         .map(new Function<CommonResponse, CommonResponse>() {
                             @Override
                             public CommonResponse apply(@NonNull CommonResponse commonResponse) throws Exception {
@@ -219,6 +215,27 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                         .subscribe(new Consumer<CommonResponse>() {
                             @Override
                             public void accept(@NonNull CommonResponse commonResponse) throws Exception {
+                                mProgressDialog.dismiss();
+                                mDialog.show();
+                                EventBus.getDefault().post(new SendOrderEvent());
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                LogUtils.e(throwable);
+                                mProgressDialog.dismiss();
+                                ToastUtils.show(mContext, throwable.getMessage());
+                            }
+                        });*/
+                Double sl = Double.parseDouble(mTvMargin.getText().toString().replaceAll(",", "").trim());
+                HttpManager.getBizService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价",
+                        sl, sl * mContractInfo.getMaxProfitMultiply())
+                        .delay(1, TimeUnit.SECONDS)
+                        .compose(RxUtils.<BizResponse<CommonResponse>>applyBizSchedulers())
+                        .compose(this.<BizResponse<CommonResponse>>bindUntilEvent(ActivityEvent.DESTROY))
+                        .subscribe(new Consumer<BizResponse<CommonResponse>>() {
+                            @Override
+                            public void accept(@NonNull BizResponse<CommonResponse> commonResponse) throws Exception {
                                 mProgressDialog.dismiss();
                                 mDialog.show();
                                 EventBus.getDefault().post(new SendOrderEvent());

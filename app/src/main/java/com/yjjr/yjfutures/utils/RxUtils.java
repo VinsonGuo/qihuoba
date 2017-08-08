@@ -103,7 +103,7 @@ public class RxUtils {
      * 统一的发送验证码接口
      */
     public static void handleSendSms(final BaseActivity mContext, final View btn, final CountDownTimer timer, String phoneNumber) {
-        btn.setEnabled(false);
+        btn.setEnabled(false) ;
         HttpManager.getBizService().sendSms(phoneNumber)
                 .compose(RxUtils.applyBizSchedulers())
                 .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))

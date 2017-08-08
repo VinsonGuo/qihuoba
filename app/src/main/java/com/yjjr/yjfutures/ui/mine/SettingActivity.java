@@ -64,7 +64,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 AlterLoginPwdActivity.startActivity(mContext, AlterLoginPwdActivity.TYPE_LOGIN_PWD);
                 break;
             case R.id.tv_help:
-//                HelpCenterActivity.startActivity(mContext);
                 WebActivity.startActivity(mContext, HttpConfig.URL_HELP);
                 break;
             case R.id.tv_logout:

@@ -30,6 +30,8 @@ public class HttpManager {
     private static volatile BizService sBizService;
     private static volatile Retrofit sDemoRetrofit;
     private static volatile HttpService sDemoHttpService;
+    private static volatile Retrofit sDemoBizRetrofit;
+    private static volatile BizService sDemoBizService;
 
     public static Retrofit getInstance() {
         if (sRetrofit == null) {
@@ -72,6 +74,35 @@ public class HttpManager {
         }
         return sBizRetrofit;
     }
+
+    public static Retrofit getDemoBizInstance() {
+        if (sDemoBizRetrofit == null) {
+            OkHttpClient client = getOkHttpClient();
+            sDemoBizRetrofit = new Retrofit.Builder()
+                    .baseUrl(HttpConfig.BIZ_HOST + "/service/")
+                    .client(client)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return sDemoBizRetrofit;
+    }
+
+    public static BizService getBizService(boolean isDemo) {
+        if (isDemo) {
+            if (sDemoBizService == null) {
+                sDemoBizService = getDemoBizInstance().create(BizService.class);
+            }
+            return sDemoBizService;
+        } else {
+            if (sBizService == null) {
+                sBizService = getBizInstance().create(BizService.class);
+            }
+            return sBizService;
+        }
+    }
+
 
     public static BizService getBizService() {
         if (sBizService == null) {

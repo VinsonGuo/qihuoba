@@ -7,6 +7,12 @@ package com.yjjr.yjfutures.utils.http;
 
 public class HttpConfig {
 
+
+    /**
+     * 是否开放了交易功能
+     */
+    public static final boolean IS_OPEN_TRADE = true;
+
     //    public static final String DOMAIN = "http://www.qihuofa.com";
     public static final String DOMAIN = "https://dev.qihuofa.com";
 

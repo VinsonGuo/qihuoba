@@ -11,7 +11,7 @@ public class HttpConfig {
     /**
      * 是否开放了交易功能
      */
-    public static final boolean IS_OPEN_TRADE = true;
+    public static boolean IS_OPEN_TRADE = true;
 
     //    public static final String DOMAIN = "http://www.qihuofa.com";
     public static final String DOMAIN = "https://dev.qihuofa.com";
@@ -19,6 +19,8 @@ public class HttpConfig {
     public static final String DEMO_HOST = "https://demo.qihuofa.com";
 
     public static final String BIZ_HOST = DOMAIN + ":9300";
+
+    public static final String BIZ_DEMO_HOST = DEMO_HOST + ":9300";
     /**
      * 手机号码的正则
      */

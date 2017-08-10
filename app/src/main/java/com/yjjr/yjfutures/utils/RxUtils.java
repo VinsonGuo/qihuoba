@@ -1,17 +1,14 @@
 package com.yjjr.yjfutures.utils;
 
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
-import android.widget.Button;
 
-import com.google.gson.Gson;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -86,8 +83,8 @@ public class RxUtils {
     /**
      * 平仓请求
      */
-    public static Observable<CommonResponse> createCloseObservable(boolean isDemo,Holding holding) {
-        return HttpManager.getHttpService().sendOrder(BaseApplication.getInstance().getTradeToken(isDemo), holding.getSymbol(), StringUtils.getOppositeBuySell(holding.getBuySell()), 0, Math.abs(holding.getQty()), "市价")
+    public static Observable<CommonResponse> createCloseObservable(boolean isDemo, Holding holding) {
+        return HttpManager.getHttpService(isDemo).sendOrder(BaseApplication.getInstance().getTradeToken(isDemo), holding.getSymbol(), StringUtils.getOppositeBuySell(holding.getBuySell()), 0, Math.abs(holding.getQty()), "市价")
                 .map(new Function<CommonResponse, CommonResponse>() {
                     @Override
                     public CommonResponse apply(@NonNull CommonResponse commonResponse) throws Exception {
@@ -99,11 +96,24 @@ public class RxUtils {
                 });
     }
 
+    public static Observable<CommonResponse> createCloseObservable(boolean isDemo, Holds holding) {
+        return HttpManager.getBizService(isDemo).sendOrder(BaseApplication.getInstance().getTradeToken(isDemo), holding.getSymbol(), StringUtils.getOppositeBuySell(holding.getBuySell()), 0, Math.abs(holding.getQty()), "市价",0,0)
+                .map(new Function<BizResponse<CommonResponse>, CommonResponse>() {
+                    @Override
+                    public CommonResponse apply(@NonNull BizResponse<CommonResponse> t) throws Exception {
+                        if (t.getRcode() != 0) {
+                            throw new RuntimeException(t.getRmsg());
+                        }
+                        return t.getResult();
+                    }
+                });
+    }
+
     /**
      * 统一的发送验证码接口
      */
     public static void handleSendSms(final BaseActivity mContext, final View btn, final CountDownTimer timer, String phoneNumber) {
-        btn.setEnabled(false) ;
+        btn.setEnabled(false);
         HttpManager.getBizService().sendSms(phoneNumber)
                 .compose(RxUtils.applyBizSchedulers())
                 .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))

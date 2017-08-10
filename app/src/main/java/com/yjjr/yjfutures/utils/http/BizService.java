@@ -2,6 +2,7 @@ package com.yjjr.yjfutures.utils.http;
 
 import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.model.CommonResponse;
+import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.AssetRecord;
 import com.yjjr.yjfutures.model.biz.BizResponse;
@@ -9,6 +10,7 @@ import com.yjjr.yjfutures.model.biz.CashRecord;
 import com.yjjr.yjfutures.model.biz.ChargeResult;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Funds;
+import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.model.biz.Info;
 import com.yjjr.yjfutures.model.biz.Notice;
 import com.yjjr.yjfutures.model.biz.NumberResult;
@@ -130,17 +132,27 @@ public interface BizService {
     Observable<BizResponse<PageResponse<Notice>>> getNotice(@Path("start") int start, @Path("count") int count);
 
     @POST("trader/closedOrderList/{start}/{count}")
-    Observable<BizResponse<List<CloseOrder>>> getCloseOrder(@Path("start") int start, @Path("count") int count);
+    Observable<BizResponse<PageResponse<CloseOrder>>> getCloseOrder(@Path("start") int start, @Path("count") int count);
+
+    @POST("trader/holdingList")
+    Observable<BizResponse<List<Holds>>> getHolding();
 
     @FormUrlEncoded
     @POST("trader/sendOrder")
     Observable<BizResponse<CommonResponse>> sendOrder(
-            @Field("account") String account,
+            @Field("cid") String account,
             @Field("symbol") String symbol,
             @Field("buysell") String buysell,
             @Field("price") double price,
             @Field("qty") int qty,
             @Field("ordertype") String ordertype,
+            @Field("lossPriceLine") double lossPriceLine,
+            @Field("profitPriceLine") double profitPriceLine);
+
+    @FormUrlEncoded
+    @POST("trader/setRiskControlTrigger")
+    Observable<BizResponse<CommonResponse>> setRiskControlTrigger(
+            @Field("orderId") String orderId,
             @Field("lossPriceLine") double lossPriceLine,
             @Field("profitPriceLine") double profitPriceLine);
 }

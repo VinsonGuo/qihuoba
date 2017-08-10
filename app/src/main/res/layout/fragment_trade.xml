@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_yue"
             android:layout_marginTop="@dimen/dp_10"
-            android:text="￥5000"
+            tools:text="￥5000"
             android:textColor="@color/third_text_color"
             android:textSize="18sp"/>
 
@@ -61,7 +61,7 @@
             android:layout_alignLeft="@id/tv_margin"
             android:layout_below="@id/tv_margin"
             android:layout_marginTop="@dimen/dp_10"
-            android:text="￥5000"
+            tools:text="￥5000"
             android:textColor="@color/second_text_color"
             android:textSize="18sp"/>
 

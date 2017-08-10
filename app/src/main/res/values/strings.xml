@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">期货吧</string>
+    <string name="app_name">外盘交易通</string>
     <string name="permission_deny_message">需要您开启应用需要相应的权限才能更好地为您服务，请点击确定-权限选项中勾选</string>
     <string name="activity_main_stroll">暂不注册</string>
     <!--activity login-->

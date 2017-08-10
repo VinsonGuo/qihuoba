@@ -8,10 +8,13 @@ import android.text.TextUtils;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.SendOrderEvent;
+import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
+import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
@@ -99,7 +102,19 @@ public class DemoTradeActivity extends BaseActivity {
     private void loadData() {
         final String account = UserSharePrefernce.getAccount(mContext);
         final String password = /*UserSharePrefernce.getPassword(mContext)*/"123456";
-        HttpManager.getHttpService(true).userLogin(account, password)
+        HttpManager.getBizService(true).login(account, password)
+                .flatMap(new Function<BizResponse<UserInfo>, ObservableSource<UserLoginResponse>>() {
+                    @Override
+                    public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
+                        if (loginBizResponse.getRcode() != 0) {
+                            if(loginBizResponse.getRcode() == 1) { // 账号密法错误，重新登录
+                                BaseApplication.getInstance().logout(mContext);
+                            }
+                            throw new RuntimeException("登录失败");
+                        }
+                        return HttpManager.getHttpService().userLogin(account, password);
+                    }
+                })
                 .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
                     @Override
                     public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {

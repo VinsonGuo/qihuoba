@@ -12,6 +12,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.PageResponse;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
@@ -53,6 +54,7 @@ public class SettlementListFragment extends ListFragment<CloseOrder> {
     @Override
     public BaseQuickAdapter<CloseOrder, BaseViewHolder> getAdapter() {
         SettlementListAdapter adapter = new SettlementListAdapter(null);
+        adapter.setEnableLoadMore(true);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -82,14 +84,18 @@ public class SettlementListFragment extends ListFragment<CloseOrder> {
                         mLoadView.loadFail();
                     }
                 });*/
-        HttpManager.getBizService(mIsDemo).getCloseOrder(1,1000)
-                .compose(RxUtils.<BizResponse<List<CloseOrder>>>applyBizSchedulers())
-                .compose(this.<BizResponse<List<CloseOrder>>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<BizResponse<List<CloseOrder>>>() {
+        HttpManager.getBizService(mIsDemo).getCloseOrder(mPage, 10)
+                .compose(RxUtils.<BizResponse<PageResponse<CloseOrder>>>applyBizSchedulers())
+                .compose(this.<BizResponse<PageResponse<CloseOrder>>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<PageResponse<CloseOrder>>>() {
                     @Override
-                    public void accept(@NonNull BizResponse<List<CloseOrder>> listBizResponse) throws Exception {
-                        mAdapter.setNewData(listBizResponse.getResult());
+                    public void accept(@NonNull BizResponse<PageResponse<CloseOrder>> listBizResponse) throws Exception {
+                        PageResponse<CloseOrder> result = listBizResponse.getResult();
+                        mAdapter.addData(result.getList());
                         loadDataFinish();
+                        if (mAdapter.getData().size() >= result.getTotal()) {
+                            mAdapter.loadMoreEnd();
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override

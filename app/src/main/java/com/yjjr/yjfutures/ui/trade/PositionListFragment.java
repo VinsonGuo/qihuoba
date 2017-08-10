@@ -17,10 +17,10 @@ import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
-import com.yjjr.yjfutures.model.Holding;
-import com.yjjr.yjfutures.ui.BaseApplication;
+import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.ui.ListFragment;
-import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
@@ -45,7 +45,7 @@ import io.reactivex.functions.Function;
  * Created by dell on 2017/6/23.
  */
 
-public class PositionListFragment extends ListFragment<Holding> {
+public class PositionListFragment extends ListFragment<Holds> {
 
     private TextView mTvProfit;
     private ProgressDialog mProgressDialog;
@@ -79,7 +79,7 @@ public class PositionListFragment extends ListFragment<Holding> {
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        List<Holding> data = mAdapter.getData();
+                        List<Holds> data = mAdapter.getData();
                         closeAllOrder(data);
                         dialog.dismiss();
                     }
@@ -98,7 +98,7 @@ public class PositionListFragment extends ListFragment<Holding> {
     }
 
     @Override
-    public BaseQuickAdapter<Holding, BaseViewHolder> getAdapter() {
+    public BaseQuickAdapter<Holds, BaseViewHolder> getAdapter() {
         final PositionListAdapter adapter = new PositionListAdapter(null);
         final View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_position_list, mRvList, false);
         mTvProfit = (TextView) headerView.findViewById(R.id.tv_profit);
@@ -106,8 +106,8 @@ public class PositionListFragment extends ListFragment<Holding> {
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                final Holds holding = (Holds) adapter.getData().get(position);
                 if (view.getId() == R.id.tv_close_order) {
-                    final Holding holding = (Holding) adapter.getData().get(position);
                     new CustomPromptDialog.Builder(mContext)
                             .setMessage("您确定要卖出持仓么？")
                             .isShowClose(true)
@@ -123,6 +123,8 @@ public class PositionListFragment extends ListFragment<Holding> {
                             .create()
                             .show();
 
+                }else if(view.getId() == R.id.tv_setting) {
+                    DialogUtils.createSettingOrderDialog(mContext, holding).show();
                 }
             }
         });
@@ -140,10 +142,10 @@ public class PositionListFragment extends ListFragment<Holding> {
         return "您暂无商品持仓";
     }
 
-    private void closeAllOrder(List<Holding> data) {
+    private void closeAllOrder(List<Holds> data) {
         mProgressDialog.show();
         List<Observable<CommonResponse>> observables = new ArrayList<>();
-        for (Holding holding : data) {
+        for (Holds holding : data) {
             observables.add(RxUtils.createCloseObservable(mIsDemo, holding));
         }
         Observable.zip(observables, new Function<Object[], String>() {
@@ -179,7 +181,7 @@ public class PositionListFragment extends ListFragment<Holding> {
     }
 
 
-    private void closeOrder(Holding holding) {
+    private void closeOrder(Holds holding) {
         mProgressDialog.show();
         RxUtils.createCloseObservable(mIsDemo, holding)
                 .delay(1, TimeUnit.SECONDS)
@@ -204,7 +206,7 @@ public class PositionListFragment extends ListFragment<Holding> {
 
     @Override
     protected void loadData() {
-        HttpManager.getHttpService(mIsDemo).getHolding(BaseApplication.getInstance().getTradeToken(mIsDemo))
+       /* HttpManager.getHttpService(mIsDemo).getHolding(BaseApplication.getInstance().getTradeToken(mIsDemo))
                 .compose(RxUtils.<List<Holding>>applySchedulers())
                 .compose(this.<List<Holding>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<Holding>>() {
@@ -213,6 +215,34 @@ public class PositionListFragment extends ListFragment<Holding> {
                         List<Holding> list = new ArrayList<>(10);
                         double profit = 0;
                         for (Holding holding : holdings) {
+                            profit += holding.getUnrealizedPL();
+                            if (holding.getQty() != 0) {
+                                list.add(holding);
+                            }
+                        }
+                        mAdapter.setNewData(list);
+                        mTvProfit.setText(StringUtils.getProfitText(profit));
+                        mTvProfit.setTextColor(StringUtils.getProfitColor(mContext, profit));
+                        loadDataFinish();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        LogUtils.e(throwable);
+                        loadFailed();
+                    }
+                });*/
+
+        HttpManager.getBizService(mIsDemo).getHolding()
+                .compose(RxUtils.<BizResponse<List<Holds>>>applySchedulers())
+                .compose(this.<BizResponse<List<Holds>>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<List<Holds>>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<List<Holds>> holdings) throws Exception {
+                        List<Holds> result = holdings.getResult();
+                        List<Holds> list = new ArrayList<>(10);
+                        double profit = 0;
+                        for (Holds holding : result) {
                             profit += holding.getUnrealizedPL();
                             if (holding.getQty() != 0) {
                                 list.add(holding);

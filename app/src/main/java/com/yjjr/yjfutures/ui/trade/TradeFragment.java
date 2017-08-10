@@ -315,7 +315,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     protected void initData() {
         super.initData();
         getHolding();
-        HttpManager.getBizService().getFunds()
+        HttpManager.getBizService(mIsDemo).getFunds()
                 .retry()
                 .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
                 .compose(this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
@@ -413,19 +413,27 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 mCloseDialog.show();
                 break;
             case R.id.tv_left:
-                if (fastTakeOrder != null) {
-                    //快速下单
-                    takeOrder(fastTakeOrder, "买入");
-                } else {
-                    TakeOrderActivity.startActivity(mContext, mSymbol, TakeOrderActivity.TYPE_BUY, mIsDemo);
+                if(TextUtils.equals("平仓",leftText)) {
+                    ToastUtils.show(mContext, "买入  --  平仓1手");
+                }else {
+                    if (fastTakeOrder != null) {
+                        //快速下单
+                        takeOrder(fastTakeOrder, "买入");
+                    } else {
+                        TakeOrderActivity.startActivity(mContext, mSymbol, TakeOrderActivity.TYPE_BUY, mIsDemo);
+                    }
                 }
                 break;
             case R.id.tv_right:
-                if (fastTakeOrder != null) {
-                    //快速下单
-                    takeOrder(fastTakeOrder, "卖出");
-                } else {
-                    TakeOrderActivity.startActivity(mContext, mSymbol, TakeOrderActivity.TYPE_SELL, mIsDemo);
+                if(TextUtils.equals("平仓",rightText)) {
+                    ToastUtils.show(mContext, "卖出  --  平仓1手");
+                }else {
+                    if (fastTakeOrder != null) {
+                        //快速下单
+                        takeOrder(fastTakeOrder, "卖出");
+                    } else {
+                        TakeOrderActivity.startActivity(mContext, mSymbol, TakeOrderActivity.TYPE_SELL, mIsDemo);
+                    }
                 }
                 break;
             case R.id.tv_center:

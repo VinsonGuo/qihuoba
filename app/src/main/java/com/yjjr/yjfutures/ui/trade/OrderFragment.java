@@ -87,7 +87,7 @@ public class OrderFragment extends BaseFragment {
     }
 
     private void getTradeInfo() {
-        HttpManager.getBizService().getFunds()
+        HttpManager.getBizService(mIsDemo).getFunds()
                 .retry()
                 .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
                 .compose(this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))

@@ -156,7 +156,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void requestData() {
-        HttpManager.getBizService().getContractInfo(mSymbol)
+        HttpManager.getBizService(mIsDemo).getContractInfo(mSymbol)
                 .compose(RxUtils.<BizResponse<ContractInfo>>applyBizSchedulers())
                 .compose(mContext.<BizResponse<ContractInfo>>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<ContractInfo>>() {

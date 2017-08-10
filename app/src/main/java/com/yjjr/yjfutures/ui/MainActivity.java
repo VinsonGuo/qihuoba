@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
@@ -29,6 +30,7 @@ import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
@@ -95,6 +97,7 @@ public class MainActivity extends BaseActivity {
 
     private void initViews() {
         mBottomBar = (AlphaTabsIndicator) findViewById(R.id.alphaIndicator);
+        mBottomBar.setVisibility(HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
         final NoTouchScrollViewpager viewPager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
         Fragment[] fragments = {new HomePageFragment(), MarketPriceFragment.newInstance(true), new FoundFragment(), new MineFragment()};
         viewPager.setOffscreenPageLimit(fragments.length);

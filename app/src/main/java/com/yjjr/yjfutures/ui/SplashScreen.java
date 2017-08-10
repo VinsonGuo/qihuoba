@@ -89,6 +89,9 @@ public class SplashScreen extends BaseActivity {
                     public void accept(@NonNull BizResponse<List<Info>> listBizResponse) throws Exception {
                         Info info = listBizResponse.getResult().get(0);
                         ImageLoader.load(mContext, HttpConfig.BIZ_HOST + info.getName(), mIvSplash);
+                        if (!BuildConfig.DEBUG) {
+                            HttpConfig.IS_OPEN_TRADE = Boolean.valueOf(info.getValue());
+                        }
                     }
                 }, RxUtils.commonErrorConsumer());
     }

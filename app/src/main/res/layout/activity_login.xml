@@ -24,12 +24,14 @@
         android:id="@+id/ri_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:name="@string/phone_number_format"/>
+        app:hint="请输入手机号码"
+        app:name="@string/phone"/>
 
     <com.yjjr.yjfutures.widget.RegisterInput
         android:id="@+id/ri_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:hint="请输入登录密码"
         app:isShowEye="true"
         app:name="@string/password"/>
 

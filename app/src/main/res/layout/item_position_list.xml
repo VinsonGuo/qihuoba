@@ -29,9 +29,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/root_padding_10"
             android:layout_weight="1"
-            tools:text="订单ID: 123456"
             android:textColor="@color/second_text_color"
-            android:textSize="@dimen/sp_14"/>
+            android:textSize="@dimen/sp_14"
+            tools:text="订单ID: 123456"/>
 
         <TextView
             android:id="@+id/tv_hand"
@@ -61,9 +61,11 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_direction"
-            tools:text="止损额\t123"
+            android:ellipsize="end"
+            android:lines="1"
             android:textColor="@color/second_text_color"
-            android:textSize="@dimen/sp_14"/>
+            android:textSize="@dimen/sp_14"
+            tools:text="止损额\t123"/>
 
         <TextView
             android:id="@+id/tv_stop_win"
@@ -71,9 +73,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_stop_lose"
             android:layout_marginTop="@dimen/root_padding_10"
-            tools:text="止赢额\t123"
+            android:ellipsize="end"
+            android:lines="1"
             android:textColor="@color/second_text_color"
-            android:textSize="@dimen/sp_14"/>
+            android:textSize="@dimen/sp_14"
+            tools:text="止赢额\t123"/>
 
 
         <TextView
@@ -82,9 +86,9 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/tv_current_price"
             android:layout_toLeftOf="@+id/tv_yuan"
-            tools:text="+288"
             android:textColor="@color/main_color_green"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            tools:text="+288"/>
 
         <TextView
             android:id="@+id/tv_yuan"
@@ -104,9 +108,9 @@
             android:layout_alignBottom="@id/tv_stop_lose"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/tv_stop_lose"
-            tools:text="开仓价\t123123456"
             android:textColor="@color/second_text_color"
-            android:textSize="@dimen/sp_14"/>
+            android:textSize="@dimen/sp_14"
+            tools:text="开仓价\t123123456"/>
 
         <TextView
             android:id="@+id/tv_current_price"
@@ -115,9 +119,9 @@
             android:layout_alignBottom="@id/tv_stop_win"
             android:layout_alignLeft="@id/tv_open_price"
             android:layout_marginTop="@dimen/root_padding_10"
-            tools:text="当前价\t123"
             android:textColor="@color/second_text_color"
-            android:textSize="@dimen/sp_14"/>
+            android:textSize="@dimen/sp_14"
+            tools:text="当前价\t123"/>
     </RelativeLayout>
 
     <View
@@ -133,10 +137,10 @@
         <TextView
             android:id="@+id/tv_setting"
             android:layout_width="90dp"
-            android:gravity="center"
-            android:padding="2dp"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_third_text_color_border_bg"
+            android:gravity="center"
+            android:padding="2dp"
             android:text="@string/setting_lose_stop_and_lose_win"
             android:textColor="@color/third_text_color"
             android:textSize="@dimen/sp_12"/>
@@ -146,9 +150,9 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:padding="2dp"
             android:background="@drawable/shape_third_text_color_border_bg"
             android:gravity="center"
+            android:padding="2dp"
             android:text="@string/pingcang"
             android:textColor="@color/third_text_color"
             android:textSize="@dimen/sp_12"/>

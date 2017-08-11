@@ -39,6 +39,20 @@ public class Holds {
 
     private double MarketPrice;
     private double UnrealizedPL;
+    /**
+     * ProfitPriceLine : 1000.0
+     * SumUnrealizedPL : 330.0
+     * SumQty : 3
+     * MarketPrice : 1292.5
+     * RivalPrice : 1291.4
+     * UnrealizedPL : 110.0
+     * LossPriceLine : 200.0
+     * AvgPrice : 1291.4
+     */
+
+    private double SumUnrealizedPL;
+    private int SumQty;
+    private double RivalPrice;
 
     public String getAccount() {
         return Account;
@@ -120,22 +134,6 @@ public class Holds {
         this.OrderId = OrderId;
     }
 
-    @Override
-    public String toString() {
-        return "Holds{" +
-                "Account='" + Account + '\'' +
-                ", ProfitPriceLine=" + ProfitPriceLine +
-                ", Symbol='" + Symbol + '\'' +
-                ", OpenDate=" + OpenDate +
-                ", Currency='" + Currency + '\'' +
-                ", Qty=" + Qty +
-                ", BuySell='" + BuySell + '\'' +
-                ", LossPriceLine=" + LossPriceLine +
-                ", AvgPrice=" + AvgPrice +
-                ", OrderId='" + OrderId + '\'' +
-                '}';
-    }
-
     public double getMarketPrice() {
         return MarketPrice;
     }
@@ -150,5 +148,50 @@ public class Holds {
 
     public void setUnrealizedPL(double UnrealizedPL) {
         this.UnrealizedPL = UnrealizedPL;
+    }
+
+    public double getSumUnrealizedPL() {
+        return SumUnrealizedPL;
+    }
+
+    public void setSumUnrealizedPL(double SumUnrealizedPL) {
+        this.SumUnrealizedPL = SumUnrealizedPL;
+    }
+
+    public int getSumQty() {
+        return SumQty;
+    }
+
+    public void setSumQty(int SumQty) {
+        this.SumQty = SumQty;
+    }
+
+    public double getRivalPrice() {
+        return RivalPrice;
+    }
+
+    public void setRivalPrice(double RivalPrice) {
+        this.RivalPrice = RivalPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Holds{" +
+                "Account='" + Account + '\'' +
+                ", ProfitPriceLine=" + ProfitPriceLine +
+                ", Symbol='" + Symbol + '\'' +
+                ", OpenDate=" + OpenDate +
+                ", Currency='" + Currency + '\'' +
+                ", Qty=" + Qty +
+                ", BuySell='" + BuySell + '\'' +
+                ", LossPriceLine=" + LossPriceLine +
+                ", AvgPrice=" + AvgPrice +
+                ", OrderId='" + OrderId + '\'' +
+                ", MarketPrice=" + MarketPrice +
+                ", UnrealizedPL=" + UnrealizedPL +
+                ", SumUnrealizedPL=" + SumUnrealizedPL +
+                ", SumQty=" + SumQty +
+                ", RivalPrice=" + RivalPrice +
+                '}';
     }
 }

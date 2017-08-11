@@ -34,7 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/root_padding_15"
         android:layout_marginRight="@dimen/root_padding_15"
-        app:name="@string/phone_number_format"/>
+        app:hint="请输入手机号码"
+        app:name="@string/phone"/>
 
     <com.yjjr.yjfutures.widget.RegisterInput
         android:id="@+id/ri_smscode"
@@ -42,8 +43,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/root_padding_15"
         android:layout_marginRight="@dimen/root_padding_15"
+        app:hint="请输入短信验证码"
         app:button_text="@string/register_get_confirm_code"
-        app:name="@string/activation_message_code"
+        app:name="@string/activation_code"
         />
 
     <com.yjjr.yjfutures.widget.RegisterInput
@@ -52,9 +54,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/root_padding_15"
         android:layout_marginRight="@dimen/root_padding_15"
-        app:hint="@string/password_too_simple"
+        app:hint="请设置账号密码"
         app:isShowEye="true"
-        app:name="@string/set_password"/>
+        app:name="@string/password"/>
 
     <Button
         android:id="@+id/btn_confirm"
@@ -67,6 +69,17 @@
         android:text="@string/register"
         android:textColor="@color/selector_common_btn_text_color"
         android:textSize="@dimen/common_btn_text_size"/>
+
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/root_padding_15"
+        android:textSize="@dimen/sp_12"
+        android:layout_width="match_parent"
+        tools:text="info"
+        android:textColor="@color/main_text_color"
+        android:layout_height="wrap_content"/>
 
     <Space
         android:layout_width="match_parent"

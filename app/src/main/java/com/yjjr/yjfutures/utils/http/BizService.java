@@ -150,6 +150,15 @@ public interface BizService {
             @Field("profitPriceLine") double profitPriceLine);
 
     @FormUrlEncoded
+    @POST("trader/closeOrder")
+    Observable<BizResponse<CommonResponse>> closeOrder(
+            @Field("cid") String account,
+            @Field("price") double price,
+            @Field("qty") int qty,
+            @Field("ordertype") String ordertype,
+            @Field("orderId") String orderId);
+
+    @FormUrlEncoded
     @POST("trader/setRiskControlTrigger")
     Observable<BizResponse<CommonResponse>> setRiskControlTrigger(
             @Field("orderId") String orderId,

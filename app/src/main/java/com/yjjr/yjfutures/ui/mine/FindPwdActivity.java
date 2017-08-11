@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,9 +20,11 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SmsCountDownTimer;
+import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -68,6 +71,14 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
         RegisterInput riSmscode = (RegisterInput) findViewById(R.id.ri_smscode);
         RegisterInput riPassword = (RegisterInput) findViewById(R.id.ri_password);
         mBtnConfirm = (Button) findViewById(R.id.btn_confirm);
+        TextView tvInfo = (TextView) findViewById(R.id.tv_info);
+        tvInfo.setText(TextUtils.concat("如遇到问题，请", SpannableUtil.getStringByColor(mContext, "联系客服",R.color.main_color)));
+        tvInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
+            }
+        });
         final TextView operaButton = riSmscode.getOperaButton();
         mCountDownTimer = new SmsCountDownTimer(operaButton);
         mEtPhone = riPhone.getEtInput();

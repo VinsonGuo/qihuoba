@@ -17,17 +17,16 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
-import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.model.biz.Info;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
@@ -37,13 +36,11 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
-import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
-import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.LoadingView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -133,14 +130,14 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         @Override
                         public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
                             if (loginBizResponse.getRcode() != 0) {
-                                if(loginBizResponse.getRcode() == 1) { // 账号密法错误，重新登录
+                                if (loginBizResponse.getRcode() == 1) { // 账号密法错误，重新登录
                                     BaseApplication.getInstance().logout(mContext);
                                 }
                                 throw new RuntimeException("登录失败");
                             }
 
                             // 如果有未读通知，点亮小红点
-                            if(loginBizResponse.getResult().isExistUnreadNotice()) {
+                            if (loginBizResponse.getResult().isExistUnreadNotice()) {
                                 EventBus.getDefault().post(new ShowRedDotEvent());
                             }
                             BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
@@ -266,7 +263,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void getHolding() {
-        HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken())
+       /* HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken())
                 .compose(RxUtils.<List<Holding>>applySchedulers())
                 .compose(this.<List<Holding>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<Holding>>() {
@@ -276,6 +273,19 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         StaticStore.sHoldSet = new HashSet<>();
                         for (Holding holding : holdings) {
                             if(holding.getQty() == 0) continue;
+                            StaticStore.sHoldSet.add(holding.getSymbol());
+                        }
+                    }
+                }, RxUtils.commonErrorConsumer());*/
+        HttpManager.getBizService().getHolding()
+                .compose(RxUtils.<BizResponse<List<Holds>>>applySchedulers())
+                .compose(this.<BizResponse<List<Holds>>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<List<Holds>>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<List<Holds>> response) throws Exception {
+                        //将持仓的品种保存起来
+                        StaticStore.sHoldSet = new HashSet<>();
+                        for (Holds holding : response.getResult()) {
                             StaticStore.sHoldSet.add(holding.getSymbol());
                         }
                     }
@@ -350,7 +360,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         @Override
         public void UpdateUI(Context context, final int position, final Info data) {
             ImageLoader.load(context, HttpConfig.BIZ_HOST + data.getName(), imageView);
-            if(!TextUtils.isEmpty(data.getValue())) {
+            if (!TextUtils.isEmpty(data.getValue())) {
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

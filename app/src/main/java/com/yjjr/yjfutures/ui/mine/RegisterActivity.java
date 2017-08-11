@@ -7,6 +7,7 @@ import android.os.CountDownTimer;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -26,6 +27,7 @@ import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SmsCountDownTimer;
+import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -76,6 +78,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         RegisterInput riSmscode = (RegisterInput) findViewById(R.id.ri_smscode);
         RegisterInput riPassword = (RegisterInput) findViewById(R.id.ri_password);
         mBtnConfirm = (Button) findViewById(R.id.btn_confirm);
+        TextView tvInfo = (TextView) findViewById(R.id.tv_info);
+        tvInfo.setText(TextUtils.concat("如收不到验证码，请拨打", SpannableUtil.getStringByColor(mContext, "客服热线", R.color.main_color), "索取"));
+        tvInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
+            }
+        });
         mOperaButton = riSmscode.getOperaButton();
         mCountDownTimer = new SmsCountDownTimer(mOperaButton);
         mEtPhone = riPhone.getEtInput();

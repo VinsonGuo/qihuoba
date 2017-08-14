@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.utils.http;
 import android.support.annotation.NonNull;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.yjjr.yjfutures.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,8 @@ public class HttpManager {
     private static volatile HttpService sDemoHttpService;
     private static volatile Retrofit sDemoBizRetrofit;
     private static volatile BizService sDemoBizService;
+
+    private static volatile OkHttpClient sClient;
 
     public static Retrofit getInstance() {
         if (sRetrofit == null) {
@@ -79,7 +82,7 @@ public class HttpManager {
         if (sDemoBizRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sDemoBizRetrofit = new Retrofit.Builder()
-                    .baseUrl(HttpConfig.BIZ_DEMO_HOST + "/service/")
+                    .baseUrl(HttpConfig.BIZ_HOST + "/simulation/service/")
                     .client(client)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -112,23 +115,26 @@ public class HttpManager {
     }
 
     @NonNull
-    public static OkHttpClient getOkHttpClient() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return new OkHttpClient.Builder().addInterceptor(interceptor).addNetworkInterceptor(new StethoInterceptor()).cookieJar(new CookieJar() {
-            private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
+    public synchronized static OkHttpClient getOkHttpClient() {
+        if(sClient == null) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            sClient = new OkHttpClient.Builder().addInterceptor(interceptor).addNetworkInterceptor(new StethoInterceptor()).cookieJar(new CookieJar() {
+                private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 
-            @Override
-            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-                cookieStore.put(url.host(), cookies);
-            }
+                @Override
+                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                    cookieStore.put(url.host(), cookies);
+                }
 
-            @Override
-            public List<Cookie> loadForRequest(HttpUrl url) {
-                List<Cookie> cookies = cookieStore.get(url.host());
-                return cookies != null ? cookies : new ArrayList<Cookie>();
-            }
-        }).build();
+                @Override
+                public List<Cookie> loadForRequest(HttpUrl url) {
+                    List<Cookie> cookies = cookieStore.get(url.host());
+                    return cookies != null ? cookies : new ArrayList<Cookie>();
+                }
+            }).build();
+        }
+        return sClient;
     }
 
     /**

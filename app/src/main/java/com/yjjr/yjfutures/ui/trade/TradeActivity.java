@@ -20,6 +20,7 @@ public class TradeActivity extends BaseActivity {
 
     private NoTouchScrollViewpager mViewpager;
     private RadioGroup mRgNav;
+    public int mIndex;
 
     public static void startActivity(Context context, String symbol, boolean isDemo) {
         Intent intent = new Intent(context, TradeActivity.class);
@@ -45,9 +46,11 @@ public class TradeActivity extends BaseActivity {
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 switch (checkedId) {
                     case R.id.rb_market:
+                        mIndex = 0;
                         mViewpager.setCurrentItem(0, false);
                         break;
                     case R.id.rb_order:
+                        mIndex = 1;
                         mViewpager.setCurrentItem(1, false);
                         break;
                 }

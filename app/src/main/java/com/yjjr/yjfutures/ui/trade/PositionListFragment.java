@@ -19,6 +19,7 @@ import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Holds;
+import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -123,7 +124,7 @@ public class PositionListFragment extends ListFragment<Holds> {
                             .create()
                             .show();
 
-                }else if(view.getId() == R.id.tv_setting) {
+                } else if (view.getId() == R.id.tv_setting) {
                     DialogUtils.createSettingOrderDialog(mContext, holding).show();
                 }
             }
@@ -144,7 +145,7 @@ public class PositionListFragment extends ListFragment<Holds> {
 
     private void closeAllOrder(List<Holds> data) {
         mProgressDialog.show();
-        List<Observable<CommonResponse>> observables = new ArrayList<>();
+       /* List<Observable<CommonResponse>> observables = new ArrayList<>();
         for (Holds holding : data) {
             observables.add(RxUtils.createCloseObservable(mIsDemo, holding));
         }
@@ -168,6 +169,25 @@ public class PositionListFragment extends ListFragment<Holds> {
                     public void accept(@NonNull String s) throws Exception {
                         mSuccessDialog.show();
                         mProgressDialog.dismiss();
+                        EventBus.getDefault().post(new SendOrderEvent());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        LogUtils.e(throwable);
+                        mProgressDialog.dismiss();
+                        ToastUtils.show(mContext, throwable.getMessage());
+                    }
+                });*/
+        HttpManager.getBizService(mIsDemo).closeAllOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), "ALL")
+                .delay(1, TimeUnit.SECONDS)
+                .compose(RxUtils.<BizResponse>applyBizSchedulers())
+                .compose(this.<BizResponse>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse>() {
+                    @Override
+                    public void accept(@NonNull BizResponse commonResponse) throws Exception {
+                        mProgressDialog.dismiss();
+                        mSuccessDialog.show();
                         EventBus.getDefault().post(new SendOrderEvent());
                     }
                 }, new Consumer<Throwable>() {
@@ -270,7 +290,7 @@ public class PositionListFragment extends ListFragment<Holds> {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        if (isFragmentVisible) {
+        if (getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 1) {
             loadData();
         }
     }

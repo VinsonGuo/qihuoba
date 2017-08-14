@@ -22,6 +22,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -164,4 +165,14 @@ public interface BizService {
             @Field("orderId") String orderId,
             @Field("lossPriceLine") double lossPriceLine,
             @Field("profitPriceLine") double profitPriceLine);
+
+    @FormUrlEncoded
+    @POST("trader/onkeyCloseOrder")
+    Observable<BizResponse> closeAllOrder(
+            @Field("cid") String account,
+            @Field("symbol") String symbol);
+
+    @POST("user/resetCapitalAccount")
+    Observable<BizResponse> resetCapitalAccount();
+
 }

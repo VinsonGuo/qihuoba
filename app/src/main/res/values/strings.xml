@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">外盘交易通</string>
+    <string name="app_name">期货吧</string>
     <string name="permission_deny_message">需要您开启应用需要相应的权限才能更好地为您服务，请点击确定-权限选项中勾选</string>
     <string name="activity_main_stroll">暂不注册</string>
     <!--activity login-->
@@ -1039,10 +1039,7 @@
     <string name="reconnect">重新连接</string>
     <string name="visitor_can_not_send_msg">请登录后再发言</string>
     <string name="opera_fail">操作失败</string>
-    <string name="nan">NAN</string>
-    <string name="jf">RH</string>
-    <string name="kvb">KVB</string>
-    <string name="placeholder_enter_chat_room">%1$s  进入聊天室</string>
+    <string name="opera_success">操作成功</string>
     <string name="calendar">日历</string>
     <string name="please_input_keyword">请输入关键字</string>
     <string name="country_area">国家/地区</string>

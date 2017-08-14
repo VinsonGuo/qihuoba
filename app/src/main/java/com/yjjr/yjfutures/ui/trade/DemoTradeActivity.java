@@ -24,6 +24,7 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
+import com.yjjr.yjfutures.widget.TradeInfoView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,6 +55,7 @@ public class DemoTradeActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
+        TradeInfoView tradeInfoView = (TradeInfoView) findViewById(R.id.trade_info);
         MarketPriceFragment fragment = MarketPriceFragment.newInstance(false);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
         fragment.setUserVisibleHint(true);
@@ -102,19 +104,7 @@ public class DemoTradeActivity extends BaseActivity {
     private void loadData() {
         final String account = UserSharePrefernce.getAccount(mContext);
         final String password = /*UserSharePrefernce.getPassword(mContext)*/"123456";
-        HttpManager.getBizService(true).login(account, password)
-                .flatMap(new Function<BizResponse<UserInfo>, ObservableSource<UserLoginResponse>>() {
-                    @Override
-                    public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
-                        if (loginBizResponse.getRcode() != 0) {
-                            if(loginBizResponse.getRcode() == 1) { // 账号密法错误，重新登录
-                                BaseApplication.getInstance().logout(mContext);
-                            }
-                            throw new RuntimeException("登录失败");
-                        }
-                        return HttpManager.getHttpService().userLogin(account, password);
-                    }
-                })
+        HttpManager.getHttpService(true).userLogin(account, password)
                 .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
                     @Override
                     public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {

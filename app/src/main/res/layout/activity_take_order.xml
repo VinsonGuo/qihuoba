@@ -227,9 +227,10 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="46dp"
+                android:layout_height="36dp"
                 android:gravity="center"
-                android:padding="@dimen/root_padding_15">
+                android:paddingLeft="@dimen/root_padding_15"
+                android:paddingRight="@dimen/root_padding_15">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -278,7 +279,7 @@
                 android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="1.2"
                 android:padding="@dimen/root_padding_15"
-                tools:text="说明：\n1.一旦开启，点击购买\n2.适当操作，理性投资"
+                tools:text="说明：\n1.一旦开启13444444444444444444444444444444243132443213441，点击购买\n2.适当操作，理性投资"
                 android:textColor="@color/second_text_color"
                 android:textSize="@dimen/sp_12"/>
         </LinearLayout>
@@ -288,7 +289,8 @@
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
         android:textSize="@dimen/common_btn_text_size"
         android:background="@drawable/selector_common_btn_bg"
         android:textColor="@color/selector_common_btn_text_color"
@@ -296,6 +298,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:gravity="center">
 
         <android.support.v7.widget.AppCompatCheckBox

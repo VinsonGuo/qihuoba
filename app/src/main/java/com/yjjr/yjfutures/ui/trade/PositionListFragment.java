@@ -125,7 +125,7 @@ public class PositionListFragment extends ListFragment<Holds> {
                             .show();
 
                 } else if (view.getId() == R.id.tv_setting) {
-                    DialogUtils.createSettingOrderDialog(mContext, holding).show();
+                    DialogUtils.createSettingOrderDialog(mContext, holding, mIsDemo).show();
                 }
             }
         });

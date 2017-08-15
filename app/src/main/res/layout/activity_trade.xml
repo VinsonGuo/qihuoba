@@ -16,6 +16,9 @@
         android:layout_weight="1"
         app:tabBackground="@color/white"/>
 
+    <View
+        style="@style/style_divider"/>
+
     <RadioGroup
         android:id="@+id/rg_nav"
         android:layout_width="match_parent"

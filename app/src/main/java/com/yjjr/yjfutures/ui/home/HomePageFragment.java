@@ -231,6 +231,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                     .subscribe(new Consumer<Boolean>() {
                         @Override
                         public void accept(@NonNull Boolean symbols) throws Exception {
+                            getHolding();
                             mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
                             mLoadingView.setVisibility(View.GONE);
                         }
@@ -259,7 +260,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         }, images);
                     }
                 }, RxUtils.commonErrorConsumer());
-        getHolding();
     }
 
     private void getHolding() {

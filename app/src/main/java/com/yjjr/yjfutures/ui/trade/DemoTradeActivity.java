@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
@@ -14,12 +15,14 @@ import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
+import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -43,6 +46,7 @@ import io.reactivex.functions.Function;
 
 public class DemoTradeActivity extends BaseActivity {
     private Timer mTimer = new Timer();
+    private TradeInfoView mTradeInfoView;
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, DemoTradeActivity.class));
@@ -55,7 +59,7 @@ public class DemoTradeActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
-        TradeInfoView tradeInfoView = (TradeInfoView) findViewById(R.id.trade_info);
+        mTradeInfoView = (TradeInfoView) findViewById(R.id.trade_info);
         MarketPriceFragment fragment = MarketPriceFragment.newInstance(false);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
         fragment.setUserVisibleHint(true);
@@ -150,6 +154,7 @@ public class DemoTradeActivity extends BaseActivity {
 //                        mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
 //                        mLoadingView.setVisibility(View.GONE);
                         getHolding();
+                        getFund();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -180,6 +185,21 @@ public class DemoTradeActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SendOrderEvent event) {
         getHolding();
+        getFund();
+    }
+
+    private void getFund() {
+        HttpManager.getBizService(true).getFunds()
+                .retry(3)
+                .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
+                .compose(this.<BizResponse<Funds>>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<Funds>>() {
+                    @Override
+                    public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
+                        Funds result = fundsBizResponse.getResult();
+                        mTradeInfoView.setValues(result.getFrozenMargin(), result.getNetAssets(), result.getAvailableFunds());
+                    }
+                }, RxUtils.commonErrorConsumer());
     }
 
     @Override

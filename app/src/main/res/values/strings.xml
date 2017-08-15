@@ -1347,4 +1347,5 @@
     <string name="agreement1">投资人与点买人合作协议</string>
     <string name="add">添加</string>
     <string name="unbind">未绑定</string>
+    <string name="please_finish_user_info">请完善个人资料</string>
 </resources>

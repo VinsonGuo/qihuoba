@@ -79,11 +79,11 @@ public class DialogUtils {
                 .create();
     }
 
-    public static CustomPromptDialog createSettingOrderDialog(final Context context, final Holds holding) {
+    public static CustomPromptDialog createSettingOrderDialog(final Context context, final Holds holding, final boolean isDemo) {
         View v = LayoutInflater.from(context).inflate(R.layout.dialog_setting_order, null);
         final RadioGroup rgSl = (RadioGroup) v.findViewById(R.id.rg_sl);
         final RadioGroup rgSw = (RadioGroup) v.findViewById(R.id.rg_sw);
-        final Disposable subscribe = HttpManager.getBizService().getContractInfo(holding.getSymbol())
+        final Disposable subscribe = HttpManager.getBizService(isDemo).getContractInfo(holding.getSymbol())
                 .compose(RxUtils.<BizResponse<ContractInfo>>applyBizSchedulers())
                 .subscribe(new Consumer<BizResponse<ContractInfo>>() {
                     private RadioButton createRedRadioButton(String name, Double tag) {
@@ -137,7 +137,7 @@ public class DialogUtils {
                     public void onClick(DialogInterface dialog, int which) {
                         final double sl = (double) rgSl.findViewById(rgSl.getCheckedRadioButtonId()).getTag();
                         final double sw = (double) rgSw.findViewById(rgSw.getCheckedRadioButtonId()).getTag();
-                        HttpManager.getBizService().setRiskControlTrigger(holding.getOrderId(), sl, sw)
+                        HttpManager.getBizService(isDemo).setRiskControlTrigger(holding.getOrderId(), sl, sw)
                                 .compose(RxUtils.<BizResponse<CommonResponse>>applyBizSchedulers())
                                 .subscribe(new Consumer<BizResponse<CommonResponse>>() {
                                     @Override

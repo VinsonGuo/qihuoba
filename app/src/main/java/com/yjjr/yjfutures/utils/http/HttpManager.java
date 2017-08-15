@@ -25,18 +25,18 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class HttpManager {
 
-    private static volatile Retrofit sRetrofit;
-    private static volatile HttpService sHttpService;
-    private static volatile Retrofit sBizRetrofit;
-    private static volatile BizService sBizService;
-    private static volatile Retrofit sDemoRetrofit;
-    private static volatile HttpService sDemoHttpService;
-    private static volatile Retrofit sDemoBizRetrofit;
-    private static volatile BizService sDemoBizService;
+    private static  Retrofit sRetrofit;
+    private static  HttpService sHttpService;
+    private static  Retrofit sBizRetrofit;
+    private static  BizService sBizService;
+    private static  Retrofit sDemoRetrofit;
+    private static  HttpService sDemoHttpService;
+    private static  Retrofit sDemoBizRetrofit;
+    private static  BizService sDemoBizService;
 
     private static volatile OkHttpClient sClient;
 
-    public static Retrofit getInstance() {
+    public synchronized static Retrofit getInstance() {
         if (sRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sRetrofit = new Retrofit.Builder()
@@ -50,7 +50,7 @@ public class HttpManager {
         return sRetrofit;
     }
 
-    public static Retrofit getDemoInstance() {
+    public synchronized static Retrofit getDemoInstance() {
         if (sDemoRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sDemoRetrofit = new Retrofit.Builder()
@@ -64,7 +64,7 @@ public class HttpManager {
         return sDemoRetrofit;
     }
 
-    public static Retrofit getBizInstance() {
+    public synchronized static Retrofit getBizInstance() {
         if (sBizRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sBizRetrofit = new Retrofit.Builder()
@@ -78,7 +78,7 @@ public class HttpManager {
         return sBizRetrofit;
     }
 
-    public static Retrofit getDemoBizInstance() {
+    public synchronized static Retrofit getDemoBizInstance() {
         if (sDemoBizRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sDemoBizRetrofit = new Retrofit.Builder()
@@ -107,7 +107,7 @@ public class HttpManager {
     }
 
 
-    public static BizService getBizService() {
+    public synchronized static BizService getBizService() {
         if (sBizService == null) {
             sBizService = getBizInstance().create(BizService.class);
         }
@@ -115,7 +115,7 @@ public class HttpManager {
     }
 
     @NonNull
-    public synchronized static OkHttpClient getOkHttpClient() {
+    public static OkHttpClient getOkHttpClient() {
         if(sClient == null) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -133,6 +133,7 @@ public class HttpManager {
                     return cookies != null ? cookies : new ArrayList<Cookie>();
                 }
             }).build();
+            LogUtils.d("okhttpclient init");
         }
         return sClient;
     }
@@ -156,7 +157,7 @@ public class HttpManager {
         }
     }
 
-    public static HttpService getHttpService() {
+    public synchronized static HttpService getHttpService() {
         if (sHttpService == null) {
             sHttpService = getInstance().create(HttpService.class);
         }

@@ -63,8 +63,7 @@
 
         <View
             android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/common_divider_small"
+            style="@style/style_divider"
             android:layout_below="@id/iv_alipay"
             android:layout_marginLeft="@dimen/dp_10"/>
 

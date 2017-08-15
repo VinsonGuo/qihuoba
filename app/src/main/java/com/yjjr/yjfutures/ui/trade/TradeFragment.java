@@ -26,12 +26,14 @@ import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Holds;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.ui.mine.UserInfoActivity;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
@@ -514,7 +516,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                                 }
                             });
                 } else {
-                    DepositActivity.startActivity(mContext);
+                    UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+                    if (userInfo == null || TextUtils.isEmpty(userInfo.getIdcard()) || TextUtils.isEmpty(userInfo.getAlipay())) {
+                        ToastUtils.show(mContext, R.string.please_finish_user_info);
+                        UserInfoActivity.startActivity(mContext);
+                    } else {
+                        DepositActivity.startActivity(mContext);
+                    }
                 }
                 break;
             case R.id.tv_kchart:

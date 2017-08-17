@@ -97,7 +97,7 @@ public class RxUtils {
     }
 
     public static Observable<CommonResponse> createCloseObservable(boolean isDemo, Holds holding) {
-        return HttpManager.getBizService(isDemo).closeOrder(BaseApplication.getInstance().getTradeToken(isDemo), 0, Math.abs(holding.getQty()), "市价", holding.getOrderId())
+        return HttpManager.getBizService(isDemo).closeOrder(BaseApplication.getInstance().getTradeToken(isDemo), holding.getOrderId())
                 .map(new Function<BizResponse<CommonResponse>, CommonResponse>() {
                     @Override
                     public CommonResponse apply(@NonNull BizResponse<CommonResponse> t) throws Exception {
@@ -112,9 +112,9 @@ public class RxUtils {
     /**
      * 统一的发送验证码接口
      */
-    public static void handleSendSms(final BaseActivity mContext, final View btn, final CountDownTimer timer, String phoneNumber) {
+    public static void handleSendSms(final BaseActivity mContext, final View btn, final CountDownTimer timer, String phoneNumber, int type) {
         btn.setEnabled(false);
-        HttpManager.getBizService().sendSms(phoneNumber)
+        HttpManager.getBizService().sendSms(phoneNumber, type)
                 .compose(RxUtils.applyBizSchedulers())
                 .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse>() {

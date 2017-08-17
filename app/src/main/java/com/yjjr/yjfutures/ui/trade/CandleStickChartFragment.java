@@ -51,7 +51,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
 /**
- * A simple {@link Fragment} subclass.
+ * K线图Fragment
  */
 public class CandleStickChartFragment extends BaseFragment {
 
@@ -302,7 +302,6 @@ public class CandleStickChartFragment extends BaseFragment {
         set1.setDecreasingPaintStyle(Paint.Style.FILL);
         set1.setShadowColorSameAsCandle(true);
         set1.setIncreasingColor(ContextCompat.getColor(getContext(), R.color.main_color_red));
-        set1.setIncreasingPaintStyle(Paint.Style.STROKE);
         set1.setIncreasingPaintStyle(Paint.Style.FILL);
         set1.setNeutralColor(ContextCompat.getColor(getContext(), R.color.main_color_red));
         //set1.setHighlightLineWidth(1f);

@@ -80,7 +80,7 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
             }
         });
         final TextView operaButton = riSmscode.getOperaButton();
-        mCountDownTimer = new SmsCountDownTimer(operaButton);
+        mCountDownTimer = new SmsCountDownTimer(operaButton, riPhone);
         mEtPhone = riPhone.getEtInput();
         mEtSmsCode = riSmscode.getEtInput();
         mEtPassword = riPassword.getEtInput();
@@ -92,15 +92,17 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
-                boolean matches = pattern.matcher(s.toString()).matches();
-                operaButton.setEnabled(matches);
+                if (TextUtils.equals(operaButton.getText(), getString(R.string.phone_verify_code))) {
+                    boolean matches = pattern.matcher(s.toString()).matches();
+                    operaButton.setEnabled(matches);
+                }
             }
         });
         findViewById(R.id.iv_back).setOnClickListener(this);
         operaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RxUtils.handleSendSms(mContext, operaButton, mCountDownTimer, mEtPhone.getText().toString().trim());
+                RxUtils.handleSendSms(mContext, operaButton, mCountDownTimer, mEtPhone.getText().toString().trim(), HttpConfig.TYPE_FIND_PWD);
             }
         });
         operaButton.setEnabled(false);

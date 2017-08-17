@@ -19,6 +19,7 @@ import com.yjjr.yjfutures.widget.HeaderView;
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
     private CustomPromptDialog mLogoutDialog;
+    private TextView mTvPhone;
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, SettingActivity.class));
@@ -31,11 +32,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
-        TextView tvPhone = (TextView) findViewById(R.id.tv_phone);
-        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
-        if (userInfo != null) {
-            tvPhone.setText(userInfo.getMobileNo());
-        }
+        mTvPhone = (TextView) findViewById(R.id.tv_phone);
         mLogoutDialog = new CustomPromptDialog.Builder(mContext)
                 .setMessage("您确定退出当前账号吗？")
                 .isShowClose(true)
@@ -52,6 +49,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.tv_login_pwd).setOnClickListener(this);
         findViewById(R.id.tv_help).setOnClickListener(this);
         findViewById(R.id.tv_logout).setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if (userInfo != null) {
+            mTvPhone.setText(userInfo.getMobileNo());
+        }
     }
 
     @Override

@@ -109,9 +109,9 @@ public interface HttpService {
      * http://139.224.8.133:9100/api/login.ashx
      * 传参：uname,upass
      */
-    @POST("/api/login.ashx")
+    @POST("/api/login2.ashx?uname=")
     @FormUrlEncoded
-    Observable<UserLoginResponse> userLogin(@Field("uname") String account, @Field("upass") String password);
+    Observable<UserLoginResponse> userLogin(@Field("phone") String phone, @Field("upass") String password);
 
     /**
      * 2、获取单个合约报价

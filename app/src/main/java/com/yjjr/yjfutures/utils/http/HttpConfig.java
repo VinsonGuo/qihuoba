@@ -87,4 +87,11 @@ public class HttpConfig {
      * 投诉电话
      */
     public static String COMPLAINT_PHONE = "0755-86534610";
+
+    /**
+     * type=1 注册；type=2 修改手机号；type=3 找回密码
+     */
+    public static final int TYPE_REGISTER = 1;
+    public static final int TYPE_ALTER_PHONE = 2;
+    public static final int TYPE_FIND_PWD = 3;
 }

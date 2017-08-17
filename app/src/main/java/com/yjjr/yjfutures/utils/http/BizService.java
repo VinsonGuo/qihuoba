@@ -54,8 +54,11 @@ public interface BizService {
     @POST("user/bindAlipay")
     Observable<BizResponse<Alipay>> bindAlipay(@Field("account") String account, @Field("alipay") String alipay);
 
+    /**
+     * @param type type=1 注册；type=2 修改手机号；type=3 找回密码
+     */
     @GET("sms/send")
-    Observable<BizResponse> sendSms(@Query("recNum") String recNum);
+    Observable<BizResponse> sendSms(@Query("recNum") String recNum, @Query("type") int type);
 
     @FormUrlEncoded
     @POST("user/setPayPwd")
@@ -154,9 +157,6 @@ public interface BizService {
     @POST("trader/closeOrder")
     Observable<BizResponse<CommonResponse>> closeOrder(
             @Field("cid") String account,
-            @Field("price") double price,
-            @Field("qty") int qty,
-            @Field("ordertype") String ordertype,
             @Field("orderId") String orderId);
 
     @FormUrlEncoded

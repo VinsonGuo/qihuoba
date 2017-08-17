@@ -44,7 +44,7 @@
         android:layout_marginLeft="@dimen/root_padding_15"
         android:layout_marginRight="@dimen/root_padding_15"
         app:hint="请输入短信验证码"
-        app:button_text="@string/register_get_confirm_code"
+        app:button_text="@string/phone_verify_code"
         app:name="@string/activation_code"
         />
 

@@ -87,7 +87,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
         });
         mOperaButton = riSmscode.getOperaButton();
-        mCountDownTimer = new SmsCountDownTimer(mOperaButton);
+        mCountDownTimer = new SmsCountDownTimer(mOperaButton, riPhone);
         mEtPhone = riPhone.getEtInput();
         mEtSmsCode = riSmscode.getEtInput();
         mEtPassword = riPassword.getEtInput();
@@ -105,17 +105,17 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mEtPhone.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
-                super.afterTextChanged(s);
-                boolean matches = pattern.matcher(s.toString()).matches();
-                mOperaButton.setEnabled(matches);
-
+                if (TextUtils.equals(mOperaButton.getText(), getString(R.string.phone_verify_code))) {
+                    boolean matches = pattern.matcher(s.toString()).matches();
+                    mOperaButton.setEnabled(matches);
+                }
             }
         });
         findViewById(R.id.iv_back).setOnClickListener(this);
         mOperaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RxUtils.handleSendSms(mContext, mOperaButton, mCountDownTimer, mEtPhone.getText().toString().trim());
+                RxUtils.handleSendSms(mContext, mOperaButton, mCountDownTimer, mEtPhone.getText().toString().trim(), HttpConfig.TYPE_REGISTER);
             }
         });
         mOperaButton.setEnabled(false);

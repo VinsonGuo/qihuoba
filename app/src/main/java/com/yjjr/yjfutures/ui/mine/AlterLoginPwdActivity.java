@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FinishEvent;
+import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.widget.HeaderView;
@@ -51,8 +52,10 @@ public class AlterLoginPwdActivity extends BaseActivity {
             headerView.setMainTitle(R.string.alter_trade_password);
             riPwd.setName("输入密码");
             etPassword.setHint("请输入原交易密码");
+            etPassword.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        } else {
+            etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
-        etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         etPassword.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -69,8 +72,14 @@ public class AlterLoginPwdActivity extends BaseActivity {
                             ToastUtils.show(mContext, "交易密码必须为6位");
                             return;
                         }
+                        AlterLoginPwdActivity2.startActivity(mContext, riPwd.getValue(), mType);
+                    }else {
+                        if (TextUtils.equals(riPwd.getValue(), UserSharePrefernce.getPassword(mContext))) {
+                            AlterLoginPwdActivity2.startActivity(mContext, riPwd.getValue(), mType);
+                        } else {
+                            ToastUtils.show(mContext, "输入的密码不正确，请重试");
+                        }
                     }
-                    AlterLoginPwdActivity2.startActivity(mContext, riPwd.getValue(), mType);
                 }
             }
         });

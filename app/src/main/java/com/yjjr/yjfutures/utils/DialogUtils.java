@@ -90,7 +90,7 @@ public class DialogUtils {
                         RadioButton rb = new RadioButton(context);
                         rb.setId(View.generateViewId());
                         RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(DisplayUtils.dip2px(context, 46), DisplayUtils.dip2px(context, 17));
-                        lp.setMargins(DisplayUtils.dip2px(context, 8), 0, 0, 0);
+                        lp.setMargins(0, 0, DisplayUtils.dip2px(context, 8), 0);
                         rb.setLayoutParams(lp);
                         rb.setBackgroundResource(R.drawable.selector_trade_rb_red_bg);
                         rb.setButtonDrawable(null);
@@ -106,7 +106,7 @@ public class DialogUtils {
                         RadioButton rb = new RadioButton(context);
                         rb.setId(View.generateViewId());
                         RadioGroup.LayoutParams lp = new RadioGroup.LayoutParams(DisplayUtils.dip2px(context, 46), DisplayUtils.dip2px(context, 17));
-                        lp.setMargins(DisplayUtils.dip2px(context, 8), 0, 0, 0);
+                        lp.setMargins(0, 0, DisplayUtils.dip2px(context, 8), 0);
                         rb.setLayoutParams(lp);
                         rb.setBackgroundResource(R.drawable.selector_trade_rb_green_bg);
                         rb.setButtonDrawable(null);

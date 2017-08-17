@@ -16,6 +16,7 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -60,14 +61,16 @@ public class AlterPhoneActivity extends BaseActivity {
         EditText etSmscode = riSmsCode.getEtInput();
         etSmscode.setInputType(InputType.TYPE_CLASS_NUMBER);
         operaButton.setEnabled(false);
-        mCountDownTimer = new SmsCountDownTimer(operaButton);
+        mCountDownTimer = new SmsCountDownTimer(operaButton, riPhone);
         headerView.bindActivity(mContext);
         final Pattern pattern = Pattern.compile(HttpConfig.REG_PHONE);
         etPhone.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 boolean matches = pattern.matcher(s.toString()).matches();
-                operaButton.setEnabled(matches);
+                if (TextUtils.equals(operaButton.getText(), getString(R.string.phone_verify_code))) {
+                    operaButton.setEnabled(matches);
+                }
                 btnConfirm.setSelected(matches && !TextUtils.isEmpty(riSmsCode.getValue()));
             }
         });
@@ -91,6 +94,7 @@ public class AlterPhoneActivity extends BaseActivity {
                                 @Override
                                 public void accept(@NonNull BizResponse response) throws Exception {
                                     CommonSuccessActivity.startActivity(mContext, "手机号码更改成功", "手机号码", riPhone.getValue());
+                                    UserSharePrefernce.setAccount(mContext, riPhone.getValue());
                                 }
                             }, new Consumer<Throwable>() {
                                 @Override
@@ -106,7 +110,7 @@ public class AlterPhoneActivity extends BaseActivity {
         operaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RxUtils.handleSendSms(mContext, operaButton, mCountDownTimer, riPhone.getValue());
+                RxUtils.handleSendSms(mContext, operaButton, mCountDownTimer, riPhone.getValue(), HttpConfig.TYPE_ALTER_PHONE);
             }
         });
     }

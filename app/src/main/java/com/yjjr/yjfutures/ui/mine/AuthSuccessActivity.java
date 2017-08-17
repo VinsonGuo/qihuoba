@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FinishEvent;
+import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.ui.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -39,6 +40,7 @@ public class AuthSuccessActivity extends BaseActivity {
                 finish();
             }
         });
+        EventBus.getDefault().post(new UpdateUserInfoEvent());
     }
 
     @Override

@@ -171,7 +171,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
-                        mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee()));
+                        mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee())+"元");
                         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
                         mTvExchange.setText(mSymbol + "按" + quote.getCurrency() + "交易，平台按人民币结算，汇率为" + mContractInfo.getCnyExchangeRate());
                         mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, quote.getLastPrice()));
@@ -262,7 +262,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
             RadioButton rb = (RadioButton) group.getChildAt(i);
             if (rb.isChecked()) {
                 Double d = (Double) rb.getTag();
-                mTvMargin.setText(DoubleUtil.formatDecimal(d));
+                mTvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.formatDecimal(d));
                 break;
             }
         }

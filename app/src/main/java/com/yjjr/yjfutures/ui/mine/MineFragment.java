@@ -24,6 +24,7 @@ import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
@@ -155,21 +156,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 WebActivity.startActivity(mContext, HttpConfig.URL_WARNING);
                 break;
             case R.id.btn_deposit:
-                if (TextUtils.isEmpty(userInfo.getIdcard())) {
-                    AuthActivity.startActivity(mContext);
-                } else if (TextUtils.isEmpty(userInfo.getAlipay())) {
-                    BindCardActivity.startActivity(mContext);
+                if (TextUtils.isEmpty(userInfo.getIdcard()) || TextUtils.isEmpty(userInfo.getAlipay())) {
+                    ToastUtils.show(mContext, R.string.please_finish_user_info);
+                    UserInfoActivity.startActivity(mContext);
                 } else {
                     DepositActivity.startActivity(mContext);
                 }
                 break;
             case R.id.btn_withdraw:
-                if (TextUtils.isEmpty(userInfo.getIdcard())) {
-                    AuthActivity.startActivity(mContext);
-                } else if (TextUtils.isEmpty(userInfo.getAlipay())) {
-                    BindCardActivity.startActivity(mContext);
-                } else if (userInfo.isExistPayPwd()) {
-                    WithdrawActivity.startActivity(mContext);
+                if (TextUtils.isEmpty(userInfo.getIdcard()) || TextUtils.isEmpty(userInfo.getAlipay())||userInfo.isExistPayPwd()) {
+                    ToastUtils.show(mContext, R.string.please_finish_user_info);
+                    UserInfoActivity.startActivity(mContext);
                 } else {
                     SetTradePwdActivity.startActivity(mContext);
                 }

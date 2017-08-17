@@ -30,7 +30,7 @@
         android:background="@drawable/shape_bg_bottom_line"
         android:paddingLeft="@dimen/dp_10"
         android:paddingRight="@dimen/dp_10"
-        app:button_text="@string/register_get_confirm_code"
+        app:button_text="@string/phone_verify_code"
         app:name="@string/activation_message_code"
         />
 

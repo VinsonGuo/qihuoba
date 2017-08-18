@@ -15,6 +15,7 @@ import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
@@ -70,6 +71,10 @@ public class AlterLoginPwdActivity extends BaseActivity {
                         // 交易密码必须为6位
                         if (riPwd.getValue().length() != 6) {
                             ToastUtils.show(mContext, "交易密码必须为6位");
+                            return;
+                        }
+                        if (StringUtils.isInValidTradePwd(riPwd.getValue())) {
+                            ToastUtils.show(mContext, R.string.trade_pwd_wrong);
                             return;
                         }
                         AlterLoginPwdActivity2.startActivity(mContext, riPwd.getValue(), mType);

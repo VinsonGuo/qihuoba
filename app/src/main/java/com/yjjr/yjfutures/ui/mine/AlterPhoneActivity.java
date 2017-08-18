@@ -68,7 +68,7 @@ public class AlterPhoneActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 boolean matches = pattern.matcher(s.toString()).matches();
-                if (TextUtils.equals(operaButton.getText(), getString(R.string.phone_verify_code))) {
+                if (TextUtils.equals(operaButton.getText(), getString(R.string.get_confirm_code))) {
                     operaButton.setEnabled(matches);
                 }
                 btnConfirm.setSelected(matches && !TextUtils.isEmpty(riSmsCode.getValue()));

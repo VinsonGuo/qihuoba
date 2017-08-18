@@ -327,8 +327,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     @Override
                     public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
                         Funds result = fundsBizResponse.getResult();
-                        tvYueValue.setText(DoubleUtil.format2Decimal(result.getAvailableFunds()));
-                        tvMarginValue.setText(DoubleUtil.format2Decimal(result.getFrozenMargin()));
+                        tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
+                        tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
 //                        tvNetValue.setText(DoubleUtil.format2Decimal(result.getNetAssets()));
                     }
                 }, RxUtils.commonErrorConsumer());

@@ -9,7 +9,6 @@ import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
 import com.facebook.stetho.Stetho;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.model.biz.UserInfo;
@@ -56,7 +55,6 @@ public class BaseApplication extends Application implements Application.Activity
         LogUtils.init();
         JodaTimeAndroid.init(this);
         registerActivityLifecycleCallbacks(this);
-        CrashReport.initCrashReport(getApplicationContext(), "97d5703386", BuildConfig.DEBUG);
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
                         .enableDumpapp(
@@ -64,7 +62,6 @@ public class BaseApplication extends Application implements Application.Activity
                         .enableWebKitInspector(
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
-//        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
         MobclickAgent.enableEncrypt(true);
         MobclickAgent.setDebugMode(BuildConfig.DEBUG);
         MobclickAgent.setCheckDevice(false);

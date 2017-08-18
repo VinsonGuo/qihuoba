@@ -241,10 +241,20 @@
                     android:textSize="@dimen/sp_14"/>
 
                 <TextView
-                    android:id="@+id/bzj_value"
-                    android:layout_width="match_parent"
+                    android:id="@+id/bzj_dollar_value"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:gravity="right"
+                    tools:text="$123"
+                    android:textColor="@color/second_text_color"
+                    android:textSize="@dimen/sp_12"/>
+
+                <TextView
+                    android:id="@+id/bzj_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
                     tools:text="$123"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>

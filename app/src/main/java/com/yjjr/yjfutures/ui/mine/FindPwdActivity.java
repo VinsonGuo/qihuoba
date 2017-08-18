@@ -92,7 +92,7 @@ public class FindPwdActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
-                if (TextUtils.equals(operaButton.getText(), getString(R.string.phone_verify_code))) {
+                if (TextUtils.equals(operaButton.getText(), getString(R.string.get_confirm_code))) {
                     boolean matches = pattern.matcher(s.toString()).matches();
                     operaButton.setEnabled(matches);
                 }

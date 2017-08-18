@@ -1,10 +1,11 @@
 package com.yjjr.yjfutures.utils.http;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.yjjr.yjfutures.utils.LogUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,10 @@ import java.util.List;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -25,14 +29,14 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class HttpManager {
 
-    private static  Retrofit sRetrofit;
-    private static  HttpService sHttpService;
-    private static  Retrofit sBizRetrofit;
-    private static  BizService sBizService;
-    private static  Retrofit sDemoRetrofit;
-    private static  HttpService sDemoHttpService;
-    private static  Retrofit sDemoBizRetrofit;
-    private static  BizService sDemoBizService;
+    private static Retrofit sRetrofit;
+    private static HttpService sHttpService;
+    private static Retrofit sBizRetrofit;
+    private static BizService sBizService;
+    private static Retrofit sDemoRetrofit;
+    private static HttpService sDemoHttpService;
+    private static Retrofit sDemoBizRetrofit;
+    private static BizService sDemoBizService;
 
     private static volatile OkHttpClient sClient;
 
@@ -116,10 +120,29 @@ public class HttpManager {
 
     @NonNull
     public static OkHttpClient getOkHttpClient() {
-        if(sClient == null) {
+        if (sClient == null) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            sClient = new OkHttpClient.Builder().addInterceptor(interceptor).addNetworkInterceptor(new StethoInterceptor()).cookieJar(new CookieJar() {
+            sClient = new OkHttpClient.Builder().addNetworkInterceptor(new Interceptor() {
+                private String token;
+
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request request;
+                    if (!TextUtils.isEmpty(token)) {
+                        request = chain.request().newBuilder()
+                                .addHeader("token", token)
+                                .build();
+                    } else {
+                        request = chain.request();
+                    }
+                    Response response = chain.proceed(request);
+                    if(!TextUtils.isEmpty(response.header("token"))) {
+                        token = response.header("token");
+                    }
+                    return response;
+                }
+            })/*.addNetworkInterceptor(new StethoInterceptor()).cookieJar(new CookieJar() {
                 private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 
                 @Override
@@ -132,8 +155,7 @@ public class HttpManager {
                     List<Cookie> cookies = cookieStore.get(url.host());
                     return cookies != null ? cookies : new ArrayList<Cookie>();
                 }
-            }).build();
-            LogUtils.d("okhttpclient init");
+            })*/.addInterceptor(interceptor).build();
         }
         return sClient;
     }

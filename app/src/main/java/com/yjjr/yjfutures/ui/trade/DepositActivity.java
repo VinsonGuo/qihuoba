@@ -14,15 +14,14 @@ import android.widget.TextView;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.BizResponse;
-import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.ui.BaseActivity;
-import com.yjjr.yjfutures.utils.DialogUtils;
+import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.ToastUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
-import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
@@ -33,7 +32,6 @@ import io.reactivex.functions.Consumer;
 public class DepositActivity extends BaseActivity implements View.OnClickListener {
 
     private Button mBtnConfirm;
-    private CustomPromptDialog mServiceDialog;
     private RegisterInput mRiMoney;
 
     public static void startActivity(Context context) {
@@ -44,7 +42,6 @@ public class DepositActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deposit);
-        mServiceDialog = DialogUtils.createCustomServiceDialog(mContext);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
         mBtnConfirm = (Button) findViewById(R.id.btn_confirm);
@@ -55,7 +52,7 @@ public class DepositActivity extends BaseActivity implements View.OnClickListene
         etMoney.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
-                mBtnConfirm.setSelected(!TextUtils.isEmpty(s));
+                mBtnConfirm.setSelected(!TextUtils.isEmpty(s) && Double.parseDouble(mRiMoney.getValue()) > 0);
             }
         });
         TextView tvService = (TextView) findViewById(R.id.tv_contact_service);
@@ -69,6 +66,10 @@ public class DepositActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.btn_confirm:
                 if (mBtnConfirm.isSelected()) {
+                    if (Double.parseDouble(mRiMoney.getValue()) <= 0) {
+                        ToastUtils.show(mContext, "充值金额不能为0");
+                        return;
+                    }
                     mBtnConfirm.setSelected(false);
                     HttpManager.getBizService().rechargeApply(mRiMoney.getValue(), "alipay")
                             .compose(RxUtils.applyBizSchedulers())
@@ -90,7 +91,7 @@ public class DepositActivity extends BaseActivity implements View.OnClickListene
                 }
                 break;
             case R.id.tv_contact_service:
-                mServiceDialog.show();
+                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
                 break;
         }
     }

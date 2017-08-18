@@ -15,7 +15,6 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
-import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
@@ -33,15 +32,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.List;
-
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 
 public class AlterLoginPwdActivity2 extends BaseActivity {
-    public static void startActivity(Context context, String oldPwd,int type) {
+    public static void startActivity(Context context, String oldPwd, int type) {
         Intent intent = new Intent(context, AlterLoginPwdActivity2.class);
         intent.putExtra(Constants.CONTENT_PARAMETER, oldPwd);
         intent.putExtra(Constants.CONTENT_PARAMETER_2, type);
@@ -61,7 +58,7 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
         final Button btnConfirm = (Button) findViewById(R.id.btn_confirm);
 
         EditText etPassword = riPwd.getEtInput();
-        if(type == AlterLoginPwdActivity.TYPE_TRADE_PWD) {
+        if (type == AlterLoginPwdActivity.TYPE_TRADE_PWD) {
             headerView.setMainTitle(R.string.alter_trade_password);
             riPwd.setName("输入密码");
             etPassword.setHint("请输入新交易密码");
@@ -69,7 +66,7 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
         } else {
             etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
-        etPassword.addTextChangedListener(new TextWatcherAdapter(){
+        etPassword.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 btnConfirm.setSelected(!TextUtils.isEmpty(s));
@@ -78,22 +75,26 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!btnConfirm.isSelected()) {
+                if (!btnConfirm.isSelected()) {
                     return;
                 }
                 final String newPwd = riPwd.getValue();
-                if(TextUtils.equals(oldPwd, newPwd)) {
+                if (TextUtils.equals(oldPwd, newPwd)) {
                     ToastUtils.show(mContext, R.string.old_password_equals_new_password);
                     return;
                 }
                 btnConfirm.setSelected(false);
-                if(type == AlterLoginPwdActivity.TYPE_LOGIN_PWD) {
+                if (type == AlterLoginPwdActivity.TYPE_LOGIN_PWD) {
                     findLoginPwd(newPwd, oldPwd, btnConfirm);
-                }else if(type == AlterLoginPwdActivity.TYPE_TRADE_PWD){
+                } else if (type == AlterLoginPwdActivity.TYPE_TRADE_PWD) {
                     // 交易密码必须为6位
-                    if(newPwd.length() != 6 || oldPwd.length() != 6) {
+                    if (newPwd.length() != 6 || oldPwd.length() != 6) {
                         ToastUtils.show(mContext, "交易密码必须为6位");
                         btnConfirm.setSelected(true);
+                        return;
+                    }
+                    if (StringUtils.isInValidTradePwd(newPwd)) {
+                        ToastUtils.show(mContext, R.string.trade_pwd_wrong);
                         return;
                     }
                     findTradePwd(newPwd, oldPwd, btnConfirm);
@@ -115,7 +116,7 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         LogUtils.e(throwable);
-                        ToastUtils.show(mContext,throwable.getMessage());
+                        ToastUtils.show(mContext, throwable.getMessage());
                         btnConfirm.setSelected(true);
                     }
                 });
@@ -126,7 +127,7 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
                 .map(new Function<CommonResponse, CommonResponse>() {
                     @Override
                     public CommonResponse apply(@NonNull CommonResponse commonResponse) throws Exception {
-                        if(commonResponse.getReturnCode() != 1) {
+                        if (commonResponse.getReturnCode() != 1) {
                             throw new RuntimeException(commonResponse.getMessage());
                         }
                         return commonResponse;
@@ -145,7 +146,7 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         LogUtils.e(throwable);
-                        ToastUtils.show(mContext,throwable.getMessage());
+                        ToastUtils.show(mContext, throwable.getMessage());
                         btnConfirm.setSelected(true);
                     }
                 });

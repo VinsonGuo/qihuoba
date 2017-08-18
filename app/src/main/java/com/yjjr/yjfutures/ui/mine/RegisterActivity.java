@@ -105,7 +105,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mEtPhone.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.equals(mOperaButton.getText(), getString(R.string.phone_verify_code))) {
+                if (TextUtils.equals(mOperaButton.getText(), getString(R.string.get_confirm_code))) {
                     boolean matches = pattern.matcher(s.toString()).matches();
                     mOperaButton.setEnabled(matches);
                 }

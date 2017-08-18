@@ -48,11 +48,11 @@ public class DialogUtils {
     }
 
     public static CustomPromptDialog createUpdateDialog(final Context context, final Update update) {
-        int android = update.getAndroid();
+        int android = update.getUpdateOS();
         boolean isForceUpdate = android == -1;
         CustomPromptDialog dialog = new CustomPromptDialog.Builder(context)
                 .isShowClose(!isForceUpdate)
-                .setMessage(update.getAndroidDesc())
+                .setMessage(update.getRemark())
                 .setMessageDrawableId(R.drawable.ic_info)
                 .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                     @Override

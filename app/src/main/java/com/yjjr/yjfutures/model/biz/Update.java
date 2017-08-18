@@ -6,27 +6,22 @@ package com.yjjr.yjfutures.model.biz;
 
 public class Update {
 
-    /**
-     * android : -1
-     * updateUrl : http://www.qihuofa.com:9300/app/android/laset
-     * androidDesc : 1.新增场外期权
-     * verNo : 2.0.01
-     */
 
-    private int android;
+    private int updateOS;
     private String updateUrl;
-    private String androidDesc;
+    private String remark;
     private String verNo;
+
 
     /**
      * -1 强制更新   1 可选更新 0 无更新提示
      */
-    public int getAndroid() {
-        return android;
+    public int getUpdateOS() {
+        return updateOS;
     }
 
-    public void setAndroid(int android) {
-        this.android = android;
+    public void setUpdateOS(int updateOS) {
+        this.updateOS = updateOS;
     }
 
     public String getUpdateUrl() {
@@ -37,12 +32,12 @@ public class Update {
         this.updateUrl = updateUrl;
     }
 
-    public String getAndroidDesc() {
-        return androidDesc;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setAndroidDesc(String androidDesc) {
-        this.androidDesc = androidDesc;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getVerNo() {
@@ -56,9 +51,9 @@ public class Update {
     @Override
     public String toString() {
         return "Update{" +
-                "android=" + android +
+                "updateOS=" + updateOS +
                 ", updateUrl='" + updateUrl + '\'' +
-                ", androidDesc='" + androidDesc + '\'' +
+                ", remark='" + remark + '\'' +
                 ", verNo='" + verNo + '\'' +
                 '}';
     }

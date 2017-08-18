@@ -77,7 +77,7 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void accept(@NonNull BizResponse<Update> response) throws Exception {
                         Update result = response.getResult();
-                        if (result.getAndroid() != 0) {
+                        if (result.getUpdateOS() != 0) {
                             DialogUtils.createUpdateDialog(mContext, result).show();
                         }
                     }

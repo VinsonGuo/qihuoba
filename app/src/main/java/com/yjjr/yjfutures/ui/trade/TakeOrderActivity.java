@@ -61,6 +61,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     private TextView mTvStopWin;
     private RadioGroup mRgSl;
     private TextView mTvMargin;
+    private TextView mTvMarginDollar;
     private TextView mTvTradeFee;
     private TextView mTvExchange;
     private TextView mTvPrice;
@@ -100,6 +101,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         mTvInfo = (TextView) findViewById(R.id.tv_info);
         mTvStopWin = (TextView) findViewById(R.id.tv_stop_win);
         mTvMargin = (TextView) findViewById(R.id.bzj_value);
+        mTvMarginDollar = (TextView) findViewById(R.id.bzj_dollar_value);
         mTvTradeFee = (TextView) findViewById(R.id.trade_fee_value);
         mTvPrice = (TextView) findViewById(R.id.tv_price);
         mTvExchange = (TextView) findViewById(R.id.tv_exchange);
@@ -165,13 +167,13 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                         mContractInfo = response.getResult();
                         mTvSymbol.setText(mContractInfo.getSymbol() + "-" + mContractInfo.getSymbolName());
                         mTvInfo.setText(String.format("持仓至%s自动平仓", mContractInfo.getEndTradeTime()));
-                        mTvStopWin.setText(String.format("=触发止损*%s", mContractInfo.getMaxProfitMultiply()));
+                        mTvStopWin.setText(String.format("=触发止损*%s", DoubleUtil.formatDecimal(mContractInfo.getMaxProfitMultiply())));
                         Map<String, Double> map = mContractInfo.getLossLevel();
                         for (Map.Entry<String, Double> next : map.entrySet()) {
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
-                        mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee())+"元");
+                        mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee()) + "元");
                         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
                         mTvExchange.setText(mSymbol + "按" + quote.getCurrency() + "交易，平台按人民币结算，汇率为" + mContractInfo.getCnyExchangeRate());
                         mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, quote.getLastPrice()));
@@ -227,7 +229,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                                 ToastUtils.show(mContext, throwable.getMessage());
                             }
                         });*/
-                Double sl = Double.parseDouble(mTvMargin.getText().toString().replaceAll(",", "").trim());
+                Double sl = (Double) mTvMarginDollar.getTag();
                 HttpManager.getBizService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价",
                         sl, sl * mContractInfo.getMaxProfitMultiply())
                         .delay(1, TimeUnit.SECONDS)
@@ -261,8 +263,10 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         for (int i = 0; i < childCount; i++) {
             RadioButton rb = (RadioButton) group.getChildAt(i);
             if (rb.isChecked()) {
+                mTvMargin.setText(getString(R.string.rmb_symbol) + rb.getText());
                 Double d = (Double) rb.getTag();
-                mTvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.formatDecimal(d));
+                mTvMarginDollar.setText(String.format("($%s)", DoubleUtil.formatDecimal(d)));
+                mTvMarginDollar.setTag(d);
                 break;
             }
         }

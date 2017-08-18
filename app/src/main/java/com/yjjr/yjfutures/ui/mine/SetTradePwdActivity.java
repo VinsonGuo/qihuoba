@@ -15,6 +15,7 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
@@ -56,13 +57,19 @@ public class SetTradePwdActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (btnConfirm.isSelected()) {
-                    HttpManager.getBizService().setPayPwd(UserSharePrefernce.getAccount(mContext), pwdView.getPassWord(), null)
+                    final String passWord = pwdView.getPassWord();
+                    if (StringUtils.isInValidTradePwd(passWord)) {
+                        ToastUtils.show(mContext, R.string.trade_pwd_wrong);
+                        return;
+                    }
+                    btnConfirm.setSelected(false);
+                    HttpManager.getBizService().setPayPwd(UserSharePrefernce.getAccount(mContext), passWord, null)
                             .compose(RxUtils.applyBizSchedulers())
                             .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
                             .subscribe(new Consumer<BizResponse>() {
                                 @Override
                                 public void accept(@NonNull BizResponse bizResponse) throws Exception {
-                                    CommonSuccessActivity.startActivity(mContext, "交易密码设置成功", "交易密码", pwdView.getPassWord());
+                                    CommonSuccessActivity.startActivity(mContext, "交易密码设置成功", "交易密码", passWord);
                                 }
                             }, new Consumer<Throwable>() {
                                 @Override

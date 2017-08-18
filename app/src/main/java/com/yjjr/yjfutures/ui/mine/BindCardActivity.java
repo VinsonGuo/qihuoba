@@ -97,7 +97,7 @@ public class BindCardActivity extends BaseActivity {
             }
         });
         Observable.merge(RxTextView.textChanges(mEtName), RxTextView.textChanges(mEtNumber), RxTextView.textChanges(mEtConfirmNumber))
-                .debounce(1000, TimeUnit.MILLISECONDS)
+                .debounce(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<CharSequence>() {
                     @Override

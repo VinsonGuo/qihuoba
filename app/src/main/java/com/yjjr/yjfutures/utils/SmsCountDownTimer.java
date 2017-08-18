@@ -33,6 +33,6 @@ public class SmsCountDownTimer extends CountDownTimer {
     @Override
     public void onFinish() {
         mTextView.setEnabled(pattern.matcher(mRiPhone.getValue()).matches());
-        mTextView.setText(R.string.phone_verify_code);
+        mTextView.setText(R.string.get_confirm_code);
     }
 }

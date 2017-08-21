@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.ui.mine.InputPayPwdActivity;
 
 
 /**
@@ -46,6 +47,9 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
         LayoutInflater.from(context).inflate(R.layout.view_header, this);
         View rootView = findViewById(R.id.root_view);
         mImage = (ImageView) findViewById(R.id.view_header_image_back);
+        if(context instanceof InputPayPwdActivity) {
+            mImage.setImageResource(R.drawable.ic_back_black);
+        }
         mTextMainTitle = (TextView) findViewById(R.id.view_header_text_maintitle);
         mTextSubtitle = (TextView) findViewById(R.id.view_header_text_subtitle);
 

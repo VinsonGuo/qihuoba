@@ -23,7 +23,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/available_balance"
         android:textColor="@color/main_text_color"
-        android:textSize="@dimen/text_size_15sp"/>
+        android:textSize="@dimen/text_size_18sp"/>
 
     <TextView
         android:id="@+id/tv_yue"
@@ -33,7 +33,7 @@
         tools:text="3600"
         android:layout_marginBottom="20dp"
         android:textColor="@color/third_text_color"
-        android:textSize="18sp"/>
+        android:textSize="24sp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

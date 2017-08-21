@@ -164,11 +164,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 }
                 break;
             case R.id.btn_withdraw:
-                if (TextUtils.isEmpty(userInfo.getIdcard()) || TextUtils.isEmpty(userInfo.getAlipay())||userInfo.isExistPayPwd()) {
+                if (TextUtils.isEmpty(userInfo.getIdcard()) || TextUtils.isEmpty(userInfo.getAlipay())||!userInfo.isExistPayPwd()) {
                     ToastUtils.show(mContext, R.string.please_finish_user_info);
                     UserInfoActivity.startActivity(mContext);
                 } else {
-                    SetTradePwdActivity.startActivity(mContext);
+                    WithdrawActivity.startActivity(mContext);
                 }
                 break;
             case R.id.tv_customer_service:

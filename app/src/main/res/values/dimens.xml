@@ -22,5 +22,6 @@
     <dimen name="common_divider_small">0.5dp</dimen>
     <dimen name="header_height">56dp</dimen>
     <dimen name="common_btn_text_size">18sp</dimen>
+    <dimen name="text_size_18sp">18sp</dimen>
     <!-- UI 定义字体 end -->
 </resources>

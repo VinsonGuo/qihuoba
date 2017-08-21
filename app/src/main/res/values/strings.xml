@@ -1348,5 +1348,5 @@
     <string name="add">添加</string>
     <string name="unbind">未绑定</string>
     <string name="please_finish_user_info">请完善个人资料</string>
-    <string name="trade_pwd_wrong">交易密码不合法</string>
+    <string name="trade_pwd_wrong">交易密码须为6位纯数字，且不能为连续数字，重复数字或身份证上的生日数字！</string>
 </resources>

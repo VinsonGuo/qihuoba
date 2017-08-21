@@ -19,6 +19,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <View
+        style="@style/style_divider"
+        android:background="@color/color_cccccc"/>
+
     <com.jungly.gridpasswordview.GridPasswordView
         android:id="@+id/pwdView"
         android:layout_width="match_parent"

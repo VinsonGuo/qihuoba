@@ -336,9 +336,11 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        mAdapter.getData().clear();
-        mAdapter.getData().addAll(StaticStore.sQuoteMap.values());
-        mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.sQuoteMap.size());
+        if (isResumed()) {
+            mAdapter.getData().clear();
+            mAdapter.getData().addAll(StaticStore.sQuoteMap.values());
+            mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.sQuoteMap.size());
+        }
     }
 
     @Override

@@ -32,6 +32,20 @@ import io.reactivex.functions.Consumer;
  */
 
 public class DialogUtils {
+
+    public static CustomPromptDialog createCommonDialog(final Context context, String info) {
+        return new CustomPromptDialog.Builder(context)
+                .isShowClose(true)
+                .setMessage(info)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+    }
+
     public static CustomPromptDialog createCustomServiceDialog(final Context context) {
         return new CustomPromptDialog.Builder(context)
                 .isShowClose(true)

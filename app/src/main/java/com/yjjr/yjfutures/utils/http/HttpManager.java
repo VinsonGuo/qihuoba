@@ -142,7 +142,7 @@ public class HttpManager {
                     }
                     return response;
                 }
-            })/*.addNetworkInterceptor(new StethoInterceptor()).cookieJar(new CookieJar() {
+            }).addNetworkInterceptor(new StethoInterceptor()).cookieJar(new CookieJar() {
                 private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 
                 @Override
@@ -155,7 +155,7 @@ public class HttpManager {
                     List<Cookie> cookies = cookieStore.get(url.host());
                     return cookies != null ? cookies : new ArrayList<Cookie>();
                 }
-            })*/.addInterceptor(interceptor).build();
+            }).addInterceptor(interceptor).build();
         }
         return sClient;
     }

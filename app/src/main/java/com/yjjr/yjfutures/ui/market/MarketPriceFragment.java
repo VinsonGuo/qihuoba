@@ -21,8 +21,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-
 /**
  * 行情页面
  */
@@ -71,9 +69,9 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
 
     @Override
     protected void initData() {
-        if(mShowTitle) {
+        if (mShowTitle) {
             mAdapter.replaceData(StaticStore.sQuoteMap.values());
-        }else {
+        } else {
             mAdapter.replaceData(StaticStore.sDemoQuoteMap.values());
         }
     }
@@ -85,10 +83,12 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        if(mShowTitle) {
-            mAdapter.replaceData(StaticStore.sQuoteMap.values());
-        }else {
-            mAdapter.replaceData(StaticStore.sDemoQuoteMap.values());
+        if (isResumed()) {
+            if (mShowTitle) {
+                mAdapter.replaceData(StaticStore.sQuoteMap.values());
+            } else {
+                mAdapter.replaceData(StaticStore.sDemoQuoteMap.values());
+            }
         }
     }
 

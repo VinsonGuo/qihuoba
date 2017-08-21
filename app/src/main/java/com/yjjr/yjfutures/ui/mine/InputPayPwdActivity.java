@@ -61,7 +61,7 @@ public class InputPayPwdActivity extends RxActivity {
                     @Override
                     public ObservableSource<BizResponse> apply(@NonNull BizResponse response) throws Exception {
                         if (response.getRcode() != 0) {
-                            throw new RuntimeException("支付密码输入错误");
+                            throw new RuntimeException(response.getRmsg());
                         }
                         return HttpManager.getBizService().extractApply(money, "alipay");
                     }

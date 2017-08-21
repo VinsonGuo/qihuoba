@@ -13,6 +13,7 @@ import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
@@ -59,7 +60,7 @@ public class SetTradePwdActivity extends BaseActivity {
                 if (btnConfirm.isSelected()) {
                     final String passWord = pwdView.getPassWord();
                     if (StringUtils.isInValidTradePwd(passWord)) {
-                        ToastUtils.show(mContext, R.string.trade_pwd_wrong);
+                        DialogUtils.createCommonDialog(mContext, getString(R.string.trade_pwd_wrong));
                         return;
                     }
                     btnConfirm.setSelected(false);

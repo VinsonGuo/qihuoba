@@ -179,6 +179,7 @@ public class BaseApplication extends Application implements Application.Activity
     public void logout(Context a) {
         UserSharePrefernce.clearCache();
         mTradeToken = "";
+        mDemoTradeToken = "";
         mUserInfo = null;
         toLogin(a);
     }

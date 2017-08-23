@@ -28,17 +28,17 @@ public class SettlementListAdapter extends BaseQuickAdapter<CloseOrder, BaseView
     @Override
     protected void convert(BaseViewHolder helper, CloseOrder item) {
         String buySell = item.getOpenBuySell();
-        helper.setText(R.id.tv_time, DateUtils.formatData(item.getCloseDate()).replace(' ', '\n'))
-                .setText(R.id.tv_info, item.getSymbol() + "\t" + Math.abs(item.getQty()) + "手")
-                .setText(R.id.tv_type, buySell);
+        helper.setText(R.id.tv_time, DateUtils.formatDateTime(item.getCloseDate()).replace(' ', '\n'))
+                .setText(R.id.tv_info, item.getSymbol())
+                .setText(R.id.tv_type, "市价" + buySell);
         TextView tvPrice = helper.getView(R.id.tv_price);
         tvPrice.setText(getPriceColor(item.getRealizedPL_CNY(), item.getRealizedPL()));
         TextView tvDirection = helper.getView(R.id.tv_direction);
         if (TextUtils.equals(buySell, "买入")) {
-            tvDirection.setText("看涨");
+            tvDirection.setText("做多");
             tvDirection.setBackgroundResource(R.drawable.shape_online_tx_red);
         } else {
-            tvDirection.setText("看跌");
+            tvDirection.setText("做空");
             tvDirection.setBackgroundResource(R.drawable.shape_online_tx_green);
         }
     }

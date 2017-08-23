@@ -56,20 +56,21 @@ public class OrderDetailActivity extends BaseActivity {
 
     private void fillViews(CloseOrder order) {
         headerView.bindActivity(mContext);
-        tvDirection.setText(TextUtils.equals(order.getOpenBuySell(), "买入")?"看涨":"看跌");
+        tvDirection.setText(TextUtils.equals(order.getOpenBuySell(), "买入")?"做多":"做空");
         tvProfitYuan.setText(DoubleUtil.format2Decimal(order.getRealizedPL_CNY()));
         int color = StringUtils.getProfitColor(mContext, order.getRealizedPL());
         tvProfitYuan.setTextColor(color);
         tvProfitDollar.setTextColor(color);
         tvProfitDollar.setText(DoubleUtil.format2Decimal(order.getRealizedPL())+String.format("汇率(%s)",order.getExchange()));
         tvTradeSymbol.setText(order.getSymbol());
-        tvTradeNum.setText(order.getQty()+"");
+        tvTradeNum.setText(Math.abs(order.getQty())+"手");
         tvBuyPrice.setText(DoubleUtil.format2Decimal(order.getOpenPrice()));
         tvSellPrice.setText(DoubleUtil.format2Decimal(order.getClosePrice()));
         tvBuyTime.setText(DateUtils.formatData(order.getOpenDate()));
         tvSellTime.setText(DateUtils.formatData(order.getCloseDate()));
 //        tvTicket.setText(order.getFilledID());
-
+        tvBuyType.setText("市价买入");
+        tvSellType.setText("市价卖出");
     }
 
 

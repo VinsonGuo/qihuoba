@@ -28,6 +28,7 @@ import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.ArithUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -68,6 +69,8 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     private String mBuySell;
     private boolean mIsDemo;
     private ContractInfo mContractInfo;
+
+    private int mHand = 1;
 
     public static void startActivity(Context context, String symbol, int type, boolean isDemo) {
         Intent intent = new Intent(context, TakeOrderActivity.class);
@@ -110,6 +113,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         TextView tvDesc = (TextView) findViewById(R.id.tv_desc);
         tvDesc.setText(mIsDemo ? "操纵盘，实盘交易实时为您自动匹配合作投资人，执行您的指令，并与您共享收益共担风险。" : StringUtils.randomTrader() + "为您本笔交易合作投资人，执行您的交易指令，并与您共享收益共担风险。");
         mRgSl.setOnCheckedChangeListener(this);
+        mRgHand.setOnCheckedChangeListener(this);
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage(getString(R.string.online_transaction_in_order));
@@ -173,9 +177,8 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
-                        mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee()) + "元");
                         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
-                        mTvExchange.setText(mSymbol + "按" + quote.getCurrency() + "交易，平台按人民币结算，汇率为" + mContractInfo.getCnyExchangeRate());
+                        mTvExchange.setText(quote.getSymbolname() + "按" + StringUtils.curreny2Word(quote.getCurrency()) + "交易，平台按人民币结算，汇率为 $1 = ￥" + mContractInfo.getCnyExchangeRate());
                         mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, quote.getLastPrice()));
                     }
                 }, RxUtils.commonErrorConsumer());
@@ -229,9 +232,9 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                                 ToastUtils.show(mContext, throwable.getMessage());
                             }
                         });*/
-                Double sl = (Double) mTvMarginDollar.getTag();
+                Double sl = (Double) mRgSl.findViewById(mRgSl.getCheckedRadioButtonId()).getTag();
                 HttpManager.getBizService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价",
-                        sl, sl * mContractInfo.getMaxProfitMultiply())
+                        sl, sl * mContractInfo.getMaxProfitMultiply(), (double) mTvTradeFee.getTag(), (double) mTvMargin.getTag())
                         .delay(1, TimeUnit.SECONDS)
                         .compose(RxUtils.<BizResponse<CommonResponse>>applyBizSchedulers())
                         .compose(this.<BizResponse<CommonResponse>>bindUntilEvent(ActivityEvent.DESTROY))
@@ -260,14 +263,41 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         int childCount = group.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            RadioButton rb = (RadioButton) group.getChildAt(i);
-            if (rb.isChecked()) {
-                mTvMargin.setText(getString(R.string.rmb_symbol) + rb.getText());
-                Double d = (Double) rb.getTag();
-                mTvMarginDollar.setText(String.format("($%s)", DoubleUtil.formatDecimal(d)));
-                mTvMarginDollar.setTag(d);
-                break;
+        if (group == mRgSl) {
+            // 止损
+            for (int i = 0; i < childCount; i++) {
+                RadioButton rb = (RadioButton) group.getChildAt(i);
+                if (rb.isChecked()) {
+                    double margin = Double.parseDouble(rb.getText().toString()) * mHand;
+                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
+                    mTvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.formatDecimal(margin));
+                    mTvMargin.setTag(margin);
+                    mTvMarginDollar.setText(String.format("($%s)", DoubleUtil.formatDecimal(marginDollar)));
+                    mTvMarginDollar.setTag(marginDollar);
+                    mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
+                    mTvTradeFee.setTag(tradeFee);
+                    break;
+                }
+            }
+        } else if (group == mRgHand) {
+            RadioButton rb = (RadioButton) mRgSl.findViewById(mRgSl.getCheckedRadioButtonId());
+            // 手数
+            for (int i = 0; i < childCount; i++) {
+                RadioButton radioButton = (RadioButton) group.getChildAt(i);
+                if (radioButton.isChecked()) {
+                    mHand = i + 1;
+                    Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
+                    double margin = Double.parseDouble(rb.getText().toString()) * mHand;
+                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    mTvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.formatDecimal(margin));
+                    mTvMargin.setTag(margin);
+                    mTvMarginDollar.setText(String.format("($%s)", DoubleUtil.formatDecimal(marginDollar)));
+                    mTvMarginDollar.setTag(marginDollar);
+                    mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
+                    mTvTradeFee.setTag(tradeFee);
+                    break;
+                }
             }
         }
     }

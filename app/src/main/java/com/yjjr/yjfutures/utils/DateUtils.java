@@ -123,6 +123,17 @@ public class DateUtils {
         return "";
     }
 
+    public static String formatDateTime(long date) {
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formatDate = dateFormat.format(date);
+            return formatDate;
+        } catch (Exception e) {
+            LogUtils.e(e.toString());
+        }
+        return "";
+    }
+
 
     public static String formatTime(long millis) {
         try {

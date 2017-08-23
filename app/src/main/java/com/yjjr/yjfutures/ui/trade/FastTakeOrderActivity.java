@@ -28,9 +28,11 @@ import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.ArithUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
@@ -54,7 +56,10 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
     private TextView mTvExchange;
     private RadioGroup mRgSl;
     private TextView mTvInfo;
+    private TextView mTvRate;
     private ContractInfo mContractInfo;
+    private int mHand = 1;
+    private RadioGroup mRgHand;
 
     public static void startActivity(Context context, String symbol) {
         Intent intent = new Intent(context, FastTakeOrderActivity.class);
@@ -78,14 +83,16 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
         mSymbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         final Button btnOpen = (Button) findViewById(R.id.btn_open);
-        final RadioGroup rg = (RadioGroup) findViewById(R.id.rg_hand);
+        mRgHand = (RadioGroup) findViewById(R.id.rg_hand);
         mTvStopWin = (TextView) findViewById(R.id.tv_stop_win);
         mTvMargin = (TextView) findViewById(R.id.bzj_value);
         mTvTradeFee = (TextView) findViewById(R.id.trade_fee_value);
         mTvInfo = (TextView) findViewById(R.id.tv_info);
         mTvExchange = (TextView) findViewById(R.id.tv_exchange);
+        mTvRate = (TextView) findViewById(R.id.tv_rate);
         mRgSl = (RadioGroup) findViewById(R.id.rg_sl);
         mRgSl.setOnCheckedChangeListener(this);
+        mRgHand.setOnCheckedChangeListener(this);
         AppCompatCheckBox checkBox = (AppCompatCheckBox) findViewById(R.id.cb_check);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -103,7 +110,10 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
         final FastTakeOrderConfig fastTakeOrder = UserSharePrefernce.getFastTakeOrder(mContext, mSymbol);
         btnOpen.setText(fastTakeOrder != null ? "关闭" : "开启");
         headerView.bindActivity(mContext);
-        headerView.setMainTitle(mSymbol);
+        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        if (quote != null) {
+            headerView.setMainTitle(quote.getSymbolname());
+        }
         btnOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +131,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                 if (fastTakeOrder == null) {
                     config = new FastTakeOrderConfig();
                     int qty = 1;
-                    switch (rg.getCheckedRadioButtonId()) {
+                    switch (mRgHand.getCheckedRadioButtonId()) {
                         case R.id.rb_hand_1:
                             qty = 1;
                             break;
@@ -139,10 +149,12 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                             break;
                     }
                     config.setQty(qty);
-                    double sl = Double.parseDouble(mTvMargin.getText().toString().replaceAll(",", "").trim());
+                    Double sl = (Double) mRgSl.findViewById(mRgSl.getCheckedRadioButtonId()).getTag();
                     double stopWin = sl * mContractInfo.getMaxProfitMultiply();
                     config.setStopLose(sl);
                     config.setStopWin(stopWin);
+                    config.setFee((Double) mTvTradeFee.getTag());
+                    config.setMarginYJ((Double) mTvMargin.getTag());
                 }
                 UserSharePrefernce.setFastTakeOrder(mContext, mSymbol, config);
                 EventBus.getDefault().post(new FastTakeOrderEvent(config != null));
@@ -193,22 +205,50 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
-                        mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee()));
+                        mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee()) + "元");
                         Quote quote = StaticStore.sQuoteMap.get(mSymbol);
-                        mTvExchange.setText("" + mContractInfo.getCnyExchangeRate());
+                        String name = StringUtils.curreny2Word(quote.getCurrency());
+                        mTvExchange.setText(String.format("1%s = %s人民币", name, mContractInfo.getCnyExchangeRate()));
+                        mTvRate.setText(String.format("汇率 > %s人民币", name));
                     }
                 }, RxUtils.commonErrorConsumer());
     }
 
+    //mTvMargin.setText(String.format("￥%s\n($%s)", rb.getText(), DoubleUtil.formatDecimal(d)));
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         int childCount = group.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            RadioButton rb = (RadioButton) group.getChildAt(i);
-            if (rb.isChecked()) {
-                Double d = (Double) rb.getTag();
-                mTvMargin.setText(DoubleUtil.formatDecimal(d));
-                break;
+        if (group == mRgSl) {
+            // 止损
+            for (int i = 0; i < childCount; i++) {
+                RadioButton rb = (RadioButton) group.getChildAt(i);
+                if (rb.isChecked()) {
+                    double margin = Double.parseDouble(rb.getText().toString()) * mHand;
+                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
+                    mTvMargin.setText(String.format("￥%s\n($%s)", DoubleUtil.formatDecimal(margin), DoubleUtil.format2Decimal(marginDollar)));
+                    mTvMargin.setTag(margin);
+                    mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
+                    mTvTradeFee.setTag(tradeFee);
+                    break;
+                }
+            }
+        } else if (group == mRgHand) {
+            RadioButton rb = (RadioButton) mRgSl.findViewById(mRgSl.getCheckedRadioButtonId());
+            // 手数
+            for (int i = 0; i < childCount; i++) {
+                RadioButton radioButton = (RadioButton) group.getChildAt(i);
+                if (radioButton.isChecked()) {
+                    mHand = i + 1;
+                    Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
+                    double margin = Double.parseDouble(rb.getText().toString()) * mHand;
+                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    mTvMargin.setText(String.format("￥%s\n($%s)", DoubleUtil.formatDecimal(margin), DoubleUtil.format2Decimal(marginDollar)));
+                    mTvMargin.setTag(margin);
+                    mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
+                    mTvTradeFee.setTag(tradeFee);
+                    break;
+                }
             }
         }
     }

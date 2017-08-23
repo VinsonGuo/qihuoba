@@ -50,8 +50,6 @@ public class Holds {
      * AvgPrice : 1291.4
      */
 
-    private double SumUnrealizedPL;
-    private int SumQty;
     private double RivalPrice;
 
     public String getAccount() {
@@ -150,22 +148,6 @@ public class Holds {
         this.UnrealizedPL = UnrealizedPL;
     }
 
-    public double getSumUnrealizedPL() {
-        return SumUnrealizedPL;
-    }
-
-    public void setSumUnrealizedPL(double SumUnrealizedPL) {
-        this.SumUnrealizedPL = SumUnrealizedPL;
-    }
-
-    public int getSumQty() {
-        return SumQty;
-    }
-
-    public void setSumQty(int SumQty) {
-        this.SumQty = SumQty;
-    }
-
     public double getRivalPrice() {
         return RivalPrice;
     }
@@ -189,8 +171,6 @@ public class Holds {
                 ", OrderId='" + OrderId + '\'' +
                 ", MarketPrice=" + MarketPrice +
                 ", UnrealizedPL=" + UnrealizedPL +
-                ", SumUnrealizedPL=" + SumUnrealizedPL +
-                ", SumQty=" + SumQty +
                 ", RivalPrice=" + RivalPrice +
                 '}';
     }

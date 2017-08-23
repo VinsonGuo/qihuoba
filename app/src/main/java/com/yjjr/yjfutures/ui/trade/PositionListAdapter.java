@@ -10,6 +10,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.store.StaticStore;
+import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.StringUtils;
@@ -30,13 +31,13 @@ public class PositionListAdapter extends BaseQuickAdapter<Holds, BaseViewHolder>
         try {
             Quote quote = StaticStore.sQuoteMap.get(item.getSymbol());
             helper.setText(R.id.tv_symbol, quote == null ? item.getSymbol() : quote.getSymbolname())
-                    .setText(R.id.tv_open_price, TextUtils.concat("开仓价\t", SpannableUtil.getStringByColor(mContext, StringUtils.getStringByTick(item.getRivalPrice(), quote.getTick()), R.color.main_text_color)))
-                    .setText(R.id.tv_current_price, TextUtils.concat("当前价\t", SpannableUtil.getStringByColor(mContext, StringUtils.getStringByTick(item.getMarketPrice(), quote.getTick()), R.color.main_text_color)))
-                    .setText(R.id.tv_stop_lose, TextUtils.concat("止损价\t", SpannableUtil.getStringByColor(mContext, StringUtils.getStringByTick(item.getLossPriceLine(), quote.getTick()), R.color.main_text_color)))
-                    .setText(R.id.tv_stop_win, TextUtils.concat("止盈价\t", SpannableUtil.getStringByColor(mContext, StringUtils.getStringByTick(item.getProfitPriceLine(), quote.getTick()), R.color.main_text_color)))
+                    .setText(R.id.tv_open_price, TextUtils.concat("开仓额\t", SpannableUtil.getStringByColor(mContext, StringUtils.getStringByTick(item.getRivalPrice(), quote.getTick()), R.color.main_text_color)))
+                    .setText(R.id.tv_current_price, TextUtils.concat("当前额\t", SpannableUtil.getStringByColor(mContext, StringUtils.getStringByTick(item.getMarketPrice(), quote.getTick()), R.color.main_text_color)))
+                    .setText(R.id.tv_stop_lose, TextUtils.concat("止损价\t", SpannableUtil.getStringByColor(mContext, DoubleUtil.formatDecimal(item.getLossPriceLine()), R.color.main_text_color)))
+                    .setText(R.id.tv_stop_win, TextUtils.concat("止盈价\t", SpannableUtil.getStringByColor(mContext, DoubleUtil.formatDecimal(item.getProfitPriceLine()), R.color.main_text_color)))
                     .setText(R.id.tv_profit, StringUtils.getProfitText(item.getUnrealizedPL()))
-                    .setText(R.id.tv_hand, item.getBuySell() + Math.abs(item.getQty()) + "手")
-                    .setText(R.id.tv_ticket, "ID:" + item.getOrderId())
+                    .setText(R.id.tv_hand, TextUtils.equals(item.getBuySell(), "买入") ? "做多" : "做空" + Math.abs(item.getQty()) + "手")
+                    .setText(R.id.tv_ticket, "订单ID " + item.getOrderId())
                     .addOnClickListener(R.id.tv_close_order)
                     .addOnClickListener(R.id.tv_setting);
             TextView tvHand = helper.getView(R.id.tv_hand);

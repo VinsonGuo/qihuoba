@@ -151,7 +151,9 @@ public interface BizService {
             @Field("qty") int qty,
             @Field("ordertype") String ordertype,
             @Field("lossPriceLine") double lossPriceLine,
-            @Field("profitPriceLine") double profitPriceLine);
+            @Field("profitPriceLine") double profitPriceLine,
+            @Field("fee") double fee,
+            @Field("marginYJ") double marginYJ);
 
     @FormUrlEncoded
     @POST("trader/closeOrder")

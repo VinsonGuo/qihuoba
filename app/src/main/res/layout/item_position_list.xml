@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/tv_stop_lose"
-            android:layout_width="100dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_direction"
             android:ellipsize="end"
@@ -69,7 +69,7 @@
 
         <TextView
             android:id="@+id/tv_stop_win"
-            android:layout_width="100dp"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_stop_lose"
             android:layout_marginTop="@dimen/root_padding_10"
@@ -147,13 +147,13 @@
 
         <TextView
             android:id="@+id/tv_close_order"
-            android:layout_width="50dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:background="@drawable/shape_third_text_color_border_bg"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@string/pingcang"
+            android:text="X 平仓"
             android:textColor="@color/third_text_color"
             android:textSize="@dimen/sp_12"/>
     </FrameLayout>

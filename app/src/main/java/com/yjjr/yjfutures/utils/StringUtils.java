@@ -34,6 +34,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +44,11 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
 
+    private static final Map<String, String> sCurrencyMap = new HashMap<String, String>(){{
+        put("USD", "美元");
+        put("HKD", "港币");
+        put("EUR", "欧元");
+    }};
 
     private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
             "[a-zA-Z0-9\\+\\._%\\-\\+]{1,256}" +
@@ -539,18 +546,22 @@ public class StringUtils {
     }
 
     public static String getProfitText(double unrealizedPL) {
-        return (unrealizedPL > 0 ? "+" : "") + DoubleUtil.format2Decimal(unrealizedPL);
+        return (unrealizedPL > 0 ? "+" : "") + DoubleUtil.formatDecimal(unrealizedPL);
     }
 
     /**
      * 是否是不合法的交易密码
      */
     public static boolean isInValidTradePwd(String passWord) {
-        if(TextUtils.isEmpty(passWord)){
+        if (TextUtils.isEmpty(passWord)) {
             return false;
         }
         String[] invaildPwd = {"123456", "234567", "345678", "456789", "111111", "222222", "333333",
                 "444444", "555555", "666666", "777777", "888888", "999999", "000000"};
         return ArrayUtils.contains(invaildPwd, passWord);
+    }
+
+    public static String curreny2Word(String currency) {
+        return sCurrencyMap.get(currency);
     }
 }

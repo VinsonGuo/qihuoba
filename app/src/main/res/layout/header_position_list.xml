@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="持仓总收益(人民币)"
+        android:text="持仓总盈亏(人民币)"
         android:textColor="@color/main_text_color"
         android:textSize="@dimen/sp_12"/>
 
@@ -26,6 +26,17 @@
         android:textColor="@color/main_color_red"
         android:textSize="20sp"
         tools:text="+188"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_profit"
+        android:layout_marginLeft="4dp"
+        android:layout_toRightOf="@id/tv_profit"
+        android:paddingBottom="4dp"
+        android:text="@string/yuan"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_12"/>
 
 
     <TextView

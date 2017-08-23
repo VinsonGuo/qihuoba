@@ -129,7 +129,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="AB123"
+                    tools:text="AB123"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
 
@@ -156,7 +156,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="1手"
+                    tools:text="1手"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
             </LinearLayout>
@@ -210,7 +210,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="AB123"
+                    tools:text="AB123"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
 
@@ -237,7 +237,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="1手"
+                    tools:text="1手"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
             </LinearLayout>
@@ -275,7 +275,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="AB123"
+                    tools:text="AB123"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
             </LinearLayout>
@@ -323,7 +323,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="AB123"
+                    tools:text="AB123"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
 
@@ -350,7 +350,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="1手"
+                    tools:text="1手"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
             </LinearLayout>
@@ -404,7 +404,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="AB123"
+                    tools:text="AB123"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
 
@@ -431,7 +431,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="1手"
+                    tools:text="1手"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
             </LinearLayout>
@@ -469,7 +469,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="AB123"
+                    tools:text="AB123"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
             </LinearLayout>
@@ -507,7 +507,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="AB123"
+                    tools:text="AB123"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
             </LinearLayout>
@@ -545,7 +545,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:padding="@dimen/dp_10"
-                    android:text="AB123"
+                    tools:text="AB123"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
             </LinearLayout>

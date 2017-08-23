@@ -137,7 +137,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="触发止赢"
+                    android:text="触发止盈"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>
 
@@ -195,11 +195,12 @@
                 android:paddingBottom="@dimen/root_padding_15">
 
                 <TextView
+                    android:id="@+id/tv_rate"
                     style="@style/text_color_333333_14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/exchange_rate"
+                    tools:text="汇率 > %s人民币"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>
 
@@ -221,15 +222,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:gravity="center"
-                android:paddingTop="@dimen/root_padding_15"
-                android:paddingBottom="@dimen/root_padding_15">
+                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/bzj"
+                    android:text="冻结 > 履约保证金"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>
 
@@ -240,7 +239,7 @@
                     android:gravity="right"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"
-                    tools:text="$123"/>
+                    tools:text="$123\n123"/>
             </LinearLayout>
 
             <View
@@ -259,7 +258,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/zhjjf"
+                    android:text="支付：综合交易费"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>
 

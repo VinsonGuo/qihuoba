@@ -411,10 +411,18 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mHoldsList = holdses;
                         if (!holdses.isEmpty()) {
                             Holds holding = holdses.get(0);
+                            // 总手数
+                            int sumQty = 0;
+                            double sumUnrealizedPL = 0; // 总浮动盈亏
+                            // 遍历将这些参数累加
+                            for(Holds h:holdses) {
+                                sumQty += h.getQty();
+                                sumUnrealizedPL += h.getUnrealizedPL();
+                            }
                             vgSettlement.setVisibility(View.GONE);
                             vgOrder.setVisibility(View.VISIBLE);
-                            tvDirection.setText(holding.getBuySell() + Math.abs(holding.getSumQty()) + "手");
-                            tvTotal.setText(TextUtils.concat("持仓盈亏\n", StringUtils.formatUnrealizePL(mContext, holding.getSumUnrealizedPL())));
+                            tvDirection.setText(holding.getBuySell() + Math.abs(sumQty) + "手");
+                            tvTotal.setText(TextUtils.concat("持仓盈亏\n", StringUtils.formatUnrealizePL(mContext, sumUnrealizedPL)));
                             if (TextUtils.equals(holding.getBuySell(), "买入")) {
                                 leftText = "追加";
                                 rightText = "平仓";
@@ -631,7 +639,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     }
                 });*/
         HttpManager.getBizService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, type, 0, Math.abs(order.getQty()), "市价",
-                order.getStopLose(), order.getStopWin())
+                order.getStopLose(), order.getStopWin(), order.getFee(), order.getMarginYJ())
                 .delay(1, TimeUnit.SECONDS)
                 .compose(RxUtils.<BizResponse<CommonResponse>>applyBizSchedulers())
                 .compose(this.<BizResponse<CommonResponse>>bindUntilEvent(FragmentEvent.DESTROY))

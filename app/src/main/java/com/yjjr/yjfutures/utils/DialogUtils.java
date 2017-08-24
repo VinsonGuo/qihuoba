@@ -50,7 +50,7 @@ public class DialogUtils {
         return new CustomPromptDialog.Builder(context)
                 .isShowClose(true)
                 .setMessage(HttpConfig.SERVICE_PHONE)
-                .setMessageDrawableId(R.drawable.ic_found_service)
+                .setMessageDrawableId(R.drawable.ic_dialog_service)
                 .setPositiveButton("呼叫", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

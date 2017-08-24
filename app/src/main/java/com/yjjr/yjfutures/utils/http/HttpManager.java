@@ -4,11 +4,18 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.yjjr.yjfutures.utils.LogUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
@@ -185,4 +192,5 @@ public class HttpManager {
         }
         return sHttpService;
     }
+
 }

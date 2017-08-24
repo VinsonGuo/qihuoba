@@ -37,10 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 /**
  * Created by dell on 2017/6/23.
@@ -107,25 +105,29 @@ public class PositionListFragment extends ListFragment<Holds> {
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                final Holds holding = (Holds) adapter.getData().get(position);
-                if (view.getId() == R.id.tv_close_order) {
-                    new CustomPromptDialog.Builder(mContext)
-                            .setMessage("您确定要卖出持仓么？")
-                            .isShowClose(true)
-                            .setMessageDrawableId(R.drawable.ic_info)
-                            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    closeOrder(holding);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .isShowClose(true)
-                            .create()
-                            .show();
+                try {
+                    final Holds holding = (Holds) adapter.getData().get(position);
+                    if (view.getId() == R.id.tv_close_order) {
+                        new CustomPromptDialog.Builder(mContext)
+                                .setMessage("您确定要卖出持仓么？")
+                                .isShowClose(true)
+                                .setMessageDrawableId(R.drawable.ic_info)
+                                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        closeOrder(holding);
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .isShowClose(true)
+                                .create()
+                                .show();
 
-                } else if (view.getId() == R.id.tv_setting) {
-                    DialogUtils.createSettingOrderDialog(mContext, holding, mIsDemo).show();
+                    } else if (view.getId() == R.id.tv_setting) {
+                        DialogUtils.createSettingOrderDialog(mContext, holding, mIsDemo).show();
+                    }
+                } catch (Exception e) {
+                    LogUtils.e(e);
                 }
             }
         });
@@ -277,7 +279,7 @@ public class PositionListFragment extends ListFragment<Holds> {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         LogUtils.e(throwable);
-                        loadFailed();
+//                        loadFailed();
                     }
                 });
 

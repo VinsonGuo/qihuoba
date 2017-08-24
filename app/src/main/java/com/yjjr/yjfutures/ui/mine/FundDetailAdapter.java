@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.AssetRecord;
 import com.yjjr.yjfutures.utils.DateUtils;
+import com.yjjr.yjfutures.utils.DoubleUtil;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class FundDetailAdapter extends BaseQuickAdapter<AssetRecord, BaseViewHol
     protected void convert(BaseViewHolder helper, AssetRecord item) {
         helper.setText(R.id.tv_info, item.getAssetName())
                 .setText(R.id.tv_time, DateUtils.formatData(item.getTradeTime()).replace(' ', '\n'))
-                .setText(R.id.tv_money, item.getMoney() + "")
+                .setText(R.id.tv_money, DoubleUtil.format2Decimal(item.getMoney()) + "元")
                 .setTextColor(R.id.tv_money, ContextCompat.getColor(mContext, item.getMoney() > 0 ? R.color.main_color_red : R.color.main_color_green));
     }
 }

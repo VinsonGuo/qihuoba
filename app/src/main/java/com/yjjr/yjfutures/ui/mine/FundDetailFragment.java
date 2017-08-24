@@ -10,6 +10,7 @@ import com.yjjr.yjfutures.model.biz.AssetRecord;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.PageResponse;
 import com.yjjr.yjfutures.ui.ListFragment;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 
@@ -40,6 +41,7 @@ public class FundDetailFragment extends ListFragment<AssetRecord> {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        LogUtils.e(throwable);
                         loadFailed();
                     }
                 });

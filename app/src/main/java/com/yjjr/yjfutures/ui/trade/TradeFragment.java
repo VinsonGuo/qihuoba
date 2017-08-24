@@ -416,7 +416,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             double sumUnrealizedPL = 0; // 总浮动盈亏
                             // 遍历将这些参数累加
                             for(Holds h:holdses) {
-                                sumQty += h.getQty();
+                                sumQty += Math.abs(h.getQty());
                                 sumUnrealizedPL += h.getUnrealizedPL();
                             }
                             vgSettlement.setVisibility(View.GONE);

@@ -1,5 +1,7 @@
 package com.yjjr.yjfutures.utils.http;
 
+import com.yjjr.yjfutures.BuildConfig;
+
 /**
  * HTTP配置
  * Created by guoziwei on 2017/7/5.
@@ -8,19 +10,10 @@ package com.yjjr.yjfutures.utils.http;
 public class HttpConfig {
 
 
-    /**
-     * 是否开放了交易功能
-     */
-    public static boolean IS_OPEN_TRADE = true;
-
     //    public static final String DOMAIN = "http://www.qihuofa.com";
-    public static final String DOMAIN = "https://dev.qihuofa.com";
-
+    public static final String DOMAIN = BuildConfig.DEBUG ? "https://dev.qihuofa.com" : "https://www.qihuofa.com";
     public static final String DEMO_HOST = "https://demo.qihuofa.com";
-
     public static final String BIZ_HOST = DOMAIN + ":9300";
-
-    public static final String BIZ_DEMO_HOST = DEMO_HOST + ":9300";
     /**
      * 手机号码的正则
      */
@@ -72,11 +65,17 @@ public class HttpConfig {
     public static final String URL_PROMOTION = DOMAIN + ":9100/serviceInfo/promotion.html";
     public static final String URL_WARNING = DOMAIN + ":9100/serviceInfo/warning.html";
     public static final String URL_RULE = DOMAIN + ":9100/serviceInfo/%srules.html";
-
-
     public static final String URL_NOTICE = DOMAIN + ":9300/service/notice/html/";
-
-
+    /**
+     * type=1 注册；type=2 修改手机号；type=3 找回密码
+     */
+    public static final int TYPE_REGISTER = 1;
+    public static final int TYPE_ALTER_PHONE = 2;
+    public static final int TYPE_FIND_PWD = 3;
+    /**
+     * 是否开放了交易功能
+     */
+    public static boolean IS_OPEN_TRADE = true;
     public static String ALIPAY_ACCOUNT_CODE = "FKX02544EKPFEEKPCQSYC8";
     /**
      * 客服电话
@@ -87,11 +86,4 @@ public class HttpConfig {
      * 投诉电话
      */
     public static String COMPLAINT_PHONE = "0755-86534610";
-
-    /**
-     * type=1 注册；type=2 修改手机号；type=3 找回密码
-     */
-    public static final int TYPE_REGISTER = 1;
-    public static final int TYPE_ALTER_PHONE = 2;
-    public static final int TYPE_FIND_PWD = 3;
 }

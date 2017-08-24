@@ -22,7 +22,10 @@ import com.mobsandgeeks.saripaar.annotation.Password;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.BaseApplication;
+import com.yjjr.yjfutures.ui.MainActivity;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -150,14 +153,21 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private void register() {
         if (mBtnConfirm.isSelected()) {
             mBtnConfirm.setSelected(false);
-            HttpManager.getBizService().register(mEtPhone.getText().toString(), mEtPassword.getText().toString(), mEtSmsCode.getText().toString())
+            final String account = mEtPhone.getText().toString();
+            final String password = mEtPassword.getText().toString();
+            HttpManager.getBizService().register(account, password, mEtSmsCode.getText().toString())
                     .compose(RxUtils.applyBizSchedulers())
                     .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
                     .subscribe(new Consumer<BizResponse>() {
                         @Override
                         public void accept(@NonNull BizResponse response) throws Exception {
                             ToastUtils.show(mContext, response.getRmsg());
-                            finish();
+                            UserSharePrefernce.setLogin(mContext, true);
+                            UserSharePrefernce.setAccount(mContext, account);
+                            UserSharePrefernce.setPassword(mContext, password);
+                            // 注册成功直接进入主界面，主界面会有相应的登录逻辑
+                            MainActivity.startActivity(mContext);
+                            finishDelay();
                         }
                     }, new Consumer<Throwable>() {
                         @Override

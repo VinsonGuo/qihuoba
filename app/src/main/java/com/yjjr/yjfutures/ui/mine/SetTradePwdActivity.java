@@ -60,7 +60,8 @@ public class SetTradePwdActivity extends BaseActivity {
                 if (btnConfirm.isSelected()) {
                     final String passWord = pwdView.getPassWord();
                     if (StringUtils.isInValidTradePwd(passWord)) {
-                        DialogUtils.createCommonDialog(mContext, getString(R.string.trade_pwd_wrong));
+                        DialogUtils.createCommonDialog(mContext, getString(R.string.trade_pwd_wrong)).show();
+                        pwdView.clearPassword();
                         return;
                     }
                     btnConfirm.setSelected(false);

@@ -6,23 +6,19 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
-import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.SendOrderEvent;
-import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
-import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
-import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -197,7 +193,7 @@ public class DemoTradeActivity extends BaseActivity {
                     @Override
                     public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
                         Funds result = fundsBizResponse.getResult();
-                        mTradeInfoView.setValues(result.getFrozenMargin(), result.getNetAssets(), result.getAvailableFunds());
+                        mTradeInfoView.setValues(result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
                     }
                 }, RxUtils.commonErrorConsumer());
     }

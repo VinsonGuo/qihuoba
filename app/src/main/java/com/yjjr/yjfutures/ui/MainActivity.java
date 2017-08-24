@@ -152,7 +152,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
-            super.onBackPressed();
+            BaseApplication.getInstance().closeApplication();
             return;
         } else {
             ToastUtils.show(mContext, R.string.click_more_exit);

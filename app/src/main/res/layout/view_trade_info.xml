@@ -19,7 +19,7 @@
             android:id="@+id/tv_name1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="履约保证金"
+            android:text="@string/bzj"
             android:textColor="@color/second_text_color"
             android:textSize="@dimen/sp_12"/>
 

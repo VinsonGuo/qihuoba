@@ -223,7 +223,6 @@
     <string name="credit_mount">信用额</string>
     <string name="credit">信用</string>
     <string name="bzj">保证金</string>
-    <string name="lybzj">履约保证金</string>
     <string name="jyzhf">交易综合费</string>
     <string name="kybzj">可用保证金</string>
     <string name="yybzj">已用保证金</string>
@@ -1322,7 +1321,6 @@
     <string name="free_register">免费注册</string>
     <string name="closeing">平仓中...</string>
     <string name="register_by_phone">手机号注册</string>
-    <string name="djbzj">冻结保证金</string>
     <string name="withdraw">提款</string>
     <string name="set_trade_password">设置交易密码</string>
     <string name="alter_trade_password">交易密码更改</string>
@@ -1333,7 +1331,6 @@
     <string name="finish">完成</string>
     <string name="old_password_equals_new_password">新密码与旧密码相同</string>
     <string name="quit_login">退出登录</string>
-    <string name="zybzj">占用保证金</string>
     <string name="jzc">净资产</string>
     <string name="go_transfer">去转账</string>
     <string name="withdraw_recode">提款记录</string>

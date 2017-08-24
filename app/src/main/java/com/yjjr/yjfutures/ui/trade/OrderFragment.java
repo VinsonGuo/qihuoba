@@ -95,7 +95,7 @@ public class OrderFragment extends BaseFragment {
                     @Override
                     public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
                         Funds result = fundsBizResponse.getResult();
-                        mTradeInfoView.setValues(result.getFrozenMargin(), result.getNetAssets(), result.getAvailableFunds());
+                        mTradeInfoView.setValues(result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
                     }
                 }, RxUtils.commonErrorConsumer());
     }

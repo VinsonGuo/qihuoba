@@ -6,58 +6,58 @@ package com.yjjr.yjfutures.model.biz;
 
 public class AssetRecord {
 
+
     /**
-     * PAGE_ROW_NUMBER : 1
-     * Money : 300
-     * Account : lj
-     * TradeTime : 1499237751000
-     * ID : 4
-     * AssetName : 记录2
+     * tradeTime : 1503478436457
+     * money : 10000000
+     * assetName : 充值
+     * account : 13632922343
      */
 
-    private int Money;
-    private String Account;
-    private long TradeTime;
-    private int ID;
-    private String AssetName;
-
-    public int getMoney() {
-        return Money;
-    }
-
-    public void setMoney(int Money) {
-        this.Money = Money;
-    }
-
-    public String getAccount() {
-        return Account;
-    }
-
-    public void setAccount(String Account) {
-        this.Account = Account;
-    }
+    private long tradeTime;
+    private double money;
+    private String assetName;
+    private String account;
 
     public long getTradeTime() {
-        return TradeTime;
+        return tradeTime;
     }
 
-    public void setTradeTime(long TradeTime) {
-        this.TradeTime = TradeTime;
+    public void setTradeTime(long tradeTime) {
+        this.tradeTime = tradeTime;
     }
 
-    public int getID() {
-        return ID;
+    public double getMoney() {
+        return money;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setMoney(double money) {
+        this.money = money;
     }
 
     public String getAssetName() {
-        return AssetName;
+        return assetName;
     }
 
-    public void setAssetName(String AssetName) {
-        this.AssetName = AssetName;
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    @Override
+    public String toString() {
+        return "AssetRecord{" +
+                "tradeTime=" + tradeTime +
+                ", money=" + money +
+                ", assetName='" + assetName + '\'' +
+                ", account='" + account + '\'' +
+                '}';
     }
 }

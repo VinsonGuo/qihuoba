@@ -105,7 +105,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
-        mChart.setMaxVisibleValueCount(100);
+        mChart.setMaxVisibleValueCount(30);
 
         mChart.setAutoScaleMinMaxEnabled(false);
         mChart.setScaleYEnabled(true);
@@ -310,7 +310,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
         mChart.setData(data);
         mChart.notifyDataSetChanged();
-        mChart.setVisibleXRange(100, 20); // allow 20 values to be displayed at once on the x-axis, not more
+        mChart.setVisibleXRange(60, 20); // allow 20 values to be displayed at once on the x-axis, not more
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
     }
 

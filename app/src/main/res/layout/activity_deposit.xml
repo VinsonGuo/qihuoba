@@ -35,8 +35,8 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginBottom="@dimen/root_padding_15"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="43dp"
             android:layout_marginTop="@dimen/root_padding_15"
             android:src="@drawable/ic_alipay"/>
 

@@ -9,14 +9,18 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
@@ -61,6 +65,15 @@ public class AlterLoginPwdActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 btnConfirm.setSelected(!TextUtils.isEmpty(s));
+            }
+        });
+
+        TextView tvInfo = (TextView) findViewById(R.id.tv_info);
+        tvInfo.setText(TextUtils.concat("如遇到问题，请", SpannableUtil.getStringByColor(mContext, "联系客服",R.color.main_color)));
+        tvInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
             }
         });
         btnConfirm.setOnClickListener(new View.OnClickListener() {

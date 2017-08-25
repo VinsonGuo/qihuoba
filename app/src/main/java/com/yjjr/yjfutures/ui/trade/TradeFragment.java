@@ -101,6 +101,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvChange;
     private TextView tvChangeRate;
     private CustomPromptDialog mCloseSuccessDialog;
+    private CustomPromptDialog mCloseAllDialog;
     private CustomPromptDialog mCloseDialog;
     private HeaderView mHeaderView;
     /**
@@ -145,7 +146,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     }
                 })
                 .create();
-        mCloseDialog = new CustomPromptDialog.Builder(mContext)
+        mCloseAllDialog = new CustomPromptDialog.Builder(mContext)
                 .setMessage("您确定要卖出全部持仓么？")
                 .isShowClose(true)
                 .setMessageDrawableId(R.drawable.ic_info)
@@ -154,6 +155,19 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         closeAllOrder();
+                    }
+                })
+                .isShowClose(true)
+                .create();
+        mCloseDialog = new CustomPromptDialog.Builder(mContext)
+                .setMessage("您确定要平仓么？")
+                .isShowClose(true)
+                .setMessageDrawableId(R.drawable.ic_info)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        closeOrder();
                     }
                 })
                 .isShowClose(true)
@@ -301,6 +315,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvDirection = (TextView) v.findViewById(R.id.tv_direction);
         tvYueValue = (TextView) v.findViewById(R.id.tv_yue_value);
         tvMarginValue = (TextView) v.findViewById(R.id.tv_margin_value);
+        if(mIsDemo) {
+           TextView tvYue = (TextView) v.findViewById(R.id.tv_yue);
+            TextView tvMargin = (TextView) v.findViewById(R.id.tv_margin);
+            tvYue.setText("可用金币");
+            tvMargin.setText("保证金币");
+        }
         tvTotal = (TextView) v.findViewById(R.id.tv_total);
         colorView = v.findViewById(R.id.view_color);
         tvPrice = (TextView) v.findViewById(R.id.tv_price);
@@ -311,7 +331,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tradeView3 = v.findViewById(R.id.trade_view3);
         tvRest = (TextView) v.findViewById(R.id.tv_rest);
         mProgressDialog = new ProgressDialog(mContext);
-        mProgressDialog.setMessage(getString(R.string.online_transaction_in_order));
+        mProgressDialog.setMessage(getString(R.string.operaing));
         mProgressDialog.setCancelable(false);
     }
 
@@ -415,13 +435,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             int sumQty = 0;
                             double sumUnrealizedPL = 0; // 总浮动盈亏
                             // 遍历将这些参数累加
-                            for(Holds h:holdses) {
+                            for (Holds h : holdses) {
                                 sumQty += Math.abs(h.getQty());
                                 sumUnrealizedPL += h.getUnrealizedPL();
                             }
                             vgSettlement.setVisibility(View.GONE);
                             vgOrder.setVisibility(View.VISIBLE);
-                            tvDirection.setText(holding.getBuySell() + Math.abs(sumQty) + "手");
+                            tvDirection.setText((TextUtils.equals(holding.getBuySell(), "买入") ? "看涨" : "看跌") + Math.abs(sumQty) + "手");
                             tvTotal.setText(TextUtils.concat("持仓盈亏\n", StringUtils.formatUnrealizePL(mContext, sumUnrealizedPL)));
                             if (TextUtils.equals(holding.getBuySell(), "买入")) {
                                 leftText = "追加";
@@ -476,11 +496,15 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         FastTakeOrderConfig fastTakeOrder = UserSharePrefernce.getFastTakeOrder(mContext, mSymbol);
         switch (v.getId()) {
             case R.id.tv_close_order:
-                mCloseDialog.show();
+                mCloseAllDialog.show();
                 break;
             case R.id.tv_left:
                 if (TextUtils.equals("平仓", leftText)) {
-                    closeOrder();
+                    if(fastTakeOrder != null) {
+                        closeOrder();
+                    }else {
+                        mCloseDialog.show();
+                    }
                 } else {
                     if (fastTakeOrder != null) {
                         //快速下单
@@ -492,7 +516,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.tv_right:
                 if (TextUtils.equals("平仓", rightText)) {
-                    closeOrder();
+                    if(fastTakeOrder != null) {
+                        closeOrder();
+                    }else {
+                        mCloseDialog.show();
+                    }
                 } else {
                     if (fastTakeOrder != null) {
                         //快速下单

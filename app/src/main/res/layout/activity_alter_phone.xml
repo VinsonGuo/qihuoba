@@ -37,7 +37,8 @@
             android:paddingLeft="@dimen/dp_10"
             android:paddingRight="@dimen/dp_10"
             app:button_text="@string/get_confirm_code"
-            app:name="@string/activation_message_code"
+            app:name="@string/activation_code"
+            app:hint="请输入验证码"
             />
 
     </LinearLayout>

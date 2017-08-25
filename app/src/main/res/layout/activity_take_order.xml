@@ -153,7 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="触发止赢"
+                    android:text="触发止盈"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>
 

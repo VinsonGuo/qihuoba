@@ -1,7 +1,5 @@
 package com.yjjr.yjfutures.utils;
 
-import com.yjjr.yjfutures.model.Quote;
-
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
@@ -21,42 +19,6 @@ public class DoubleUtil {
         }
     }
 
-    public static String formatDecimal(Double d, int decimal) {
-        String formatDecimalString = "";
-        switch (decimal) {
-            case 0:
-                formatDecimalString = "######0";
-                break;
-            case 1:
-                formatDecimalString = "######0.0";
-                break;
-            case 2:
-                formatDecimalString = "######0.00";
-                break;
-            case 3:
-                formatDecimalString = "######0.000";
-                break;
-            case 4:
-                formatDecimalString = "######0.0000";
-                break;
-            case 5:
-                formatDecimalString = "######0.00000";
-                break;
-            case 6:
-                formatDecimalString = "######0.000000";
-                break;
-            case 7:
-                formatDecimalString = "######0.0000000";
-                break;
-            default:
-                formatDecimalString = "######0.00";
-                break;
-        }
-        String formatDoubleString = new DecimalFormat(formatDecimalString).format(d);
-//        LogUtils.i("==== " + formatDoubleString);
-//        Float floatValue = new Float(formatDoubleString);
-        return formatDoubleString;
-    }
 
     public static String format2Decimal(Double d) {
         NumberFormat instance = DecimalFormat.getInstance();
@@ -69,7 +31,7 @@ public class DoubleUtil {
         NumberFormat instance = DecimalFormat.getInstance();
         instance.setMinimumFractionDigits(0);
         instance.setMaximumFractionDigits(8);
-        return instance.format(d);
+        return instance.format(d).replace(",", "");
     }
 
 

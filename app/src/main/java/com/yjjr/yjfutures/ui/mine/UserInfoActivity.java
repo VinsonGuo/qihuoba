@@ -49,7 +49,7 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
             mTvName.setText(userInfo.getName());
         }
         if (!TextUtils.isEmpty(userInfo.getAlipay())) {
-            mTvCard.setText(R.string.modify);
+            mTvCard.setText(userInfo.getAlipay());
         }
     }
 
@@ -73,10 +73,10 @@ public class UserInfoActivity extends BaseActivity implements View.OnClickListen
                 }
                 break;
             case R.id.tv_deposit:
-                if (!TextUtils.isEmpty(userInfo.getIdcard())) {
-                    BindCardActivity.startActivity(mContext);
-                } else {
+                if (TextUtils.isEmpty(userInfo.getIdcard())) {
                     AuthActivity.startActivity(mContext);
+                } else if(TextUtils.isEmpty(userInfo.getAlipay())) {
+                    BindCardActivity.startActivity(mContext);
                 }
                 break;
         }

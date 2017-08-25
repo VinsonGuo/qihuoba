@@ -505,7 +505,6 @@
     <string name="reset">重置</string>
     <string name="filtrate">筛选</string>
     <string name="filtrate_result">筛选结果</string>
-    <string name="input_trader_nick_name">请输入交易员昵称</string>
     <string name="up_to_low">由高到低</string>
     <string name="low_to_up">由低到高</string>
     <string name="from_up_to_low">从高到低</string>
@@ -535,7 +534,6 @@
     <string name="trade_role">交易细则</string>
     <string name="investor_list">跟随者排行</string>
     <string name="title_activity_search_investor">SearchInvestorActivity</string>
-    <string name="input_investor_nick_name">请输入跟随者昵称</string>
     <string name="register_time">注册时间</string>
     <string name="click_more_exit">再次点击退出应用</string>
     <string name="with_who_dialogue">与%1$s的对话</string>
@@ -628,8 +626,6 @@
     <string name="activate_code">激活码</string>
     <string name="activate_code_sending">激活码发送中</string>
     <string name="register_get_activate_code_again">重新获取激活码</string>
-    <string name="register_get_avtivate_code">获取激活码</string>
-    <string name="input_wrong_image_code">请输入正确的验证码</string>
     <string name="has_verified">已验证</string>
     <string name="not_verified">未验证</string>
     <string name="mine_not_login_prompt">登录后，您可以在这里查看您的个人数据，及维护个人资料</string>
@@ -1307,7 +1303,7 @@
     <string name="hqjy">行情交易</string>
     <string name="bullish">看涨</string>
     <string name="bearish">看跌</string>
-    <string name="mine_order">我的订单</string>
+    <string name="mine_order">我的持仓</string>
     <string name="order_record">订单记录</string>
     <string name="order_detail">订单详情</string>
     <string name="contract_info">合约信息</string>
@@ -1346,4 +1342,5 @@
     <string name="unbind">未绑定</string>
     <string name="please_finish_user_info">请完善个人资料</string>
     <string name="trade_pwd_wrong">交易密码须为6位纯数字，且不能为连续数字，重复数字或身份证上的生日数字！</string>
+    <string name="operaing">操作中...</string>
 </resources>

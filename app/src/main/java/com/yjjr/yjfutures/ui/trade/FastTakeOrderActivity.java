@@ -199,7 +199,6 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                     public void accept(@NonNull BizResponse<ContractInfo> response) throws Exception {
                         mContractInfo = response.getResult();
                         mTvInfo.setText(String.format("持仓至%s自动平仓", mContractInfo.getEndTradeTime()));
-                        mTvStopWin.setText(String.format("=触发止损*%s", mContractInfo.getMaxProfitMultiply()));
                         Map<String, Double> map = mContractInfo.getLossLevel();
                         for (Map.Entry<String, Double> next : map.entrySet()) {
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
@@ -223,10 +222,13 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
             for (int i = 0; i < childCount; i++) {
                 RadioButton rb = (RadioButton) group.getChildAt(i);
                 if (rb.isChecked()) {
-                    double margin = Double.parseDouble(rb.getText().toString()) * mHand;
-                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    double sl = Double.parseDouble(rb.getText().toString());
+                    double margin = sl * mHand;
+//                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    Double marginDollar = mContractInfo.getLossjb().get(rb.getText().toString());
                     Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
-                    mTvMargin.setText(String.format("￥%s\n($%s)", DoubleUtil.formatDecimal(margin), DoubleUtil.format2Decimal(marginDollar)));
+                    mTvStopWin.setText(DoubleUtil.formatDecimal(sl * mContractInfo.getMaxProfitMultiply()));
+                    mTvMargin.setText(String.format("￥%s\n($%s)", DoubleUtil.formatDecimal(margin), DoubleUtil.formatDecimal(marginDollar)));
                     mTvMargin.setTag(margin);
                     mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
                     mTvTradeFee.setTag(tradeFee);
@@ -242,8 +244,9 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                     mHand = i + 1;
                     Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
                     double margin = Double.parseDouble(rb.getText().toString()) * mHand;
-                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
-                    mTvMargin.setText(String.format("￥%s\n($%s)", DoubleUtil.formatDecimal(margin), DoubleUtil.format2Decimal(marginDollar)));
+//                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    Double marginDollar = mContractInfo.getLossjb().get(rb.getText().toString());
+                    mTvMargin.setText(String.format("￥%s\n($%s)", DoubleUtil.formatDecimal(margin), DoubleUtil.formatDecimal(marginDollar)));
                     mTvMargin.setTag(margin);
                     mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
                     mTvTradeFee.setTag(tradeFee);

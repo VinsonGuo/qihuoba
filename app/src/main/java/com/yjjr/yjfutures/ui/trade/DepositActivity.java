@@ -14,7 +14,9 @@ import android.widget.TextView;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -58,6 +60,11 @@ public class DepositActivity extends BaseActivity implements View.OnClickListene
         TextView tvService = (TextView) findViewById(R.id.tv_contact_service);
         tvService.setText(TextUtils.concat(tvService.getText(), SpannableUtil.getStringByColor(mContext, "联系客服", R.color.main_color)));
         tvService.setOnClickListener(this);
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if(userInfo != null) {
+            TextView tvDesc = (TextView) findViewById(R.id.tv_desc);
+            tvDesc.setText(userInfo.getAlipay());
+        }
     }
 
 

@@ -77,7 +77,7 @@
             android:lines="1"
             android:textColor="@color/second_text_color"
             android:textSize="@dimen/sp_14"
-            tools:text="止赢额\t123"/>
+            tools:text="止盈额\t123"/>
 
 
         <TextView
@@ -96,6 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/tv_current_price"
             android:layout_alignParentRight="true"
+            android:layout_marginLeft="2dp"
             android:text="@string/yuan"
             android:textColor="@color/main_text_color"
             android:textSize="@dimen/sp_12"/>

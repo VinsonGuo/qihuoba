@@ -5,22 +5,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/chart_background"
+    android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.mine.WithdrawActivity">
+
     <com.yjjr.yjfutures.widget.HeaderView
         android:id="@+id/header_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:background_color="@color/background_dark"
         app:main_title="@string/withdraw"
         app:sub_title="@string/withdraw_recode"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:background="@color/background_dark"
         android:gravity="center"
-        android:layout_marginTop="20dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="20dp"
         android:text="@string/available_balance"
         android:textColor="@color/main_text_color"
         android:textSize="@dimen/text_size_18sp"/>
@@ -29,11 +32,12 @@
         android:id="@+id/tv_yue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/background_dark"
         android:gravity="center"
-        tools:text="3600"
-        android:layout_marginBottom="20dp"
+        android:paddingBottom="20dp"
         android:textColor="@color/third_text_color"
-        android:textSize="24sp"/>
+        android:textSize="24sp"
+        tools:text="3600"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -68,14 +72,15 @@
             android:layout_height="@dimen/common_divider_small"
             android:layout_below="@id/ri_money"
             android:layout_marginLeft="@dimen/dp_10"/>
+
         <ImageView
             android:id="@+id/iv_alipay"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_below="@id/divider"
             android:layout_marginBottom="@dimen/root_padding_15"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="43dp"
             android:layout_marginTop="@dimen/root_padding_15"
             android:src="@drawable/ic_alipay"/>
 
@@ -101,7 +106,6 @@
             android:textSize="@dimen/sp_12"/>
 
 
-
     </RelativeLayout>
 
     <Button
@@ -111,17 +115,17 @@
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"
         android:layout_marginTop="@dimen/root_padding_15"
-        android:textSize="@dimen/common_btn_text_size"
         android:background="@drawable/selector_common_btn_bg"
         android:text="@string/confirm"
-        android:textColor="@color/selector_common_btn_text_color"/>
+        android:textColor="@color/selector_common_btn_text_color"
+        android:textSize="@dimen/common_btn_text_size"/>
 
     <TextView
-        android:layout_marginTop="@dimen/root_padding_15"
-        android:textColor="@color/second_text_color"
-        android:textSize="12sp"
-        android:text="每日提现次数限2次\n提现处理时间为8:30-17:00\n到账时间以银行为准，节假日延后处理"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/root_padding_15"
+        android:gravity="center"
+        android:text="每日提现次数限2次\n提现处理时间为8:30-17:00\n到账时间以银行为准，节假日延后处理"
+        android:textColor="@color/second_text_color"
+        android:textSize="12sp"/>
 </LinearLayout>

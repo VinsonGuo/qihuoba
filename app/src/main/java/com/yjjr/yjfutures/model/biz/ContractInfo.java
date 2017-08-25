@@ -25,6 +25,7 @@ public class ContractInfo {
     private String endTradeTime;
     private double maxProfitMultiply;
     private Map<String,Double> lossLevel;
+    private Map<String,Double> lossjb;
     private double cnyExchangeRate;
     private double transactionFee;
 
@@ -84,6 +85,14 @@ public class ContractInfo {
         this.transactionFee = transactionFee;
     }
 
+    public Map<String, Double> getLossjb() {
+        return lossjb;
+    }
+
+    public void setLossjb(Map<String, Double> lossjb) {
+        this.lossjb = lossjb;
+    }
+
     @Override
     public String toString() {
         return "ContractInfo{" +
@@ -92,6 +101,7 @@ public class ContractInfo {
                 ", endTradeTime='" + endTradeTime + '\'' +
                 ", maxProfitMultiply=" + maxProfitMultiply +
                 ", lossLevel=" + lossLevel +
+                ", lossjb=" + lossjb +
                 ", cnyExchangeRate=" + cnyExchangeRate +
                 ", transactionFee=" + transactionFee +
                 '}';

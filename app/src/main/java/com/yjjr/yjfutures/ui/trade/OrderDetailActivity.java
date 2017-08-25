@@ -3,13 +3,14 @@ package com.yjjr.yjfutures.ui.trade;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.model.CloseOrder;
+import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
@@ -55,17 +56,24 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     private void fillViews(CloseOrder order) {
+        Quote quote = StaticStore.sQuoteMap.get(order.getSymbol());
         headerView.bindActivity(mContext);
-        tvDirection.setText(TextUtils.equals(order.getOpenBuySell(), "买入")?"做多":"做空");
+        if (TextUtils.equals(order.getOpenBuySell(), "买入")) {
+            tvDirection.setText("看涨");
+            tvDirection.setBackgroundResource(R.drawable.shape_online_tx_red);
+        } else {
+            tvDirection.setText("看跌");
+            tvDirection.setBackgroundResource(R.drawable.shape_online_tx_green);
+        }
         tvProfitYuan.setText(DoubleUtil.format2Decimal(order.getRealizedPL_CNY()));
         int color = StringUtils.getProfitColor(mContext, order.getRealizedPL());
         tvProfitYuan.setTextColor(color);
         tvProfitDollar.setTextColor(color);
-        tvProfitDollar.setText(DoubleUtil.format2Decimal(order.getRealizedPL())+String.format("汇率(%s)",order.getExchange()));
+        tvProfitDollar.setText(DoubleUtil.format2Decimal(order.getRealizedPL()) + String.format("汇率(%s)", order.getExchange()));
         tvTradeSymbol.setText(order.getSymbol());
-        tvTradeNum.setText(Math.abs(order.getQty())+"手");
-        tvBuyPrice.setText(DoubleUtil.format2Decimal(order.getOpenPrice()));
-        tvSellPrice.setText(DoubleUtil.format2Decimal(order.getClosePrice()));
+        tvTradeNum.setText(Math.abs(order.getQty()) + "手");
+        tvBuyPrice.setText(StringUtils.getStringByTick(order.getOpenPrice(),quote.getTick()));
+        tvSellPrice.setText(StringUtils.getStringByTick(order.getClosePrice(),quote.getTick()));
         tvBuyTime.setText(DateUtils.formatData(order.getOpenDate()));
         tvSellTime.setText(DateUtils.formatData(order.getCloseDate()));
 //        tvTicket.setText(order.getFilledID());

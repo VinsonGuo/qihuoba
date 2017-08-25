@@ -171,7 +171,6 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                         mContractInfo = response.getResult();
                         mTvSymbol.setText(mContractInfo.getSymbol() + "-" + mContractInfo.getSymbolName());
                         mTvInfo.setText(String.format("持仓至%s自动平仓", mContractInfo.getEndTradeTime()));
-                        mTvStopWin.setText(String.format("=触发止损*%s", DoubleUtil.formatDecimal(mContractInfo.getMaxProfitMultiply())));
                         Map<String, Double> map = mContractInfo.getLossLevel();
                         for (Map.Entry<String, Double> next : map.entrySet()) {
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
@@ -204,34 +203,6 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                     qty = 5;
                 }
 
-               /* HttpManager.getHttpService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价")
-                        .map(new Function<CommonResponse, CommonResponse>() {
-                            @Override
-                            public CommonResponse apply(@NonNull CommonResponse commonResponse) throws Exception {
-                                if (commonResponse.getReturnCode() < 0) {
-                                    throw new RuntimeException(commonResponse.getMessage());
-                                }
-                                return commonResponse;
-                            }
-                        })
-                        .delay(1, TimeUnit.SECONDS)
-                        .compose(RxUtils.<CommonResponse>applySchedulers())
-                        .compose(this.<CommonResponse>bindUntilEvent(ActivityEvent.DESTROY))
-                        .subscribe(new Consumer<CommonResponse>() {
-                            @Override
-                            public void accept(@NonNull CommonResponse commonResponse) throws Exception {
-                                mProgressDialog.dismiss();
-                                mDialog.show();
-                                EventBus.getDefault().post(new SendOrderEvent());
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception {
-                                LogUtils.e(throwable);
-                                mProgressDialog.dismiss();
-                                ToastUtils.show(mContext, throwable.getMessage());
-                            }
-                        });*/
                 Double sl = (Double) mRgSl.findViewById(mRgSl.getCheckedRadioButtonId()).getTag();
                 HttpManager.getBizService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价",
                         sl, sl * mContractInfo.getMaxProfitMultiply(), (double) mTvTradeFee.getTag(), (double) mTvMargin.getTag())
@@ -268,9 +239,12 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
             for (int i = 0; i < childCount; i++) {
                 RadioButton rb = (RadioButton) group.getChildAt(i);
                 if (rb.isChecked()) {
-                    double margin = Double.parseDouble(rb.getText().toString()) * mHand;
-                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    double sl = Double.parseDouble(rb.getText().toString());
+                    double margin = sl * mHand;
+//                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    Double marginDollar = mContractInfo.getLossjb().get(rb.getText().toString());
                     Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
+                    mTvStopWin.setText(DoubleUtil.formatDecimal(sl * mContractInfo.getMaxProfitMultiply()));
                     mTvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.formatDecimal(margin));
                     mTvMargin.setTag(margin);
                     mTvMarginDollar.setText(String.format("($%s)", DoubleUtil.formatDecimal(marginDollar)));
@@ -288,12 +262,14 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                 if (radioButton.isChecked()) {
                     mHand = i + 1;
                     Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
-                    double margin = Double.parseDouble(rb.getText().toString()) * mHand;
-                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    double sl = Double.parseDouble(rb.getText().toString());
+                    double margin = sl * mHand;
+//                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+//                    Double marginDollar = mContractInfo.getLossjb().get(margin);
                     mTvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.formatDecimal(margin));
                     mTvMargin.setTag(margin);
-                    mTvMarginDollar.setText(String.format("($%s)", DoubleUtil.formatDecimal(marginDollar)));
-                    mTvMarginDollar.setTag(marginDollar);
+//                    mTvMarginDollar.setText(String.format("($%s)", DoubleUtil.formatDecimal(marginDollar)));
+//                    mTvMarginDollar.setTag(marginDollar);
                     mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
                     mTvTradeFee.setTag(tradeFee);
                     break;

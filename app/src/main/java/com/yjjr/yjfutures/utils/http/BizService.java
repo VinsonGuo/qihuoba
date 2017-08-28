@@ -2,7 +2,6 @@ package com.yjjr.yjfutures.utils.http;
 
 import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.model.CommonResponse;
-import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.AssetRecord;
 import com.yjjr.yjfutures.model.biz.BizResponse;
@@ -22,7 +21,6 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
-import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -97,7 +95,7 @@ public interface BizService {
 
     @FormUrlEncoded
     @POST("user/rechargeApply")
-    Observable<BizResponse> rechargeApply(@Field("money") String money, @Field("accountType") String accountType);
+    Observable<BizResponse> rechargeApply(@Field("money") String money, @Field("accountType") String accountType, @Field("cid") String account);
 
     @FormUrlEncoded
     @POST("user/extractApply")
@@ -174,7 +172,8 @@ public interface BizService {
             @Field("cid") String account,
             @Field("symbol") String symbol);
 
+    @FormUrlEncoded
     @POST("user/resetCapitalAccount")
-    Observable<BizResponse> resetCapitalAccount();
+    Observable<BizResponse> resetCapitalAccount(@Field("cid") String account);
 
 }

@@ -60,10 +60,12 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
     private ContractInfo mContractInfo;
     private int mHand = 1;
     private RadioGroup mRgHand;
+    private boolean mIsDemo;
 
-    public static void startActivity(Context context, String symbol) {
+    public static void startActivity(Context context, String symbol, boolean isDemo) {
         Intent intent = new Intent(context, FastTakeOrderActivity.class);
         intent.putExtra(Constants.CONTENT_PARAMETER, symbol);
+        intent.putExtra(Constants.CONTENT_PARAMETER_2, isDemo);
         context.startActivity(intent);
     }
 
@@ -81,6 +83,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                 })
                 .create();
         mSymbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
+        mIsDemo = getIntent().getBooleanExtra(Constants.CONTENT_PARAMETER_2, false);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         final Button btnOpen = (Button) findViewById(R.id.btn_open);
         mRgHand = (RadioGroup) findViewById(R.id.rg_hand);
@@ -110,7 +113,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
         final FastTakeOrderConfig fastTakeOrder = UserSharePrefernce.getFastTakeOrder(mContext, mSymbol);
         btnOpen.setText(fastTakeOrder != null ? "关闭" : "开启");
         headerView.bindActivity(mContext);
-        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (quote != null) {
             headerView.setMainTitle(quote.getSymbolname());
         }
@@ -205,7 +208,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
                         mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee()) + "元");
-                        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+                        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
                         String name = StringUtils.curreny2Word(quote.getCurrency());
                         mTvExchange.setText(String.format("1%s = %s人民币", name, mContractInfo.getCnyExchangeRate()));
                         mTvRate.setText(String.format("汇率 > %s人民币", name));

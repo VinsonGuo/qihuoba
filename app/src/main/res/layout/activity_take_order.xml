@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/chart_background"
+    android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.TakeOrderActivity">
 
     <com.yjjr.yjfutures.widget.HeaderView
@@ -26,33 +26,35 @@
             android:orientation="vertical">
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:padding="@dimen/root_padding_15">
-            <TextView
-                android:id="@+id/tv_symbol"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/symbol"
-                android:textColor="@color/main_text_color"
-                android:textSize="@dimen/sp_14"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:padding="@dimen/root_padding_15">
 
-            <TextView
-                android:id="@+id/tv_info"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:gravity="right|center_vertical"
-                android:textColor="@color/main_text_color"
-                android:textSize="@dimen/sp_14"/>
+                <TextView
+                    android:id="@+id/tv_symbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/symbol"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/sp_14"/>
+
+                <TextView
+                    android:id="@+id/tv_info"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/sp_14"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/common_divider_small"
                 android:background="@color/divider_color"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
@@ -163,8 +165,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="=触发止损*5"
-                    android:textColor="@color/main_color_red"/>
+                    android:textColor="@color/main_color_red"
+                    tools:text="=触发止损*5"/>
             </LinearLayout>
 
             <View
@@ -202,6 +204,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/common_divider_small"
                 android:background="@color/divider_color"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
@@ -221,10 +224,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    tools:text="$123"
                     android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/sp_14"/>
+                    android:textSize="@dimen/sp_14"
+                    tools:text="$123"/>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
@@ -243,24 +247,22 @@
                 <TextView
                     android:id="@+id/bzj_dollar_value"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="right"
-                    tools:text="$123"
                     android:textColor="@color/second_text_color"
-                    android:textSize="@dimen/sp_12"/>
+                    android:textSize="@dimen/sp_12"
+                    tools:text="$123"/>
 
                 <TextView
                     android:id="@+id/bzj_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dp_10"
-                    tools:text="$123"
                     android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/sp_14"/>
+                    android:textSize="@dimen/sp_14"
+                    tools:text="$123"/>
             </LinearLayout>
-
-
 
 
             <TextView
@@ -276,22 +278,23 @@
                 android:id="@+id/tv_price"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
-                android:padding="4dp"
                 android:layout_gravity="center"
-                android:drawablePadding="4dp"
+                android:layout_marginTop="15dp"
                 android:drawableLeft="@drawable/ic_clock"
+                android:drawablePadding="4dp"
+                android:padding="4dp"
                 android:textColor="@color/main_text_color"
                 android:textSize="@dimen/sp_14"/>
+
             <TextView
                 android:id="@+id/tv_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="1.2"
                 android:padding="@dimen/root_padding_15"
-                tools:text="说明：\n1.一旦开启13444444444444444444444444444444243132443213441，点击购买\n2.适当操作，理性投资"
                 android:textColor="@color/second_text_color"
-                android:textSize="@dimen/sp_12"/>
+                android:textSize="@dimen/sp_12"
+                tools:text="说明：\n1.一旦开启13444444444444444444444444444444243132443213441，点击购买\n2.适当操作，理性投资"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
@@ -301,10 +304,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"
-        android:textSize="@dimen/common_btn_text_size"
         android:background="@drawable/selector_common_btn_bg"
+        android:text="@string/confirm"
         android:textColor="@color/selector_common_btn_text_color"
-        android:text="@string/confirm"/>
+        android:textSize="@dimen/common_btn_text_size"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

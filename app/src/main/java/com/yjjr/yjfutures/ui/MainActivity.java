@@ -123,11 +123,10 @@ public class MainActivity extends BaseActivity {
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override
                             public List<Quote> apply(@NonNull List<Quote> quotes) throws Exception {
-                                Map<String, Quote> quoteMap = StaticStore.sQuoteMap;
                                 for (Quote quote : quotes) {
                                     //设置一下商品是否持仓
                                     quote.setHolding(StaticStore.sHoldSet.contains(quote.getSymbol()));
-                                    quoteMap.put(quote.getSymbol(), quote);
+                                    StaticStore.putQuote(quote, false);
                                 }
                                 return quotes;
                             }

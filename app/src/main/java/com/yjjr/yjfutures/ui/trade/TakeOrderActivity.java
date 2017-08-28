@@ -176,7 +176,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                             mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
-                        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+                        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
                         mTvExchange.setText(quote.getSymbolname() + "按" + StringUtils.curreny2Word(quote.getCurrency()) + "交易，平台按人民币结算，汇率为 $1 = ￥" + mContractInfo.getCnyExchangeRate());
                         mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, quote.getLastPrice()));
                     }

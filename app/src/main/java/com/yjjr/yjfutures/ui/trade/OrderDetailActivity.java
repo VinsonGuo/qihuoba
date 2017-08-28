@@ -56,7 +56,7 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     private void fillViews(CloseOrder order) {
-        Quote quote = StaticStore.sQuoteMap.get(order.getSymbol());
+        Quote quote = StaticStore.getQuote(order.getSymbol(), false);
         headerView.bindActivity(mContext);
         if (TextUtils.equals(order.getOpenBuySell(), "买入")) {
             tvDirection.setText("看涨");

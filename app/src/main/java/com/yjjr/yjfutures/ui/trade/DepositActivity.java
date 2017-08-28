@@ -78,7 +78,7 @@ public class DepositActivity extends BaseActivity implements View.OnClickListene
                         return;
                     }
                     mBtnConfirm.setSelected(false);
-                    HttpManager.getBizService().rechargeApply(mRiMoney.getValue(), "alipay")
+                    HttpManager.getBizService().rechargeApply(mRiMoney.getValue(), "alipay", BaseApplication.getInstance().getTradeToken())
                             .compose(RxUtils.applyBizSchedulers())
                             .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
                             .subscribe(new Consumer<BizResponse>() {

@@ -177,7 +177,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
-        final Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         findViews(v);
         if (quote.isRest()) { // 休市的状态
             tradeView1.setVisibility(View.GONE);
@@ -194,7 +194,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         });
         mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol);
         Fragment[] fragments = {/*TickChartFragment.newInstance(mSymbol)*/new Fragment(), TimeSharingplanFragment.newInstance(mSymbol),
-                mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol)};
+                mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol, mIsDemo)};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
         mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
@@ -355,60 +355,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void getHolding() {
-        /*HttpManager.getHttpService(mIsDemo).getHolding(BaseApplication.getInstance().getTradeToken(mIsDemo))
-                .flatMap(new Function<List<Holding>, ObservableSource<Holding>>() {
-                    @Override
-                    public ObservableSource<Holding> apply(@NonNull List<Holding> holdings) throws Exception {
-                        return Observable.fromIterable(holdings);
-                    }
-                })
-                .filter(new Predicate<Holding>() {
-                    @Override
-                    public boolean test(@NonNull Holding holding) throws Exception {
-                        return TextUtils.equals(holding.getSymbol(), mSymbol);
-                    }
-                })
-                .map(new Function<Holding, Holding>() {
-                    @Override
-                    public Holding apply(@NonNull Holding holding) throws Exception {
-                        if (holding.getQty() == 0) {
-                            throw new RuntimeException("holding qty = 0");
-                        }
-                        return holding;
-                    }
-                })
-                .compose(RxUtils.<Holding>applySchedulers())
-                .compose(this.<Holding>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<Holding>() {
-                    @Override
-                    public void accept(@NonNull Holding holding) throws Exception {
-                        mHolding = holding;
-                        vgSettlement.setVisibility(View.GONE);
-                        vgOrder.setVisibility(View.VISIBLE);
-                        tvDirection.setText(holding.getBuySell() + Math.abs(holding.getQty()) + "手");
-                        tvTotal.setText(TextUtils.concat("持仓盈亏\n", StringUtils.formatUnrealizePL(mContext, holding.getUnrealizedPL())));
-                        if (TextUtils.equals(holding.getBuySell(), "买入")) {
-                            leftText = "追加";
-                            rightText = "平仓";
-                            tvDirection.setTextColor(ContextCompat.getColor(mContext, R.color.main_color_red));
-                            colorView.setBackgroundResource(R.drawable.shape_online_tx_red);
-                        } else {
-                            leftText = "平仓";
-                            rightText = "追加";
-                            tvDirection.setTextColor(ContextCompat.getColor(mContext, R.color.main_color_green));
-                            colorView.setBackgroundResource(R.drawable.shape_online_tx_green);
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        vgOrder.setVisibility(View.GONE);
-                        vgSettlement.setVisibility(View.VISIBLE);
-                        leftText = "看涨";
-                        rightText = "看跌";
-                    }
-                });*/
-
         HttpManager.getBizService(mIsDemo).getHolding()
                 .flatMap(new Function<BizResponse<List<Holds>>, ObservableSource<Holds>>() {
                     @Override
@@ -479,7 +425,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         fillViews(quote);
         if (vgOrder.getVisibility() == View.VISIBLE && getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 0) {
             getHolding();
@@ -531,11 +477,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 }
                 break;
             case R.id.tv_center:
-                FastTakeOrderActivity.startActivity(mContext, mSymbol);
+                FastTakeOrderActivity.startActivity(mContext, mSymbol, mIsDemo);
                 break;
             case R.id.tv_deposit:
                 if (mIsDemo) {
-                    HttpManager.getBizService(true).resetCapitalAccount()
+                    HttpManager.getBizService(true).resetCapitalAccount(BaseApplication.getInstance().getTradeToken(mIsDemo))
                             .compose(RxUtils.applyBizSchedulers())
                             .compose(this.<BizResponse>bindUntilEvent(FragmentEvent.DESTROY))
                             .subscribe(new Consumer<BizResponse>() {
@@ -592,27 +538,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void closeAllOrder() {
-       /* if (mHolding == null) return;
-        mProgressDialog.show();
-        RxUtils.createCloseObservable(mIsDemo, mHolding)
-                .delay(1, TimeUnit.SECONDS)
-                .compose(RxUtils.<CommonResponse>applySchedulers())
-                .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<CommonResponse>() {
-                    @Override
-                    public void accept(@NonNull CommonResponse response) throws Exception {
-                        mCloseSuccessDialog.show();
-                        mProgressDialog.dismiss();
-                        EventBus.getDefault().post(new SendOrderEvent());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
-                        mProgressDialog.dismiss();
-                        ToastUtils.show(mContext, throwable.getMessage());
-                    }
-                });*/
         if (mHoldsList == null || mHoldsList.isEmpty()) return;
         mProgressDialog.show();
         HttpManager.getBizService(mIsDemo).closeAllOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol)
@@ -638,34 +563,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     private void takeOrder(FastTakeOrderConfig order, final String type) {
         mProgressDialog.show();
-       /* HttpManager.getHttpService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, type, 0, Math.abs(order.getQty()), "市价")
-                .delay(1, TimeUnit.SECONDS)
-                .compose(RxUtils.<CommonResponse>applySchedulers())
-                .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<CommonResponse>() {
-                    @Override
-                    public void accept(@NonNull CommonResponse response) throws Exception {
-                        new CustomPromptDialog.Builder(mContext)
-                                .setMessage(type + "委托成功")
-                                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .create()
-                                .show();
-                        mProgressDialog.dismiss();
-                        EventBus.getDefault().post(new SendOrderEvent());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
-                        mProgressDialog.dismiss();
-                        ToastUtils.show(mContext, throwable.getMessage());
-                    }
-                });*/
         HttpManager.getBizService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, type, 0, Math.abs(order.getQty()), "市价",
                 order.getStopLose(), order.getStopWin(), order.getFee(), order.getMarginYJ())
                 .delay(1, TimeUnit.SECONDS)

@@ -58,7 +58,7 @@ public class TickChartFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
-        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        Quote quote = StaticStore.getQuote(mSymbol, false);
         if (quote != null) {
             mChart.addEntry((float) quote.getLastPrice());
             mChart.addEntry((float) quote.getLastPrice());
@@ -67,7 +67,7 @@ public class TickChartFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        Quote quote = StaticStore.getQuote(mSymbol, false);
         if (quote != null) {
             mChart.addEntry((float) quote.getLastPrice());
         }

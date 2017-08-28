@@ -69,11 +69,12 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
 
     @Override
     protected void initData() {
-        if (mShowTitle) {
-            mAdapter.replaceData(StaticStore.sQuoteMap.values());
-        } else {
-            mAdapter.replaceData(StaticStore.sDemoQuoteMap.values());
-        }
+//        if (mShowTitle) {
+//            mAdapter.replaceData(StaticStore.sQuoteMap.values());
+//        } else {
+//            mAdapter.replaceData(StaticStore.sDemoQuoteMap.values());
+//        }
+        mAdapter.replaceData(StaticStore.getQuoteValues(!mShowTitle));
     }
 
     @Override
@@ -84,11 +85,7 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
         if (isResumed()) {
-            if (mShowTitle) {
-                mAdapter.replaceData(StaticStore.sQuoteMap.values());
-            } else {
-                mAdapter.replaceData(StaticStore.sDemoQuoteMap.values());
-            }
+            mAdapter.replaceData(StaticStore.getQuoteValues(!mShowTitle));
         }
     }
 

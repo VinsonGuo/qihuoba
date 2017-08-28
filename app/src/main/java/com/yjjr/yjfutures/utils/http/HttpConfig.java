@@ -11,7 +11,7 @@ public class HttpConfig {
 
 
     //    public static final String DOMAIN = "http://www.qihuofa.com";
-    public static final String DOMAIN = BuildConfig.DEBUG ? "https://dev.qihuofa.com" : "https://www.qihuofa.com";
+    public static final String DOMAIN =/* BuildConfig.DEBUG ? "https://dev.qihuofa.com" : */"https://www.qihuofa.com";
     public static final String DEMO_HOST = "https://demo.qihuofa.com";
     public static final String BIZ_HOST = DOMAIN + ":9300";
     /**

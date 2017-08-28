@@ -98,7 +98,7 @@ public class PositionListFragment extends ListFragment<Holds> {
 
     @Override
     public BaseQuickAdapter<Holds, BaseViewHolder> getAdapter() {
-        final PositionListAdapter adapter = new PositionListAdapter(null);
+        final PositionListAdapter adapter = new PositionListAdapter(null, mIsDemo);
         final View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_position_list, mRvList, false);
         mTvProfit = (TextView) headerView.findViewById(R.id.tv_profit);
         adapter.setHeaderView(headerView);

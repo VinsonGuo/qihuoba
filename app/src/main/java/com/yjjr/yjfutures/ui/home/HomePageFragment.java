@@ -38,6 +38,7 @@ import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
@@ -116,7 +117,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     @Override
     protected void initData() {
         super.initData();
-        mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+        mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
         loadData();
     }
 
@@ -131,6 +132,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
                             if (loginBizResponse.getRcode() != 0) {
                                 if (loginBizResponse.getRcode() == 1) { // 账号密法错误，重新登录
+                                    ToastUtils.show(mContext, R.string.please_login_again);
                                     BaseApplication.getInstance().logout(mContext);
                                 }
                                 throw new RuntimeException("登录失败");
@@ -148,6 +150,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         @Override
                         public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
                             if (userLoginResponse.getReturnCode() != 1) {// 账号密法错误，重新登录
+                                ToastUtils.show(mContext, R.string.please_login_again);
                                 BaseApplication.getInstance().logout(mContext);
                             }
                             BaseApplication.getInstance().setTradeToken(userLoginResponse.getCid());
@@ -176,7 +179,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         @Override
                         public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
                             for (Quote quote : quotes) {
-                                StaticStore.sQuoteMap.put(quote.getSymbol(), quote);
+                                StaticStore.putQuote(quote, false);
                             }
                             return true;
                         }
@@ -186,7 +189,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                     .subscribe(new Consumer<Boolean>() {
                         @Override
                         public void accept(@NonNull Boolean symbols) throws Exception {
-                            mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+                            mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
                             mLoadingView.setVisibility(View.GONE);
                             getHolding();
                         }
@@ -221,7 +224,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         @Override
                         public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
                             for (Quote quote : quotes) {
-                                StaticStore.sQuoteMap.put(quote.getSymbol(), quote);
+                                StaticStore.putQuote(quote, false);
                             }
                             return true;
                         }
@@ -232,7 +235,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         @Override
                         public void accept(@NonNull Boolean symbols) throws Exception {
                             getHolding();
-                            mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
+                            mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
                             mLoadingView.setVisibility(View.GONE);
                         }
                     }, new Consumer<Throwable>() {
@@ -338,8 +341,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void onEvent(RefreshEvent event) {
         if (isResumed()) {
             mAdapter.getData().clear();
-            mAdapter.getData().addAll(StaticStore.sQuoteMap.values());
-            mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.sQuoteMap.size());
+            mAdapter.getData().addAll(StaticStore.getQuoteValues(false));
+            mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.getQuoteValues(false).size());
         }
     }
 

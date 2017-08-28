@@ -35,11 +35,13 @@ public class HandicapFragment extends BaseFragment {
     private TextView tvLow;
     private TextView tvVol;
     private TextView tvLastClose;
+    private boolean mIsDemo;
 
-    public static HandicapFragment newInstance(String symbol) {
+    public static HandicapFragment newInstance(String symbol, boolean isDemo) {
         HandicapFragment fragment = new HandicapFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.CONTENT_PARAMETER, symbol);
+        bundle.putBoolean(Constants.CONTENT_PARAMETER_2, isDemo);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -61,6 +63,7 @@ public class HandicapFragment extends BaseFragment {
         EventBus.getDefault().register(this);
         if (getArguments() != null) {
             mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER);
+            mIsDemo = getArguments().getBoolean(Constants.CONTENT_PARAMETER_2, false);
         }
     }
 
@@ -74,7 +77,7 @@ public class HandicapFragment extends BaseFragment {
     }
 
     private void fillView() {
-        Quote quote = StaticStore.sQuoteMap.get(mSymbol);
+        Quote quote = StaticStore.getQuote(mSymbol, false);
         tvHigh.setText(StringUtils.getStringByTick(quote.getHigh(), quote.getTick()));
         tvLastPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()));
         tvOpen.setText(StringUtils.getStringByTick(quote.getOpen(), quote.getTick()));

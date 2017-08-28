@@ -30,7 +30,7 @@ public class SettlementListAdapter extends BaseQuickAdapter<CloseOrder, BaseView
 
     @Override
     protected void convert(BaseViewHolder helper, CloseOrder item) {
-        Quote quote = StaticStore.sQuoteMap.get(item.getSymbol());
+        Quote quote = StaticStore.getQuote(item.getSymbol(), false);
         String buySell = item.getOpenBuySell();
         helper.setText(R.id.tv_time, DateUtils.formatDateTime(item.getCloseDate()).replace(' ', '\n'))
                 .setText(R.id.tv_info, (quote == null ? item.getSymbol() : quote.getSymbolname()) + "    " + Math.abs(item.getQty()) + "手")

@@ -74,11 +74,10 @@ public class DemoTradeActivity extends BaseActivity {
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override
                             public List<Quote> apply(@NonNull List<Quote> quotes) throws Exception {
-                                Map<String, Quote> quoteMap = StaticStore.sDemoQuoteMap;
                                 for (Quote quote : quotes) {
                                     //设置一下商品是否持仓
                                     quote.setHolding(StaticStore.sDemoHoldSet.contains(quote.getSymbol()));
-                                    quoteMap.put(quote.getSymbol(), quote);
+                                    StaticStore.putQuote(quote, true);
                                 }
                                 return quotes;
                             }
@@ -109,7 +108,8 @@ public class DemoTradeActivity extends BaseActivity {
                     @Override
                     public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
                         if (userLoginResponse.getReturnCode() != 1) {// 账号密法错误，重新登录
-                            BaseApplication.getInstance().logout(mContext);
+//                            BaseApplication.getInstance().logout(mContext);
+                            throw new RuntimeException("账号密码错误");
                         }
                         BaseApplication.getInstance().setDemoTradeToken(userLoginResponse.getCid());
                         return HttpManager.getHttpService(true).getSymbols(BaseApplication.getInstance().getTradeToken(true));
@@ -137,7 +137,7 @@ public class DemoTradeActivity extends BaseActivity {
                     @Override
                     public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
                         for (Quote quote : quotes) {
-                            StaticStore.sDemoQuoteMap.put(quote.getSymbol(), quote);
+                            StaticStore.putQuote(quote, true);
                         }
                         return true;
                     }

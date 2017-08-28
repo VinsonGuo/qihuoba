@@ -22,14 +22,18 @@ import java.util.List;
  */
 
 public class PositionListAdapter extends BaseQuickAdapter<Holds, BaseViewHolder> {
-    public PositionListAdapter(@Nullable List<Holds> data) {
+
+    private boolean mIsDemo;
+
+    public PositionListAdapter(@Nullable List<Holds> data, boolean isDemo) {
         super(R.layout.item_position_list, data);
+        mIsDemo = isDemo;
     }
 
     @Override
     protected void convert(BaseViewHolder helper, Holds item) {
         try {
-            Quote quote = StaticStore.sQuoteMap.get(item.getSymbol());
+            Quote quote = StaticStore.getQuote(item.getSymbol(), mIsDemo);
             helper.setText(R.id.tv_symbol, quote == null ? item.getSymbol() : quote.getSymbolname())
                     .setText(R.id.tv_open_price, TextUtils.concat("开仓价\t", SpannableUtil.getStringByColor(mContext, StringUtils.getStringByTick(item.getRivalPrice(), quote.getTick()), R.color.main_text_color)))
                     .setText(R.id.tv_current_price, TextUtils.concat("当前价\t", SpannableUtil.getStringByColor(mContext, StringUtils.getStringByTick(item.getMarketPrice(), quote.getTick()), R.color.main_text_color)))

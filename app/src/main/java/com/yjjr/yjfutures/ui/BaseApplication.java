@@ -10,6 +10,8 @@ import android.text.TextUtils;
 
 import com.facebook.stetho.Stetho;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
@@ -53,6 +55,7 @@ public class BaseApplication extends Application implements Application.Activity
         super.onCreate();
         sInstance = this;
         LogUtils.init();
+        initUmeng();
         JodaTimeAndroid.init(this);
         registerActivityLifecycleCallbacks(this);
         Stetho.initialize(
@@ -62,6 +65,15 @@ public class BaseApplication extends Application implements Application.Activity
                         .enableWebKitInspector(
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
+    }
+
+    private void initUmeng() {
+        PlatformConfig.setWeixin("wx972e81f96607a655", "5de26e7abee9a6ae1bce93169723346c");
+//        PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
+//        PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad", "http://sns.whalecloud.com");
+        UMShareAPI.get(this);
+
+
         MobclickAgent.enableEncrypt(true);
         MobclickAgent.setDebugMode(BuildConfig.DEBUG);
         MobclickAgent.setCheckDevice(false);

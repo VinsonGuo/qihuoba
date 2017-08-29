@@ -17,11 +17,8 @@ import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.ui.BaseActivity;
-import com.yjjr.yjfutures.ui.trade.AlipayTransferActivity;
 import com.yjjr.yjfutures.utils.DoubleUtil;
-import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
-import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
@@ -53,7 +50,7 @@ public class WithdrawActivity extends BaseActivity {
         headerView.bindActivity(mContext);
         final RegisterInput riMoney = (RegisterInput) findViewById(R.id.ri_money);
         EditText etMoney = riMoney.getEtInput();
-        etMoney.setInputType(InputType.TYPE_CLASS_NUMBER);
+        etMoney.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         etMoney.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {

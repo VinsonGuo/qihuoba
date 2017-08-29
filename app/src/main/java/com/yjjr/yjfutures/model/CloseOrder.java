@@ -23,6 +23,7 @@ public class CloseOrder implements Parcelable {
      * OpenPrice : 48.9425
      * Qty : 2
      * Currency : USD
+     * {"Account":"13163725850","OpenDate":1503967730000,"Symbol":"CLV7","OpenBuySell":"买入","RealizedPL":60,"fee":11.666667,"ClosePrice":46.82,"CloseDate":1503970005000,"Exchange":"NYMEX","RealizedPL_CNY":420,"OpenPrice":46.76,"Qty":1,"Currency":"USD  "}
      */
 
     private String Account;
@@ -38,6 +39,7 @@ public class CloseOrder implements Parcelable {
     private double OpenPrice;
     private int Qty;
     private String Currency;
+    private double exchangeRate;
 
     public String getAccount() {
         return Account;
@@ -144,6 +146,18 @@ public class CloseOrder implements Parcelable {
     }
 
 
+    public CloseOrder() {
+    }
+
+    public double getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setExchangeRate(double exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -164,9 +178,7 @@ public class CloseOrder implements Parcelable {
         dest.writeDouble(this.OpenPrice);
         dest.writeInt(this.Qty);
         dest.writeString(this.Currency);
-    }
-
-    public CloseOrder() {
+        dest.writeDouble(this.exchangeRate);
     }
 
     protected CloseOrder(Parcel in) {
@@ -183,6 +195,7 @@ public class CloseOrder implements Parcelable {
         this.OpenPrice = in.readDouble();
         this.Qty = in.readInt();
         this.Currency = in.readString();
+        this.exchangeRate = in.readDouble();
     }
 
     public static final Creator<CloseOrder> CREATOR = new Creator<CloseOrder>() {

@@ -65,7 +65,7 @@ public class HttpManager {
         if (sDemoRetrofit == null) {
             OkHttpClient client = getOkHttpClient();
             sDemoRetrofit = new Retrofit.Builder()
-                    .baseUrl(HttpConfig.DEMO_HOST + ":9100/")
+                    .baseUrl(HttpConfig.DEMO_HOST)
                     .client(client)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())

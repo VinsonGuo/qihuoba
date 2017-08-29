@@ -11,11 +11,13 @@ import android.widget.LinearLayout;
 
 import com.just.library.AgentWeb;
 import com.just.library.ChromeClientCallbackManager;
+import com.umeng.socialize.UMShareAPI;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
+import com.yjjr.yjfutures.utils.ShareUtils;
 import com.yjjr.yjfutures.widget.HeaderView;
 
 public class WebActivity extends BaseActivity {
@@ -60,6 +62,7 @@ public class WebActivity extends BaseActivity {
                     DialogUtils.createCustomServiceDialog(mContext).show();
                 } else if (type == TYPE_SHARE) {
                     ActivityTools.share(mContext, getString(R.string.app_name), url);
+//                    ShareUtils.share(mContext);
                 }
             }
         });
@@ -83,6 +86,13 @@ public class WebActivity extends BaseActivity {
                 .createAgentWeb()//
                 .ready()
                 .go(url);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        /** attention to this below ,must add this**/
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

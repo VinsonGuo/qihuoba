@@ -57,10 +57,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         tvYue = (TextView) v.findViewById(R.id.tv_yue);
         tvMargin = (TextView) v.findViewById(R.id.tv_margin);
         tvNet = (TextView) v.findViewById(R.id.tv_net);
+        final TextView tvTitle = (TextView) v.findViewById(R.id.tv_title);
         final SwipeRefreshLayout refresh = (SwipeRefreshLayout) v.findViewById(R.id.refresh);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+                if(userInfo != null) {
+                    tvTitle.setText(userInfo.getName());
+                }
                 HttpManager.getBizService().getFunds()
                         .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
                         .compose(MineFragment.this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
@@ -82,9 +87,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                         });
             }
         });
-        TextView tvTitle = (TextView) v.findViewById(R.id.tv_title);
-        if (BaseApplication.getInstance().getUserInfo() != null) {
-            tvTitle.setText(BaseApplication.getInstance().getUserInfo().getName());
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if(userInfo != null) {
+            tvTitle.setText(userInfo.getName());
         }
 
         tvOne.setOnClickListener(this);

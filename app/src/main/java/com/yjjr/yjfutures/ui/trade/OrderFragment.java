@@ -81,9 +81,7 @@ public class OrderFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SendOrderEvent event) {
-        if (isFragmentVisible) {
-            getTradeInfo();
-        }
+        getTradeInfo();
     }
 
     private void getTradeInfo() {

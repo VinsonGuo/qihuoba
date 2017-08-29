@@ -19,6 +19,7 @@ import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Holds;
+import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.utils.DialogUtils;
@@ -34,6 +35,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -147,40 +149,6 @@ public class PositionListFragment extends ListFragment<Holds> {
 
     private void closeAllOrder(List<Holds> data) {
         mProgressDialog.show();
-       /* List<Observable<CommonResponse>> observables = new ArrayList<>();
-        for (Holds holding : data) {
-            observables.add(RxUtils.createCloseObservable(mIsDemo, holding));
-        }
-        Observable.zip(observables, new Function<Object[], String>() {
-
-            @Override
-            public String apply(@NonNull Object[] objects) throws Exception {
-                String msg = null;
-                for (Object object : objects) {
-                    CommonResponse commonResponse = (CommonResponse) object;
-                    msg = commonResponse.getMessage();
-                }
-                return msg;
-            }
-        })
-                .delay(1, TimeUnit.SECONDS)
-                .compose(RxUtils.<String>applySchedulers())
-                .compose(this.<String>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(@NonNull String s) throws Exception {
-                        mSuccessDialog.show();
-                        mProgressDialog.dismiss();
-                        EventBus.getDefault().post(new SendOrderEvent());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
-                        mProgressDialog.dismiss();
-                        ToastUtils.show(mContext, throwable.getMessage());
-                    }
-                });*/
         HttpManager.getBizService(mIsDemo).closeAllOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), "ALL")
                 .delay(1, TimeUnit.SECONDS)
                 .compose(RxUtils.<BizResponse>applyBizSchedulers())
@@ -228,33 +196,6 @@ public class PositionListFragment extends ListFragment<Holds> {
 
     @Override
     protected void loadData() {
-       /* HttpManager.getHttpService(mIsDemo).getHolding(BaseApplication.getInstance().getTradeToken(mIsDemo))
-                .compose(RxUtils.<List<Holding>>applySchedulers())
-                .compose(this.<List<Holding>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<List<Holding>>() {
-                    @Override
-                    public void accept(@NonNull List<Holding> holdings) throws Exception {
-                        List<Holding> list = new ArrayList<>(10);
-                        double profit = 0;
-                        for (Holding holding : holdings) {
-                            profit += holding.getUnrealizedPL();
-                            if (holding.getQty() != 0) {
-                                list.add(holding);
-                            }
-                        }
-                        mAdapter.setNewData(list);
-                        mTvProfit.setText(StringUtils.getProfitText(profit));
-                        mTvProfit.setTextColor(StringUtils.getProfitColor(mContext, profit));
-                        loadDataFinish();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
-                        loadFailed();
-                    }
-                });*/
-
         HttpManager.getBizService(mIsDemo).getHolding()
                 .compose(RxUtils.<BizResponse<List<Holds>>>applySchedulers())
                 .compose(this.<BizResponse<List<Holds>>>bindUntilEvent(FragmentEvent.DESTROY))
@@ -264,10 +205,21 @@ public class PositionListFragment extends ListFragment<Holds> {
                         List<Holds> result = holdings.getResult();
                         List<Holds> list = new ArrayList<>(10);
                         double profit = 0;
+                        //将持仓的品种保存起来
+                        if(mIsDemo) {
+                            StaticStore.sDemoHoldSet = new HashSet<>();
+                        }else {
+                            StaticStore.sHoldSet = new HashSet<>();
+                        }
                         for (Holds holding : result) {
                             profit += holding.getUnrealizedPL();
                             if (holding.getQty() != 0) {
                                 list.add(holding);
+                                if(mIsDemo) {
+                                    StaticStore.sDemoHoldSet.add(holding.getSymbol());
+                                }else {
+                                    StaticStore.sHoldSet.add(holding.getSymbol());
+                                }
                             }
                         }
                         mAdapter.setNewData(list);
@@ -292,7 +244,7 @@ public class PositionListFragment extends ListFragment<Holds> {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        if (getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 1) {
+        if (getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 1 && isResumed()) {
             loadData();
         }
     }

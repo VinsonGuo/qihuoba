@@ -487,8 +487,15 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             .subscribe(new Consumer<BizResponse>() {
                                 @Override
                                 public void accept(@NonNull BizResponse response) throws Exception {
-                                    ToastUtils.show(mContext, R.string.opera_success);
-                                    EventBus.getDefault().post(new SendOrderEvent());
+                                    mProgressDialog.show();
+                                    tvMarginValue.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mProgressDialog.dismiss();
+                                            ToastUtils.show(mContext, R.string.opera_success);
+                                            EventBus.getDefault().post(new SendOrderEvent());
+                                        }
+                                    },5000);
                                 }
                             }, new Consumer<Throwable>() {
                                 @Override

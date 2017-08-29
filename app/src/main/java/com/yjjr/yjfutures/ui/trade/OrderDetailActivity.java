@@ -69,7 +69,7 @@ public class OrderDetailActivity extends BaseActivity {
         int color = StringUtils.getProfitColor(mContext, order.getRealizedPL());
         tvProfitYuan.setTextColor(color);
         tvProfitDollar.setTextColor(color);
-        tvProfitDollar.setText(DoubleUtil.format2Decimal(order.getRealizedPL()) + String.format("汇率(%s)", order.getExchange()));
+        tvProfitDollar.setText(DoubleUtil.format2Decimal(order.getRealizedPL()) + String.format("汇率(%s)",DoubleUtil.formatDecimal(order.getExchangeRate())));
         tvTradeSymbol.setText(order.getSymbol());
         tvTradeNum.setText(Math.abs(order.getQty()) + "手");
         tvBuyPrice.setText(StringUtils.getStringByTick(order.getOpenPrice(),quote.getTick()));
@@ -77,6 +77,8 @@ public class OrderDetailActivity extends BaseActivity {
         tvBuyTime.setText(DateUtils.formatData(order.getOpenDate()));
         tvSellTime.setText(DateUtils.formatData(order.getCloseDate()));
 //        tvTicket.setText(order.getFilledID());
+        tvCharge.setText(DoubleUtil.format2Decimal(order.getFee()));
+
         tvBuyType.setText("市价买入");
         tvSellType.setText("市价卖出");
     }

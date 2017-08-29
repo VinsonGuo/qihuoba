@@ -194,32 +194,7 @@
                 android:background="@color/background_dark"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:padding="@dimen/dp_10"
-                    android:text="@string/bzj"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="@dimen/sp_12"/>
 
-                <TextView
-                    android:id="@+id/tv_margin"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right"
-                    android:padding="@dimen/dp_10"
-                    tools:text="AB123"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="@dimen/sp_12"/>
-
-                <View
-                    android:layout_width="@dimen/common_divider_small"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/dp_10"
-                    android:background="@color/divider_color"/>
 
                 <TextView
                     android:layout_width="0dp"
@@ -241,11 +216,43 @@
                     tools:text="1手"
                     android:textColor="@color/second_text_color"
                     android:textSize="@dimen/sp_12"/>
+
+                <View
+                    android:layout_width="@dimen/common_divider_small"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:background="@color/divider_color"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left"
+                    android:visibility="gone"
+                    android:padding="@dimen/dp_10"
+                    android:text="@string/bzj"
+                    android:textColor="@color/second_text_color"
+                    android:textSize="@dimen/sp_12"/>
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tv_margin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:padding="@dimen/dp_10"
+                    tools:text="AB123"
+                    android:textColor="@color/second_text_color"
+                    android:textSize="@dimen/sp_12"/>
+
             </LinearLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:background="@color/background_dark">
 
                 <View
@@ -255,6 +262,7 @@
             </FrameLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/background_dark">
@@ -525,6 +533,7 @@
             </FrameLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/background_dark">
@@ -552,6 +561,7 @@
             </LinearLayout>
 
             <View
+                android:visibility="gone"
                 style="@style/style_divider"/>
 
 

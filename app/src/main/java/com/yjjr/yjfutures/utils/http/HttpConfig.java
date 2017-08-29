@@ -11,8 +11,8 @@ public class HttpConfig {
 
 
     //    public static final String DOMAIN = "http://www.qihuofa.com";
-    public static final String DOMAIN =/* BuildConfig.DEBUG ? "https://dev.qihuofa.com" : */"https://www.qihuofa.com";
-    public static final String DEMO_HOST = "https://demo.qihuofa.com";
+    public static final String DOMAIN = BuildConfig.DEBUG ? "https://dev.qihuofa.com" : "https://www.qihuofa.com";
+    public static final String DEMO_HOST = BuildConfig.DEBUG ? "https://dev.qihuofa.com:9101/" : "https://demo.qihuofa.com:9100/";
     public static final String BIZ_HOST = DOMAIN + ":9300";
     /**
      * 手机号码的正则

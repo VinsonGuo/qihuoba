@@ -80,8 +80,7 @@ public class PositionListFragment extends ListFragment<Holds> {
                 .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        List<Holds> data = mAdapter.getData();
-                        closeAllOrder(data);
+                        closeAllOrder();
                         dialog.dismiss();
                     }
                 })
@@ -147,7 +146,7 @@ public class PositionListFragment extends ListFragment<Holds> {
         return "您暂无商品持仓";
     }
 
-    private void closeAllOrder(List<Holds> data) {
+    private void closeAllOrder() {
         mProgressDialog.show();
         HttpManager.getBizService(mIsDemo).closeAllOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), "ALL")
                 .delay(1, TimeUnit.SECONDS)
@@ -237,10 +236,10 @@ public class PositionListFragment extends ListFragment<Holds> {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(SendOrderEvent event) {
-        loadData();
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onEvent(SendOrderEvent event) {
+//        loadData();
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {

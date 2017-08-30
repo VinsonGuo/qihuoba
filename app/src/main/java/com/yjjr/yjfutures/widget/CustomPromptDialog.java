@@ -34,7 +34,7 @@ public class CustomPromptDialog extends Dialog {
     public static class Builder {
         private Context context;
         private String title;
-        private String message;
+        private CharSequence message;
         private String positiveButtonText;
         private String negativeButtonText;
         private View contentView;
@@ -48,7 +48,7 @@ public class CustomPromptDialog extends Dialog {
             this.context = context;
         }
 
-        public Builder setMessage(String message) {
+        public Builder setMessage(CharSequence message) {
             this.message = message;
             return this;
         }
@@ -69,7 +69,7 @@ public class CustomPromptDialog extends Dialog {
          * @return
          */
         public Builder setMessage(int message) {
-            this.message = (String) context.getText(message);
+            this.message = context.getText(message);
             return this;
         }
 

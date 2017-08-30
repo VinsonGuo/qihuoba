@@ -7,13 +7,14 @@ import android.text.TextUtils;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
-import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
+import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
@@ -31,7 +32,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -70,6 +70,9 @@ public class DemoTradeActivity extends BaseActivity {
                 if (TextUtils.isEmpty(StaticStore.sDemoSymbols)) {
                     return;
                 }
+                if (BaseApplication.getInstance().isBackground()) {
+                    return;
+                }
                 HttpManager.getHttpService(true).getQuoteList(StaticStore.sDemoSymbols, StaticStore.sDemoExchange)
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override
@@ -89,12 +92,17 @@ public class DemoTradeActivity extends BaseActivity {
                             public void accept(@NonNull List<Quote> quotes) throws Exception {
 //                                EventBus.getDefault().post(new RefreshEvent());
                             }
-                        }, new Consumer<Throwable>() {
+                        }, RxUtils.commonErrorConsumer());
+                HttpManager.getBizService(true).getFunds()
+                        .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
+                        .compose(mContext.<BizResponse<Funds>>bindUntilEvent(ActivityEvent.DESTROY))
+                        .subscribe(new Consumer<BizResponse<Funds>>() {
                             @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception {
-                                LogUtils.e(throwable);
+                            public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
+                                Funds result = fundsBizResponse.getResult();
+                                StaticStore.setFunds(true, result);
                             }
-                        });
+                        }, RxUtils.commonErrorConsumer());
             }
         }, 3000, 1000);
 
@@ -150,7 +158,6 @@ public class DemoTradeActivity extends BaseActivity {
 //                        mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
 //                        mLoadingView.setVisibility(View.GONE);
                         getHolding();
-                        getFund();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -162,15 +169,15 @@ public class DemoTradeActivity extends BaseActivity {
     }
 
     private void getHolding() {
-        HttpManager.getHttpService(true).getHolding(BaseApplication.getInstance().getTradeToken(true))
-                .compose(RxUtils.<List<Holding>>applySchedulers())
-                .compose(this.<List<Holding>>bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribe(new Consumer<List<Holding>>() {
+        HttpManager.getBizService(true).getHolding()
+                .compose(RxUtils.<BizResponse<List<Holds>>>applyBizSchedulers())
+                .compose(this.<BizResponse<List<Holds>>>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<List<Holds>>>() {
                     @Override
-                    public void accept(@NonNull List<Holding> holdings) throws Exception {
+                    public void accept(@NonNull BizResponse<List<Holds>> response) throws Exception {
                         //将持仓的品种保存起来
                         StaticStore.sDemoHoldSet = new HashSet<>();
-                        for (Holding holding : holdings) {
+                        for (Holds holding : response.getResult()) {
                             if (holding.getQty() == 0) continue;
                             StaticStore.sDemoHoldSet.add(holding.getSymbol());
                         }
@@ -181,22 +188,28 @@ public class DemoTradeActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SendOrderEvent event) {
         getHolding();
-        getFund();
     }
 
-    private void getFund() {
-        HttpManager.getBizService(true).getFunds()
-                .retry(3)
-                .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
-                .compose(this.<BizResponse<Funds>>bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribe(new Consumer<BizResponse<Funds>>() {
-                    @Override
-                    public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
-                        Funds result = fundsBizResponse.getResult();
-                        mTradeInfoView.setValues(result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
-                    }
-                }, RxUtils.commonErrorConsumer());
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RefreshEvent event) {
+        if (mTradeInfoView == null) return;
+        Funds result = StaticStore.getFunds(true);
+        mTradeInfoView.setValues(result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
     }
+
+//    private void getFund() {
+//        HttpManager.getBizService(true).getFunds()
+//                .retry(3)
+//                .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
+//                .compose(this.<BizResponse<Funds>>bindUntilEvent(ActivityEvent.DESTROY))
+//                .subscribe(new Consumer<BizResponse<Funds>>() {
+//                    @Override
+//                    public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
+//                        Funds result = fundsBizResponse.getResult();
+//                        mTradeInfoView.setValues(result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
+//                    }
+//                }, RxUtils.commonErrorConsumer());
+//    }
 
     @Override
     protected void onDestroy() {

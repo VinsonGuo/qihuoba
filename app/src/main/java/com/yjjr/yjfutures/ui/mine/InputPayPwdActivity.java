@@ -61,7 +61,7 @@ public class InputPayPwdActivity extends RxActivity {
                     @Override
                     public ObservableSource<BizResponse> apply(@NonNull BizResponse response) throws Exception {
                         if (response.getRcode() != 0) {
-                            throw new RuntimeException(response.getRmsg());
+                            throw new PayPwdException(response.getRmsg());
                         }
                         return HttpManager.getBizService().extractApply(money, "alipay");
                     }
@@ -80,7 +80,16 @@ public class InputPayPwdActivity extends RxActivity {
                         LogUtils.e(throwable);
                         ToastUtils.show(mContext, throwable.getMessage());
                         mPasswordView.clearPassword();
+                        if (!(throwable instanceof PayPwdException)) {
+                            finish();
+                        }
                     }
                 });
+    }
+
+    public static class PayPwdException extends RuntimeException {
+        public PayPwdException(String msg) {
+            super(msg);
+        }
     }
 }

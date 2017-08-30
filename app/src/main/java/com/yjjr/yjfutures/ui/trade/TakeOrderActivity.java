@@ -26,7 +26,6 @@ import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseActivity;
-import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.ArithUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
@@ -111,7 +110,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         mRgHand = (RadioGroup) findViewById(R.id.rg_hand);
         mRgSl = (RadioGroup) findViewById(R.id.rg_sl);
         TextView tvDesc = (TextView) findViewById(R.id.tv_desc);
-        tvDesc.setText(mIsDemo ? "操纵盘，实盘交易实时为您自动匹配合作投资人，执行您的指令，并与您共享收益共担风险。" : StringUtils.randomTrader() + "为您本笔交易合作投资人，执行您的交易指令，并与您共享收益共担风险。");
+        tvDesc.setText(mIsDemo ? "实盘交易实时为您自动匹配合作投资人，执行您的指令，并与您共享收益共担风险。" : StringUtils.randomTrader() + "为您本笔交易合作投资人，执行您的交易指令，并与您共享收益共担风险。");
         mRgSl.setOnCheckedChangeListener(this);
         mRgHand.setOnCheckedChangeListener(this);
         mProgressDialog = new ProgressDialog(mContext);
@@ -173,7 +172,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                         mTvInfo.setText(String.format("持仓至%s自动平仓", mContractInfo.getEndTradeTime()));
                         Map<String, Double> map = mContractInfo.getLossLevel();
                         for (Map.Entry<String, Double> next : map.entrySet()) {
-                            mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
+                            mRgSl.addView(createRadioButton(next.getKey(), Double.parseDouble(next.getKey())));
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
                         Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
@@ -204,7 +203,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                 }
 
                 Double sl = (Double) mRgSl.findViewById(mRgSl.getCheckedRadioButtonId()).getTag();
-                HttpManager.getBizService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, mType == TYPE_BUY ? "买入" : "卖出", 0, qty, "市价",
+                RxUtils.createSendOrderObservable(mIsDemo, mSymbol, mType == TYPE_BUY ? "买入" : "卖出", qty,
                         sl, sl * mContractInfo.getMaxProfitMultiply(), (double) mTvTradeFee.getTag(), (double) mTvMargin.getTag())
                         .delay(1, TimeUnit.SECONDS)
                         .compose(RxUtils.<BizResponse<CommonResponse>>applyBizSchedulers())

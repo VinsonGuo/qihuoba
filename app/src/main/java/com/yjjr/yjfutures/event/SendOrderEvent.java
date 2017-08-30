@@ -6,4 +6,27 @@ package com.yjjr.yjfutures.event;
  */
 
 public class SendOrderEvent {
+    private int delay;
+
+    public SendOrderEvent() {
+    }
+
+    public SendOrderEvent(int delay) {
+        this.delay = delay;
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
+    }
+
+    @Override
+    public String toString() {
+        return "SendOrderEvent{" +
+                "delay=" + delay +
+                '}';
+    }
 }

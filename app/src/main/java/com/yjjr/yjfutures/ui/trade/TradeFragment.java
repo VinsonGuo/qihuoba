@@ -34,6 +34,7 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.mine.UserInfoActivity;
+import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
@@ -315,8 +316,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvDirection = (TextView) v.findViewById(R.id.tv_direction);
         tvYueValue = (TextView) v.findViewById(R.id.tv_yue_value);
         tvMarginValue = (TextView) v.findViewById(R.id.tv_margin_value);
-        if(mIsDemo) {
-           TextView tvYue = (TextView) v.findViewById(R.id.tv_yue);
+        if (mIsDemo) {
+            TextView tvYue = (TextView) v.findViewById(R.id.tv_yue);
             TextView tvMargin = (TextView) v.findViewById(R.id.tv_margin);
             tvYue.setText("可用金币");
             tvMargin.setText("保证金币");
@@ -339,19 +340,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     protected void initData() {
         super.initData();
         getHolding();
-        HttpManager.getBizService(mIsDemo).getFunds()
-                .retry(3)
-                .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
-                .compose(this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<BizResponse<Funds>>() {
-                    @Override
-                    public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
-                        Funds result = fundsBizResponse.getResult();
-                        tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
-                        tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
-//                        tvNetValue.setText(DoubleUtil.format2Decimal(result.getNetAssets()));
-                    }
-                }, RxUtils.commonErrorConsumer());
     }
 
     private void getHolding() {
@@ -418,17 +406,16 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 });
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(SendOrderEvent event) {
-        initData();
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-        fillViews(quote);
-        if (vgOrder.getVisibility() == View.VISIBLE && getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 0) {
+        if (getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 0) {
+            Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+            fillViews(quote);
             getHolding();
+            Funds result = StaticStore.getFunds(mIsDemo);
+            tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
+            tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
         }
     }
 
@@ -446,9 +433,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.tv_left:
                 if (TextUtils.equals("平仓", leftText)) {
-                    if(fastTakeOrder != null) {
+                    if (fastTakeOrder != null) {
                         closeOrder();
-                    }else {
+                    } else {
                         mCloseDialog.show();
                     }
                 } else {
@@ -462,9 +449,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.tv_right:
                 if (TextUtils.equals("平仓", rightText)) {
-                    if(fastTakeOrder != null) {
+                    if (fastTakeOrder != null) {
                         closeOrder();
-                    }else {
+                    } else {
                         mCloseDialog.show();
                     }
                 } else {
@@ -487,15 +474,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             .subscribe(new Consumer<BizResponse>() {
                                 @Override
                                 public void accept(@NonNull BizResponse response) throws Exception {
-                                    mProgressDialog.show();
-                                    tvMarginValue.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mProgressDialog.dismiss();
-                                            ToastUtils.show(mContext, R.string.opera_success);
-                                            EventBus.getDefault().post(new SendOrderEvent());
-                                        }
-                                    },5000);
+                                    ToastUtils.show(mContext, R.string.opera_success);
                                 }
                             }, new Consumer<Throwable>() {
                                 @Override
@@ -505,13 +484,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                                 }
                             });
                 } else {
-                    UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
-                    if (userInfo == null || TextUtils.isEmpty(userInfo.getIdcard()) || TextUtils.isEmpty(userInfo.getAlipay())) {
-                        ToastUtils.show(mContext, R.string.please_finish_user_info);
-                        UserInfoActivity.startActivity(mContext);
-                    } else {
-                        DepositActivity.startActivity(mContext);
-                    }
+                    ActivityTools.toDeposit(mContext);
                 }
                 break;
             case R.id.tv_kchart:
@@ -570,7 +543,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     private void takeOrder(FastTakeOrderConfig order, final String type) {
         mProgressDialog.show();
-        HttpManager.getBizService(mIsDemo).sendOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), mSymbol, type, 0, Math.abs(order.getQty()), "市价",
+        RxUtils.createSendOrderObservable(mIsDemo, mSymbol, type, Math.abs(order.getQty()),
                 order.getStopLose(), order.getStopWin(), order.getFee(), order.getMarginYJ())
                 .delay(1, TimeUnit.SECONDS)
                 .compose(RxUtils.<BizResponse<CommonResponse>>applyBizSchedulers())

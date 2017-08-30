@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
+import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -21,6 +23,8 @@ import com.yjjr.yjfutures.widget.TradeInfoView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -76,27 +80,21 @@ public class OrderFragment extends BaseFragment {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, positionListFragment)
                 .commit();
         positionListFragment.setUserVisibleHint(true);
-        getTradeInfo();
     }
+
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onEvent(SendOrderEvent event) {
+//        getTradeInfo();
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(SendOrderEvent event) {
-        getTradeInfo();
+    public void onEvent(RefreshEvent event) {
+        if(isFragmentVisible()) {
+            Funds result = StaticStore.getFunds(mIsDemo);
+            mTradeInfoView.setValues(mIsDemo, result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
+        }
     }
 
-    private void getTradeInfo() {
-        HttpManager.getBizService(mIsDemo).getFunds()
-                .retry(3)
-                .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
-                .compose(this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<BizResponse<Funds>>() {
-                    @Override
-                    public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
-                        Funds result = fundsBizResponse.getResult();
-                        mTradeInfoView.setValues(mIsDemo, result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
-                    }
-                }, RxUtils.commonErrorConsumer());
-    }
 
     @Override
     public void onDestroy() {

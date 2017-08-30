@@ -44,7 +44,7 @@ public class TradeInfoView extends LinearLayout {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TradeInfoView);
         boolean isDemo = typedArray.getBoolean(R.styleable.TradeInfoView_isDemo, false);
         if (isDemo) {
-            mTvName1.setText("履约金币");
+            mTvName1.setText("保证金币");
             mTvName2.setText("可用金币");
             mTvName3.setText("总金币");
         }
@@ -59,7 +59,7 @@ public class TradeInfoView extends LinearLayout {
 
     public void setValues(boolean isDemo, double value1, double value2, double value3) {
         if (isDemo) {
-            mTvName1.setText("履约金币");
+            mTvName1.setText("保证金币");
             mTvName2.setText("可用金币");
             mTvName3.setText("总金币");
         }

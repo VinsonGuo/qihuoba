@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,8 +67,9 @@ public class DialogUtils {
         boolean isForceUpdate = android == -1;
         CustomPromptDialog dialog = new CustomPromptDialog.Builder(context)
                 .isShowClose(!isForceUpdate)
+                .setMessageGravity(Gravity.LEFT)
                 .setMessage(update.getRemark())
-                .setMessageDrawableId(R.drawable.ic_info)
+                .setMessageDrawableId(R.drawable.ic_update)
                 .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -137,8 +139,8 @@ public class DialogUtils {
                         ContractInfo mContractInfo = response.getResult();
                         Map<String, Double> map = mContractInfo.getLossLevel();
                         for (Map.Entry<String, Double> next : map.entrySet()) {
-                            rgSl.addView(createRedRadioButton(next.getKey(), next.getValue()));
-                            rgSw.addView(createGreenRadioButton(next.getKey(), next.getValue()));
+                            rgSl.addView(createRedRadioButton(next.getKey(), Double.parseDouble(next.getKey())));
+                            rgSw.addView(createGreenRadioButton(next.getKey(), Double.parseDouble(next.getKey())));
                         }
                         ((RadioButton) rgSl.getChildAt(1)).setChecked(true);
                         ((RadioButton) rgSw.getChildAt(1)).setChecked(true);
@@ -156,7 +158,7 @@ public class DialogUtils {
                                 .subscribe(new Consumer<BizResponse<CommonResponse>>() {
                                     @Override
                                     public void accept(@NonNull BizResponse<CommonResponse> r) throws Exception {
-                                        ToastUtils.show(context, sl + "设置成功" + sw);
+                                        ToastUtils.show(context, r.getRmsg());
                                     }
                                 }, RxUtils.commonErrorConsumer());
                         dialog.dismiss();

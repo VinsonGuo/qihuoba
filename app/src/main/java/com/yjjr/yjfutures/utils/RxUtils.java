@@ -8,6 +8,7 @@ import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
@@ -128,6 +129,37 @@ public class RxUtils {
                         LogUtils.e(throwable);
                         ToastUtils.show(mContext, throwable.getMessage());
                         btn.setEnabled(true);
+                    }
+                });
+    }
+
+    /**
+     * 统一的下单接口
+     */
+    public static Observable<BizResponse<CommonResponse>> createSendOrderObservable(
+            final boolean isDemo,
+            final String symbol,
+            final String buysell,
+            final int qty,
+            final double lossPriceLine,
+            final double profitPriceLine,
+            final double fee,
+            final double marginYJ) {
+        return HttpManager.getBizService(isDemo).getFunds()
+                .flatMap(new Function<BizResponse<Funds>, ObservableSource<BizResponse<CommonResponse>>>() {
+                    @Override
+                    public ObservableSource<BizResponse<CommonResponse>> apply(@NonNull BizResponse<Funds> t) throws Exception {
+                        if (t.getRcode() == 99) {
+                            EventBus.getDefault().post(new UpdateUserInfoEvent());
+                        }
+                        if (t.getRcode() != 0) {
+                            throw new RuntimeException(t.getRmsg());
+                        }
+                        Funds result = t.getResult();
+                        if (marginYJ > result.getAvailableFunds()) {
+                            throw new RuntimeException("可用余额不足，请充值后再下单");
+                        }
+                        return HttpManager.getBizService(isDemo).sendOrder(BaseApplication.getInstance().getTradeToken(isDemo), symbol, buysell, 0, qty, "市价", lossPriceLine, profitPriceLine, fee, marginYJ);
                     }
                 });
     }

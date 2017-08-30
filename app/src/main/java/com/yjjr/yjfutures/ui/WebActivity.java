@@ -61,8 +61,8 @@ public class WebActivity extends BaseActivity {
                 if (type == TYPE_CSCENTER) {
                     DialogUtils.createCustomServiceDialog(mContext).show();
                 } else if (type == TYPE_SHARE) {
-                    ActivityTools.share(mContext, getString(R.string.app_name), url);
-//                    ShareUtils.share(mContext);
+//                    ActivityTools.share(mContext, getString(R.string.app_name), url);
+                    ShareUtils.share(mContext,url,"title","desc");
                 }
             }
         });

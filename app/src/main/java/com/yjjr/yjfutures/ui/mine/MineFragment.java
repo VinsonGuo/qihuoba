@@ -12,14 +12,17 @@ import android.widget.TextView;
 
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.UserInfo;
+import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DepositActivity;
+import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -44,6 +47,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     private TextView tvYue;
     private TextView tvMargin;
     private TextView tvNet;
+    private TextView mTvTitle;
 
     public MineFragment() {
         // Required empty public constructor
@@ -57,40 +61,18 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         tvYue = (TextView) v.findViewById(R.id.tv_yue);
         tvMargin = (TextView) v.findViewById(R.id.tv_margin);
         tvNet = (TextView) v.findViewById(R.id.tv_net);
-        final TextView tvTitle = (TextView) v.findViewById(R.id.tv_title);
+        mTvTitle = (TextView) v.findViewById(R.id.tv_title);
         final SwipeRefreshLayout refresh = (SwipeRefreshLayout) v.findViewById(R.id.refresh);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
                 if(userInfo != null) {
-                    tvTitle.setText(userInfo.getName());
+                    mTvTitle.setText(userInfo.getName());
                 }
-                HttpManager.getBizService().getFunds()
-                        .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
-                        .compose(MineFragment.this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
-                        .subscribe(new Consumer<BizResponse<Funds>>() {
-                            @Override
-                            public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
-                                Funds result = fundsBizResponse.getResult();
-                                tvYue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
-                                tvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
-                                tvNet.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getNetAssets()));
-                                refresh.setRefreshing(false);
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception {
-                                LogUtils.e(throwable);
-                                refresh.setRefreshing(false);
-                            }
-                        });
+                refresh.setRefreshing(false);
             }
         });
-        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
-        if(userInfo != null) {
-            tvTitle.setText(userInfo.getName());
-        }
 
         tvOne.setOnClickListener(this);
         tvTwo.setOnClickListener(this);
@@ -115,29 +97,22 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     protected void initData() {
         super.initData();
-        HttpManager.getBizService().getFunds()
-                .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
-                .compose(this.<BizResponse<Funds>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<BizResponse<Funds>>() {
-                    @Override
-                    public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
-                        Funds result = fundsBizResponse.getResult();
-                        tvYue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
-                        tvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
-                        tvNet.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getNetAssets()));
-                    }
-                }, RxUtils.commonErrorConsumer());
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if(userInfo != null) {
+            mTvTitle.setText(userInfo.getName());
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(SendOrderEvent event) {
-        initData();
+    public void onEvent(RefreshEvent event) {
+        Funds result = StaticStore.getFunds(false);
+        tvYue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
+        tvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
+        tvNet.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getNetAssets()));
     }
 
     @Override
     public void onClick(View v) {
-        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
-        if (userInfo == null) return;
         switch (v.getId()) {
             case R.id.btn_login:
                 LoginActivity.startActivity(mContext);
@@ -161,20 +136,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 WebActivity.startActivity(mContext, HttpConfig.URL_WARNING);
                 break;
             case R.id.btn_deposit:
-                if (TextUtils.isEmpty(userInfo.getIdcard()) || TextUtils.isEmpty(userInfo.getAlipay())) {
-                    ToastUtils.show(mContext, R.string.please_finish_user_info);
-                    UserInfoActivity.startActivity(mContext);
-                } else {
-                    DepositActivity.startActivity(mContext);
-                }
+                ActivityTools.toDeposit(mContext);
                 break;
             case R.id.btn_withdraw:
-                if (TextUtils.isEmpty(userInfo.getIdcard()) || TextUtils.isEmpty(userInfo.getAlipay())||!userInfo.isExistPayPwd()) {
-                    ToastUtils.show(mContext, R.string.please_finish_user_info);
-                    UserInfoActivity.startActivity(mContext);
-                } else {
-                    WithdrawActivity.startActivity(mContext);
-                }
+                ActivityTools.toWithdraw(mContext);
                 break;
             case R.id.tv_customer_service:
                 WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);

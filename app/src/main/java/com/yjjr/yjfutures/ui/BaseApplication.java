@@ -68,7 +68,7 @@ public class BaseApplication extends Application implements Application.Activity
     }
 
     private void initUmeng() {
-        PlatformConfig.setWeixin("wx972e81f96607a655", "5de26e7abee9a6ae1bce93169723346c");
+        PlatformConfig.setWeixin("wx9f81e3beeffcd53c", "cb8cd620c673659ab700860dbc8b33c");
 //        PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
 //        PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad", "http://sns.whalecloud.com");
         UMShareAPI.get(this);

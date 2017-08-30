@@ -1,6 +1,7 @@
 package com.yjjr.yjfutures.store;
 
 import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.model.biz.Funds;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -24,6 +25,9 @@ public class StaticStore {
     // 模拟盘的数据
     private static Map<String, Quote> sDemoQuoteMap = new LinkedHashMap<>();
 
+    private static Funds sFunds = new Funds();
+    private static Funds sDemoFunds = new Funds();
+
     public static void putQuote(Quote quote, boolean isDemo) {
         if (isDemo) {
             sDemoQuoteMap.put(quote.getSymbol(), quote);
@@ -46,5 +50,17 @@ public class StaticStore {
         } else {
             return sQuoteMap.values();
         }
+    }
+
+    public static void setFunds(boolean isDemo, Funds result) {
+        if (isDemo) {
+            sDemoFunds = result;
+        } else {
+            sFunds = result;
+        }
+    }
+
+    public static Funds getFunds(boolean isDemo) {
+        return isDemo ? sDemoFunds : sFunds;
     }
 }

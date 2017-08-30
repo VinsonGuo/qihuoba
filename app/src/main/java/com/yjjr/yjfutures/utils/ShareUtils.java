@@ -19,10 +19,10 @@ import com.yjjr.yjfutures.R;
  */
 
 public class ShareUtils {
-    public static void share(final Activity activity) {
-        UMWeb  web = new UMWeb("http://www.baidu.com");
-        web.setTitle("This is music title");//标题
-        web.setDescription("my description");//描述
+    public static void share(final Activity activity,String url, String title,String desc) {
+        UMWeb  web = new UMWeb(url);
+        web.setTitle(title);//标题
+        web.setDescription(desc);//描述
         web.setThumb(new UMImage(activity, R.mipmap.ic_launcher_icon));
         final CustomShareListener listener = new CustomShareListener(activity);
         ShareAction mShareAction = new ShareAction(activity).setDisplayList(

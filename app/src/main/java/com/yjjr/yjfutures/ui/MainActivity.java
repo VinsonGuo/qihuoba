@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
@@ -18,6 +19,7 @@ import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Update;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
@@ -109,6 +111,7 @@ public class MainActivity extends BaseActivity {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
+                EventBus.getDefault().post(new RefreshEvent());
                 DateTime dateTime = new DateTime();
                 if (dateTime.getSecondOfMinute() == 1) {
                     EventBus.getDefault().post(new OneMinuteEvent());
@@ -136,14 +139,19 @@ public class MainActivity extends BaseActivity {
                         .subscribe(new Consumer<List<Quote>>() {
                             @Override
                             public void accept(@NonNull List<Quote> quotes) throws Exception {
-                                EventBus.getDefault().post(new RefreshEvent());
                             }
-                        }, new Consumer<Throwable>() {
+                        }, RxUtils.commonErrorConsumer());
+
+                HttpManager.getBizService().getFunds()
+                        .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
+                        .compose(mContext.<BizResponse<Funds>>bindUntilEvent(ActivityEvent.DESTROY))
+                        .subscribe(new Consumer<BizResponse<Funds>>() {
                             @Override
-                            public void accept(@NonNull Throwable throwable) throws Exception {
-                                LogUtils.e(throwable);
+                            public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
+                                Funds result = fundsBizResponse.getResult();
+                                StaticStore.setFunds(false, result);
                             }
-                        });
+                        }, RxUtils.commonErrorConsumer());
             }
         }, 0, 1000);
     }

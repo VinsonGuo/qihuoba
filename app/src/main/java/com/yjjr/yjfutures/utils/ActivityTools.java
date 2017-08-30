@@ -10,7 +10,18 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.RawRes;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.WindowManager;
+
+import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.biz.UserInfo;
+import com.yjjr.yjfutures.ui.BaseApplication;
+import com.yjjr.yjfutures.ui.mine.AuthActivity;
+import com.yjjr.yjfutures.ui.mine.BindCardActivity;
+import com.yjjr.yjfutures.ui.mine.SetTradePwdActivity;
+import com.yjjr.yjfutures.ui.mine.UserInfoActivity;
+import com.yjjr.yjfutures.ui.mine.WithdrawActivity;
+import com.yjjr.yjfutures.ui.trade.DepositActivity;
 
 
 /**
@@ -118,11 +129,56 @@ public class ActivityTools {
         context.startActivity(intent);
     }
 
-    public static void share(Context context,String content, String url) {
+    public static void share(Context context, String content, String url) {
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_SUBJECT, content);
         i.putExtra(Intent.EXTRA_TEXT, url);
         context.startActivity(Intent.createChooser(i, content));
     }
+
+    public static void toDeposit(Context context) {
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if (userInfo == null) {
+            ToastUtils.show(context, R.string.please_finish_user_info);
+            UserInfoActivity.startActivity(context);
+            return;
+        }
+        if (TextUtils.isEmpty(userInfo.getIdcard())) {
+            ToastUtils.show(context, R.string.please_finish_user_info);
+//            UserInfoActivity.startActivity(context);
+            AuthActivity.startActivity(context);
+        } else if (TextUtils.isEmpty(userInfo.getAlipay())) {
+            ToastUtils.show(context, R.string.please_finish_alipay);
+//            UserInfoActivity.startActivity(context);
+            BindCardActivity.startActivity(context);
+        } else {
+            DepositActivity.startActivity(context);
+        }
+    }
+
+    public static void toWithdraw(Context context) {
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if (userInfo == null) {
+            ToastUtils.show(context, R.string.please_finish_user_info);
+            UserInfoActivity.startActivity(context);
+            return;
+        }
+        if (TextUtils.isEmpty(userInfo.getIdcard())) {
+            ToastUtils.show(context, R.string.please_finish_user_info);
+//            UserInfoActivity.startActivity(context);
+            AuthActivity.startActivity(context);
+        } else if (TextUtils.isEmpty(userInfo.getAlipay())) {
+            ToastUtils.show(context, R.string.please_finish_alipay);
+//            UserInfoActivity.startActivity(context);
+            BindCardActivity.startActivity(context);
+        } else if(!userInfo.isExistPayPwd()){
+            ToastUtils.show(context, R.string.please_finish_trade_pwd);
+//            UserInfoActivity.startActivity(context);
+            SetTradePwdActivity.startActivity(context);
+        }else {
+            WithdrawActivity.startActivity(context);
+        }
+    }
+
 }

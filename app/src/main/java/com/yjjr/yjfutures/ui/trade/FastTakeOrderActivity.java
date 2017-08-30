@@ -204,7 +204,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                         mTvInfo.setText(String.format("持仓至%s自动平仓", mContractInfo.getEndTradeTime()));
                         Map<String, Double> map = mContractInfo.getLossLevel();
                         for (Map.Entry<String, Double> next : map.entrySet()) {
-                            mRgSl.addView(createRadioButton(next.getKey(), next.getValue()));
+                            mRgSl.addView(createRadioButton(next.getKey(), Double.parseDouble(next.getKey())));
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
                         mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee()) + "元");

@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/background_dark"
-        app:main_title="模拟练习场地"/>
+        app:main_title="模拟练习场"/>
 
     <FrameLayout
         android:id="@+id/fl_container"

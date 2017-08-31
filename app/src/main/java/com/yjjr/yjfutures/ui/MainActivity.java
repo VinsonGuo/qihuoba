@@ -18,6 +18,7 @@ import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Update;
@@ -180,6 +181,15 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void accept(@NonNull BizResponse<UserInfo> response) throws Exception {
                         BaseApplication.getInstance().setUserInfo(response.getResult());
+                    }
+                }, RxUtils.commonErrorConsumer());
+        HttpManager.getHttpService().userLogin(account, password)
+                .compose(RxUtils.<UserLoginResponse>applySchedulers())
+                .compose(this.<UserLoginResponse>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new Consumer<UserLoginResponse>() {
+                    @Override
+                    public void accept(@NonNull UserLoginResponse userLoginResponse) throws Exception {
+                        BaseApplication.getInstance().setTradeToken(userLoginResponse.getCid());
                     }
                 }, RxUtils.commonErrorConsumer());
     }

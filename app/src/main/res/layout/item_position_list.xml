@@ -141,6 +141,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_third_text_color_border_bg"
             android:gravity="center"
+            android:visibility="gone"
             android:padding="2dp"
             android:text="@string/setting_lose_stop_and_lose_win"
             android:textColor="@color/third_text_color"

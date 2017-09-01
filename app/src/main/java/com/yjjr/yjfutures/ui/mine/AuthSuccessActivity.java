@@ -37,8 +37,8 @@ public class AuthSuccessActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 EventBus.getDefault().post(new FinishEvent());
-//                finish();
                 BindCardActivity.startActivity(mContext);
+                finish();
             }
         });
         EventBus.getDefault().post(new UpdateUserInfoEvent());

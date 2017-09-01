@@ -64,6 +64,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
     private CandleStickChart mChart;
     private String mSymbol;
+    private boolean mIsDemo;
     /**
      * 数据类型  day=日线 hour=小时图 min15=15分钟图 min5=5分钟图 min=1分钟图
      */
@@ -74,10 +75,11 @@ public class CandleStickChartFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static CandleStickChartFragment newInstance(String symbol) {
+    public static CandleStickChartFragment newInstance(String symbol, boolean isDemo) {
         CandleStickChartFragment fragment = new CandleStickChartFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.CONTENT_PARAMETER, symbol);
+        bundle.putBoolean(Constants.CONTENT_PARAMETER_2, isDemo);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -92,6 +94,7 @@ public class CandleStickChartFragment extends BaseFragment {
         EventBus.getDefault().register(this);
         if (getArguments() != null) {
             mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER);
+            mIsDemo = getArguments().getBoolean(Constants.CONTENT_PARAMETER_2);
         }
     }
 
@@ -125,7 +128,7 @@ public class CandleStickChartFragment extends BaseFragment {
                 if (mList != null && value < mList.size()) {
                     DateTime dateTime = new DateTime(mList.get((int) value).getsDate());
                     if (mType.equals(DAY)) {
-                        return android.text.format.DateUtils.formatDateTime(mContext, dateTime.getMillis(), android.text.format.DateUtils.FORMAT_ABBREV_ALL);
+                        return DateUtils.formatDataOnly(dateTime.getMillis());
                     }
                     return DateUtils.formatTime(dateTime.getMillis());
                 }
@@ -141,7 +144,7 @@ public class CandleStickChartFragment extends BaseFragment {
         rightAxis.setGridLineWidth(0.5f);
 
         rightAxis.enableGridDashedLine(20, 5, 0);
-        final Quote quote = StaticStore.getQuote(mSymbol, false);
+        final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -207,7 +210,7 @@ public class CandleStickChartFragment extends BaseFragment {
     public void onEvent(OneMinuteEvent event) {
         if (mList != null && TextUtils.equals(mType, MIN)) {
             HisData hisData = mList.get(mList.size() - 1);
-            final Quote quote = StaticStore.getQuote(mSymbol, false);
+            final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
             HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)
                     .filter(new Predicate<List<HisData>>() {
                         @Override
@@ -231,7 +234,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
     public void loadDataByType(String type) {
         mType = type;
-        final Quote quote = StaticStore.getQuote(mSymbol, false);
+        final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         DateTime dateTime;
         if (quote.isRest()) { //未开盘，数据加载前一天的
             dateTime = new DateTime();

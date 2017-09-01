@@ -10,15 +10,22 @@ import android.text.TextUtils;
 
 import com.facebook.stetho.Stetho;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.IUmengCallback;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.PushAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.model.biz.UserInfo;
+import com.yjjr.yjfutures.store.FastOrderSharePrefernce;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.mine.LoginActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
 
 import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.android.agoo.huawei.HuaWeiRegister;
+import org.android.agoo.xiaomi.MiPushRegistar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +84,25 @@ public class BaseApplication extends Application implements Application.Activity
         MobclickAgent.enableEncrypt(true);
         MobclickAgent.setDebugMode(BuildConfig.DEBUG);
         MobclickAgent.setCheckDevice(false);
+
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.setPushCheck(true);
+//注册推送服务，每次调用register方法都会回调该接口
+        mPushAgent.register(new IUmengRegisterCallback() {
+
+            @Override
+            public void onSuccess(String deviceToken) {
+                //注册成功会返回device token
+                LogUtils.d("device token -- %s", deviceToken);
+            }
+
+            @Override
+            public void onFailure(String s, String s1) {
+                LogUtils.e(s + "\n" + s1);
+            }
+        });
+        MiPushRegistar.register(this, "2882303761517603946", "5871760360946");
+        HuaWeiRegister.register(this);
     }
 
     @Override
@@ -133,6 +159,8 @@ public class BaseApplication extends Application implements Application.Activity
     }
 
     public void closeApplication() {
+        // 清除快速下单的信息
+        FastOrderSharePrefernce.clearCache();
         for (Activity a : mActivities) {
             if (a != null && !a.isFinishing()) {
                 a.finish();

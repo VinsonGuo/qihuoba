@@ -21,70 +21,6 @@ import java.util.Date;
  */
 public class DateUtils {
 
-
-    /**
-     * @param dateString yyyy-MM-dd'T'HH:mm:ss
-     * @return
-     */
-    public static String formatData5(String dateString) {
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = dateFormat.parse(dateString);
-            String formatDate = dateFormat2.format(date);
-            return formatDate;
-        } catch (Exception e) {
-            LogUtils.e(e.toString());
-            DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
-            String formatDate = dateFormat2.format(new Date());
-            return formatDate;
-        }
-    }
-
-    public static String formatData8(String dateString) {
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date = dateFormat.parse(dateString);
-            String formatDate = dateFormat2.format(date);
-            return formatDate;
-        } catch (Exception e) {
-            LogUtils.e(e.toString());
-        }
-        return "";
-    }
-
-    /**
-     * @param dateString yyyy-MM-dd'T'HH:mm:ss
-     * @return
-     */
-    public static String formatData4(String dateString) {
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            DateFormat dateFormat2 = new SimpleDateFormat("MM/dd HH:mm");
-            Date date = dateFormat.parse(dateString);
-            String formatDate = dateFormat2.format(date);
-            return formatDate;
-        } catch (Exception e) {
-            LogUtils.e(e.toString());
-            DateFormat dateFormat2 = new SimpleDateFormat("MM/dd HH:mm");
-            String formatDate = dateFormat2.format(new Date());
-            return formatDate;
-        }
-    }
-
-    public static String getTimeNow(){
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            String formatDate = dateFormat.format(new Date());
-            return formatDate;
-        } catch (Exception e) {
-            LogUtils.e(e.toString());
-        }
-        return "";
-    }
-
-
     public static String formatData(long time) {
         try {
             DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -96,19 +32,15 @@ public class DateUtils {
         return "";
     }
 
-    public static String formatDataNoT(long time) {
-        return new DateTime(time, DateTimeZone.forID("GMT")).toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public static long parseData(String dataString) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    public static String formatDataOnly(long time) {
         try {
-            Date date = dateFormat.parse(dataString);
-            return date.getTime();
+            DateFormat dateFormat2 = new SimpleDateFormat("MM-dd");
+            String formatDate = dateFormat2.format(time);
+            return formatDate;
         } catch (Exception e) {
             LogUtils.e(e.toString());
         }
-        return 0;
+        return "";
     }
 
 

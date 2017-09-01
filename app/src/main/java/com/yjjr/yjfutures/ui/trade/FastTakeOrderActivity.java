@@ -24,6 +24,7 @@ import com.yjjr.yjfutures.model.FastTakeOrderConfig;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
+import com.yjjr.yjfutures.store.FastOrderSharePrefernce;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
@@ -110,7 +111,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                 WebActivity.startActivity(mContext, HttpConfig.URL_AGREEMENT1);
             }
         });
-        final FastTakeOrderConfig fastTakeOrder = UserSharePrefernce.getFastTakeOrder(mContext, mSymbol);
+        final FastTakeOrderConfig fastTakeOrder = FastOrderSharePrefernce.getFastTakeOrder(mContext, mSymbol);
         btnOpen.setText(fastTakeOrder != null ? "关闭" : "开启");
         headerView.bindActivity(mContext);
         Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
@@ -159,7 +160,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                     config.setFee((Double) mTvTradeFee.getTag());
                     config.setMarginYJ((Double) mTvMargin.getTag());
                 }
-                UserSharePrefernce.setFastTakeOrder(mContext, mSymbol, config);
+                FastOrderSharePrefernce.setFastTakeOrder(mContext, mSymbol, config);
                 EventBus.getDefault().post(new FastTakeOrderEvent(config != null));
             }
         });
@@ -207,9 +208,8 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                             mRgSl.addView(createRadioButton(next.getKey(), Double.parseDouble(next.getKey())));
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
-                        mTvTradeFee.setText(DoubleUtil.formatDecimal(mContractInfo.getTransactionFee()) + "元");
                         Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-                        String name = StringUtils.curreny2Word(quote.getCurrency());
+                        String name = StringUtils.currency2Word(quote.getCurrency());
                         mTvExchange.setText(String.format("1%s = %s人民币", name, mContractInfo.getCnyExchangeRate()));
                         mTvRate.setText(String.format("汇率 > %s人民币", name));
                     }
@@ -219,6 +219,7 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
     //mTvMargin.setText(String.format("￥%s\n($%s)", rb.getText(), DoubleUtil.formatDecimal(d)));
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         int childCount = group.getChildCount();
         if (group == mRgSl) {
             // 止损
@@ -228,10 +229,10 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                     double sl = Double.parseDouble(rb.getText().toString());
                     double margin = sl * mHand;
 //                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
-                    Double marginDollar = mContractInfo.getLossjb().get(rb.getText().toString());
+                    Double marginDollar = mContractInfo.getLossLevel().get(rb.getText().toString())*mHand;
                     Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
                     mTvStopWin.setText(DoubleUtil.formatDecimal(sl * mContractInfo.getMaxProfitMultiply()));
-                    mTvMargin.setText(String.format("￥%s\n($%s)", DoubleUtil.formatDecimal(margin), DoubleUtil.formatDecimal(marginDollar)));
+                    mTvMargin.setText(String.format("￥%s\n(%s%s)", DoubleUtil.formatDecimal(margin),StringUtils.getCurrencySymbol(quote.getCurrency()) ,DoubleUtil.formatDecimal(marginDollar)));
                     mTvMargin.setTag(margin);
                     mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
                     mTvTradeFee.setTag(tradeFee);
@@ -248,8 +249,8 @@ public class FastTakeOrderActivity extends BaseActivity implements RadioGroup.On
                     Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
                     double margin = Double.parseDouble(rb.getText().toString()) * mHand;
 //                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
-                    Double marginDollar = mContractInfo.getLossjb().get(rb.getText().toString());
-                    mTvMargin.setText(String.format("￥%s\n($%s)", DoubleUtil.formatDecimal(margin), DoubleUtil.formatDecimal(marginDollar)));
+                    Double marginDollar = mContractInfo.getLossLevel().get(rb.getText().toString())*mHand;
+                    mTvMargin.setText(String.format("￥%s\n(%s%s)", DoubleUtil.formatDecimal(margin),StringUtils.getCurrencySymbol(quote.getCurrency()), DoubleUtil.formatDecimal(marginDollar)));
                     mTvMargin.setTag(margin);
                     mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
                     mTvTradeFee.setTag(tradeFee);

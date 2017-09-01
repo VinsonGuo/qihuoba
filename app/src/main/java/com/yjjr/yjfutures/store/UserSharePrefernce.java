@@ -109,37 +109,6 @@ public class UserSharePrefernce {
         return sharedPreferences.getString(PASSWORD, "");
     }
 
-    /**
-     * 设置该品种快速平仓的信息
-     * @param config  取消配置传null
-     */
-    public static void setFastTakeOrder(Context ctx, String symbol, FastTakeOrderConfig config) {
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if(config != null) {
-            editor.putString(symbol, sGson.toJson(config));
-        }else {
-            editor.putString(symbol, "");
-        }
-        editor.apply();
-    }
-
-    public static FastTakeOrderConfig getFastTakeOrder(Context ctx, String symbol) {
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(TOKEN_SHAREPREF_NAME,
-                Context.MODE_PRIVATE);
-        String json = sharedPreferences.getString(symbol, null);
-        if (TextUtils.isEmpty(json)) {
-            return null;
-        }
-        try {
-            FastTakeOrderConfig config = sGson.fromJson(json, FastTakeOrderConfig.class);
-            return config;
-        } catch (Exception e) {
-            LogUtils.e(e);
-        }
-        return null;
-    }
 
    /* public static void setAccountInfo(Context ctx, AccountInfoContent token) {
         if (token == null) return;

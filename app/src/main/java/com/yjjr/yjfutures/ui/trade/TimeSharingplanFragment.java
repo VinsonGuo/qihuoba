@@ -45,15 +45,17 @@ public class TimeSharingplanFragment extends BaseFragment {
     private String mSymbol;
     private List<HisData> mDatas = new ArrayList<>(100);
     private Quote mQuote;
+    private boolean mIsDemo;
 
     public TimeSharingplanFragment() {
         // Required empty public constructor
     }
 
-    public static TimeSharingplanFragment newInstance(String symbol) {
+    public static TimeSharingplanFragment newInstance(String symbol, boolean isDemo) {
         TimeSharingplanFragment fragment = new TimeSharingplanFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.CONTENT_PARAMETER, symbol);
+        bundle.putBoolean(Constants.CONTENT_PARAMETER_2, isDemo);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -64,12 +66,13 @@ public class TimeSharingplanFragment extends BaseFragment {
         EventBus.getDefault().register(this);
         if (getArguments() != null) {
             mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER);
+            mIsDemo = getArguments().getBoolean(Constants.CONTENT_PARAMETER_2);
         }
     }
 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mQuote = StaticStore.getQuote(mSymbol, false);
+        mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
         mChart = new TimeSharingplanChart(mContext, mQuote.getTick());
         return mChart;
     }
@@ -145,7 +148,7 @@ public class TimeSharingplanFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(RefreshEvent event) {
-        Quote quote = StaticStore.getQuote(mSymbol, false);
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (mChart != null && quote != null) {
             mChart.refreshEntry((float) quote.getLastPrice());
         }

@@ -44,10 +44,16 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
 
-    private static final Map<String, String> sCurrencyMap = new HashMap<String, String>(){{
+    private static final Map<String, String> sCurrencyMap = new HashMap<String, String>() {{
         put("USD", "美元");
         put("HKD", "港币");
         put("EUR", "欧元");
+    }};
+
+    private static final Map<String, String> sCurrencySymbolMap = new HashMap<String, String>() {{
+        put("USD", "$");
+        put("HKD", "HK$");
+        put("EUR", "€");
     }};
 
     private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
@@ -561,7 +567,16 @@ public class StringUtils {
         return ArrayUtils.contains(invaildPwd, passWord);
     }
 
-    public static String curreny2Word(String currency) {
+    public static String currency2Word(String currency) {
         return sCurrencyMap.get(currency);
+    }
+
+
+    public static String getCurrencySymbol(String currency) {
+        String s = sCurrencySymbolMap.get(currency);
+        if (s == null) {
+            return "$";
+        }
+        return s;
     }
 }

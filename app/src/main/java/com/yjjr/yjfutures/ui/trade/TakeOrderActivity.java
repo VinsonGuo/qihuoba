@@ -176,7 +176,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                         }
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
                         Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-                        mTvExchange.setText(quote.getSymbolname() + "按" + StringUtils.curreny2Word(quote.getCurrency()) + "交易，平台按人民币结算，汇率为 $1 = ￥" + mContractInfo.getCnyExchangeRate());
+                        mTvExchange.setText(quote.getSymbolname() + "按" + StringUtils.currency2Word(quote.getCurrency()) + "交易，平台按人民币结算，汇率为 " + StringUtils.getCurrencySymbol(quote.getCurrency()) + "1 = ￥" + mContractInfo.getCnyExchangeRate());
                         mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, quote.getLastPrice()));
                     }
                 }, RxUtils.commonErrorConsumer());
@@ -241,12 +241,13 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                     double sl = Double.parseDouble(rb.getText().toString());
                     double margin = sl * mHand;
 //                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
-                    Double marginDollar = mContractInfo.getLossjb().get(rb.getText().toString());
+                    Double marginDollar = mContractInfo.getLossLevel().get(rb.getText().toString())*mHand;
                     Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
                     mTvStopWin.setText(DoubleUtil.formatDecimal(sl * mContractInfo.getMaxProfitMultiply()));
                     mTvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.formatDecimal(margin));
                     mTvMargin.setTag(margin);
-                    mTvMarginDollar.setText(String.format("($%s)", DoubleUtil.formatDecimal(marginDollar)));
+                    Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+                    mTvMarginDollar.setText(String.format("(%s%s)", StringUtils.getCurrencySymbol(quote.getCurrency()), DoubleUtil.formatDecimal(marginDollar)));
                     mTvMarginDollar.setTag(marginDollar);
                     mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
                     mTvTradeFee.setTag(tradeFee);
@@ -263,12 +264,11 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                     Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
                     double sl = Double.parseDouble(rb.getText().toString());
                     double margin = sl * mHand;
-//                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
+                    Double marginDollar = mContractInfo.getLossLevel().get(rb.getText().toString())*mHand;
 //                    Double marginDollar = mContractInfo.getLossjb().get(margin);
                     mTvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.formatDecimal(margin));
                     mTvMargin.setTag(margin);
-//                    mTvMarginDollar.setText(String.format("($%s)", DoubleUtil.formatDecimal(marginDollar)));
-//                    mTvMarginDollar.setTag(marginDollar);
+                    mTvMarginDollar.setText(String.format("($%s)", DoubleUtil.formatDecimal(marginDollar)));
                     mTvTradeFee.setText(DoubleUtil.format2Decimal(tradeFee) + "元");
                     mTvTradeFee.setTag(tradeFee);
                     break;

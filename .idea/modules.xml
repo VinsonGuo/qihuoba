@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/YJFutures.iml" filepath="$PROJECT_DIR$/YJFutures.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/umengpush/umengpush.iml" filepath="$PROJECT_DIR$/umengpush/umengpush.iml" />
     </modules>
   </component>
 </project>

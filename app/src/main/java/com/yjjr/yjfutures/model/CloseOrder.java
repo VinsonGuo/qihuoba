@@ -40,6 +40,7 @@ public class CloseOrder implements Parcelable {
     private int Qty;
     private String Currency;
     private double exchangeRate;
+    private String Symbolname;
 
     public String getAccount() {
         return Account;
@@ -179,6 +180,7 @@ public class CloseOrder implements Parcelable {
         dest.writeInt(this.Qty);
         dest.writeString(this.Currency);
         dest.writeDouble(this.exchangeRate);
+        dest.writeString(this.Symbolname);
     }
 
     protected CloseOrder(Parcel in) {
@@ -196,6 +198,7 @@ public class CloseOrder implements Parcelable {
         this.Qty = in.readInt();
         this.Currency = in.readString();
         this.exchangeRate = in.readDouble();
+        this.Symbolname = in.readString();
     }
 
     public static final Creator<CloseOrder> CREATOR = new Creator<CloseOrder>() {
@@ -209,4 +212,12 @@ public class CloseOrder implements Parcelable {
             return new CloseOrder[size];
         }
     };
+
+    public String getSymbolname() {
+        return Symbolname;
+    }
+
+    public void setSymbolname(String symbolname) {
+        Symbolname = symbolname;
+    }
 }

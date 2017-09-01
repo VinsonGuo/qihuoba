@@ -62,7 +62,7 @@ public class WebActivity extends BaseActivity {
                     DialogUtils.createCustomServiceDialog(mContext).show();
                 } else if (type == TYPE_SHARE) {
                     ActivityTools.share(mContext, getString(R.string.app_name), url);
-//                    ShareUtils.share(mContext,url,"title","desc");
+//                    ShareUtils.share(mContext,url,"外盘期货原油黄金白银","美国顶级券商盈透证券，国内外盘期货领先者，原油黄金恒指德指，绝对实盘保证，自主研发系统。");
                 }
             }
         });

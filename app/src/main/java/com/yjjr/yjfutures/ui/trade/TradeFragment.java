@@ -27,6 +27,7 @@ import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.model.biz.UserInfo;
+import com.yjjr.yjfutures.store.FastOrderSharePrefernce;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
@@ -193,8 +194,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 WebActivity.startActivity(mContext, String.format(HttpConfig.URL_RULE, StringUtils.getRuleName(quote)));
             }
         });
-        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol);
-        Fragment[] fragments = {/*TickChartFragment.newInstance(mSymbol)*/new Fragment(), TimeSharingplanFragment.newInstance(mSymbol),
+        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo);
+        Fragment[] fragments = {/*TickChartFragment.newInstance(mSymbol)*/new Fragment(), TimeSharingplanFragment.newInstance(mSymbol, mIsDemo),
                 mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol, mIsDemo)};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
         mViewpager.setOffscreenPageLimit(fragments.length);
@@ -265,7 +266,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mCandleStickChartFragment.loadDataByType(type);
                     }
                 });
-        tvCenter.setText(UserSharePrefernce.getFastTakeOrder(mContext, mSymbol) != null ? R.string.opened : R.string.closed);
+        tvCenter.setText(FastOrderSharePrefernce.getFastTakeOrder(mContext, mSymbol) != null ? R.string.opened : R.string.closed);
         fillViews(quote);
         mHeaderView.setMainTitle(quote.getSymbolname());
         tvLeft.setOnClickListener(this);
@@ -426,7 +427,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        FastTakeOrderConfig fastTakeOrder = UserSharePrefernce.getFastTakeOrder(mContext, mSymbol);
+        FastTakeOrderConfig fastTakeOrder = FastOrderSharePrefernce.getFastTakeOrder(mContext, mSymbol);
         switch (v.getId()) {
             case R.id.tv_close_order:
                 mCloseAllDialog.show();

@@ -87,4 +87,5 @@ dependencies {
     compile 'com.bigkoo:convenientbanner:2.0.5'
     compile 'com.umeng.analytics:analytics:6.1.1'
     testCompile 'junit:junit:4.12'
+    compile project(':umengpush')
 }

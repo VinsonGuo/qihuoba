@@ -8,8 +8,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.CloseOrder;
-import com.yjjr.yjfutures.model.Quote;
-import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.SpannableUtil;
@@ -30,13 +28,12 @@ public class SettlementListAdapter extends BaseQuickAdapter<CloseOrder, BaseView
 
     @Override
     protected void convert(BaseViewHolder helper, CloseOrder item) {
-        Quote quote = StaticStore.getQuote(item.getSymbol(), false);
         String buySell = item.getOpenBuySell();
         helper.setText(R.id.tv_time, DateUtils.formatDateTime(item.getCloseDate()).replace(' ', '\n'))
-                .setText(R.id.tv_info, (quote == null ? item.getSymbol() : quote.getSymbolname()) + "    " + Math.abs(item.getQty()) + "手")
+                .setText(R.id.tv_info, (item.getSymbolname()) + "    " + Math.abs(item.getQty()) + "手")
                 .setText(R.id.tv_type, "市价" + buySell);
         TextView tvPrice = helper.getView(R.id.tv_price);
-        tvPrice.setText(getPriceColor(item.getRealizedPL_CNY(), item.getRealizedPL()));
+        tvPrice.setText(getPriceColor(item.getRealizedPL_CNY(), item.getRealizedPL(), StringUtils.getCurrencySymbol(item.getCurrency().trim())));
         TextView tvDirection = helper.getView(R.id.tv_direction);
         if (TextUtils.equals(buySell, "买入")) {
             tvDirection.setText("看涨");
@@ -47,7 +44,7 @@ public class SettlementListAdapter extends BaseQuickAdapter<CloseOrder, BaseView
         }
     }
 
-    private CharSequence getPriceColor(double y, double d) {
+    private CharSequence getPriceColor(double y, double d, String s) {
         int color;
         if (y == 0) {
             color = R.color.main_text_color;
@@ -58,7 +55,7 @@ public class SettlementListAdapter extends BaseQuickAdapter<CloseOrder, BaseView
         }
         return TextUtils.concat(
                 SpannableUtil.getOnlinePriceString(mContext, StringUtils.getProfitText(y), y),
-                SpannableUtil.getStringBySize(SpannableUtil.getStringByColor(mContext, "\n($" + DoubleUtil.formatDecimal(d) + ")", color), 0.8f));
+                SpannableUtil.getStringBySize(SpannableUtil.getStringByColor(mContext, "\n(" + s + DoubleUtil.formatDecimal(d) + ")", color), 0.8f));
     }
 
 }

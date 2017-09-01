@@ -77,7 +77,7 @@ public class HandicapFragment extends BaseFragment {
     }
 
     private void fillView() {
-        Quote quote = StaticStore.getQuote(mSymbol, false);
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         tvHigh.setText(StringUtils.getStringByTick(quote.getHigh(), quote.getTick()));
         tvLastPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()));
         tvOpen.setText(StringUtils.getStringByTick(quote.getOpen(), quote.getTick()));

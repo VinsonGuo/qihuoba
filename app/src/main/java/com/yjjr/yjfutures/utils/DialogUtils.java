@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,7 @@ import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.model.biz.Update;
+import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
@@ -45,6 +45,24 @@ public class DialogUtils {
                     }
                 })
                 .create();
+    }
+
+
+    public static CustomPromptDialog createReloginDialog(final Context context) {
+        CustomPromptDialog dialog = new CustomPromptDialog.Builder(context)
+                .isShowClose(false)
+                .setMessageDrawableId(R.drawable.ic_info)
+                .setMessage("请重新登录账号！")
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        BaseApplication.getInstance().logout(context);
+                    }
+                })
+                .create();
+        dialog.setCancelable(false);
+        return dialog;
     }
 
     public static CustomPromptDialog createCustomServiceDialog(final Context context) {
@@ -182,4 +200,5 @@ public class DialogUtils {
         });
         return dialog;
     }
+
 }

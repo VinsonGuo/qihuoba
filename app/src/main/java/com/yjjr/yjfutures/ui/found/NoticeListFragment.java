@@ -33,9 +33,9 @@ public class NoticeListFragment extends ListFragment<Notice> {
                 .subscribe(new Consumer<BizResponse<PageResponse<Notice>>>() {
                     @Override
                     public void accept(@NonNull BizResponse<PageResponse<Notice>> response) throws Exception {
+                        loadDataFinish();
                         PageResponse<Notice> result = response.getResult();
                         mAdapter.addData(result.getList());
-                        loadDataFinish();
                         if (mAdapter.getData().size() >= result.getTotal()) {
                             mAdapter.loadMoreEnd();
                         }

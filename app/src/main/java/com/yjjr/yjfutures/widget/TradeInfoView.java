@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.biz.Funds;
+import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 
 /**
@@ -49,6 +51,8 @@ public class TradeInfoView extends LinearLayout {
             mTvName3.setText("总金币");
         }
         typedArray.recycle();
+        Funds funds = StaticStore.getFunds(isDemo);
+        setValues(funds.getFrozenMargin(), funds.getAvailableFunds(), funds.getNetAssets());
     }
 
     public void setValues(double value1, double value2, double value3) {

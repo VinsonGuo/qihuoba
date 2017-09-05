@@ -66,6 +66,7 @@ public class LoginActivity extends BaseActivity {
         RegisterInput riPassword = (RegisterInput) findViewById(R.id.ri_password);
         etUsername = riUsername.getEtInput();
         etPassword = riPassword.getEtInput();
+        etUsername.setInputType(InputType.TYPE_CLASS_PHONE);
         etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         btnLogin = (Button) findViewById(R.id.btn_login);
         TextView tvRegister = (TextView) findViewById(R.id.tv_register);

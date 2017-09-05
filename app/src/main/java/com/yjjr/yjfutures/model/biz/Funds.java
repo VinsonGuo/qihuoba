@@ -6,16 +6,9 @@ package com.yjjr.yjfutures.model.biz;
 
 public class Funds {
 
-    /**
-     * availableFunds : 1369701704
-     * frozenMargin : 1.369701704E7
-     * netAssets : 2.739413408E7
-     */
-
     private double availableFunds;
     private double frozenMargin;
     private double netAssets;
-    private double extractMoney;
 
     public double getAvailableFunds() {
         return availableFunds;
@@ -41,21 +34,12 @@ public class Funds {
         this.netAssets = netAssets;
     }
 
-    public double getExtractMoney() {
-        return extractMoney;
-    }
-
-    public void setExtractMoney(double extractMoney) {
-        this.extractMoney = extractMoney;
-    }
-
     @Override
     public String toString() {
         return "Funds{" +
                 "availableFunds=" + availableFunds +
                 ", frozenMargin=" + frozenMargin +
                 ", netAssets=" + netAssets +
-                ", extractMoney=" + extractMoney +
                 '}';
     }
 }

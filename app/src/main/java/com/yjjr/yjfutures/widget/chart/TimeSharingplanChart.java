@@ -3,8 +3,6 @@ package com.yjjr.yjfutures.widget.chart;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
@@ -92,7 +90,7 @@ public class TimeSharingplanChart extends RelativeLayout {
 
         ILineDataSet testSet = createSet(transparentColor);
         for (int i = list.size(); i < list.size() + 20; i++) {
-            testSet.addEntry(new Entry(i, (float) list.get(list.size()-1).getClose()));
+            testSet.addEntry(new Entry(i, (float) list.get(list.size() - 1).getClose()));
         }
         data.addDataSet(testSet);
 
@@ -158,14 +156,16 @@ public class TimeSharingplanChart extends RelativeLayout {
     private ILineDataSet createSet(int color) {
         LineDataSet set = new LineDataSet(null, null);
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
-
-        set.setHighLightColor(color);
-        set.setDrawHighlightIndicators(false);
-        set.setDrawHorizontalHighlightIndicator(true);
-        set.setDrawVerticalHighlightIndicator(false);
-        set.setHighlightLineWidth(0.5f);
-
-        set.enableDashedHighlightLine(10, 5, 0);
+        if (color != transparentColor) {
+            set.setHighLightColor(color);
+            set.setDrawHighlightIndicators(false);
+            set.setDrawHorizontalHighlightIndicator(true);
+            set.setDrawVerticalHighlightIndicator(false);
+            set.setHighlightLineWidth(0.5f);
+            set.enableDashedHighlightLine(10, 5, 0);
+        }else {
+            set.setHighlightEnabled(false);
+        }
         set.setColor(color);
         set.setCircleColor(Color.WHITE);
         set.setLineWidth(0.5f);
@@ -183,7 +183,7 @@ public class TimeSharingplanChart extends RelativeLayout {
     private void setupSettingParameter() {
         mChart.setDrawGridBackground(false);
         mChart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.chart_background));
-        RealPriceMarkerView mv = new RealPriceMarkerView(mContext,mTick);
+        RealPriceMarkerView mv = new RealPriceMarkerView(mContext, mTick);
         mv.setChartView(mChart);
         mChart.setMarker(mv);
         mChart.setNoDataText(getContext().getString(R.string.loading));

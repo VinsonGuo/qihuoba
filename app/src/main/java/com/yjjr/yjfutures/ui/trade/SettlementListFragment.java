@@ -90,9 +90,9 @@ public class SettlementListFragment extends ListFragment<CloseOrder> {
                 .subscribe(new Consumer<BizResponse<PageResponse<CloseOrder>>>() {
                     @Override
                     public void accept(@NonNull BizResponse<PageResponse<CloseOrder>> listBizResponse) throws Exception {
+                        loadDataFinish();
                         PageResponse<CloseOrder> result = listBizResponse.getResult();
                         mAdapter.addData(result.getList());
-                        loadDataFinish();
                         if (mAdapter.getData().size() >= result.getTotal()) {
                             mAdapter.loadMoreEnd();
                         }

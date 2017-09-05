@@ -36,6 +36,7 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
+import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
@@ -132,8 +133,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
                             if (loginBizResponse.getRcode() != 0) {
                                 if (loginBizResponse.getRcode() == 1) { // 账号密法错误，重新登录
-                                    ToastUtils.show(mContext, R.string.please_login_again);
-                                    BaseApplication.getInstance().logout(mContext);
+                                    DialogUtils.createReloginDialog(mContext).show();
                                 }
                                 throw new RuntimeException("登录失败");
                             }

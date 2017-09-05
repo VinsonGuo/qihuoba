@@ -31,9 +31,9 @@ public class FundDetailFragment extends ListFragment<AssetRecord> {
                 .subscribe(new Consumer<BizResponse<PageResponse<AssetRecord>>>() {
                     @Override
                     public void accept(@NonNull BizResponse<PageResponse<AssetRecord>> response) throws Exception {
+                        loadDataFinish();
                         PageResponse<AssetRecord> result = response.getResult();
                         mAdapter.addData(result.getList());
-                        loadDataFinish();
                         if(mAdapter.getData().size() >= result.getTotal()) {
                             mAdapter.loadMoreEnd();
                         }

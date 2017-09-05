@@ -88,6 +88,8 @@ public class BaseApplication extends Application implements Application.Activity
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setPushCheck(true);
 //注册推送服务，每次调用register方法都会回调该接口
+        mPushAgent.onAppStart();
+        MiPushRegistar.register(this, "2882303761517603946", "5871760360946");
         mPushAgent.register(new IUmengRegisterCallback() {
 
             @Override
@@ -101,7 +103,6 @@ public class BaseApplication extends Application implements Application.Activity
                 LogUtils.e(s + "\n" + s1);
             }
         });
-        MiPushRegistar.register(this, "2882303761517603946", "5871760360946");
         HuaWeiRegister.register(this);
     }
 

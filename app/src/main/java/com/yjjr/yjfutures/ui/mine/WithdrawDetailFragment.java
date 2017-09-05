@@ -31,9 +31,9 @@ public class WithdrawDetailFragment extends ListFragment<CashRecord> {
                 .subscribe(new Consumer<BizResponse<PageResponse<CashRecord>>>() {
                     @Override
                     public void accept(@NonNull BizResponse<PageResponse<CashRecord>> response) throws Exception {
+                        loadDataFinish();
                         PageResponse<CashRecord> result = response.getResult();
                         mAdapter.addData(result.getList());
-                        loadDataFinish();
                         if(mAdapter.getData().size() >= result.getTotal()) {
                             mAdapter.loadMoreEnd();
                         }

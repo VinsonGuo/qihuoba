@@ -1,10 +1,13 @@
 package com.yjjr.yjfutures.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +71,9 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     protected abstract void loadData();
 
     protected void loadDataFinish() {
+        if(mPage == 1) {
+            mAdapter.getData().clear();
+        }
         mLoadView.setVisibility(View.GONE);
         mRefreshLayout.setRefreshing(false);
         mAdapter.loadMoreComplete();
@@ -88,7 +94,7 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     }
 
     protected void setManager() {
-        mRvList.setLayoutManager(new LinearLayoutManager(mContext));
+        mRvList.setLayoutManager(new WrapContentLinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
     }
 
     public abstract BaseQuickAdapter<T, BaseViewHolder> getAdapter();
@@ -96,7 +102,6 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     @Override
     public void onRefresh() {
         mPage = 1;
-        mAdapter.getData().clear();
         loadData();
     }
 
@@ -104,5 +109,29 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     public void onLoadMoreRequested() {
         mPage++;
         loadData();
+    }
+
+    public class WrapContentLinearLayoutManager extends LinearLayoutManager {
+        public WrapContentLinearLayoutManager(Context context) {
+            super(context);
+        }
+
+        public WrapContentLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+            super(context, orientation, reverseLayout);
+        }
+
+        public WrapContentLinearLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+            super(context, attrs, defStyleAttr, defStyleRes);
+        }
+
+        //... constructor
+        @Override
+        public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+            try {
+                super.onLayoutChildren(recycler, state);
+            } catch (IndexOutOfBoundsException e) {
+                Log.e("probe", "meet a IOOBE in RecyclerView");
+            }
+        }
     }
 }

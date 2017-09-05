@@ -527,9 +527,7 @@
                 android:background="@color/background_dark">
 
                 <View
-                    style="@style/style_divider"
-                    android:layout_marginLeft="@dimen/dp_10"
-                    android:layout_marginRight="@dimen/dp_10"/>
+                    style="@style/style_divider"/>
             </FrameLayout>
 
             <LinearLayout

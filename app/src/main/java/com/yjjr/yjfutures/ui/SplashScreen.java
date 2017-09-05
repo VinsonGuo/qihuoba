@@ -54,7 +54,7 @@ public class SplashScreen extends BaseActivity {
         SystemBarHelper.immersiveStatusBar(this, 0);
         setContentView(R.layout.splash);
         TextView tvVersion = (TextView) findViewById(R.id.tv_version);
-        tvVersion.setText(String.format("V%s", BuildConfig.VERSION_NAME));
+        tvVersion.setText(String.format("V%s%s", BuildConfig.VERSION_NAME, BuildConfig.DEBUG ? "(测试版)" : ""));
         mIvSplash = (ImageView) findViewById(R.id.iv_splash);
         new Handler().postDelayed(new Runnable() {
             @Override

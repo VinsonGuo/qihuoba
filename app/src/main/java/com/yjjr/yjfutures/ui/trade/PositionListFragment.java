@@ -201,6 +201,7 @@ public class PositionListFragment extends ListFragment<Holds> {
                 .subscribe(new Consumer<BizResponse<List<Holds>>>() {
                     @Override
                     public void accept(@NonNull BizResponse<List<Holds>> holdings) throws Exception {
+                        loadDataFinish();
                         List<Holds> result = holdings.getResult();
                         List<Holds> list = new ArrayList<>(10);
                         double profit = 0;
@@ -224,7 +225,6 @@ public class PositionListFragment extends ListFragment<Holds> {
                         mAdapter.setNewData(list);
                         mTvProfit.setText(StringUtils.getProfitText(profit));
                         mTvProfit.setTextColor(StringUtils.getProfitColor(mContext, profit));
-                        loadDataFinish();
                     }
                 }, new Consumer<Throwable>() {
                     @Override

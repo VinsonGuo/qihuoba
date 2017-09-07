@@ -39,6 +39,8 @@ android {
         maven { url "https://jitpack.io" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
+
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
@@ -46,6 +48,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile project(':umengpush')
     compile 'com.android.support:support-vector-drawable:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
@@ -86,6 +89,8 @@ dependencies {
     compile 'com.jungly:gridPasswordView:0.3'
     compile 'com.bigkoo:convenientbanner:2.0.5'
     compile 'com.umeng.analytics:analytics:6.1.1'
+    compile 'com.isanwenyu.highlight:highlight:1.8.0'
+    compile 'com.github.stfalcon:chatkit:0.2.2'
+    compile 'com.hyphenate:hyphenate-sdk-lite:3.3.0'
     testCompile 'junit:junit:4.12'
-    compile project(':umengpush')
 }

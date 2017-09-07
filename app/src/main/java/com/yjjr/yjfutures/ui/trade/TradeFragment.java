@@ -26,15 +26,12 @@ import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Holds;
-import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.FastOrderSharePrefernce;
 import com.yjjr.yjfutures.store.StaticStore;
-import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.ui.WebActivity;
-import com.yjjr.yjfutures.ui.mine.UserInfoActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
@@ -116,6 +113,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      * 休市信息，休市时显示出来
      */
     private TextView tvRest;
+    private TextView mTvDeposit;
 
 
     public TradeFragment() {
@@ -273,11 +271,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvRight.setOnClickListener(this);
         v.findViewById(R.id.tv_center).setOnClickListener(this);
         v.findViewById(R.id.tv_close_order).setOnClickListener(this);
-        TextView tvDeposit = (TextView) v.findViewById(R.id.tv_deposit);
-        tvDeposit.setText(mIsDemo ? R.string.reset : R.string.deposit);
-        tvDeposit.setSelected(true);
-        tvDeposit.setOnClickListener(this);
+        mTvDeposit = (TextView) v.findViewById(R.id.tv_deposit);
+        mTvDeposit.setSelected(true);
+        mTvDeposit.setOnClickListener(this);
         v.findViewById(R.id.tv_kchart).setOnClickListener(this);
+        DialogUtils.showGuideView(getActivity(), mTvDeposit);
         return v;
     }
 

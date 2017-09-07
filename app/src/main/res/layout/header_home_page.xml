@@ -21,7 +21,7 @@
         android:paddingTop="18dp">
 
         <TextView
-            android:id="@+id/tv_title1"
+            android:id="@+id/tv_header_title1"
             style="@style/text_color_333333_14sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

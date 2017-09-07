@@ -61,7 +61,7 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
         v.findViewById(R.id.tv_title).setVisibility(mShowTitle ? View.VISIBLE : View.GONE);
         RecyclerView rvList = (RecyclerView) v.findViewById(R.id.rv_list);
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
-        mAdapter = new MarketPriceAdapter(null);
+        mAdapter = new MarketPriceAdapter(null, !mShowTitle);
         rvList.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
         return v;
@@ -69,11 +69,6 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
 
     @Override
     protected void initData() {
-//        if (mShowTitle) {
-//            mAdapter.replaceData(StaticStore.sQuoteMap.values());
-//        } else {
-//            mAdapter.replaceData(StaticStore.sDemoQuoteMap.values());
-//        }
         mAdapter.replaceData(StaticStore.getQuoteValues(!mShowTitle));
     }
 

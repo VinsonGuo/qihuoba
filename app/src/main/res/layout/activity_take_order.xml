@@ -215,7 +215,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="支付：综合交易费"
+                    android:text="支付：交易综合费"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>
 
@@ -240,7 +240,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="冻结：保证金"
+                    android:text="冻结：履约保证金"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>
 

@@ -3,6 +3,8 @@ package com.yjjr.yjfutures.ui.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +36,7 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.ui.mine.ChatActivity;
 import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.DialogUtils;
@@ -67,6 +70,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     private ConvenientBanner<Info> mBanner;
     private HomePageAdapter mAdapter;
     private LoadingView mLoadingView;
+    private View mDemoView;
 
     public HomePageFragment() {
         // Required empty public constructor
@@ -80,16 +84,16 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_home_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_page, container, false);
 
-        mLoadingView = (LoadingView) v.findViewById(R.id.load_view);
+        mLoadingView = (LoadingView) view.findViewById(R.id.load_view);
         mLoadingView.setOnReloadListener(new LoadingView.OnReloadListener() {
             @Override
             public void onReload() {
                 loadData();
             }
         });
-        RecyclerView rvList = (RecyclerView) v.findViewById(R.id.rv_list);
+        RecyclerView rvList = (RecyclerView) view.findViewById(R.id.rv_list);
         RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
         if (animator instanceof SimpleItemAnimator) {
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
@@ -98,7 +102,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         mAdapter = new HomePageAdapter(null);
         View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, rvList, false);
         mBanner = (ConvenientBanner<Info>) headerView.findViewById(R.id.banner);
-        headerView.findViewById(R.id.tv_title1).setOnClickListener(this);
+        mDemoView = headerView.findViewById(R.id.tv_header_title1);
+        mDemoView.setOnClickListener(this);
         headerView.findViewById(R.id.tv_title2).setOnClickListener(this);
         headerView.findViewById(R.id.tv_title3).setOnClickListener(this);
 
@@ -109,11 +114,13 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 TradeActivity.startActivity(mContext, mAdapter.getData().get(position).getSymbol(), false);
             }
         });
-        rvList.setAdapter(mAdapter);
-        v.findViewById(R.id.tv_customer_service).setOnClickListener(this);
-        v.findViewById(R.id.tv_guide).setOnClickListener(this);
-        return v;
+//        rvList.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(rvList);
+        view.findViewById(R.id.tv_customer_service).setOnClickListener(this);
+        view.findViewById(R.id.tv_guide).setOnClickListener(this);
+        return view;
     }
+
 
     @Override
     protected void initData() {
@@ -133,7 +140,12 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
                             if (loginBizResponse.getRcode() != 0) {
                                 if (loginBizResponse.getRcode() == 1) { // 账号密法错误，重新登录
-                                    DialogUtils.createReloginDialog(mContext).show();
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            DialogUtils.createReloginDialog(mContext).show();
+                                        }
+                                    });
                                 }
                                 throw new RuntimeException("登录失败");
                             }
@@ -191,6 +203,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         public void accept(@NonNull Boolean symbols) throws Exception {
                             mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
                             mLoadingView.setVisibility(View.GONE);
+                            DialogUtils.showGuideView(getActivity(), mDemoView);
                             getHolding();
                         }
                     }, new Consumer<Throwable>() {
@@ -237,6 +250,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                             getHolding();
                             mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
                             mLoadingView.setVisibility(View.GONE);
+                            DialogUtils.showGuideView(getActivity(), mDemoView);
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -320,12 +334,13 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_customer_service:
-                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
+//                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
+                ChatActivity.startActivity(mContext);
                 break;
             case R.id.tv_guide:
                 WebActivity.startActivity(mContext, HttpConfig.URL_GUIDE);
                 break;
-            case R.id.tv_title1:
+            case R.id.tv_header_title1:
                 DemoTradeActivity.startActivity(mContext);
                 break;
             case R.id.tv_title2:
@@ -351,6 +366,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
 
     public class ImageHolderView implements Holder<Info> {
         private ImageView imageView;

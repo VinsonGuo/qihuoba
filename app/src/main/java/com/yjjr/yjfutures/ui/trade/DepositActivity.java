@@ -77,24 +77,8 @@ public class DepositActivity extends BaseActivity implements View.OnClickListene
                         ToastUtils.show(mContext, "充值金额不能为0");
                         return;
                     }
-                    mBtnConfirm.setSelected(false);
-                    HttpManager.getBizService().rechargeApply(mRiMoney.getValue(), "alipay", BaseApplication.getInstance().getTradeToken())
-                            .compose(RxUtils.applyBizSchedulers())
-                            .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
-                            .subscribe(new Consumer<BizResponse>() {
-                                @Override
-                                public void accept(@NonNull BizResponse response) throws Exception {
-                                    AlipayTransferActivity.startActivity(mContext);
-                                    finish();
-                                }
-                            }, new Consumer<Throwable>() {
-                                @Override
-                                public void accept(@NonNull Throwable throwable) throws Exception {
-                                    LogUtils.e(throwable);
-                                    mBtnConfirm.setSelected(true);
-                                    ToastUtils.show(mContext, throwable.getMessage());
-                                }
-                            });
+                    AlipayTransferActivity.startActivity(mContext, mRiMoney.getValue());
+                    finish();
                 }
                 break;
             case R.id.tv_contact_service:

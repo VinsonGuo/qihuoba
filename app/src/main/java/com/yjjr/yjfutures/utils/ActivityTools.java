@@ -119,6 +119,7 @@ public class ActivityTools {
         mMediaPlayer.start();
     }
 
+
     public static String getDeviceId(Context context) {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         return telephonyManager.getDeviceId();

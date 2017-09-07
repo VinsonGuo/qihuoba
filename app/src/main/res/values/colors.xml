@@ -17,6 +17,7 @@
     <color name="trader_chart_line_color">#f9d2c9</color>
     <color name="unselect_button">#9d9fa5</color>
 
+    <color name="shadow">#cc222222</color>
 
     <color name="background">#f2f2f2</color>
     <color name="background_dark">#181818</color>

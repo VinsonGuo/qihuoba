@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity {
             public void run() {
                 EventBus.getDefault().post(new RefreshEvent());
                 DateTime dateTime = new DateTime();
-                if (dateTime.getSecondOfMinute() == 1) {
+                if (dateTime.getSecondOfMinute() == 5) {
                     EventBus.getDefault().post(new OneMinuteEvent());
                 }
                 if (TextUtils.isEmpty(StaticStore.sSymbols)) {

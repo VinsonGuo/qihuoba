@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.event.RefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Quote;
@@ -28,6 +30,7 @@ import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.ArithUtils;
+import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -40,6 +43,8 @@ import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -83,6 +88,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_order);
+        EventBus.getDefault().register(this);
         Intent intent = getIntent();
         mSymbol = intent.getStringExtra(Constants.CONTENT_PARAMETER);
         mType = intent.getIntExtra(Constants.CONTENT_PARAMETER_2, TYPE_BUY);
@@ -168,7 +174,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                     @Override
                     public void accept(@NonNull BizResponse<ContractInfo> response) throws Exception {
                         mContractInfo = response.getResult();
-                        mTvSymbol.setText(mContractInfo.getSymbol() + "-" + mContractInfo.getSymbolName());
+                        mTvSymbol.setText(mContractInfo.getSymbolName());
                         mTvInfo.setText(String.format("持仓至%s自动平仓", mContractInfo.getEndTradeTime()));
                         Map<String, Double> map = mContractInfo.getLossLevel();
                         for (Map.Entry<String, Double> next : map.entrySet()) {
@@ -177,9 +183,19 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                         ((RadioButton) mRgSl.getChildAt(1)).setChecked(true);
                         Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
                         mTvExchange.setText(quote.getSymbolname() + "按" + StringUtils.currency2Word(quote.getCurrency()) + "交易，平台按人民币结算，汇率为 " + StringUtils.getCurrencySymbol(quote.getCurrency()) + "1 = ￥" + mContractInfo.getCnyExchangeRate());
-                        mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, quote.getLastPrice()));
+                        mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, TextUtils.equals("买入", mBuySell) ? quote.getAskPrice() : quote.getBidPrice()));
+
+//                        DialogUtils.showGuideView(mContext, R.id.rb_hand_1, mRgSl.getCheckedRadioButtonId(), R.id.btn_confirm);
                     }
                 }, RxUtils.commonErrorConsumer());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(RefreshEvent event) {
+        if(mTvPrice != null) {
+            Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+            mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, TextUtils.equals("买入", mBuySell) ? quote.getAskPrice() : quote.getBidPrice()));
+        }
     }
 
     @Override
@@ -241,7 +257,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                     double sl = Double.parseDouble(rb.getText().toString());
                     double margin = sl * mHand;
 //                    Double marginDollar = ArithUtils.mul((Double) rb.getTag(), mHand);
-                    Double marginDollar = mContractInfo.getLossLevel().get(rb.getText().toString())*mHand;
+                    Double marginDollar = mContractInfo.getLossLevel().get(rb.getText().toString()) * mHand;
                     Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
                     mTvStopWin.setText(DoubleUtil.formatDecimal(sl * mContractInfo.getMaxProfitMultiply()));
                     mTvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.formatDecimal(margin));
@@ -264,7 +280,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                     Double tradeFee = ArithUtils.mul(mContractInfo.getTransactionFee(), mContractInfo.getCnyExchangeRate(), mHand);
                     double sl = Double.parseDouble(rb.getText().toString());
                     double margin = sl * mHand;
-                    Double marginDollar = mContractInfo.getLossLevel().get(rb.getText().toString())*mHand;
+                    Double marginDollar = mContractInfo.getLossLevel().get(rb.getText().toString()) * mHand;
 //                    Double marginDollar = mContractInfo.getLossjb().get(margin);
                     mTvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.formatDecimal(margin));
                     mTvMargin.setTag(margin);
@@ -275,5 +291,11 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                 }
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

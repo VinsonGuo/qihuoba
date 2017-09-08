@@ -217,7 +217,7 @@ public class DialogUtils {
 
     public static void showGuideView(final Activity activity, final View view) {
         //test
-        final GuideBuilder builder1 = new GuideBuilder();
+      /*  final GuideBuilder builder1 = new GuideBuilder();
         builder1.setTargetView(view)
 //                .setFullingViewId(R.id.tv_title1)
                 .setAlpha(150)
@@ -244,7 +244,7 @@ public class DialogUtils {
             public void run() {
                 guide.show(activity);
             }
-        });
+        });*/
     }
 
     public static void showGuideView(final Activity activity, final int... views) {

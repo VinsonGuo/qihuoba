@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.utils.InputMethodUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -37,7 +36,7 @@ public class BaseActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         LogUtils.d("onCreate (" + getClass().getSimpleName() + ".java:1)");
-        PushAgent.getInstance(this).onAppStart();
+//        PushAgent.getInstance(this).onAppStart();
     }
 
     @Override

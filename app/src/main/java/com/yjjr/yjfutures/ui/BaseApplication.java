@@ -11,10 +11,8 @@ import android.text.TextUtils;
 import com.facebook.stetho.Stetho;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.exceptions.HyphenateException;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.IUmengCallback;
-import com.umeng.message.IUmengRegisterCallback;
-import com.umeng.message.PushAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.yjjr.yjfutures.BuildConfig;
@@ -26,9 +24,6 @@ import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.LogUtils;
 
 import net.danlew.android.joda.JodaTimeAndroid;
-
-import org.android.agoo.huawei.HuaWeiRegister;
-import org.android.agoo.xiaomi.MiPushRegistar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +83,8 @@ public class BaseApplication extends Application implements Application.Activity
             return;
         }
         EMOptions options = new EMOptions();
+        options.setAutoLogin(false);
+        options.setMipushConfig("2882303761517603946","5871760360946");
 //初始化
         EMClient.getInstance().init(this, options);
 //在做打包混淆时，关闭debug模式，避免消耗不必要的资源
@@ -105,7 +102,7 @@ public class BaseApplication extends Application implements Application.Activity
         MobclickAgent.setDebugMode(BuildConfig.DEBUG);
         MobclickAgent.setCheckDevice(false);
 
-        PushAgent mPushAgent = PushAgent.getInstance(this);
+       /* PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setPushCheck(true);
 //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.onAppStart();
@@ -123,7 +120,7 @@ public class BaseApplication extends Application implements Application.Activity
                 LogUtils.e(s + "\n" + s1);
             }
         });
-        HuaWeiRegister.register(this);
+        HuaWeiRegister.register(this);*/
     }
 
     @Override

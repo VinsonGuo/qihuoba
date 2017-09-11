@@ -9,6 +9,12 @@ public class BizResponse<T> {
     private T result;
     private String rmsg;
 
+    /**
+     * @return 97  请重新登录
+     * 98  有其他设备正在登录，请重新登录
+     * 99 cid失效
+     * 90 无此账号
+     */
     public int getRcode() {
         return rcode;
     }

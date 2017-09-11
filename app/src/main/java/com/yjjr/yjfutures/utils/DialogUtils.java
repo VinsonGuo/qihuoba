@@ -20,13 +20,10 @@ import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.model.biz.Update;
 import com.yjjr.yjfutures.ui.BaseApplication;
-import com.yjjr.yjfutures.ui.MainActivity;
+import com.yjjr.yjfutures.ui.mine.LoginActivity;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
-import com.yjjr.yjfutures.widget.guideview.Guide;
-import com.yjjr.yjfutures.widget.guideview.GuideBuilder;
-import com.yjjr.yjfutures.widget.guideview.SimpleComponent;
 
 import java.util.Map;
 
@@ -34,12 +31,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import zhy.com.highlight.HighLight;
-import zhy.com.highlight.position.OnBottomPosCallback;
 import zhy.com.highlight.position.OnLeftPosCallback;
-import zhy.com.highlight.position.OnRightPosCallback;
-import zhy.com.highlight.position.OnTopPosCallback;
-import zhy.com.highlight.shape.CircleLightShape;
-import zhy.com.highlight.shape.OvalLightShape;
 import zhy.com.highlight.shape.RectLightShape;
 
 /**
@@ -71,7 +63,9 @@ public class DialogUtils {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        BaseApplication.getInstance().logout(context);
+                        if (!(context instanceof LoginActivity)) {
+                            BaseApplication.getInstance().logout(context);
+                        }
                     }
                 })
                 .create();
@@ -258,7 +252,7 @@ public class DialogUtils {
                     }
                 });
         for (int v : views) {
-            mHightLight.addHighLight(v, R.layout.item_market_price, new OnLeftPosCallback(45),new RectLightShape());
+            mHightLight.addHighLight(v, R.layout.item_market_price, new OnLeftPosCallback(45), new RectLightShape());
         }
         mHightLight.show();
 

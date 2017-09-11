@@ -254,3 +254,7 @@ public static final int *;
 #password view
 -dontwarn com.jungly.gridpasswordview.**
 -keep public class com.jungly.gridpasswordview.**{*;}
+
+#环信
+-keep class com.hyphenate.** {*;}
+-dontwarn  com.hyphenate.**

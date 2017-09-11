@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import com.facebook.stetho.Stetho;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
-import com.hyphenate.exceptions.HyphenateException;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -79,12 +78,12 @@ public class BaseApplication extends Application implements Application.Activity
 // 为了防止环信SDK被初始化2次，加此判断会保证SDK被初始化1次
 // 默认的APP会在以包名为默认的process name下运行，如果查到的process name不是APP的process name就立即返回
 
-        if (processAppName == null ||!processAppName.equalsIgnoreCase(getPackageName())) {
+        if (processAppName == null || !processAppName.equalsIgnoreCase(getPackageName())) {
             return;
         }
         EMOptions options = new EMOptions();
         options.setAutoLogin(false);
-        options.setMipushConfig("2882303761517603946","5871760360946");
+        options.setMipushConfig("2882303761517603946", "5871760360946");
 //初始化
         EMClient.getInstance().init(this, options);
 //在做打包混淆时，关闭debug模式，避免消耗不必要的资源
@@ -187,6 +186,17 @@ public class BaseApplication extends Application implements Application.Activity
         mActivities.clear();
     }
 
+    public Activity getTopActivity() {
+        try {
+            if (mActivities != null && !mActivities.isEmpty()) {
+                return mActivities.get(mActivities.size() - 1);
+            }
+        }catch (Exception e) {
+            //忽略
+        }
+        return null;
+    }
+
     public boolean isLogin() {
         return !TextUtils.isEmpty(UserSharePrefernce.getAccount(this)) && UserSharePrefernce.isLogin(this);
     }
@@ -249,5 +259,6 @@ public class BaseApplication extends Application implements Application.Activity
     public void setUserInfo(UserInfo userInfo) {
         mUserInfo = userInfo;
     }
+
 
 }

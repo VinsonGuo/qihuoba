@@ -1,6 +1,9 @@
 package com.yjjr.yjfutures.utils;
 
+import android.app.Activity;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
@@ -13,6 +16,7 @@ import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.http.HttpManager;
+import com.yjjr.yjfutures.widget.CustomPromptDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -58,6 +62,14 @@ public class RxUtils {
                             public T apply(@NonNull final T t) throws Exception {
                                 if (t.getRcode() == 99) {
                                     EventBus.getDefault().post(new UpdateUserInfoEvent());
+                                }
+                                if (t.getRcode() == 98) {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            BaseApplication.getInstance().logout(BaseApplication.getInstance().getTopActivity());
+                                        }
+                                    });
                                 }
                                 if (t.getRcode() != 0) {
                                     throw new RuntimeException(t.getRmsg());

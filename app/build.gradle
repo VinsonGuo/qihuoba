@@ -94,5 +94,10 @@ dependencies {
     compile 'com.hyphenate:hyphenate-sdk-lite:3.3.0'
     compile 'com.github.w446108264:XhsEmoticonsKeyboard:2.0.4'
     compile 'com.github.w446108264:AndroidEmoji:1.0.0'
+    compile 'io.github.rockerhieu:emojicon:1.4.0'
+    compile ('io.socket:socket.io-client:1.0.0') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
     testCompile 'junit:junit:4.12'
 }

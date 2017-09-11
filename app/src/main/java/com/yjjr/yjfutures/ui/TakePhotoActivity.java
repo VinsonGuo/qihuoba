@@ -18,6 +18,7 @@ import com.jph.takephoto.permission.InvokeListener;
 import com.jph.takephoto.permission.PermissionManager;
 import com.jph.takephoto.permission.TakePhotoInvocationHandler;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.utils.LogUtils;
 
 /**
  * 继承这个类来让Activity获取拍照的能力<br>
@@ -71,12 +72,12 @@ public class TakePhotoActivity extends BaseActivity implements TakePhoto.TakeRes
 
     @Override
     public void takeSuccess(TResult result) {
-        Log.i(TAG, "takeSuccess：" + result.getImage().getCompressPath());
+        LogUtils.d("takeSuccess：" + result.getImage().getCompressPath());
     }
 
     @Override
     public void takeFail(TResult result, String msg) {
-        Log.i(TAG, "takeFail:" + msg);
+        LogUtils.e(" showMsg(messages);:" + msg);
     }
 
     @Override

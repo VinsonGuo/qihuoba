@@ -29,6 +29,7 @@ import com.yjjr.yjfutures.ui.home.HomePageFragment;
 import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
 import com.yjjr.yjfutures.ui.mine.MineFragment;
 import com.yjjr.yjfutures.utils.DialogUtils;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
@@ -47,6 +48,9 @@ import java.util.TimerTask;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class MainActivity extends BaseActivity {
 
@@ -67,6 +71,50 @@ public class MainActivity extends BaseActivity {
         initViews();
         checkUpdate();
         startPoll();
+        testSocketIO();
+    }
+
+    private void testSocketIO() {
+        try {
+            IO.Options options = new IO.Options();
+            options.forceNew = true;
+            options.reconnection = true;
+            final Socket socket = IO.socket("http://192.168.1.75:9092", options);//创建连接
+            //监听事件获取服务端的返回数据
+            socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    LogUtils.d("connect");
+//                   socket.close();
+                }
+            }).on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    System.out.println("connect timeout");
+                }
+            }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    System.out.println("connect error");
+                }
+            }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    System.out.println("disconnect");
+                }
+            }).on("topMarketData", new Emitter.Listener() {//获取行情数据事件。连接打开后由服务端自动推送数据到这个监听方法，不用APP发生请求
+                @Override
+                public void call(Object... args) {
+                    String data = (String) args[0];
+                    LogUtils.d("服务端返回的数据：************" + data);
+
+                }
+            });
+            socket.connect();
+        }catch (Exception e) {
+            LogUtils.e(e);
+        }
+
     }
 
     private void checkUpdate() {

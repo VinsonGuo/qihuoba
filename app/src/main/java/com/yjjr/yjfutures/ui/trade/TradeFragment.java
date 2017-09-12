@@ -18,7 +18,8 @@ import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FastTakeOrderEvent;
-import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
+import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.FastTakeOrderConfig;
@@ -407,11 +408,17 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(PollRefreshEvent event) {
         if (getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 0) {
+            getHolding();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(PriceRefreshEvent event) {
+        if (TextUtils.equals(event.getSymbol(), mSymbol)) {
             Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
             fillViews(quote);
-            getHolding();
             Funds result = StaticStore.getFunds(mIsDemo);
             tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
             tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));

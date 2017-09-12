@@ -14,7 +14,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
-import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
@@ -242,7 +242,7 @@ public class PositionListFragment extends ListFragment<Holds> {
 //    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(PollRefreshEvent event) {
         if (getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 1 && isResumed()) {
             loadData();
         }

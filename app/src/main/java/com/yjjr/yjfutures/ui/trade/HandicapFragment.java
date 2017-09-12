@@ -2,6 +2,7 @@ package com.yjjr.yjfutures.ui.trade;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,8 @@ import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
-import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
+import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
@@ -90,8 +92,10 @@ public class HandicapFragment extends BaseFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
-        fillView();
+    public void onEvent(PriceRefreshEvent event) {
+        if (TextUtils.equals(event.getSymbol(), mSymbol)) {
+            fillView();
+        }
     }
 
     @Override

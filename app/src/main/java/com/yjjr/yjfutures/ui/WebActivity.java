@@ -12,12 +12,11 @@ import android.widget.LinearLayout;
 import com.just.library.AgentWeb;
 import com.just.library.ChromeClientCallbackManager;
 import com.umeng.socialize.UMShareAPI;
-import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
-import com.yjjr.yjfutures.utils.ShareUtils;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.widget.HeaderView;
 
 public class WebActivity extends BaseActivity {
@@ -45,6 +44,7 @@ public class WebActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
         final String url = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
+        LogUtils.d("WebView url %s", url);
         final int type = getIntent().getIntExtra(Constants.CONTENT_PARAMETER_2, 0);
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.root_view);
         final HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
@@ -52,7 +52,7 @@ public class WebActivity extends BaseActivity {
         headerView.setMainTitle(url);
         if (type == TYPE_CSCENTER) { //客服中心
             headerView.getSubTitle().setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(mContext, R.drawable.ic_cscenter_phone), null, null, null);
-        }else if(type == TYPE_SHARE) { //推广赚钱
+        } else if (type == TYPE_SHARE) { //推广赚钱
             headerView.getSubTitle().setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(mContext, R.drawable.ic_share), null, null, null);
         }
         headerView.setOperateClickListener(new View.OnClickListener() {

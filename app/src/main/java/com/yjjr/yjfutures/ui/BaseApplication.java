@@ -189,7 +189,8 @@ public class BaseApplication extends Application implements Application.Activity
     public Activity getTopActivity() {
         try {
             if (mActivities != null && !mActivities.isEmpty()) {
-                return mActivities.get(mActivities.size() - 1);
+//                return mActivities.get(mActivities.size() - 1);
+                return mActivities.get(0);
             }
         }catch (Exception e) {
             //忽略
@@ -245,11 +246,18 @@ public class BaseApplication extends Application implements Application.Activity
     }
 
     public void logout(Context a) {
+        clearCache();
+        toLogin(a);
+    }
+
+    /**
+     * 清理用户资料
+     */
+    public void clearCache() {
         UserSharePrefernce.clearCache();
         mTradeToken = "";
         mDemoTradeToken = "";
         mUserInfo = null;
-        toLogin(a);
     }
 
     public UserInfo getUserInfo() {

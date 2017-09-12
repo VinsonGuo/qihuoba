@@ -19,9 +19,9 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Info;
 import com.yjjr.yjfutures.model.biz.NumberResult;
-import com.yjjr.yjfutures.store.ConfigSharePrefernce;
 import com.yjjr.yjfutures.ui.mine.GuideActivity;
 import com.yjjr.yjfutures.ui.mine.LoginActivity;
+import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SystemBarHelper;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
@@ -146,7 +146,7 @@ public class SplashScreen extends BaseActivity {
         if (isFinishing()) {
             return;
         }
-        if (BuildConfig.VERSION_CODE > ConfigSharePrefernce.getVersionCode(mContext)) {
+        if (ActivityTools.isNeedShowGuide(mContext)) {
             GuideActivity.startActivity(mContext);
         } else {
             if (BaseApplication.getInstance().isLogin()) {

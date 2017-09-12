@@ -83,7 +83,6 @@ public class GuideFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        ConfigSharePrefernce.setVersionCode(mContext, BuildConfig.VERSION_CODE);
         if (BaseApplication.getInstance().isLogin()) {
             MainActivity.startActivity(mContext);
         } else {

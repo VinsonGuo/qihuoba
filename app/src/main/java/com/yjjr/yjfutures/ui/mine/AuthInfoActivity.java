@@ -41,7 +41,6 @@ public class AuthInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_info);
-        EventBus.getDefault().register(this);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
         final RegisterInput riName = (RegisterInput) findViewById(R.id.ri_name);
@@ -99,6 +98,5 @@ public class AuthInfoActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

@@ -46,7 +46,6 @@ public class AlterLoginPwdActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alter_login_pwd);
-        EventBus.getDefault().register(this);
         mType = getIntent().getIntExtra(Constants.CONTENT_PARAMETER, 0);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         final RegisterInput riPwd = (RegisterInput) findViewById(R.id.ri_pwd);
@@ -111,6 +110,5 @@ public class AlterLoginPwdActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

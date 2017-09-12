@@ -51,8 +51,8 @@ public class MarketPriceAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> 
             tvPrice.setTextColor(ContextCompat.getColor(mContext, change > 0 ? R.color.main_color_red : R.color.main_color_green));
             tvChange.setBackgroundResource(change > 0 ? R.drawable.shape_red_border_bg : R.drawable.shape_green_border_bg);
 
-            int position = helper.getLayoutPosition();
-            /*if (position == 2 && isDemo && !isShow) {
+            /*int position = helper.getLayoutPosition();
+            if (position == 2 && isDemo && !isShow) {
                 showGuideView(helper.getConvertView(), position);
                 isShow = true;
             }*/

@@ -11,9 +11,16 @@ import android.view.View;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 import com.umeng.analytics.MobclickAgent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.ReloginDialogEvent;
+import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.InputMethodUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SystemBarHelper;
+import com.yjjr.yjfutures.widget.CustomPromptDialog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 
 /**
@@ -25,6 +32,7 @@ public class BaseActivity extends RxAppCompatActivity {
     protected boolean isDestroy = false;
     protected BaseActivity mContext;
     private Handler mHandler = new Handler(Looper.getMainLooper());
+    private CustomPromptDialog mReloginDialog;
 
     /**
      * 是否设置默认的状态栏
@@ -34,8 +42,10 @@ public class BaseActivity extends RxAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         mContext = this;
         LogUtils.d("onCreate (" + getClass().getSimpleName() + ".java:1)");
+        mReloginDialog = DialogUtils.createReloginDialog(mContext);
 //        PushAgent.getInstance(this).onAppStart();
     }
 
@@ -103,9 +113,18 @@ public class BaseActivity extends RxAppCompatActivity {
         MobclickAgent.onPause(this);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ReloginDialogEvent event) {
+        if (mReloginDialog != null && !mReloginDialog.isShowing()) {
+            BaseApplication.getInstance().clearCache();
+            mReloginDialog.show();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         isDestroy = true;
     }
 

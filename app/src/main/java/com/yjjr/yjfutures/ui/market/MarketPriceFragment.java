@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
-import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
+import com.yjjr.yjfutures.event.PriceRefreshEvent;
+import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
@@ -62,7 +64,7 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
         RecyclerView rvList = (RecyclerView) v.findViewById(R.id.rv_list);
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new MarketPriceAdapter(null, !mShowTitle);
-        rvList.setAdapter(mAdapter);
+        mAdapter.bindToRecyclerView(rvList);
         mAdapter.setOnItemClickListener(this);
         return v;
     }
@@ -77,10 +79,19 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
         TradeActivity.startActivity(mContext, mAdapter.getData().get(position).getSymbol(), !mShowTitle);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(PriceRefreshEvent event) {
         if (isResumed()) {
-            mAdapter.replaceData(StaticStore.getQuoteValues(!mShowTitle));
+//            mAdapter.replaceData(StaticStore.getQuoteValues(!mShowTitle));
+            Quote quote = StaticStore.getQuote(event.getSymbol(), !mShowTitle);
+            int position = mAdapter.getData().indexOf(quote);
+            mAdapter.notifyItemChanged(position);
         }
     }
 

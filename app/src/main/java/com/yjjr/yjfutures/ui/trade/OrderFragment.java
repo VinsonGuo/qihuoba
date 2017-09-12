@@ -6,28 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
-import com.yjjr.yjfutures.event.RefreshEvent;
-import com.yjjr.yjfutures.event.SendOrderEvent;
-import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
-import com.yjjr.yjfutures.utils.RxUtils;
-import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.TradeInfoView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 public class OrderFragment extends BaseFragment {
 
@@ -88,7 +78,7 @@ public class OrderFragment extends BaseFragment {
 //    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(PollRefreshEvent event) {
         if(isFragmentVisible()) {
             Funds result = StaticStore.getFunds(mIsDemo);
             mTradeInfoView.setValues(mIsDemo, result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());

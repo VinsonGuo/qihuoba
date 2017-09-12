@@ -4,40 +4,26 @@ package com.yjjr.yjfutures.ui.mine;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.event.RefreshEvent;
-import com.yjjr.yjfutures.event.SendOrderEvent;
-import com.yjjr.yjfutures.model.biz.BizResponse;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
-import com.yjjr.yjfutures.ui.trade.DepositActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
-import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
-import com.yjjr.yjfutures.utils.LogUtils;
-import com.yjjr.yjfutures.utils.RxUtils;
-import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
-import com.yjjr.yjfutures.utils.http.HttpManager;
-import com.yjjr.yjfutures.widget.CustomPromptDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 /**
  * mine fragment
@@ -104,7 +90,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(PollRefreshEvent event) {
         Funds result = StaticStore.getFunds(false);
         tvYue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
         tvMargin.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));

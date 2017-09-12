@@ -49,7 +49,6 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alter_login_pwd2);
-        EventBus.getDefault().register(this);
         final String oldPwd = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
         final int type = getIntent().getIntExtra(Constants.CONTENT_PARAMETER_2, 0);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
@@ -160,6 +159,5 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

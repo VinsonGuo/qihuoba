@@ -3,12 +3,9 @@ package com.yjjr.yjfutures.ui.home;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +18,8 @@ import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.PriceRefreshEvent;
+import com.yjjr.yjfutures.event.ReloginDialogEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.model.Quote;
@@ -94,10 +92,10 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             }
         });
         RecyclerView rvList = (RecyclerView) view.findViewById(R.id.rv_list);
-        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
-        if (animator instanceof SimpleItemAnimator) {
-            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
-        }
+//        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
+//        if (animator instanceof SimpleItemAnimator) {
+//            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+//        }
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new HomePageAdapter(null);
         View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, rvList, false);
@@ -114,7 +112,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 TradeActivity.startActivity(mContext, mAdapter.getData().get(position).getSymbol(), false);
             }
         });
-//        rvList.setAdapter(mAdapter);
         mAdapter.bindToRecyclerView(rvList);
         view.findViewById(R.id.tv_customer_service).setOnClickListener(this);
         view.findViewById(R.id.tv_guide).setOnClickListener(this);
@@ -140,12 +137,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
                             if (loginBizResponse.getRcode() != 0) {
                                 if (loginBizResponse.getRcode() == 1) { // 账号密法错误，重新登录
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            DialogUtils.createReloginDialog(mContext).show();
-                                        }
-                                    });
+                                    EventBus.getDefault().post(new ReloginDialogEvent());
                                 }
                                 throw new RuntimeException("登录失败");
                             }
@@ -280,20 +272,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void getHolding() {
-       /* HttpManager.getHttpService().getHolding(BaseApplication.getInstance().getTradeToken())
-                .compose(RxUtils.<List<Holding>>applySchedulers())
-                .compose(this.<List<Holding>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<List<Holding>>() {
-                    @Override
-                    public void accept(@NonNull List<Holding> holdings) throws Exception {
-                        //将持仓的品种保存起来
-                        StaticStore.sHoldSet = new HashSet<>();
-                        for (Holding holding : holdings) {
-                            if(holding.getQty() == 0) continue;
-                            StaticStore.sHoldSet.add(holding.getSymbol());
-                        }
-                    }
-                }, RxUtils.commonErrorConsumer());*/
         HttpManager.getBizService().getHolding()
                 .compose(RxUtils.<BizResponse<List<Holds>>>applySchedulers())
                 .compose(this.<BizResponse<List<Holds>>>bindUntilEvent(FragmentEvent.DESTROY))
@@ -319,6 +297,9 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         super.onResume();
         if (mBanner != null) {
             mBanner.startTurning(3000);
+        }
+        if (mAdapter != null) {
+            mAdapter.replaceData(StaticStore.getQuoteValues(false));
         }
     }
 
@@ -353,11 +334,15 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(PriceRefreshEvent event) {
         if (isResumed()) {
-            mAdapter.getData().clear();
-            mAdapter.getData().addAll(StaticStore.getQuoteValues(false));
-            mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.getQuoteValues(false).size());
+//            mAdapter.getData().clear();
+//            mAdapter.getData().addAll(StaticStore.getQuoteValues(false));
+//            mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.getQuoteValues(false).size());
+            Quote quote = StaticStore.getQuote(event.getSymbol(), false);
+            int position = mAdapter.getData().indexOf(quote);
+            mAdapter.notifyItemChanged(mAdapter.getHeaderLayoutCount() + position);
+//            mAdapter.notifyItemInserted();
         }
     }
 

@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
@@ -26,7 +26,6 @@ import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.TradeInfoView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -52,13 +51,9 @@ public class DemoTradeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo_trade);
-        EventBus.getDefault().register(this);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
         mTradeInfoView = (TradeInfoView) findViewById(R.id.trade_info);
-        MarketPriceFragment fragment = MarketPriceFragment.newInstance(false);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
-        fragment.setUserVisibleHint(true);
         loadData();
         startTimer();
     }
@@ -73,7 +68,7 @@ public class DemoTradeActivity extends BaseActivity {
                 if (BaseApplication.getInstance().isBackground()) {
                     return;
                 }
-                HttpManager.getHttpService(true).getQuoteList(StaticStore.sDemoSymbols, StaticStore.sDemoExchange)
+               /* HttpManager.getHttpService(true).getQuoteList(StaticStore.sDemoSymbols, StaticStore.sDemoExchange)
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override
                             public List<Quote> apply(@NonNull List<Quote> quotes) throws Exception {
@@ -90,9 +85,9 @@ public class DemoTradeActivity extends BaseActivity {
                         .subscribe(new Consumer<List<Quote>>() {
                             @Override
                             public void accept(@NonNull List<Quote> quotes) throws Exception {
-//                                EventBus.getDefault().post(new RefreshEvent());
+//                                EventBus.getDefault().post(new PollRefreshEvent());
                             }
-                        }, RxUtils.commonErrorConsumer());
+                        }, RxUtils.commonErrorConsumer());*/
                 HttpManager.getBizService(true).getFunds()
                         .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
                         .compose(mContext.<BizResponse<Funds>>bindUntilEvent(ActivityEvent.DESTROY))
@@ -157,6 +152,10 @@ public class DemoTradeActivity extends BaseActivity {
                     public void accept(@NonNull Boolean symbols) throws Exception {
 //                        mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
 //                        mLoadingView.setVisibility(View.GONE);
+                        // 设置fragment
+                        MarketPriceFragment fragment = MarketPriceFragment.newInstance(false);
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
+//                        fragment.setUserVisibleHint(true);
                         getHolding();
                     }
                 }, new Consumer<Throwable>() {
@@ -191,29 +190,15 @@ public class DemoTradeActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(PollRefreshEvent event) {
         if (mTradeInfoView == null) return;
         Funds result = StaticStore.getFunds(true);
         mTradeInfoView.setValues(result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
     }
 
-//    private void getFund() {
-//        HttpManager.getBizService(true).getFunds()
-//                .retry(3)
-//                .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
-//                .compose(this.<BizResponse<Funds>>bindUntilEvent(ActivityEvent.DESTROY))
-//                .subscribe(new Consumer<BizResponse<Funds>>() {
-//                    @Override
-//                    public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
-//                        Funds result = fundsBizResponse.getResult();
-//                        mTradeInfoView.setValues(result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
-//                    }
-//                }, RxUtils.commonErrorConsumer());
-//    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

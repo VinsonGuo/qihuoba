@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.ui.trade;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,7 @@ import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
-import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
@@ -147,9 +148,9 @@ public class TimeSharingplanFragment extends BaseFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
-        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-        if (mChart != null && quote != null) {
+    public void onEvent(PriceRefreshEvent event) {
+        if (TextUtils.equals(event.getSymbol(), mSymbol)) {
+            Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
             mChart.refreshEntry((float) quote.getLastPrice());
         }
     }

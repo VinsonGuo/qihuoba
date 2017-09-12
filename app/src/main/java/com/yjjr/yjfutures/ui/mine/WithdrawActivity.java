@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.FinishEvent;
-import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseActivity;
@@ -22,7 +22,6 @@ import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -39,7 +38,6 @@ public class WithdrawActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_withdraw);
-        EventBus.getDefault().register(this);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         mTvYue = (TextView) findViewById(R.id.tv_yue);
         headerView.bindActivity(mContext);
@@ -77,7 +75,7 @@ public class WithdrawActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(PollRefreshEvent event) {
         Funds funds = StaticStore.getFunds(false);
         mTvYue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(funds.getAvailableFunds()));
     }
@@ -85,6 +83,5 @@ public class WithdrawActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

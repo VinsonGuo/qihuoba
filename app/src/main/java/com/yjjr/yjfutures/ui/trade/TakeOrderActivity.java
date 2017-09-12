@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
-import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Quote;
@@ -30,7 +30,6 @@ import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.ArithUtils;
-import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -88,7 +87,6 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_order);
-        EventBus.getDefault().register(this);
         Intent intent = getIntent();
         mSymbol = intent.getStringExtra(Constants.CONTENT_PARAMETER);
         mType = intent.getIntExtra(Constants.CONTENT_PARAMETER_2, TYPE_BUY);
@@ -191,8 +189,8 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(RefreshEvent event) {
-        if(mTvPrice != null) {
+    public void onEvent(PriceRefreshEvent event) {
+        if (TextUtils.equals(event.getSymbol(), mSymbol)) {
             Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
             mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, TextUtils.equals("买入", mBuySell) ? quote.getAskPrice() : quote.getBidPrice()));
         }
@@ -296,6 +294,5 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

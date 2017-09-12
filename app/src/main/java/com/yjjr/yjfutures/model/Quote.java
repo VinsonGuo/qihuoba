@@ -276,7 +276,15 @@ public class Quote implements Parcelable {
     @Override
     public String toString() {
         return "Quote{" +
-                "askSize=" + askSize +
+                "Symbol='" + Symbol + '\'' +
+                ", Symbolname='" + Symbolname + '\'' +
+                ", AskPrice=" + AskPrice +
+                ", ExchangeRate=" + ExchangeRate +
+                ", BidSize=" + BidSize +
+                ", LastSize=" + LastSize +
+                ", LastPrice=" + LastPrice +
+                ", BidPrice=" + BidPrice +
+                ", askSize=" + askSize +
                 ", Lastclose=" + Lastclose +
                 ", openinterest=" + openinterest +
                 ", Change=" + Change +
@@ -287,14 +295,6 @@ public class Quote implements Parcelable {
                 ", open=" + open +
                 ", ChangeRate=" + ChangeRate +
                 ", Exchange=" + Exchange +
-                ", Symbolname='" + Symbolname + '\'' +
-                ", AskPrice=" + AskPrice +
-                ", ExchangeRate=" + ExchangeRate +
-                ", BidSize=" + BidSize +
-                ", Symbol='" + Symbol + '\'' +
-                ", LastSize=" + LastSize +
-                ", LastPrice=" + LastPrice +
-                ", BidPrice=" + BidPrice +
                 ", high=" + high +
                 ", Multiple=" + Multiple +
                 ", low=" + low +

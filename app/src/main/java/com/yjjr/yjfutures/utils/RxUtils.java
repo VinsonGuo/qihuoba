@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.yjjr.yjfutures.event.ReloginDialogEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
@@ -64,12 +65,14 @@ public class RxUtils {
                                     EventBus.getDefault().post(new UpdateUserInfoEvent());
                                 }
                                 if (t.getRcode() == 98) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    EventBus.getDefault().post(new ReloginDialogEvent());
+                                   /* new Handler(Looper.getMainLooper()).post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            BaseApplication.getInstance().logout(BaseApplication.getInstance().getTopActivity());
+//                                            BaseApplication.getInstance().logout(BaseApplication.getInstance().getTopActivity());
+                                            DialogUtils.createReloginDialog(BaseApplication.getInstance().getTopActivity()).show();
                                         }
-                                    });
+                                    });*/
                                 }
                                 if (t.getRcode() != 0) {
                                     throw new RuntimeException(t.getRmsg());

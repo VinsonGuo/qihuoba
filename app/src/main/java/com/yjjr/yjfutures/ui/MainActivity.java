@@ -7,13 +7,15 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.HideRedDotEvent;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
-import com.yjjr.yjfutures.event.RefreshEvent;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
+import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.Quote;
@@ -28,6 +30,8 @@ import com.yjjr.yjfutures.ui.found.FoundFragment;
 import com.yjjr.yjfutures.ui.home.HomePageFragment;
 import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
 import com.yjjr.yjfutures.ui.mine.MineFragment;
+import com.yjjr.yjfutures.ui.trade.TradeGuideActivity;
+import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -41,13 +45,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -58,6 +60,7 @@ public class MainActivity extends BaseActivity {
     private Timer mTimer = new Timer();
     private long mBackPressed;
     private AlphaTabsIndicator mBottomBar;
+    private Gson mGson = new Gson();
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
@@ -67,11 +70,13 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        EventBus.getDefault().register(this);
         initViews();
         checkUpdate();
         startPoll();
         testSocketIO();
+        if (ActivityTools.isNeedShowGuide(mContext)) {
+            TradeGuideActivity.startActivity(mContext);
+        }
     }
 
     private void testSocketIO() {
@@ -85,7 +90,6 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void call(Object... args) {
                     LogUtils.d("connect");
-//                   socket.close();
                 }
             }).on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
                 @Override
@@ -102,16 +106,34 @@ public class MainActivity extends BaseActivity {
                 public void call(Object... args) {
                     System.out.println("disconnect");
                 }
-            }).on("topMarketData", new Emitter.Listener() {//获取行情数据事件。连接打开后由服务端自动推送数据到这个监听方法，不用APP发生请求
+            }).on("singleTopMarketData", new Emitter.Listener() {//获取行情数据事件。连接打开后由服务端自动推送数据到这个监听方法，不用APP发生请求
                 @Override
                 public void call(Object... args) {
+                    if (BaseApplication.getInstance().isBackground()) {
+                        return;
+                    }
                     String data = (String) args[0];
-                    LogUtils.d("服务端返回的数据：************" + data);
+                    Quote quote = mGson.fromJson(data, Quote.class);
+                    Quote oldQuote = StaticStore.getQuote(quote.getSymbol(), false);
+                    if (oldQuote != null) {
+                        oldQuote.setAskPrice(quote.getAskPrice());
+                        oldQuote.setBidPrice(quote.getBidPrice());
+                        oldQuote.setChange(quote.getChange());
+                        oldQuote.setChangeRate(quote.getChangeRate());
+                        oldQuote.setLastclose(quote.getLastclose());
+                        oldQuote.setLastPrice(quote.getLastPrice());
+                        oldQuote.setLastSize(quote.getLastSize());
+                        oldQuote.setAskSize(quote.getAskSize());
+                        oldQuote.setBidSize(quote.getBidSize());
+                        oldQuote.setVol(quote.getVol());
+                        LogUtils.d("收到报价信息：%s", oldQuote.toString());
+                        EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
+                    }
 
                 }
             });
             socket.connect();
-        }catch (Exception e) {
+        } catch (Exception e) {
             LogUtils.e(e);
         }
 
@@ -157,7 +179,6 @@ public class MainActivity extends BaseActivity {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                EventBus.getDefault().post(new RefreshEvent());
                 DateTime dateTime = new DateTime();
                 if (dateTime.getSecondOfMinute() == 5) {
                     EventBus.getDefault().post(new OneMinuteEvent());
@@ -168,7 +189,8 @@ public class MainActivity extends BaseActivity {
                 if (BaseApplication.getInstance().isBackground()) {
                     return;
                 }
-                HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
+               EventBus.getDefault().post(new PollRefreshEvent());
+               /*  HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override
                             public List<Quote> apply(@NonNull List<Quote> quotes) throws Exception {
@@ -186,7 +208,7 @@ public class MainActivity extends BaseActivity {
                             @Override
                             public void accept(@NonNull List<Quote> quotes) throws Exception {
                             }
-                        }, RxUtils.commonErrorConsumer());
+                        }, RxUtils.commonErrorConsumer());*/
 
                 HttpManager.getBizService().getFunds()
                         .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
@@ -242,7 +264,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
         mTimer.cancel();
     }
 }

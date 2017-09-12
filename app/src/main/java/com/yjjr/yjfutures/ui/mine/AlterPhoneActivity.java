@@ -50,7 +50,6 @@ public class AlterPhoneActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alter_phone);
-        EventBus.getDefault().register(this);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         final RegisterInput riPhone = (RegisterInput) findViewById(R.id.ri_phone);
         final RegisterInput riSmsCode = (RegisterInput) findViewById(R.id.ri_smscode);
@@ -123,6 +122,5 @@ public class AlterPhoneActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

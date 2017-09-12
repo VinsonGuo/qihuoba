@@ -13,8 +13,10 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.WindowManager;
 
+import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.UserInfo;
+import com.yjjr.yjfutures.store.ConfigSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.mine.AuthActivity;
 import com.yjjr.yjfutures.ui.mine.BindCardActivity;
@@ -207,4 +209,7 @@ public class ActivityTools {
         return "";
     }
 
+    public static boolean isNeedShowGuide(Context context) {
+        return BuildConfig.VERSION_CODE > ConfigSharePrefernce.getVersionCode(context);
+    }
 }

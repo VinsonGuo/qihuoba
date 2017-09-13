@@ -16,6 +16,7 @@ public class Notice {
     private int id;
     private String title;
     private String summary;
+    private String rightTitle;
 
     public long getDate() {
         return date;
@@ -47,5 +48,13 @@ public class Notice {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getRightTitle() {
+        return rightTitle;
+    }
+
+    public void setRightTitle(String rightTitle) {
+        this.rightTitle = rightTitle;
     }
 }

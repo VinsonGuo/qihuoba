@@ -45,6 +45,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -84,27 +85,27 @@ public class MainActivity extends BaseActivity {
             IO.Options options = new IO.Options();
             options.forceNew = true;
             options.reconnection = true;
-            final Socket socket = IO.socket("http://192.168.1.75:9092", options);//创建连接
+            final Socket socket = IO.socket("http://192.168.1.67:9092", options);//创建连接
             //监听事件获取服务端的返回数据
             socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    LogUtils.d("connect");
+                    LogUtils.d("socket io connect");
                 }
             }).on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    System.out.println("connect timeout");
+                    LogUtils.d("socket io connect timeout");
                 }
             }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    System.out.println("connect error");
+                    LogUtils.d("socket io connect error %s", Arrays.toString(args));
                 }
             }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    System.out.println("disconnect");
+                    LogUtils.d("socket io disconnect");
                 }
             }).on("singleTopMarketData", new Emitter.Listener() {//获取行情数据事件。连接打开后由服务端自动推送数据到这个监听方法，不用APP发生请求
                 @Override
@@ -126,7 +127,7 @@ public class MainActivity extends BaseActivity {
                         oldQuote.setAskSize(quote.getAskSize());
                         oldQuote.setBidSize(quote.getBidSize());
                         oldQuote.setVol(quote.getVol());
-                        LogUtils.d("收到报价信息：%s", oldQuote.toString());
+                        LogUtils.d("socket io 收到报价信息：%s", oldQuote.toString());
                         EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
                     }
 
@@ -150,6 +151,14 @@ public class MainActivity extends BaseActivity {
                         if (result.getUpdateOS() != 0) {
                             DialogUtils.createUpdateDialog(mContext, result).show();
                         }
+                    }
+                }, RxUtils.commonErrorConsumer());
+        HttpManager.getBizService().getActivity()
+                .compose(RxUtils.applyBizSchedulers())
+                .subscribe(new Consumer<BizResponse>() {
+                    @Override
+                    public void accept(@NonNull BizResponse response) throws Exception {
+
                     }
                 }, RxUtils.commonErrorConsumer());
     }
@@ -189,7 +198,7 @@ public class MainActivity extends BaseActivity {
                 if (BaseApplication.getInstance().isBackground()) {
                     return;
                 }
-               EventBus.getDefault().post(new PollRefreshEvent());
+                EventBus.getDefault().post(new PollRefreshEvent());
                /*  HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override

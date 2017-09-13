@@ -1,13 +1,14 @@
 package com.yjjr.yjfutures.ui.found;
 
 import android.support.annotation.Nullable;
-import android.text.Html;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.Notice;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -15,6 +16,10 @@ import java.util.List;
  */
 
 public class NoticeAdapter extends BaseQuickAdapter<Notice, BaseViewHolder> {
+
+
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-mm");
+
     public NoticeAdapter(@Nullable List<Notice> data) {
         super(R.layout.item_notice_list, data);
     }
@@ -22,6 +27,8 @@ public class NoticeAdapter extends BaseQuickAdapter<Notice, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, Notice item) {
         helper.setText(R.id.tv_name, "·通知：" + item.getTitle())
-                .setText(R.id.tv_content, item.getSummary());
+                .setText(R.id.tv_content, item.getSummary())
+                .setText(R.id.tv_date, dateFormat.format(item.getDate()))
+                .setText(R.id.tv_symbol, item.getRightTitle());
     }
 }

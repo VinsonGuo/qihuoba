@@ -54,6 +54,8 @@ public class DialogUtils {
     }
 
 
+
+
     public static CustomPromptDialog createReloginDialog(final Context context) {
         CustomPromptDialog dialog = new CustomPromptDialog.Builder(context)
                 .isShowClose(false)

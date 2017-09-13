@@ -27,9 +27,40 @@
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:padding="@dimen/root_padding_15"
         android:textColor="@color/main_text_color"
         android:textSize="@dimen/sp_12"
         tools:text="@string/content"/>
+
+    <View
+        style="@style/style_divider"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:paddingLeft="@dimen/root_padding_15"
+        android:paddingRight="@dimen/root_padding_15">
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"
+            tools:text="date"/>
+
+        <TextView
+            android:id="@+id/tv_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"
+            tools:text="tv_symbol"/>
+
+    </FrameLayout>
 
 </LinearLayout>

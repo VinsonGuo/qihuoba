@@ -411,6 +411,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     public void onEvent(PollRefreshEvent event) {
         if (getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 0) {
             getHolding();
+            // 下面是轮询方式获取报价
+            Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+            fillViews(quote);
+            Funds result = StaticStore.getFunds(mIsDemo);
+            tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
+            tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
         }
     }
 

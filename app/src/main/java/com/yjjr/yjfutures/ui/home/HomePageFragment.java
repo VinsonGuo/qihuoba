@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.ReloginDialogEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
@@ -92,10 +94,10 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             }
         });
         RecyclerView rvList = (RecyclerView) view.findViewById(R.id.rv_list);
-//        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
-//        if (animator instanceof SimpleItemAnimator) {
-//            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
-//        }
+        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new HomePageAdapter(null);
         View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, rvList, false);
@@ -197,6 +199,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                             mLoadingView.setVisibility(View.GONE);
                             DialogUtils.showGuideView(getActivity(), mDemoView);
                             getHolding();
+                            getHuodong();
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -240,6 +243,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         @Override
                         public void accept(@NonNull Boolean symbols) throws Exception {
                             getHolding();
+                            getHuodong();
                             mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
                             mLoadingView.setVisibility(View.GONE);
                             DialogUtils.showGuideView(getActivity(), mDemoView);
@@ -283,6 +287,19 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         for (Holds holding : response.getResult()) {
                             StaticStore.sHoldSet.add(holding.getSymbol());
                         }
+                    }
+                }, RxUtils.commonErrorConsumer());
+    }
+
+    private void getHuodong() {
+        HttpManager.getBizService().getActivity()
+                .compose(RxUtils.applyBizSchedulers())
+                .subscribe(new Consumer<BizResponse>() {
+                    @Override
+                    public void accept(@NonNull BizResponse response) throws Exception {
+                        //test
+//                        DialogUtils.createImageDialog(mContext, "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1505303018751&di=42818b54b4161d71ff164d66f233c332&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F031b54a58aa9fd0a801219c77cdeaa5.jpg").show();
+                        DialogUtils.createImageDialog(mContext, "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1505304595665&di=7aab3919e3b9cfcd8369f0711b570bfe&imgtype=0&src=http%3A%2F%2Fimg.smzy.com%2Fdown%2FUploadPic%2F2016-8%2F201689146265738.jpg").show();
                     }
                 }, RxUtils.commonErrorConsumer());
     }
@@ -336,13 +353,22 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PriceRefreshEvent event) {
         if (isResumed()) {
-//            mAdapter.getData().clear();
-//            mAdapter.getData().addAll(StaticStore.getQuoteValues(false));
-//            mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.getQuoteValues(false).size());
             Quote quote = StaticStore.getQuote(event.getSymbol(), false);
             int position = mAdapter.getData().indexOf(quote);
             mAdapter.notifyItemChanged(mAdapter.getHeaderLayoutCount() + position);
-//            mAdapter.notifyItemInserted();
+        }
+    }
+
+    /**
+     * 旧的方式，新版可以弃用
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(PollRefreshEvent event) {
+        if (isResumed()) {
+            mAdapter.getData().clear();
+            mAdapter.getData().addAll(StaticStore.getQuoteValues(false));
+            mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.getQuoteValues(false).size());
         }
     }
 

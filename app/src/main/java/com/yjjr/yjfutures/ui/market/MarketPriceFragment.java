@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,10 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
         View v = inflater.inflate(R.layout.fragment_market_price, container, false);
         v.findViewById(R.id.tv_title).setVisibility(mShowTitle ? View.VISIBLE : View.GONE);
         RecyclerView rvList = (RecyclerView) v.findViewById(R.id.rv_list);
+        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new MarketPriceAdapter(null, !mShowTitle);
         mAdapter.bindToRecyclerView(rvList);
@@ -88,10 +93,16 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PriceRefreshEvent event) {
         if (isResumed()) {
-//            mAdapter.replaceData(StaticStore.getQuoteValues(!mShowTitle));
             Quote quote = StaticStore.getQuote(event.getSymbol(), !mShowTitle);
             int position = mAdapter.getData().indexOf(quote);
             mAdapter.notifyItemChanged(position);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(PollRefreshEvent event) {
+        if (isResumed()) {
+            mAdapter.replaceData(StaticStore.getQuoteValues(!mShowTitle));
         }
     }
 

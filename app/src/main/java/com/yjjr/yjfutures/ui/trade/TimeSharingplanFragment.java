@@ -12,6 +12,7 @@ import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Quote;
@@ -153,6 +154,12 @@ public class TimeSharingplanFragment extends BaseFragment {
             Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
             mChart.refreshEntry((float) quote.getLastPrice());
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(PollRefreshEvent event) {
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+        mChart.refreshEntry((float) quote.getLastPrice());
     }
 
     @Override

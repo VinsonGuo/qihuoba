@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
@@ -194,6 +195,12 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
             Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
             mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, TextUtils.equals("买入", mBuySell) ? quote.getAskPrice() : quote.getBidPrice()));
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(PollRefreshEvent event) {
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+        mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, TextUtils.equals("买入", mBuySell) ? quote.getAskPrice() : quote.getBidPrice()));
     }
 
     @Override

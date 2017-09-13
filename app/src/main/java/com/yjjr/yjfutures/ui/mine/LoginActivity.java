@@ -15,6 +15,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.exception.UserNotExistException;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.UserInfo;
@@ -23,6 +24,7 @@ import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.MainActivity;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
@@ -126,6 +128,9 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
                         if (loginBizResponse.getRcode() != 0) {
+                            if (loginBizResponse.getRcode() == 90) { // 用户不存在
+                                throw new UserNotExistException(loginBizResponse.getRmsg());
+                            }
                             throw new RuntimeException(loginBizResponse.getRmsg());
                         }
                         BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
@@ -160,7 +165,11 @@ public class LoginActivity extends BaseActivity {
                         mLoginDialog.dismiss();
                         LogUtils.e(throwable);
                         btnLogin.setSelected(true);
-                        ToastUtils.show(mContext, throwable.getMessage());
+                        if(throwable instanceof UserNotExistException) {
+                            DialogUtils.createToRegisterDialog(mContext).show();
+                        }else {
+                            ToastUtils.show(mContext, throwable.getMessage());
+                        }
                     }
                 });
     }

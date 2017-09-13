@@ -46,11 +46,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -74,7 +76,7 @@ public class MainActivity extends BaseActivity {
         initViews();
         checkUpdate();
         startPoll();
-        testSocketIO();
+//        testSocketIO();
         if (ActivityTools.isNeedShowGuide(mContext)) {
             TradeGuideActivity.startActivity(mContext);
         }
@@ -153,14 +155,6 @@ public class MainActivity extends BaseActivity {
                         }
                     }
                 }, RxUtils.commonErrorConsumer());
-        HttpManager.getBizService().getActivity()
-                .compose(RxUtils.applyBizSchedulers())
-                .subscribe(new Consumer<BizResponse>() {
-                    @Override
-                    public void accept(@NonNull BizResponse response) throws Exception {
-
-                    }
-                }, RxUtils.commonErrorConsumer());
     }
 
 
@@ -199,7 +193,7 @@ public class MainActivity extends BaseActivity {
                     return;
                 }
                 EventBus.getDefault().post(new PollRefreshEvent());
-               /*  HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
+                 HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override
                             public List<Quote> apply(@NonNull List<Quote> quotes) throws Exception {
@@ -217,7 +211,7 @@ public class MainActivity extends BaseActivity {
                             @Override
                             public void accept(@NonNull List<Quote> quotes) throws Exception {
                             }
-                        }, RxUtils.commonErrorConsumer());*/
+                        }, RxUtils.commonErrorConsumer());
 
                 HttpManager.getBizService().getFunds()
                         .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())

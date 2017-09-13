@@ -177,7 +177,7 @@ public interface BizService {
     Observable<BizResponse> resetCapitalAccount(@Field("cid") String account);
 
 
-    @GET("service/activict/queryActivict")
+    @GET("activict/queryActivict")
     Observable<BizResponse> getActivity();
 
 }

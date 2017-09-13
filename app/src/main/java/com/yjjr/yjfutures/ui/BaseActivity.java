@@ -12,6 +12,7 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 import com.umeng.analytics.MobclickAgent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.ReloginDialogEvent;
+import com.yjjr.yjfutures.ui.mine.LoginActivity;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.InputMethodUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -115,6 +116,9 @@ public class BaseActivity extends RxAppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ReloginDialogEvent event) {
+        if (mContext instanceof LoginActivity) {
+            return;
+        }
         if (mReloginDialog != null && !mReloginDialog.isShowing()) {
             BaseApplication.getInstance().clearCache();
             mReloginDialog.show();

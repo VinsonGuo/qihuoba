@@ -40,7 +40,10 @@ import zhy.com.highlight.shape.RectLightShape;
 
 public class DialogUtils {
 
-    public static CustomPromptDialog createCommonDialog(final Context context, String info) {
+    /**
+     * 去注册的对话框
+     */
+    public static CustomPromptDialog createToRegisterDialog(final Context context, String info) {
         return new CustomPromptDialog.Builder(context)
                 .isShowClose(true)
                 .setMessage(info)
@@ -53,7 +56,18 @@ public class DialogUtils {
                 .create();
     }
 
-
+    public static CustomPromptDialog createCommonDialog(final Context context, String info) {
+        return new CustomPromptDialog.Builder(context)
+                .isShowClose(true)
+                .setMessage(info)
+                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+    }
 
 
     public static CustomPromptDialog createReloginDialog(final Context context) {

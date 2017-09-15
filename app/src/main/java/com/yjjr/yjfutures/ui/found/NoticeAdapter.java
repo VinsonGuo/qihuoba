@@ -18,7 +18,7 @@ import java.util.List;
 public class NoticeAdapter extends BaseQuickAdapter<Notice, BaseViewHolder> {
 
 
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-mm");
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public NoticeAdapter(@Nullable List<Notice> data) {
         super(R.layout.item_notice_list, data);
@@ -29,6 +29,7 @@ public class NoticeAdapter extends BaseQuickAdapter<Notice, BaseViewHolder> {
         helper.setText(R.id.tv_name, "·通知：" + item.getTitle())
                 .setText(R.id.tv_content, item.getSummary())
                 .setText(R.id.tv_date, dateFormat.format(item.getDate()))
-                .setText(R.id.tv_symbol, item.getRightTitle());
+                .setText(R.id.tv_symbol, item.getRightTitle())
+                .setVisible(R.id.iv_unread, item.getIsread() == 0);
     }
 }

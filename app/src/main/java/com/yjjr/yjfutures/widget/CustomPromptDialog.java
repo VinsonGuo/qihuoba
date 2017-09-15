@@ -169,6 +169,8 @@ public class CustomPromptDialog extends Dialog {
             tvTitle.setVisibility(visible);
             // set the confirm button
             if (positiveButtonText != null) {
+                // 将分割线隐藏
+                layout.findViewById(R.id.divider).setVisibility(View.GONE);
                 positiveButtonShow = true;
                 ((Button) layout.findViewById(R.id.positiveButton))
                         .setText(positiveButtonText);
@@ -205,6 +207,13 @@ public class CustomPromptDialog extends Dialog {
                 layout.findViewById(R.id.negativeButton).setVisibility(
                         View.GONE);
             }
+
+            // 如果两个按钮都没有，下面的按钮栏就不显示
+            if(positiveButtonText == null && negativeButtonText== null) {
+                layout.findViewById(R.id.ll_btn).setVisibility(View.GONE);
+                layout.findViewById(R.id.top_divider).setVisibility(View.GONE);
+            }
+
             // set the content message
             if (message != null) {
                 TextView tvMessage = (TextView) layout.findViewById(R.id.message);

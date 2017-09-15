@@ -2,6 +2,7 @@ package com.yjjr.yjfutures.utils.http;
 
 import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.model.CommonResponse;
+import com.yjjr.yjfutures.model.biz.Active;
 import com.yjjr.yjfutures.model.biz.Alipay;
 import com.yjjr.yjfutures.model.biz.AssetRecord;
 import com.yjjr.yjfutures.model.biz.BizResponse;
@@ -178,6 +179,6 @@ public interface BizService {
 
 
     @GET("activict/queryActivict")
-    Observable<BizResponse> getActivity();
+    Observable<BizResponse<Active>> getActivity();
 
 }

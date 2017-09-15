@@ -166,7 +166,7 @@ public class LoginActivity extends BaseActivity {
                         LogUtils.e(throwable);
                         btnLogin.setSelected(true);
                         if(throwable instanceof UserNotExistException) {
-                            DialogUtils.createToRegisterDialog(mContext).show();
+                            DialogUtils.createToRegisterDialog(mContext, account).show();
                         }else {
                             ToastUtils.show(mContext, throwable.getMessage());
                         }

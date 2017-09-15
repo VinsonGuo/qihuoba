@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +20,13 @@ import android.widget.Toast;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.CommonResponse;
+import com.yjjr.yjfutures.model.biz.Active;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.model.biz.Update;
 import com.yjjr.yjfutures.ui.BaseApplication;
+import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.mine.LoginActivity;
 import com.yjjr.yjfutures.ui.mine.RegisterActivity;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
@@ -46,36 +49,55 @@ import zhy.com.highlight.shape.RectLightShape;
 
 public class DialogUtils {
 
-    public static CustomPromptDialog createImageDialog(final Context context, String url) {
+    public static CustomPromptDialog createImageDialog(final Context context, final Active active) {
         FrameLayout frameLayout = new FrameLayout(context);
         ImageView iv = new ImageView(context);
         iv.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         iv.setAdjustViewBounds(true);
         frameLayout.addView(iv);
+        View view = new View(context);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(DisplayUtils.dip2px(context, 50), DisplayUtils.dip2px(context, 50), Gravity.RIGHT);
+        view.setLayoutParams(params);
+        frameLayout.addView(view);
+
+        String url = active.getHtmlUrl();
         ImageLoader.load(context, (URLUtil.isHttpsUrl(url) || URLUtil.isHttpsUrl(url)) ? url : HttpConfig.BIZ_HOST + url, iv);
-        return new CustomPromptDialog.Builder(context)
+
+        final CustomPromptDialog dialog = new CustomPromptDialog.Builder(context)
                 .setContentView(frameLayout)
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
                 .create();
+        frameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if (!TextUtils.isEmpty(active.getClickUrl())) {
+                    String url = active.getClickUrl();
+                    WebActivity.startActivity(context, (URLUtil.isHttpsUrl(url) || URLUtil.isHttpsUrl(url)) ? url : HttpConfig.BIZ_HOST + url);
+                }
+            }
+        });
+        return dialog;
     }
 
     /**
      * 去注册的对话框
      */
-    public static CustomPromptDialog createToRegisterDialog(final Context context) {
+    public static CustomPromptDialog createToRegisterDialog(final Context context, final String phone) {
         return new CustomPromptDialog.Builder(context)
                 .isShowClose(true)
-                .setMessage("用户未注册")
-                .setPositiveButton("去注册", new DialogInterface.OnClickListener() {
+                .setMessageDrawableId(R.drawable.ic_info)
+                .setMessage("用户不存在!")
+                .setPositiveButton(R.string.register, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        RegisterActivity.startActivity(context);
+                        RegisterActivity.startActivity(context, phone);
+                    }
+                })
+                .setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
                     }
                 })
                 .create();

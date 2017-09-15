@@ -9,7 +9,7 @@
     <!-- 主体背景颜色值 -->
     <item>
         <shape>
-            <corners android:radius="10dp" />
+            <corners android:radius="15dp" />
             <solid android:color="@color/white" />
         </shape>
     </item>

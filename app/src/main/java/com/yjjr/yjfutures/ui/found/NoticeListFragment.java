@@ -11,6 +11,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Notice;
 import com.yjjr.yjfutures.model.biz.PageResponse;
+import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -23,7 +24,6 @@ import io.reactivex.functions.Consumer;
 /**
  * Created by dell on 2017/8/2.
  */
-
 public class NoticeListFragment extends ListFragment<Notice> {
     @Override
     protected void loadData() {
@@ -56,7 +56,10 @@ public class NoticeListFragment extends ListFragment<Notice> {
         mRvList.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
-                WebActivity.startActivity(mContext, HttpConfig.URL_NOTICE + mAdapter.getData().get(position).getId());
+                Notice notice = mAdapter.getData().get(position);
+                notice.setIsread(1);
+                mAdapter.notifyItemChanged(position);
+                WebActivity.startActivity(mContext, HttpConfig.URL_NOTICE + notice.getId() + "/" + UserSharePrefernce.getAccount(mContext));
             }
         });
         return adapter;

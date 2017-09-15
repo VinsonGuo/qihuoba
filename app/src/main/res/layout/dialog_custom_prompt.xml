@@ -57,11 +57,13 @@
         </FrameLayout>
 
         <View
+            android:id="@+id/top_divider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/common_divider_small"
             android:background="@color/color_dbdce4"/>
 
         <LinearLayout
+            android:id="@+id/ll_btn"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:layout_gravity="bottom"
@@ -79,6 +81,12 @@
                 android:textColor="@color/color_333333"
                 android:textSize="18sp"
                 />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="@dimen/common_divider_small"
+                android:layout_height="match_parent"
+                android:background="@color/color_dbdce4"/>
 
             <Button
                 android:id="@+id/positiveButton"

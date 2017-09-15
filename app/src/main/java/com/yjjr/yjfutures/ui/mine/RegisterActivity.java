@@ -21,10 +21,10 @@ import com.mobsandgeeks.saripaar.annotation.Checked;
 import com.mobsandgeeks.saripaar.annotation.Password;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
-import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.MainActivity;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.LogUtils;
@@ -69,6 +69,12 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, RegisterActivity.class));
+    }
+
+    public static void startActivity(Context context, String phone) {
+        Intent intent = new Intent(context, RegisterActivity.class);
+        intent.putExtra(Constants.CONTENT_PARAMETER, phone);
+        context.startActivity(intent);
     }
 
     @Override
@@ -133,6 +139,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                         mValidator.validate();
                     }
                 });
+
+        // 如果用户从“去注册”引导进入的，要带上之前的手机号
+        String phone = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
+        if (!TextUtils.isEmpty(phone)) {
+            mEtPhone.setText(phone);
+            mEtPhone.setSelection(phone.length());
+        }
     }
 
     @Override

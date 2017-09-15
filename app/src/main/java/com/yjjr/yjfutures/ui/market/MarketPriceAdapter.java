@@ -47,9 +47,9 @@ public class MarketPriceAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> 
             TextView tvPrice = helper.getView(R.id.tv_price);
             tvChange.setText(changeRate == 0 ? "-" : DoubleUtil.format2Decimal(changeRate) + "%");
             double change = item.getChange();
-            tvChange.setTextColor(ContextCompat.getColor(mContext, change > 0 ? R.color.main_color_red : R.color.main_color_green));
-            tvPrice.setTextColor(ContextCompat.getColor(mContext, change > 0 ? R.color.main_color_red : R.color.main_color_green));
-            tvChange.setBackgroundResource(change > 0 ? R.drawable.shape_red_border_bg : R.drawable.shape_green_border_bg);
+            tvChange.setTextColor(ContextCompat.getColor(mContext, change >= 0 ? R.color.main_color_red : R.color.main_color_green));
+            tvPrice.setTextColor(ContextCompat.getColor(mContext, change >= 0 ? R.color.main_color_red : R.color.main_color_green));
+            tvChange.setBackgroundResource(change >= 0 ? R.drawable.shape_red_border_bg : R.drawable.shape_green_border_bg);
 
             /*int position = helper.getLayoutPosition();
             if (position == 2 && isDemo && !isShow) {

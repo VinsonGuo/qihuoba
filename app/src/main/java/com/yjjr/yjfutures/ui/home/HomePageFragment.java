@@ -27,6 +27,7 @@ import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
+import com.yjjr.yjfutures.model.biz.Active;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.model.biz.Info;
@@ -36,7 +37,6 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
-import com.yjjr.yjfutures.ui.mine.ChatActivity;
 import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.DialogUtils;
@@ -293,13 +293,14 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     private void getHuodong() {
         HttpManager.getBizService().getActivity()
-                .compose(RxUtils.applyBizSchedulers())
-                .subscribe(new Consumer<BizResponse>() {
+                .compose(RxUtils.<BizResponse<Active>>applyBizSchedulers())
+                .compose(this.<BizResponse<Active>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<Active>>() {
                     @Override
-                    public void accept(@NonNull BizResponse response) throws Exception {
-                        //test
-//                        DialogUtils.createImageDialog(mContext, "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1505303018751&di=42818b54b4161d71ff164d66f233c332&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F031b54a58aa9fd0a801219c77cdeaa5.jpg").show();
-                        DialogUtils.createImageDialog(mContext, "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1505304595665&di=7aab3919e3b9cfcd8369f0711b570bfe&imgtype=0&src=http%3A%2F%2Fimg.smzy.com%2Fdown%2FUploadPic%2F2016-8%2F201689146265738.jpg").show();
+                    public void accept(@NonNull BizResponse<Active> response) throws Exception {
+                        if (response.getResult() != null) {
+                            DialogUtils.createImageDialog(mContext, response.getResult()).show();
+                        }
                     }
                 }, RxUtils.commonErrorConsumer());
     }
@@ -332,8 +333,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_customer_service:
-//                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
-                ChatActivity.startActivity(mContext);
+                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
+//                ChatActivity.startActivity(mContext);
                 break;
             case R.id.tv_guide:
                 WebActivity.startActivity(mContext, HttpConfig.URL_GUIDE);
@@ -361,6 +362,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 
     /**
      * 旧的方式，新版可以弃用
+     *
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)

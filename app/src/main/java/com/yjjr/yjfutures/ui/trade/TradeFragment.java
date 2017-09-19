@@ -287,11 +287,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
         int allSize = quote.getBidSize() + quote.getAskSize();
         if (allSize != 0) {
-            pbLeft.setProgress(quote.getBidSize() * 100 / allSize);
-            pbRight.setProgress(quote.getAskSize() * 100 / allSize);
+            pbRight.setProgress(quote.getBidSize() * 100 / allSize);
+            pbLeft.setProgress(quote.getAskSize() * 100 / allSize);
         }
-        tvLeftPb.setText(String.valueOf(quote.getBidSize()));
-        tvRightPb.setText(String.valueOf(quote.getAskSize()));
+        tvRightPb.setText(String.valueOf(quote.getBidSize()));
+        tvLeftPb.setText(String.valueOf(quote.getAskSize()));
         tvPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()));
         tvChange.setText(DoubleUtil.format2Decimal(quote.getChange()));
         tvChangeRate.setText(DoubleUtil.format2Decimal(quote.getChangeRate()) + "%");

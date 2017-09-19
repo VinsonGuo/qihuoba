@@ -64,7 +64,7 @@ public class WithdrawActivity extends BaseActivity {
         headerView.setOperateClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WithdrawDetailActivity.startActivity(mContext);
+                CashRecordActivity.startActivity(mContext, CashRecordActivity.WITHDRAW);
             }
         });
     }

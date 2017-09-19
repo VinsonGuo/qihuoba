@@ -128,8 +128,18 @@ public interface BizService {
     @POST("user/queryAssetRecord/{start}/{count}")
     Observable<BizResponse<PageResponse<AssetRecord>>> getAssetRecord(@Path("start") int start, @Path("count") int count);
 
+    /**
+     * 提现记录
+     */
     @POST("user/queryCashRecord/{start}/{count}")
     Observable<BizResponse<PageResponse<CashRecord>>> getCashRecord(@Path("start") int start, @Path("count") int count);
+
+
+    /**
+     * 充值记录
+     */
+    @POST("user/queryRechargeRecord/{start}/{count}")
+    Observable<BizResponse<PageResponse<CashRecord>>> getRechargeRecord(@Path("start") int start, @Path("count") int count);
 
     @POST("notice/list/{start}/{count}")
     Observable<BizResponse<PageResponse<Notice>>> getNotice(@Path("start") int start, @Path("count") int count);

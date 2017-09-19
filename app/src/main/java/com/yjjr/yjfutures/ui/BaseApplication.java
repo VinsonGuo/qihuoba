@@ -186,18 +186,6 @@ public class BaseApplication extends Application implements Application.Activity
         mActivities.clear();
     }
 
-    public Activity getTopActivity() {
-        try {
-            if (mActivities != null && !mActivities.isEmpty()) {
-//                return mActivities.get(mActivities.size() - 1);
-                return mActivities.get(0);
-            }
-        }catch (Exception e) {
-            //忽略
-        }
-        return null;
-    }
-
     public boolean isLogin() {
         return !TextUtils.isEmpty(UserSharePrefernce.getAccount(this)) && UserSharePrefernce.isLogin(this);
     }
@@ -214,16 +202,8 @@ public class BaseApplication extends Application implements Application.Activity
 //        RegisterActivity.startActivity(a, LoginActivity.REQUEST_REGISTER);
     }
 
-    public boolean isRealAccount() {
-        return isLogin() && UserSharePrefernce.isRealAccount(this);
-    }
-
     public String getAccount() {
         return UserSharePrefernce.getAccount(this);
-    }
-
-    public String getToken() {
-        return UserSharePrefernce.getToken(this);
     }
 
     public String getTradeToken() {

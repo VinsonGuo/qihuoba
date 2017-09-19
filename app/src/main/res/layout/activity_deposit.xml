@@ -13,6 +13,7 @@
         android:id="@+id/header_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:sub_title="充值记录"
         app:main_title="@string/account_deposit"/>
 
     <TextView

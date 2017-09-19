@@ -56,6 +56,7 @@ import io.reactivex.functions.Function;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import io.socket.engineio.client.transports.WebSocket;
 
 public class MainActivity extends BaseActivity {
 
@@ -76,7 +77,7 @@ public class MainActivity extends BaseActivity {
         initViews();
         checkUpdate();
         startPoll();
-//        testSocketIO();
+        testSocketIO();
         if (ActivityTools.isNeedShowGuide(mContext)) {
             TradeGuideActivity.startActivity(mContext);
         }
@@ -87,7 +88,8 @@ public class MainActivity extends BaseActivity {
             IO.Options options = new IO.Options();
             options.forceNew = true;
             options.reconnection = true;
-            final Socket socket = IO.socket("http://192.168.1.67:9092", options);//创建连接
+            options.transports = new String[]{WebSocket.NAME};
+            final Socket socket = IO.socket("http://192.168.1.52:9092", options);//创建连接
             //监听事件获取服务端的返回数据
             socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
@@ -129,10 +131,9 @@ public class MainActivity extends BaseActivity {
                         oldQuote.setAskSize(quote.getAskSize());
                         oldQuote.setBidSize(quote.getBidSize());
                         oldQuote.setVol(quote.getVol());
-                        LogUtils.d("socket io 收到报价信息：%s", oldQuote.toString());
-                        EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
+                        LogUtils.d("socket io 收到报价信息：%s", data);
+//                        EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
                     }
-
                 }
             });
             socket.connect();
@@ -193,7 +194,7 @@ public class MainActivity extends BaseActivity {
                     return;
                 }
                 EventBus.getDefault().post(new PollRefreshEvent());
-                 HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
+                HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override
                             public List<Quote> apply(@NonNull List<Quote> quotes) throws Exception {

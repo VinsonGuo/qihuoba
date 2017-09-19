@@ -18,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.utils.FileUtils;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.biz.Active;
@@ -228,11 +229,24 @@ public class DialogUtils {
                         ContractInfo mContractInfo = response.getResult();
                         Map<String, Double> map = mContractInfo.getLossLevel();
                         for (Map.Entry<String, Double> next : map.entrySet()) {
-                            rgSl.addView(createRedRadioButton(next.getKey(), Double.parseDouble(next.getKey())));
-                            rgSw.addView(createGreenRadioButton(next.getKey(), Double.parseDouble(next.getKey())));
+                            double value = Double.parseDouble(next.getKey());
+                            RadioButton sl = createRedRadioButton(next.getKey(), value);
+                            rgSl.addView(sl);
+                            if (holding.getLossPriceLine() == value) {
+                                sl.setChecked(true);
+                            }
+                            RadioButton sw = createGreenRadioButton(next.getKey(), value);
+                            rgSw.addView(sw);
+                            if (holding.getProfitPriceLine() == value) {
+                                sw.setChecked(true);
+                            }
                         }
-                        ((RadioButton) rgSl.getChildAt(1)).setChecked(true);
-                        ((RadioButton) rgSw.getChildAt(1)).setChecked(true);
+                        if (rgSl.getCheckedRadioButtonId() == -1) {
+                            ((RadioButton) rgSl.getChildAt(1)).setChecked(true);
+                        }
+                        if (rgSw.getCheckedRadioButtonId() == -1) {
+                            ((RadioButton) rgSw.getChildAt(1)).setChecked(true);
+                        }
                     }
                 }, RxUtils.commonErrorConsumer());
         final CustomPromptDialog dialog = new CustomPromptDialog.Builder(context)

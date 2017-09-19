@@ -288,7 +288,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.mine.WithdrawDetailActivity"
+            android:name=".ui.mine.CashRecordActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity

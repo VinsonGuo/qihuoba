@@ -6,18 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.yjjr.yjfutures.ui.mine.WithdrawDetailActivity">
+    android:background="@color/chart_background"
+    tools:context="com.yjjr.yjfutures.ui.mine.CashRecordActivity">
 
     <com.yjjr.yjfutures.widget.HeaderView
         android:id="@+id/header_view"
-        app:main_title="提现记录"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <fragment
-        android:id="@+id/withdraw_detail"
+    <FrameLayout
+        android:id="@+id/fl_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.yjjr.yjfutures.ui.mine.WithdrawDetailFragment"/>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

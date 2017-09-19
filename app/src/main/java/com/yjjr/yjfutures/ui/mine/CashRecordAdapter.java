@@ -19,9 +19,9 @@ import java.util.List;
  * Created by dell on 2017/7/17.
  */
 
-public class WithdrawDetailAdapter extends BaseQuickAdapter<CashRecord, BaseViewHolder> {
-    public WithdrawDetailAdapter(@Nullable List<CashRecord> data) {
-        super(R.layout.item_withdraw_detail, data);
+public class CashRecordAdapter extends BaseQuickAdapter<CashRecord, BaseViewHolder> {
+    public CashRecordAdapter(@Nullable List<CashRecord> data) {
+        super(R.layout.item_cash_record, data);
     }
 
     @Override

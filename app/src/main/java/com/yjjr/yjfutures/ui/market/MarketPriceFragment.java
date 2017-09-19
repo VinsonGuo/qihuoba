@@ -68,7 +68,7 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
         }
         rvList.setLayoutManager(new LinearLayoutManager(mContext));
-        mAdapter = new MarketPriceAdapter(null, !mShowTitle);
+        mAdapter = new MarketPriceAdapter(null);
         mAdapter.bindToRecyclerView(rvList);
         mAdapter.setOnItemClickListener(this);
         return v;

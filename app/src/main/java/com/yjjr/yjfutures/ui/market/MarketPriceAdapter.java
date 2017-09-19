@@ -1,5 +1,7 @@
 package com.yjjr.yjfutures.ui.market;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -26,16 +28,13 @@ import java.util.List;
 
 public class MarketPriceAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
 
-    private boolean isShow = false;
-    private boolean isDemo;
 
-    public MarketPriceAdapter(@Nullable List<Quote> data, boolean isDemo) {
+    public MarketPriceAdapter(@Nullable List<Quote> data) {
         super(R.layout.item_market_price, data);
-        this.isDemo = isDemo;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, Quote item) {
+    protected void convert(final BaseViewHolder helper, Quote item) {
         try {
             double changeRate = item.getChangeRate();
             helper.setText(R.id.tv_symbol_name, item.getSymbolname())
@@ -44,54 +43,30 @@ public class MarketPriceAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> 
                     .setText(R.id.tv_trade_amount, item.getVol() + "")
                     .setVisible(R.id.reddot, item.isHolding());
             TextView tvChange = helper.getView(R.id.tv_change);
-            TextView tvPrice = helper.getView(R.id.tv_price);
+            final TextView tvPrice = helper.getView(R.id.tv_price);
             tvChange.setText(changeRate == 0 ? "-" : DoubleUtil.format2Decimal(changeRate) + "%");
             double change = item.getChange();
             tvChange.setTextColor(ContextCompat.getColor(mContext, change >= 0 ? R.color.main_color_red : R.color.main_color_green));
             tvPrice.setTextColor(ContextCompat.getColor(mContext, change >= 0 ? R.color.main_color_red : R.color.main_color_green));
             tvChange.setBackgroundResource(change >= 0 ? R.drawable.shape_red_border_bg : R.drawable.shape_green_border_bg);
 
-            /*int position = helper.getLayoutPosition();
-            if (position == 2 && isDemo && !isShow) {
-                showGuideView(helper.getConvertView(), position);
-                isShow = true;
-            }*/
+          /*  int colorFrom = mContext.getResources().getColor(R.color.main_color_red);
+            int colorTo = mContext.getResources().getColor(R.color.transparent);
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+            colorAnimation.setDuration(250); // milliseconds
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                   tvPrice.setBackgroundColor((int) animator.getAnimatedValue());
+                }
+
+            });
+            colorAnimation.start();*/
+
         } catch (Exception e) {
             LogUtils.e(e);
         }
-
     }
 
-    private void showGuideView(final View v, final int position) {
-        //test
-        final GuideBuilder builder1 = new GuideBuilder();
-        builder1.setTargetView(v)
-//                .setFullingViewId(R.id.tv_title1)
-                .setAlpha(150)
-                .setHighTargetCorner(20)
-//                .setHighTargetPadding(10)
-                .setOverlayTarget(false)
-                .setOutsideTouchable(false);
-        builder1.setOnVisibilityChangedListener(new GuideBuilder.OnVisibilityChangedListener() {
-            @Override
-            public void onShown() {
-            }
-
-            @Override
-            public void onDismiss() {
-                getOnItemClickListener().onItemClick(MarketPriceAdapter.this, v, position);
-            }
-        });
-
-        builder1.addComponent(new SimpleComponent());
-        final Guide guide = builder1.createGuide();
-        guide.setShouldCheckLocInWindow(false);
-        v.post(new Runnable() {
-            @Override
-            public void run() {
-                guide.show((Activity) mContext);
-            }
-        });
-
-    }
 }

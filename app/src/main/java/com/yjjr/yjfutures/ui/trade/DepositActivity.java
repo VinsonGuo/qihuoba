@@ -11,25 +11,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.WebActivity;
-import com.yjjr.yjfutures.utils.LogUtils;
-import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.ui.mine.CashRecordActivity;
 import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
-import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
-
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 
 public class DepositActivity extends BaseActivity implements View.OnClickListener {
 
@@ -57,11 +50,17 @@ public class DepositActivity extends BaseActivity implements View.OnClickListene
                 mBtnConfirm.setSelected(!TextUtils.isEmpty(s) && Double.parseDouble(mRiMoney.getValue()) > 0);
             }
         });
+        headerView.setOperateClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CashRecordActivity.startActivity(mContext, CashRecordActivity.DEPOSIT);
+            }
+        });
         TextView tvService = (TextView) findViewById(R.id.tv_contact_service);
         tvService.setText(TextUtils.concat(tvService.getText(), SpannableUtil.getStringByColor(mContext, "联系客服", R.color.main_color)));
         tvService.setOnClickListener(this);
         UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
-        if(userInfo != null) {
+        if (userInfo != null) {
             TextView tvDesc = (TextView) findViewById(R.id.tv_desc);
             tvDesc.setText(userInfo.getAlipay());
         }

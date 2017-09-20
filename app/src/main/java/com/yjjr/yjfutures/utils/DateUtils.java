@@ -1,19 +1,11 @@
 package com.yjjr.yjfutures.utils;
 
-import android.content.Context;
-
-
-import com.yjjr.yjfutures.R;
+import com.instacart.library.truetime.TrueTime;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -76,5 +68,30 @@ public class DateUtils {
             LogUtils.e(e.toString());
         }
         return "";
+    }
+
+    public static long parseTime(String time) {
+        try {
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            return dateFormat.parse(time).getTime();
+        } catch (Exception e) {
+            LogUtils.e(e.toString());
+        }
+        return 0;
+    }
+
+    public static Date nowDate() {
+        if (TrueTime.isInitialized()) {
+            return TrueTime.now();
+        }
+        return new Date();
+    }
+
+    public static long nowTime() {
+        return nowDate().getTime();
+    }
+
+    public static DateTime nowDateTime() {
+        return new DateTime(nowTime());
     }
 }

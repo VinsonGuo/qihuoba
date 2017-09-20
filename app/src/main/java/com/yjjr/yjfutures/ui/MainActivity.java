@@ -15,7 +15,6 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.HideRedDotEvent;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.PollRefreshEvent;
-import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.Quote;
@@ -32,6 +31,7 @@ import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
 import com.yjjr.yjfutures.ui.mine.MineFragment;
 import com.yjjr.yjfutures.ui.trade.TradeGuideActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
+import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -77,7 +77,7 @@ public class MainActivity extends BaseActivity {
         initViews();
         checkUpdate();
         startPoll();
-        testSocketIO();
+//        testSocketIO();
         if (ActivityTools.isNeedShowGuide(mContext)) {
             TradeGuideActivity.startActivity(mContext);
         }
@@ -183,7 +183,7 @@ public class MainActivity extends BaseActivity {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                DateTime dateTime = new DateTime();
+                DateTime dateTime = DateUtils.nowDateTime();
                 if (dateTime.getSecondOfMinute() == 5) {
                     EventBus.getDefault().post(new OneMinuteEvent());
                 }

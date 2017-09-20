@@ -237,14 +237,14 @@ public class CandleStickChartFragment extends BaseFragment {
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         DateTime dateTime;
         if (quote.isRest()) { //未开盘，数据加载前一天的
-            dateTime = new DateTime();
+            dateTime = DateUtils.nowDateTime();
             if (dateTime.getDayOfWeek() == 1 || dateTime.getDayOfWeek() == 7) { //星期一、星期天前一天还是没数据，要加载星期五的
                 dateTime = dateTime.withDayOfWeek(5).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
             } else {
                 dateTime = dateTime.minusDays(1).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
             }
         } else {
-            dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+            dateTime = DateUtils.nowDateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
         }
         if (DAY.equals(type)) {
             dateTime = dateTime.minusYears(1);

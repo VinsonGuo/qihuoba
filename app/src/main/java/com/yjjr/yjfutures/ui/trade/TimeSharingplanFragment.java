@@ -84,14 +84,14 @@ public class TimeSharingplanFragment extends BaseFragment {
         super.initData();
         DateTime dateTime;
         if (mQuote.isRest()) { //未开盘，数据加载前一天的
-            dateTime = new DateTime();
+            dateTime = DateUtils.nowDateTime();
             if (dateTime.getDayOfWeek() == 1 || dateTime.getDayOfWeek() == 7) { //星期一、星期天前一天还是没数据，要加载星期五的
                 dateTime = dateTime.minusDays(1).withDayOfWeek(5).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
             } else {
                 dateTime = dateTime.minusDays(1).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
             }
         } else {
-            dateTime = new DateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+            dateTime = DateUtils.nowDateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
         }
         HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()))
                 .map(new Function<List<HisData>, List<HisData>>() {

@@ -3,6 +3,12 @@ package com.yjjr.yjfutures.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.instacart.library.truetime.TrueTime;
+import com.yjjr.yjfutures.utils.DateUtils;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+
 /**
  * Created by dell on 2017/7/6.
  */
@@ -270,7 +276,34 @@ public class Quote implements Parcelable {
     }
 
     public boolean isRest() {
-        return AskPrice == -1 && BidPrice == -1;
+//        return AskPrice == -1 && BidPrice == -1;
+        if (TradingTime.contains(",")) {
+            String[] timeRanges = TradingTime.split(",");
+            for (String timeRange : timeRanges) {
+                // 如果在其中的一个时间段内没休市，返回false
+                if (!testIsRest(timeRange)) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return testIsRest(TradingTime);
+        }
+    }
+
+    /**
+     * 判断是否休市，如果休市返回true
+     */
+    private boolean testIsRest(String timeRange) {
+        DateTime now = DateUtils.nowDateTime();
+        String[] times = timeRange.split("-");
+        DateTime startTime = new DateTime(DateUtils.parseTime(times[0])).withYear(now.getYear()).withMonthOfYear(now.getMonthOfYear()).withDayOfMonth(now.getDayOfMonth());
+        DateTime endTime = new DateTime(DateUtils.parseTime(times[1])).withYear(now.getYear()).withMonthOfYear(now.getMonthOfYear()).withDayOfMonth(now.getDayOfMonth());
+        // 如果结束时间在开始时间之前，就加一天
+        if (endTime.isBefore(startTime)) {
+            endTime = endTime.plusDays(1);
+        }
+        return !(now.isAfter(startTime) && now.isBefore(endTime));
     }
 
     @Override

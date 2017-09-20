@@ -74,7 +74,7 @@ public class CashRecordFragment extends ListFragment<CashRecord> {
 
     @Override
     public BaseQuickAdapter<CashRecord, BaseViewHolder> getAdapter() {
-        CashRecordAdapter adapter = new CashRecordAdapter(null);
+        CashRecordAdapter adapter = new CashRecordAdapter(null,mType);
         adapter.setEnableLoadMore(true);
         return adapter;
     }

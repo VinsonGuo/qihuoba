@@ -11,16 +11,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FinishEvent;
+import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
@@ -28,6 +32,9 @@ import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 public class AlterLoginPwdActivity extends BaseActivity {
 
@@ -89,7 +96,20 @@ public class AlterLoginPwdActivity extends BaseActivity {
                             ToastUtils.show(mContext, R.string.trade_pwd_wrong);
                             return;
                         }
-                        AlterLoginPwdActivity2.startActivity(mContext, riPwd.getValue(), mType);
+                        HttpManager.getBizService().validPayPwd(UserSharePrefernce.getAccount(mContext), riPwd.getValue())
+                                .compose(RxUtils.applyBizSchedulers())
+                                .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
+                                .subscribe(new Consumer<BizResponse>() {
+                                    @Override
+                                    public void accept(@NonNull BizResponse response) throws Exception {
+                                        AlterLoginPwdActivity2.startActivity(mContext, riPwd.getValue(), mType);
+                                    }
+                                }, new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(@NonNull Throwable throwable) throws Exception {
+                                        ToastUtils.show(mContext, throwable.getMessage());
+                                    }
+                                });
                     }else {
                         if (TextUtils.equals(riPwd.getValue(), UserSharePrefernce.getPassword(mContext))) {
                             AlterLoginPwdActivity2.startActivity(mContext, riPwd.getValue(), mType);

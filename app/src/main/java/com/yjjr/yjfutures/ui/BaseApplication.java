@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.text.TextUtils;
 import com.facebook.stetho.Stetho;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
+import com.instacart.library.truetime.TrueTime;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -24,6 +26,7 @@ import com.yjjr.yjfutures.utils.LogUtils;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +64,7 @@ public class BaseApplication extends Application implements Application.Activity
         LogUtils.init();
         initUmeng();
         JodaTimeAndroid.init(this);
+        new InitTrueTimeAsyncTask().execute();
         registerActivityLifecycleCallbacks(this);
         Stetho.initialize(
                 Stetho.newInitializerBuilder(this)
@@ -246,6 +250,25 @@ public class BaseApplication extends Application implements Application.Activity
 
     public void setUserInfo(UserInfo userInfo) {
         mUserInfo = userInfo;
+    }
+
+
+    private class InitTrueTimeAsyncTask
+            extends AsyncTask<Void, Void, Void> {
+
+        protected Void doInBackground(Void... params) {
+            try {
+                TrueTime.build()
+//                        .withSharedPreferences(BaseApplication.this)
+                        .withNtpHost("time.pool.aliyun.com")
+                        .withLoggingEnabled(BuildConfig.DEBUG)
+                        .withConnectionTimeout(3_1428)
+                        .initialize();
+            } catch (IOException e) {
+                LogUtils.e(e);
+            }
+            return null;
+        }
     }
 
 

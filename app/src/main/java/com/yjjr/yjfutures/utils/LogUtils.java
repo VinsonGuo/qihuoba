@@ -26,7 +26,7 @@ public class LogUtils {
 
     public static void e(Throwable throwable) {
         Logger.e(throwable, null);
-        MobclickAgent.reportError(BaseApplication.getInstance(), throwable);
+//        MobclickAgent.reportError(BaseApplication.getInstance(), throwable);
     }
 
     public static void w(String msg, Object... args) {

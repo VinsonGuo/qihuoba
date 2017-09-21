@@ -158,7 +158,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 register();
                 break;
             case R.id.tv_agreement:
-                WebActivity.startActivity(mContext, HttpConfig.URL_AGREEMENT);
+                WebActivity.startActivity(mContext, HttpConfig.URL_HELP);
                 break;
         }
     }

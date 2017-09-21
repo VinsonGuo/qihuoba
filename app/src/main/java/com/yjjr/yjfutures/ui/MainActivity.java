@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.umeng.analytics.MobclickAgent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
@@ -17,6 +18,8 @@ import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
+import com.yjjr.yjfutures.model.HisData;
+import com.yjjr.yjfutures.model.HistoryDataRequest;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
@@ -77,10 +80,12 @@ public class MainActivity extends BaseActivity {
         initViews();
         checkUpdate();
         startPoll();
-//        testSocketIO();
+        testSocketIO();
         if (ActivityTools.isNeedShowGuide(mContext)) {
             TradeGuideActivity.startActivity(mContext);
         }
+        // 统计用户登录
+        MobclickAgent.onProfileSignIn(UserSharePrefernce.getAccount(this));
     }
 
     private void testSocketIO() {
@@ -137,6 +142,15 @@ public class MainActivity extends BaseActivity {
                 }
             });
             socket.connect();
+
+            HttpManager.getHttpService().getHistoryData("http://192.168.1.52:6666/historyMarketData", new HistoryDataRequest("CNU17", "NYMEX", "2017-09-21 06:00", null))
+                    .compose(RxUtils.<List<HisData>>applySchedulers())
+                    .subscribe(new Consumer<List<HisData>>() {
+                        @Override
+                        public void accept(@NonNull List<HisData> hisDatas) throws Exception {
+                            LogUtils.d(hisDatas.toString());
+                        }
+                    }, RxUtils.commonErrorConsumer());
         } catch (Exception e) {
             LogUtils.e(e);
         }
@@ -254,7 +268,7 @@ public class MainActivity extends BaseActivity {
                         BaseApplication.getInstance().setUserInfo(response.getResult());
                     }
                 }, RxUtils.commonErrorConsumer());
-        HttpManager.getHttpService().userLogin(account, password)
+        HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpAddressString())
                 .compose(RxUtils.<UserLoginResponse>applySchedulers())
                 .compose(this.<UserLoginResponse>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<UserLoginResponse>() {
@@ -269,5 +283,7 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mTimer.cancel();
+        // 统计用户登出
+        MobclickAgent.onProfileSignOff();
     }
 }

@@ -24,6 +24,7 @@ import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.MainActivity;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -134,7 +135,7 @@ public class LoginActivity extends BaseActivity {
                             throw new RuntimeException(loginBizResponse.getRmsg());
                         }
                         BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
-                        return HttpManager.getHttpService().userLogin(account, password);
+                        return HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpAddressString());
                     }
                 })
                 .map(new Function<UserLoginResponse, UserLoginResponse>() {

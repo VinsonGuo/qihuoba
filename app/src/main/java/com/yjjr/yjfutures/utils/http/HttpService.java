@@ -6,21 +6,25 @@ import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Exchange;
 import com.yjjr.yjfutures.model.FilledOrder;
 import com.yjjr.yjfutures.model.HisData;
+import com.yjjr.yjfutures.model.HistoryDataRequest;
 import com.yjjr.yjfutures.model.Holding;
 import com.yjjr.yjfutures.model.OpenOrder;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.Trade;
 import com.yjjr.yjfutures.model.UserLoginResponse;
+import com.yjjr.yjfutures.utils.ActivityTools;
 
 import java.util.List;
 
 import io.reactivex.Observable;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 /**
  * 1、登录
@@ -111,7 +115,7 @@ public interface HttpService {
      */
     @POST("/api/login2.ashx?uname=")
     @FormUrlEncoded
-    Observable<UserLoginResponse> userLogin(@Field("phone") String phone, @Field("upass") String password);
+    Observable<UserLoginResponse> userLogin(@Field("phone") String phone, @Field("upass") String password, @Field("ip") String ip);
 
     /**
      * 2、获取单个合约报价
@@ -253,4 +257,8 @@ public interface HttpService {
      */
     @GET("/api/register_online_2.ashx")
     Observable<List<Exchange>> register(@Query("rootaccount") String rootaccount, @Query("account") String account);
+
+    @POST
+    Observable<List<HisData>> getHistoryData(@Url String url, @Body HistoryDataRequest request);
+
 }

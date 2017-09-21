@@ -20,6 +20,7 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
+import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -106,7 +107,7 @@ public class DemoTradeActivity extends BaseActivity {
     private void loadData() {
         final String account = UserSharePrefernce.getAccount(mContext);
         final String password = /*UserSharePrefernce.getPassword(mContext)*/"123456";
-        HttpManager.getHttpService(true).userLogin(account, password)
+        HttpManager.getHttpService(true).userLogin(account, password, ActivityTools.getIpAddressString())
                 .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
                     @Override
                     public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {

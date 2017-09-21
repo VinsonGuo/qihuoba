@@ -110,7 +110,6 @@ public class TimeSharingplanFragment extends BaseFragment {
                     public void accept(@NonNull List<HisData> list) throws Exception {
                         mDatas.clear();
                         mDatas.addAll(list);
-                        mChart.setStartTime(new DateTime(list.get(0).getsDate()));
                         mChart.addEntries(list);
                     }
                 }, new Consumer<Throwable>() {

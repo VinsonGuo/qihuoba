@@ -39,6 +39,7 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
+import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -149,7 +150,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                                 EventBus.getDefault().post(new ShowRedDotEvent());
                             }
                             BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
-                            return HttpManager.getHttpService().userLogin(account, password);
+                            return HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpAddressString());
                         }
                     })
                     .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {

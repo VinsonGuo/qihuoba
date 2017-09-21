@@ -5,6 +5,7 @@ package com.yjjr.yjfutures.widget.chart;
  */
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.components.MarkerView;
@@ -24,10 +25,6 @@ public class RealPriceMarkerView extends MarkerView {
     private final double mTick;
     private TextView tvContent;
 
-    private int dataSet1Color = getResources().getColor(R.color.main_color_red);
-    private int dataSet2Color = getResources().getColor(R.color.main_color);
-
-
     public RealPriceMarkerView(Context context, double tick) {
         super(context, R.layout.view_mp_real_price_marker);
         mTick = tick;
@@ -36,9 +33,7 @@ public class RealPriceMarkerView extends MarkerView {
 
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        int dataIndex = highlight.getDataSetIndex();
-        int color = dataIndex == 0 ? dataSet1Color : dataSet2Color;
-        tvContent.setBackgroundColor(color);
+        tvContent.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.third_text_color));
         float value = e.getY();
         tvContent.setText(StringUtils.getStringByTick(value, mTick));
         super.refreshContent(e, highlight);

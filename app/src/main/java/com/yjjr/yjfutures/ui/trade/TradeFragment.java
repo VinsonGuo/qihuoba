@@ -18,6 +18,7 @@ import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.FastTakeOrderEvent;
+import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
@@ -180,13 +181,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         findViews(v);
-        if (quote.isRest()) { // 休市的状态
-            tradeView1.setVisibility(View.GONE);
-            tradeView2.setVisibility(View.GONE);
-            tradeView3.setVisibility(View.GONE);
-            tvRest.setVisibility(View.VISIBLE);
-            tvRest.setText(TextUtils.concat(SpannableUtil.getStringBySize("休市中", 1.4f), String.format("\n下一个交易时间段：%s", quote.getTradingTime())));
-        }
+        setRestView(quote);
         mHeaderView.setOperateClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,6 +273,25 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         v.findViewById(R.id.tv_kchart).setOnClickListener(this);
         DialogUtils.showGuideView(getActivity(), mTvDeposit);
         return v;
+    }
+
+    /**
+     * 设置休市状态
+     * @param quote
+     */
+    private void setRestView(Quote quote) {
+        if (quote.isRest()) { // 休市的状态
+            tradeView1.setVisibility(View.GONE);
+            tradeView2.setVisibility(View.GONE);
+            tradeView3.setVisibility(View.GONE);
+            tvRest.setVisibility(View.VISIBLE);
+            tvRest.setText(TextUtils.concat(SpannableUtil.getStringBySize("休市中", 1.4f), String.format("\n下一个交易时间段：%s", quote.getTradingTime())));
+        }else {
+            tradeView1.setVisibility(View.VISIBLE);
+            tradeView2.setVisibility(View.VISIBLE);
+            tradeView3.setVisibility(View.VISIBLE);
+            tvRest.setVisibility(View.GONE);
+        }
     }
 
     private void fillViews(Quote quote) {
@@ -418,6 +432,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
             tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(OneMinuteEvent event) {
+        // 每分钟检查一下是否开盘
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+        setRestView(quote);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

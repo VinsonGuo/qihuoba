@@ -205,6 +205,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         // enable touch gestures
         mChart.setTouchEnabled(true);
 
+
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {

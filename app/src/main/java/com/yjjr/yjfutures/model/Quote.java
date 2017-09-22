@@ -3,11 +3,9 @@ package com.yjjr.yjfutures.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.instacart.library.truetime.TrueTime;
 import com.yjjr.yjfutures.utils.DateUtils;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  * Created by dell on 2017/7/6.
@@ -299,9 +297,13 @@ public class Quote implements Parcelable {
         String[] times = timeRange.split("-");
         DateTime startTime = new DateTime(DateUtils.parseTime(times[0])).withYear(now.getYear()).withMonthOfYear(now.getMonthOfYear()).withDayOfMonth(now.getDayOfMonth());
         DateTime endTime = new DateTime(DateUtils.parseTime(times[1])).withYear(now.getYear()).withMonthOfYear(now.getMonthOfYear()).withDayOfMonth(now.getDayOfMonth());
-        // 如果结束时间在开始时间之前，就加一天
+        // 如果结束时间在开始时间之前
         if (endTime.isBefore(startTime)) {
-            endTime = endTime.plusDays(1);
+            if (now.isBefore(startTime)) {
+                startTime = startTime.minusDays(1);
+            } else {
+                endTime = endTime.plusDays(1);
+            }
         }
         return !(now.isAfter(startTime) && now.isBefore(endTime));
     }

@@ -28,6 +28,7 @@ import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.model.biz.Update;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.ui.mine.BindCardActivity;
 import com.yjjr.yjfutures.ui.mine.LoginActivity;
 import com.yjjr.yjfutures.ui.mine.RegisterActivity;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
@@ -104,6 +105,26 @@ public class DialogUtils {
                 .create();
     }
 
+    public static CustomPromptDialog createToBindAlipayDialog(final Context context) {
+        return new CustomPromptDialog.Builder(context)
+                .setMessageDrawableId(R.drawable.ic_info)
+                .setMessage(TextUtils.concat("请添加支付宝账户\n", SpannableUtil.getStringByColor(context,SpannableUtil.getStringBySize("(添加支付宝账户不会扣款)",0.8f) ,R.color.color_666666)))
+                .setPositiveButton("添加", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        BindCardActivity.startActivity(context);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+    }
+
     public static CustomPromptDialog createCommonDialog(final Context context, String info) {
         return new CustomPromptDialog.Builder(context)
                 .isShowClose(true)
@@ -140,7 +161,7 @@ public class DialogUtils {
     public static CustomPromptDialog createCustomServiceDialog(final Context context) {
         return new CustomPromptDialog.Builder(context)
                 .isShowClose(true)
-                .setMessage(HttpConfig.SERVICE_PHONE)
+                .setMessage(HttpConfig. SERVICE_PHONE)
                 .setMessageDrawableId(R.drawable.ic_dialog_service)
                 .setPositiveButton("呼叫", new DialogInterface.OnClickListener() {
                     @Override

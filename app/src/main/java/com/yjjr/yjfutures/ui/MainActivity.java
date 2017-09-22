@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity {
         initViews();
         checkUpdate();
         startPoll();
-        testSocketIO();
+//        testSocketIO();
         if (ActivityTools.isNeedShowGuide(mContext)) {
             TradeGuideActivity.startActivity(mContext);
         }
@@ -94,7 +94,7 @@ public class MainActivity extends BaseActivity {
             options.forceNew = true;
             options.reconnection = true;
             options.transports = new String[]{WebSocket.NAME};
-            final Socket socket = IO.socket("http://192.168.1.52:9092", options);//创建连接
+            final Socket socket = IO.socket(/*HttpConfig.DOMAIN */"http://139.224.8.133" + ":9092", options);//创建连接
             //监听事件获取服务端的返回数据
             socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override

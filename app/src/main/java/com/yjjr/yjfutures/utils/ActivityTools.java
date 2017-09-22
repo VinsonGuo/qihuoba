@@ -158,9 +158,10 @@ public class ActivityTools {
 //            UserInfoActivity.startActivity(context);
             AuthActivity.startActivity(context);
         } else if (TextUtils.isEmpty(userInfo.getAlipay())) {
-            ToastUtils.show(context, R.string.please_finish_alipay);
+//            ToastUtils.show(context, R.string.please_finish_alipay);
 //            UserInfoActivity.startActivity(context);
-            BindCardActivity.startActivity(context);
+//            BindCardActivity.startActivity(context);
+            DialogUtils.createToBindAlipayDialog(context).show();
         } else {
             DepositActivity.startActivity(context);
         }

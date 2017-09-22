@@ -193,15 +193,15 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
     public void onEvent(PriceRefreshEvent event) {
         if (TextUtils.equals(event.getSymbol(), mSymbol)) {
             Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-            mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, TextUtils.equals("买入", mBuySell) ? quote.getAskPrice() : quote.getBidPrice()));
+            mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, StringUtils.getStringByTick(TextUtils.equals("买入", mBuySell) ? quote.getAskPrice() : quote.getBidPrice(), quote.getTick())));
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PollRefreshEvent event) {
         Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         mTvPrice.setText(String.format("即时%s(最新%s价%s)", mBuySell, mBuySell, TextUtils.equals("买入", mBuySell) ? quote.getAskPrice() : quote.getBidPrice()));
-    }
+    }*/
 
     @Override
     public void onClick(View v) {

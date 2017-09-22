@@ -99,12 +99,12 @@ public class MarketPriceFragment extends BaseFragment implements BaseQuickAdapte
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PollRefreshEvent event) {
         if (isResumed()) {
             mAdapter.replaceData(StaticStore.getQuoteValues(!mShowTitle));
         }
-    }
+    }*/
 
     @Override
     public void onDestroy() {

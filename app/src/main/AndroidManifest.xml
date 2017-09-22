@@ -303,6 +303,8 @@
         </activity>
         <activity android:name=".ui.trade.TradeGuideActivity">
         </activity>
+        <activity android:name=".ui.trade.FullScreenChartActivity">
+        </activity>
     </application>
 
 </manifest>

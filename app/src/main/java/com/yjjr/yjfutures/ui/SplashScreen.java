@@ -100,6 +100,9 @@ public class SplashScreen extends BaseActivity {
      * android 6.0动态检查权限
      */
     private void checkPermissions() {
+        if(isDestroy) {
+            return;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             RxPermissions rxPermissions = new RxPermissions(this);
             rxPermissions

@@ -366,14 +366,14 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
      *
      * @param event
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PollRefreshEvent event) {
         if (isResumed()) {
             mAdapter.getData().clear();
             mAdapter.getData().addAll(StaticStore.getQuoteValues(false));
             mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.getQuoteValues(false).size());
         }
-    }
+    }*/
 
     @Override
     public void onDestroy() {

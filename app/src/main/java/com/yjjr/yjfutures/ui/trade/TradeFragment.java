@@ -271,12 +271,14 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         mTvDeposit.setSelected(true);
         mTvDeposit.setOnClickListener(this);
         v.findViewById(R.id.tv_kchart).setOnClickListener(this);
+        v.findViewById(R.id.tv_fullscreen).setOnClickListener(this);
         DialogUtils.showGuideView(getActivity(), mTvDeposit);
         return v;
     }
 
     /**
      * 设置休市状态
+     *
      * @param quote
      */
     private void setRestView(Quote quote) {
@@ -286,7 +288,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             tradeView3.setVisibility(View.GONE);
             tvRest.setVisibility(View.VISIBLE);
             tvRest.setText(TextUtils.concat(SpannableUtil.getStringBySize("休市中", 1.4f), String.format("\n下一个交易时间段：%s", quote.getTradingTime())));
-        }else {
+        } else {
             tradeView1.setVisibility(View.VISIBLE);
             tradeView2.setVisibility(View.VISIBLE);
             tradeView3.setVisibility(View.VISIBLE);
@@ -426,8 +428,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         if (getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 0) {
             getHolding();
             // 下面是轮询方式获取报价
-            Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-            fillViews(quote);
+//            Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+//            fillViews(quote);
+            // end
             Funds result = StaticStore.getFunds(mIsDemo);
             tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
             tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
@@ -522,6 +525,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.tv_kchart:
                 mTopRightMenu.showAsDropDown(mTvKchart, 0, DisplayUtils.dip2px(mContext, 10));
+                break;
+            case R.id.tv_fullscreen:
+                FullScreenChartActivity.startActivity(mContext);
                 break;
         }
     }

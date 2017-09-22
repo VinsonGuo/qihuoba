@@ -155,11 +155,11 @@ public class TimeSharingplanFragment extends BaseFragment {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PollRefreshEvent event) {
         Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         mChart.refreshEntry((float) quote.getLastPrice());
-    }
+    }*/
 
     @Override
     public void onDestroy() {

@@ -16,6 +16,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.HideRedDotEvent;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.PollRefreshEvent;
+import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.HisData;
@@ -68,6 +69,7 @@ public class MainActivity extends BaseActivity {
     private long mBackPressed;
     private AlphaTabsIndicator mBottomBar;
     private Gson mGson = new Gson();
+    private Socket mSocket;
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
@@ -80,7 +82,7 @@ public class MainActivity extends BaseActivity {
         initViews();
         checkUpdate();
         startPoll();
-//        testSocketIO();
+        initSocketIO();
         if (ActivityTools.isNeedShowGuide(mContext)) {
             TradeGuideActivity.startActivity(mContext);
         }
@@ -88,15 +90,17 @@ public class MainActivity extends BaseActivity {
         MobclickAgent.onProfileSignIn(UserSharePrefernce.getAccount(this));
     }
 
-    private void testSocketIO() {
+    private void initSocketIO() {
         try {
             IO.Options options = new IO.Options();
             options.forceNew = true;
             options.reconnection = true;
             options.transports = new String[]{WebSocket.NAME};
-            final Socket socket = IO.socket(/*HttpConfig.DOMAIN */"http://139.224.8.133" + ":9092", options);//创建连接
+
+            //创建连接
+            mSocket = IO.socket("http://dev.qihuofa.com:9092", options);
             //监听事件获取服务端的返回数据
-            socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
                     LogUtils.d("socket io connect");
@@ -124,6 +128,7 @@ public class MainActivity extends BaseActivity {
                     }
                     String data = (String) args[0];
                     Quote quote = mGson.fromJson(data, Quote.class);
+                    // 真实
                     Quote oldQuote = StaticStore.getQuote(quote.getSymbol(), false);
                     if (oldQuote != null) {
                         oldQuote.setAskPrice(quote.getAskPrice());
@@ -136,14 +141,28 @@ public class MainActivity extends BaseActivity {
                         oldQuote.setAskSize(quote.getAskSize());
                         oldQuote.setBidSize(quote.getBidSize());
                         oldQuote.setVol(quote.getVol());
-                        LogUtils.d("socket io 收到报价信息：%s", data);
-//                        EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
                     }
+
+                    // 模拟
+                    Quote demoQuote = StaticStore.getQuote(quote.getSymbol(), true);
+                    if (demoQuote != null) {
+                        demoQuote.setAskPrice(quote.getAskPrice());
+                        demoQuote.setBidPrice(quote.getBidPrice());
+                        demoQuote.setChange(quote.getChange());
+                        demoQuote.setChangeRate(quote.getChangeRate());
+                        demoQuote.setLastclose(quote.getLastclose());
+                        demoQuote.setLastPrice(quote.getLastPrice());
+                        demoQuote.setLastSize(quote.getLastSize());
+                        demoQuote.setAskSize(quote.getAskSize());
+                        demoQuote.setBidSize(quote.getBidSize());
+                        demoQuote.setVol(quote.getVol());
+                    }
+                    EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
                 }
             });
-            socket.connect();
+            mSocket.connect();
 
-            HttpManager.getHttpService().getHistoryData("http://192.168.1.52:6666/historyMarketData", new HistoryDataRequest("CNU17", "NYMEX", "2017-09-21 06:00", null))
+            HttpManager.getHttpService().getHistoryData("http://dev.qihuofa.com:6666/historyMarketData", new HistoryDataRequest("CNU17", "NYMEX", "2017-09-21 06:00", null))
                     .compose(RxUtils.<List<HisData>>applySchedulers())
                     .subscribe(new Consumer<List<HisData>>() {
                         @Override
@@ -208,7 +227,7 @@ public class MainActivity extends BaseActivity {
                     return;
                 }
                 EventBus.getDefault().post(new PollRefreshEvent());
-                HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
+               /* HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
                         .map(new Function<List<Quote>, List<Quote>>() {
                             @Override
                             public List<Quote> apply(@NonNull List<Quote> quotes) throws Exception {
@@ -226,7 +245,7 @@ public class MainActivity extends BaseActivity {
                             @Override
                             public void accept(@NonNull List<Quote> quotes) throws Exception {
                             }
-                        }, RxUtils.commonErrorConsumer());
+                        }, RxUtils.commonErrorConsumer());*/
 
                 HttpManager.getBizService().getFunds()
                         .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())
@@ -285,5 +304,8 @@ public class MainActivity extends BaseActivity {
         mTimer.cancel();
         // 统计用户登出
         MobclickAgent.onProfileSignOff();
+        if (mSocket != null && mSocket.connected()) {
+            mSocket.disconnect();
+        }
     }
 }

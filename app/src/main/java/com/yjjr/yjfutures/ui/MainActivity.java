@@ -56,7 +56,6 @@ import java.util.TimerTask;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -98,7 +97,7 @@ public class MainActivity extends BaseActivity {
             options.transports = new String[]{WebSocket.NAME};
 
             //创建连接
-            mSocket = IO.socket("http://dev.qihuofa.com:9092", options);
+            mSocket = IO.socket("http://dev.qihuofa.com:9092"/*"http://139.224.8.133:9092"*/, options);
             //监听事件获取服务端的返回数据
             mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
@@ -161,15 +160,6 @@ public class MainActivity extends BaseActivity {
                 }
             });
             mSocket.connect();
-
-            HttpManager.getHttpService().getHistoryData("http://dev.qihuofa.com:6666/historyMarketData", new HistoryDataRequest("CNU17", "NYMEX", "2017-09-21 06:00", null))
-                    .compose(RxUtils.<List<HisData>>applySchedulers())
-                    .subscribe(new Consumer<List<HisData>>() {
-                        @Override
-                        public void accept(@NonNull List<HisData> hisDatas) throws Exception {
-                            LogUtils.d(hisDatas.toString());
-                        }
-                    }, RxUtils.commonErrorConsumer());
         } catch (Exception e) {
             LogUtils.e(e);
         }

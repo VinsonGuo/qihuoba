@@ -7,19 +7,16 @@ import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.utils.DoubleUtil;
 
 /**
  * 闪电图
@@ -113,7 +110,7 @@ public class TickChart extends RelativeLayout {
     }
 
     private void setupSettingParameter() {
-        RealPriceMarkerView mv = new RealPriceMarkerView(mContext, 0.1);
+        LineChartYMarkerView mv = new LineChartYMarkerView(mContext, 0.1);
         mChart.setMarker(mv);
 
         mChart.setDescription(null);

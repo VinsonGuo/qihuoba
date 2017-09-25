@@ -93,10 +93,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvMarginValue;
     private TextView tvTotal;
     private View colorView;
-    /**
-     * 持仓的对象
-     */
-//    private Holding mHolding;
     private List<Holds> mHoldsList;
     private TextView tvPrice;
     private TextView tvChange;
@@ -207,9 +203,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mViewpager.setCurrentItem(3, false);
                         break;
                 }
-                mTvKchart.setBackgroundResource(R.drawable.shape_trade_rb_bg_unchecked);
-                mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.radio_color_small));
-                mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow), null);
+                mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.background_dark));
+                mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.main_text_color));
+                mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow_white), null);
             }
         });
         ((RadioButton) rgNav.getChildAt(1)).setChecked(true);
@@ -235,9 +231,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     public void onMenuItemClick(int position) {
                         rgNav.clearCheck();
                         mTvKchart.setText(menuItems.get(position).getText());
-                        mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.main_text_color));
-                        mTvKchart.setBackgroundResource(R.drawable.shape_trade_rb_bg_checked);
-                        mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow_white), null);
+                        mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.color_333333));
+                        mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.third_text_color));
+                        mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow), null);
                         mViewpager.setCurrentItem(2, false);
                         String type = CandleStickChartFragment.MIN;
                         switch (position) {
@@ -527,7 +523,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 mTopRightMenu.showAsDropDown(mTvKchart, 0, DisplayUtils.dip2px(mContext, 10));
                 break;
             case R.id.tv_fullscreen:
-                FullScreenChartActivity.startActivity(mContext);
+                FullScreenChartActivity.startActivity(mContext, mSymbol, mIsDemo);
                 break;
         }
     }

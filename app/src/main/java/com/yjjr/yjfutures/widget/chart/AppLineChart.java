@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
@@ -14,6 +15,8 @@ import com.github.mikephil.charting.interfaces.datasets.IDataSet;
  */
 
 public class AppLineChart extends LineChart {
+
+    private IMarker mXMarker;
 
     public AppLineChart(Context context) {
         this(context, null);
@@ -33,9 +36,13 @@ public class AppLineChart extends LineChart {
         mRenderer = new AppLineChartRenderer(this, mAnimator, mViewPortHandler);
     }
 
+    public void setXMarker(IMarker marker) {
+        mXMarker = marker;
+    }
+
     @Override
     protected void drawMarkers(Canvas canvas) {
-        if (mMarker == null || !isDrawMarkersEnabled() || !valuesToHighlight())
+        if (mMarker == null || mXMarker == null || !isDrawMarkersEnabled() || !valuesToHighlight())
             return;
 
         for (int i = 0; i < mIndicesToHighlight.length; i++) {
@@ -59,15 +66,25 @@ public class AppLineChart extends LineChart {
 
             // callbacks to update the content
             mMarker.refreshContent(e, highlight);
+            mXMarker.refreshContent(e, highlight);
 
             // draw the marker
-            if (mMarker instanceof RealPriceMarkerView) {
-                RealPriceMarkerView realPriceMarkerView = (RealPriceMarkerView) mMarker;
-                int width = realPriceMarkerView.getMeasuredWidth();
-                mMarker.draw(canvas, getMeasuredWidth() - width, pos[1]);
-            } else {
-                mMarker.draw(canvas, pos[0], pos[1]);
-            }
+//            if (mMarker instanceof LineChartYMarkerView) {
+            LineChartYMarkerView yMarker = (LineChartYMarkerView) mMarker;
+            LineChartXMarkerView xMarker = (LineChartXMarkerView) mXMarker;
+            int width = yMarker.getMeasuredWidth();
+            mMarker.draw(canvas, getMeasuredWidth() - width * 1.05f, pos[1] - yMarker.getMeasuredHeight() / 2);
+
+            mXMarker.draw(canvas, pos[0] - (xMarker.getMeasuredWidth() / 2), getMeasuredHeight());
+//            } else {
+//                mMarker.draw(canvas, pos[0], pos[1]);
+//            }
         }
     }
+
+    @Override
+    public void highlightValue(Highlight highlight) {
+        super.highlightValue(highlight);
+    }
+
 }

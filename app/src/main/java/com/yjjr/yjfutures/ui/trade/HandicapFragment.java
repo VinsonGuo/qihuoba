@@ -98,10 +98,10 @@ public class HandicapFragment extends BaseFragment {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PollRefreshEvent event) {
         fillView();
-    }
+    }*/
 
     @Override
     public void onDestroy() {

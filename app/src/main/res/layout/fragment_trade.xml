@@ -143,93 +143,93 @@
     <com.yjjr.yjfutures.widget.NestRadioGroup
         android:id="@+id/rg_nav"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/root_padding_15"
+        android:layout_height="36dp"
         android:background="@color/chart_background"
         android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/rb_chart1"
-            android:layout_width="64dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/root_padding_10"
-            android:background="@drawable/selector_trade_rb_bg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
             android:button="@null"
             android:gravity="center"
-            android:padding="2dp"
+            android:padding="10dp"
             android:text="闪电图"
-            android:textColor="@color/selector_trade_rb_text_color"
+            android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"
             android:visibility="gone"
             />
 
         <RadioButton
             android:id="@+id/rb_chart2"
-            android:layout_width="64dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/root_padding_10"
-            android:background="@drawable/selector_trade_rb_bg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
             android:button="@null"
             android:gravity="center"
-            android:padding="2dp"
             android:text="分时图"
-            android:textColor="@color/selector_trade_rb_text_color"
+            android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"
             />
+
+        <View
+            android:layout_width="@dimen/common_divider_small"
+            android:layout_height="match_parent"
+            android:background="@color/divider_color"/>
 
         <TextView
             android:id="@+id/tv_kchart"
-            android:layout_width="64dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/root_padding_10"
-            android:background="@drawable/selector_trade_rb_bg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
             android:button="@null"
             android:drawableRight="@drawable/ic_down_arrow"
             android:gravity="center"
-            android:paddingBottom="2dp"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp"
-            android:paddingTop="2dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:text="@string/kchart"
-            android:textColor="@color/selector_trade_rb_text_color"
+            android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"
             />
 
+        <View
+            android:layout_width="@dimen/common_divider_small"
+            android:layout_height="match_parent"
+            android:background="@color/divider_color"/>
+
         <RadioButton
             android:id="@+id/rb_chart4"
-            android:layout_width="64dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/root_padding_10"
-            android:background="@drawable/selector_trade_rb_bg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
             android:button="@null"
             android:gravity="center"
-            android:padding="2dp"
             android:text="盘口"
-            android:textColor="@color/selector_trade_rb_text_color"
+            android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"/>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/tv_fullscreen"
-            android:layout_width="64dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/root_padding_10"
-            android:layout_marginRight="@dimen/root_padding_15"
-            android:background="@drawable/selector_trade_rb_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_chart_rb_bg"
             android:button="@null"
             android:gravity="center"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
+            android:padding="10dp"
             android:text="全屏"
-            android:textColor="@color/selector_trade_rb_text_color"
+            android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"
             />
 
     </com.yjjr.yjfutures.widget.NestRadioGroup>
+
+    <View
+        style="@style/style_divider"/>
 
     <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
         android:id="@+id/viewpager"

@@ -15,6 +15,10 @@ public class HttpConfig {
     public static final String DEMO_HOST = BuildConfig.DEBUG ? "https://dev.qihuofa.com:9101/" : "https://demo.qihuofa.com:9100/";
     public static final String BIZ_HOST = DOMAIN + ":9300";
     /**
+     * 获取K线图的url
+     */
+    public static final String KLINE_URL = BuildConfig.DEBUG ? "http://dev.qihuofa.com:6666/historyMarketData" : "http://www.qihuofa.com:6666/historyMarketData";
+    /**
      * 手机号码的正则
      */
     public static final String REG_PHONE = "^0?(13[0-9]|15[012356789]|17[0678]|18[0-9]|14[57])[0-9]{8}$";

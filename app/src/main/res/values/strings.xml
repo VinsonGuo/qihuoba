@@ -1346,4 +1346,7 @@
     <string name="please_login_again">请重新登录</string>
     <string name="please_finish_alipay">请填写支付宝账号</string>
     <string name="please_finish_trade_pwd">请设置交易密码</string>
+    <string name="price">价格</string>
+    <string name="change_rate">涨跌幅</string>
+    <string name="volume">成交量</string>
 </resources>

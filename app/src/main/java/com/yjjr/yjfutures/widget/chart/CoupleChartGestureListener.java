@@ -19,7 +19,7 @@ public class CoupleChartGestureListener implements OnChartGestureListener {
     private Chart srcChart;
     private Chart[] dstCharts;
 
-    public CoupleChartGestureListener(Chart srcChart, Chart[] dstCharts) {
+    public CoupleChartGestureListener(Chart srcChart, Chart... dstCharts) {
         this.srcChart = srcChart;
         this.dstCharts = dstCharts;
     }

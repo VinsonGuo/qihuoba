@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <com.yjjr.yjfutures.widget.chart.AppLineChart
         android:id="@+id/line_chart"
@@ -9,4 +9,10 @@
         android:layout_height="match_parent"
         android:background="@color/chart_background"/>
 
-</LinearLayout>
+    <com.yjjr.yjfutures.widget.chart.LineChartInfoView
+        android:id="@+id/info"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+</FrameLayout>

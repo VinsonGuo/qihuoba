@@ -50,7 +50,7 @@ public class MarketPriceAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> 
             tvPrice.setTextColor(ContextCompat.getColor(mContext, change >= 0 ? R.color.main_color_red : R.color.main_color_green));
             tvChange.setBackgroundResource(change >= 0 ? R.drawable.shape_red_border_bg : R.drawable.shape_green_border_bg);
 
-            int colorFrom = mContext.getResources().getColor(R.color.color_5_000000);
+           /* int colorFrom = mContext.getResources().getColor(R.color.color_5_000000);
             int colorTo = mContext.getResources().getColor(R.color.transparent);
             ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
             colorAnimation.setDuration(250); // milliseconds
@@ -62,7 +62,7 @@ public class MarketPriceAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> 
                 }
 
             });
-            colorAnimation.start();
+            colorAnimation.start();*/
 
         } catch (Exception e) {
             LogUtils.e(e);

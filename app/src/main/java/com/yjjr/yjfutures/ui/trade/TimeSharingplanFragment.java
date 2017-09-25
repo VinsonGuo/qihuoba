@@ -12,15 +12,16 @@ import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
-import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.model.HisData;
+import com.yjjr.yjfutures.model.HistoryDataRequest;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.chart.TimeSharingplanChart;
 
@@ -75,7 +76,8 @@ public class TimeSharingplanFragment extends BaseFragment {
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
-        mChart = new TimeSharingplanChart(mContext, mQuote.getTick());
+        mChart = new TimeSharingplanChart(mContext);
+        mChart.setTick(mQuote.getTick());
         return mChart;
     }
 
@@ -94,6 +96,7 @@ public class TimeSharingplanFragment extends BaseFragment {
             dateTime = DateUtils.nowDateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
         }
         HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()))
+//        HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()), null))
                 .map(new Function<List<HisData>, List<HisData>>() {
                     @Override
                     public List<HisData> apply(@NonNull List<HisData> hisDatas) throws Exception {
@@ -129,6 +132,7 @@ public class TimeSharingplanFragment extends BaseFragment {
         //一分钟更新一下数据
         HisData hisData = mDatas.get(mDatas.size() - 1);
         HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), hisData.getsDate())
+//        HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), hisData.getsDate(), null))
                 .filter(new Predicate<List<HisData>>() {
                     @Override
                     public boolean test(@NonNull List<HisData> hisDatas) throws Exception {
@@ -142,7 +146,7 @@ public class TimeSharingplanFragment extends BaseFragment {
                     public void accept(@NonNull List<HisData> hisDatas) throws Exception {
                         HisData data = hisDatas.get(hisDatas.size() - 1);
                         mDatas.add(data);
-                        mChart.addEntry((float) data.getClose());
+                        mChart.addEntry(data);
                     }
                 }, RxUtils.commonErrorConsumer());
     }

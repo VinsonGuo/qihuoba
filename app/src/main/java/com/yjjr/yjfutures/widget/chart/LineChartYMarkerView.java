@@ -20,12 +20,12 @@ import com.yjjr.yjfutures.utils.StringUtils;
  *
  * @author Philipp Jahoda
  */
-public class RealPriceMarkerView extends MarkerView {
+public class LineChartYMarkerView extends MarkerView {
 
     private final double mTick;
     private TextView tvContent;
 
-    public RealPriceMarkerView(Context context, double tick) {
+    public LineChartYMarkerView(Context context, double tick) {
         super(context, R.layout.view_mp_real_price_marker);
         mTick = tick;
         tvContent = (TextView) findViewById(R.id.tvContent);
@@ -33,7 +33,6 @@ public class RealPriceMarkerView extends MarkerView {
 
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        tvContent.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.third_text_color));
         float value = e.getY();
         tvContent.setText(StringUtils.getStringByTick(value, mTick));
         super.refreshContent(e, highlight);

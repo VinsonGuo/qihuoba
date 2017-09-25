@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -109,9 +108,9 @@ public class CandleStickChartFragment extends BaseFragment {
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
         mChart.setMaxVisibleValueCount(30);
+        mChart.setScaleYEnabled(false);
 
         mChart.setAutoScaleMinMaxEnabled(false);
-        mChart.setScaleYEnabled(true);
 
         // scaling can now only be done on x- and y-axis separately
         mChart.setPinchZoom(true);
@@ -138,12 +137,12 @@ public class CandleStickChartFragment extends BaseFragment {
 
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setTextColor(whiteColor);
-        rightAxis.setLabelCount(7, false);
+        rightAxis.setLabelCount(6, true);
         rightAxis.setDrawGridLines(true);
         rightAxis.setGridColor(dividerColor);
         rightAxis.setGridLineWidth(0.5f);
 
-        rightAxis.enableGridDashedLine(20, 5, 0);
+        rightAxis.enableGridDashedLine(50, 5, 0);
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
@@ -158,7 +157,6 @@ public class CandleStickChartFragment extends BaseFragment {
 
 
         mChart.getLegend().setEnabled(false);
-//        mChart.setMarker(new RealPriceMarkerView(mContext, 2));
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -212,6 +210,7 @@ public class CandleStickChartFragment extends BaseFragment {
             HisData hisData = mList.get(mList.size() - 1);
             final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
             HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)
+//            HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType))
                     .filter(new Predicate<List<HisData>>() {
                         @Override
                         public boolean test(@NonNull List<HisData> hisDatas) throws Exception {
@@ -254,6 +253,7 @@ public class CandleStickChartFragment extends BaseFragment {
             dateTime = dateTime.minusMonths(1);
         }
         HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)
+//        HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType))
                 .map(new Function<List<HisData>, List<HisData>>() {
                     @Override
                     public List<HisData> apply(@NonNull List<HisData> hisDatas) throws Exception {

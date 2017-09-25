@@ -68,7 +68,7 @@ public class ChatActivity extends TakePhotoActivity implements
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
 
-//    private String toSendId = "13163725850";
+    //    private String toSendId = "13163725850";
     private String toSendId = "18566745261";
 
     private MessagesList mMessagesList;
@@ -105,6 +105,9 @@ public class ChatActivity extends TakePhotoActivity implements
     private XhsEmoticonsKeyBoard mEditText;
 
     public static void startActivity(Context context) {
+        if (BaseApplication.getInstance().getUserInfo() == null) {
+            return;
+        }
         context.startActivity(new Intent(context, ChatActivity.class));
     }
 

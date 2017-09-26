@@ -77,7 +77,7 @@ public class TimeSharingplanFragment extends BaseFragment {
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
         mChart = new TimeSharingplanChart(mContext);
-        mChart.setTick(mQuote.getTick());
+        mChart.setQuote(mQuote);
         return mChart;
     }
 
@@ -95,8 +95,8 @@ public class TimeSharingplanFragment extends BaseFragment {
         } else {
             dateTime = DateUtils.nowDateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
         }
-        HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()))
-//        HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()), null))
+//        HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()))
+        HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()), "min"))
                 .map(new Function<List<HisData>, List<HisData>>() {
                     @Override
                     public List<HisData> apply(@NonNull List<HisData> hisDatas) throws Exception {
@@ -130,9 +130,9 @@ public class TimeSharingplanFragment extends BaseFragment {
             return;
         }
         //一分钟更新一下数据
-        HisData hisData = mDatas.get(mDatas.size() - 1);
-        HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), hisData.getsDate())
-//        HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), hisData.getsDate(), null))
+        final HisData hisData = mDatas.get(mDatas.size() - 1);
+//        HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), hisData.getsDate())
+        HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), hisData.getsDate(), "min"))
                 .filter(new Predicate<List<HisData>>() {
                     @Override
                     public boolean test(@NonNull List<HisData> hisDatas) throws Exception {
@@ -144,9 +144,12 @@ public class TimeSharingplanFragment extends BaseFragment {
                 .subscribe(new Consumer<List<HisData>>() {
                     @Override
                     public void accept(@NonNull List<HisData> hisDatas) throws Exception {
-                        HisData data = hisDatas.get(hisDatas.size() - 1);
-                        mDatas.add(data);
-                        mChart.addEntry(data);
+                        for (HisData data : hisDatas) {
+                            if (!mDatas.contains(data)) {
+                                mDatas.add(data);
+                                mChart.addEntry(data);
+                            }
+                        }
                     }
                 }, RxUtils.commonErrorConsumer());
     }

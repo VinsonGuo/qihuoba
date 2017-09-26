@@ -21,8 +21,10 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.HisData;
+import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 
@@ -49,7 +51,6 @@ public class TimeSharingplanChart extends RelativeLayout {
     public static final int FULL_SCREEN_SHOW_COUNT = 200;
     public static final int DATA_SET_PRICE = 0;
     public static final int DATA_SET_PADDING = 1;
-    private double mTick;
     private List<HisData> mList = new ArrayList<>();
     private AppLineChart mChart;
     private Context mContext;
@@ -57,7 +58,13 @@ public class TimeSharingplanChart extends RelativeLayout {
     private int transparentColor = getResources().getColor(R.color.transparent);
     private int candleGridColor = getResources().getColor(R.color.color_333333);
     private int mTextColor = getResources().getColor(R.color.second_text_color);
+    /**
+     * 是否处于闲置状态
+     */
     private boolean isIdle = true;
+
+    private Quote mQuote;
+
     private IAxisValueFormatter xValueFormatter = new IAxisValueFormatter() {
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
@@ -117,7 +124,14 @@ public class TimeSharingplanChart extends RelativeLayout {
             data.addEntry(new Entry(setSell.getEntryCount(), (float) hisData.getClose()), DATA_SET_PRICE);
         }
 
-        for (int i = mList.size(); i < mList.size() + 20; i++) {
+        int size;
+        if (mList.size() < FULL_SCREEN_SHOW_COUNT - 20) {//小于最大的个数，补充个数与最大的相同
+            size = FULL_SCREEN_SHOW_COUNT;
+        } else { // 大于最大个数，向后面添加20个
+            size = mList.size() + 20;
+        }
+
+        for (int i = mList.size(); i < size; i++) {
             data.addEntry(new Entry(i, (float) mList.get(list.size() - 1).getClose()), DATA_SET_PADDING);
         }
 
@@ -125,6 +139,10 @@ public class TimeSharingplanChart extends RelativeLayout {
         mChart.highlightValue(chartHighlighter);
         mChart.notifyDataSetChanged();
         mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, 50);
+
+//        ViewPortHandler port = mChart.getViewPortHandler();
+//        mChart.setViewPortOffsets(0, port.offsetTop(), port.offsetRight(), port.offsetBottom());
+
         mChart.moveViewToX(data.getEntryCount());
 
     }
@@ -169,12 +187,14 @@ public class TimeSharingplanChart extends RelativeLayout {
             }
             data.addEntry(new Entry(setSell.getEntryCount(), price), DATA_SET_PRICE);
 
+            // 给padding添加entry
             ILineDataSet paddingSet = data.getDataSetByIndex(DATA_SET_PADDING);
             if (paddingSet == null) {
                 paddingSet = createSet(TYPE_DASHED);
                 data.addDataSet(paddingSet);
             }
-            data.addEntry(new Entry(setSell.getEntryCount(), price), DATA_SET_PADDING);
+            data.addEntry(new Entry(setSell.getEntryCount() + paddingSet.getEntryCount(), price), DATA_SET_PADDING);
+            data.removeEntry(0, DATA_SET_PADDING);
 
             Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_PRICE).getEntryCount() - 1, price, DATA_SET_PRICE);
             mChart.highlightValue(chartHighlighter);
@@ -200,8 +220,8 @@ public class TimeSharingplanChart extends RelativeLayout {
         } else {
             set.setHighlightEnabled(false);
             set.setVisible(false);
-            set.setColor(mLineColor);
-            set.enableDashedLine(10, 5, 0);
+            set.setColor(mTextColor);
+            set.enableDashedLine(5, 10, 0);
             set.setDrawCircleHole(false);
             set.setCircleColor(transparentColor);
         }
@@ -212,13 +232,6 @@ public class TimeSharingplanChart extends RelativeLayout {
         set.setDrawValues(false);
 
         return set;
-    }
-
-    public void setTick(double tick) {
-        mTick = tick;
-        LineChartYMarkerView mv = new LineChartYMarkerView(mContext, mTick);
-        mv.setChartView(mChart);
-        mChart.setMarker(mv);
     }
 
     private void setupSettingParameter() {
@@ -232,7 +245,8 @@ public class TimeSharingplanChart extends RelativeLayout {
         mChart.getDescription().setEnabled(false);
         mChart.setPinchZoom(true);
         mChart.setScaleYEnabled(false);
-        mChart.setAutoScaleMinMaxEnabled(false);
+        mChart.setAutoScaleMinMaxEnabled(true);
+
 
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
 
@@ -240,9 +254,9 @@ public class TimeSharingplanChart extends RelativeLayout {
             public void onValueSelected(Entry e, Highlight h) {
 //                mChart.highlightValue(h);
                 int x = (int) e.getX();
-                if (x < mList.size()) {
+                if (x < mList.size() && mQuote != null) {
                     mInfoView.setVisibility(VISIBLE);
-                    mInfoView.setData(mList.get(x));
+                    mInfoView.setData(mQuote.getOpen(), mList.get(x));
                 }
             }
 
@@ -303,13 +317,13 @@ public class TimeSharingplanChart extends RelativeLayout {
         rightAxis.setTextColor(mTextColor);
         rightAxis.setGridLineWidth(0.5f);
         rightAxis.enableGridDashedLine(5, 5, 0);
-        rightAxis.setLabelCount(6,true);
+        rightAxis.setLabelCount(6, true);
         rightAxis.setDrawAxisLine(false);
 
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return StringUtils.getStringByTick(value, mTick);
+                return StringUtils.getStringByTick(value, mQuote.getTick());
             }
         });
         Legend legend = mChart.getLegend();
@@ -324,6 +338,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         xAxis.setDrawGridLines(false);
         xAxis.setTextColor(mTextColor);
         xAxis.setGridColor(candleGridColor);
+        xAxis.setLabelCount(5,true);
 
         xAxis.setValueFormatter(xValueFormatter);
 
@@ -331,5 +346,12 @@ public class TimeSharingplanChart extends RelativeLayout {
 
     public void setNoDataText(String text) {
         mChart.setNoDataText(text);
+    }
+
+    public void setQuote(Quote quote) {
+        mQuote = quote;
+        LineChartYMarkerView mv = new LineChartYMarkerView(mContext, quote.getTick());
+        mv.setChartView(mChart);
+        mChart.setMarker(mv);
     }
 }

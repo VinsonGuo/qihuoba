@@ -27,6 +27,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.model.HisData;
+import com.yjjr.yjfutures.model.HistoryDataRequest;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
@@ -34,6 +35,7 @@ import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -107,10 +109,10 @@ public class CandleStickChartFragment extends BaseFragment {
 
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
-        mChart.setMaxVisibleValueCount(30);
+//        mChart.setMaxVisibleValueCount(30);
         mChart.setScaleYEnabled(false);
 
-        mChart.setAutoScaleMinMaxEnabled(false);
+        mChart.setAutoScaleMinMaxEnabled(true);
 
         // scaling can now only be done on x- and y-axis separately
         mChart.setPinchZoom(true);
@@ -142,7 +144,7 @@ public class CandleStickChartFragment extends BaseFragment {
         rightAxis.setGridColor(dividerColor);
         rightAxis.setGridLineWidth(0.5f);
 
-        rightAxis.enableGridDashedLine(50, 5, 0);
+        rightAxis.enableGridDashedLine(5, 5, 0);
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
@@ -207,10 +209,10 @@ public class CandleStickChartFragment extends BaseFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(OneMinuteEvent event) {
         if (mList != null && TextUtils.equals(mType, MIN)) {
-            HisData hisData = mList.get(mList.size() - 1);
+            final HisData hisData = mList.get(mList.size() - 1);
             final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-            HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)
-//            HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType))
+//            HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)
+            HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType))
                     .filter(new Predicate<List<HisData>>() {
                         @Override
                         public boolean test(@NonNull List<HisData> hisDatas) throws Exception {
@@ -222,10 +224,17 @@ public class CandleStickChartFragment extends BaseFragment {
                     .subscribe(new Consumer<List<HisData>>() {
                         @Override
                         public void accept(@NonNull List<HisData> hisDatas) throws Exception {
-                            HisData data = hisDatas.get(hisDatas.size() - 1);
-                            mList.add(data);
-                            mChart.notifyDataSetChanged();
-                            mChart.moveViewToX(mChart.getCandleData().getEntryCount());
+//                            HisData data = hisDatas.get(hisDatas.size() - 1);
+//                            mList.add(data);
+//                            mChart.notifyDataSetChanged();
+//                            mChart.moveViewToX(mChart.getCandleData().getEntryCount());
+                            for (HisData data : hisDatas) {
+                                if (!hisDatas.contains(data)) {
+                                    mList.add(data);
+                                    mChart.notifyDataSetChanged();
+                                    mChart.moveViewToX(mChart.getCandleData().getEntryCount());
+                                }
+                            }
                         }
                     }, RxUtils.commonErrorConsumer());
         }
@@ -252,8 +261,8 @@ public class CandleStickChartFragment extends BaseFragment {
         } else if (HOUR.equals(type)) {
             dateTime = dateTime.minusMonths(1);
         }
-        HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)
-//        HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType))
+//        HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)
+        HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType))
                 .map(new Function<List<HisData>, List<HisData>>() {
                     @Override
                     public List<HisData> apply(@NonNull List<HisData> hisDatas) throws Exception {
@@ -281,7 +290,7 @@ public class CandleStickChartFragment extends BaseFragment {
     }
 
     private void fullData(List<HisData> datas) {
-        if (datas == null || datas.size() == 0) {
+        if (datas == null || datas.isEmpty()) {
             return;
         }
         ArrayList<CandleEntry> yVals1 = new ArrayList<>();
@@ -311,9 +320,10 @@ public class CandleStickChartFragment extends BaseFragment {
         set1.setDrawValues(false);
         CandleData data = new CandleData(set1);
 
+        mChart.setVisibleXRange(30, 10); // allow 20 values to be displayed at once on the x-axis, not more
         mChart.setData(data);
-        mChart.notifyDataSetChanged();
-        mChart.setVisibleXRange(60, 20); // allow 20 values to be displayed at once on the x-axis, not more
+//        mChart.notifyDataSetChanged();
+        mChart.invalidate();
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
     }
 

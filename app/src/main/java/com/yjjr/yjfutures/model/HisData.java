@@ -81,6 +81,22 @@ public class HisData {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        HisData hisData = (HisData) o;
+
+        return sDate != null ? sDate.equals(hisData.sDate) : hisData.sDate == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return sDate != null ? sDate.hashCode() : 0;
+    }
+
+    @Override
     public String toString() {
         return "HisData{" +
                 "Close=" + Close +

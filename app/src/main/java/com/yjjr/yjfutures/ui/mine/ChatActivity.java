@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,6 +19,9 @@ import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chat.EMVideoMessageBody;
+import com.hyphenate.chat.EMVoiceMessageBody;
+import com.hyphenate.chat.adapter.EMAChatClient;
 import com.jph.takephoto.model.TImage;
 import com.jph.takephoto.model.TResult;
 import com.sj.emoji.DefEmoticons;
@@ -26,6 +30,7 @@ import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
+import com.stfalcon.chatkit.utils.DateFormatter;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.model.chat.Message;
@@ -33,16 +38,19 @@ import com.yjjr.yjfutures.model.chat.User;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BigPhotoActivity;
 import com.yjjr.yjfutures.ui.TakePhotoActivity;
+import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.widget.ChatFuncView;
+import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.listener.EmojiFilter;
 import com.yjjr.yjfutures.widget.listener.YJChat;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -69,11 +77,12 @@ public class ChatActivity extends TakePhotoActivity implements
     protected MessagesListAdapter<Message> messagesAdapter;
 
     //    private String toSendId = "13163725850";
-    private String toSendId = "18566745261";
+    private String toSendId = "pdw";
 
     private MessagesList mMessagesList;
     private UserInfo mUserInfo;
-    private String mOtherUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1504867752018&di=f305320cf4629db92fc59e6e56fefe23&imgtype=0&src=http%3A%2F%2Fwanzao2.b0.upaiyun.com%2Fsystem%2Fpictures%2F36203759%2Foriginal%2F1464751360_640x640.jpg";
+    private String mOtherUrl = "1";
+    private String mMineUrl = "0";
     private EMMessageListener msgListener = new EMMessageListener() {
 
         @Override
@@ -101,7 +110,6 @@ public class ChatActivity extends TakePhotoActivity implements
             LogUtils.d(message.toString());
         }
     };
-    private String mMineUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1505103642653&di=70f08b69d75a8d04f450ed8aca3947ae&imgtype=0&src=http%3A%2F%2Fpic.qqtn.com%2Fup%2F2016-4%2F2016042620205417694.png";
     private XhsEmoticonsKeyBoard mEditText;
 
     public static void startActivity(Context context) {
@@ -118,13 +126,18 @@ public class ChatActivity extends TakePhotoActivity implements
      */
     private void showMsg(List<EMMessage> messages) {
         for (EMMessage msg : messages) {
-            User user = new User(msg.getFrom(), msg.getUserName(), mOtherUrl, true);
+            String from = msg.getFrom();
+            boolean isMe = TextUtils.equals(mUserInfo.getAccount(), from);
+            User user = new User(from, isMe ? mUserInfo.getName() : msg.getUserName(), isMe ? mMineUrl : mOtherUrl, true);
             EMMessageBody body = msg.getBody();
             final Message message = new Message(msg.getMsgId(), user, body.toString());
             if (body instanceof EMTextMessageBody) {
                 message.setText(((EMTextMessageBody) body).getMessage());
             } else if (body instanceof EMImageMessageBody) {
                 message.setImage(new Message.Image(((EMImageMessageBody) body).getRemoteUrl()));
+            }else if(body instanceof EMVoiceMessageBody) {
+                EMVoiceMessageBody b = (EMVoiceMessageBody) body;
+                message.setVoice(new Message.Voice(b.getRemoteUrl(),b.getLength()));
             }
             mMessagesList.post(new Runnable() {
                 @Override
@@ -143,10 +156,18 @@ public class ChatActivity extends TakePhotoActivity implements
         imageLoader = new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {
-                com.yjjr.yjfutures.utils.imageloader.ImageLoader.load(mContext, url, imageView);
+                if (TextUtils.isEmpty(url)) return;
+                if (TextUtils.equals("0", url)) {
+                    imageView.setImageResource(R.drawable.ic_chat_avaster_male);
+                } else if (TextUtils.equals("1", url)) {
+                    imageView.setImageResource(R.drawable.ic_chat_avaster_female);
+                } else {
+                    com.yjjr.yjfutures.utils.imageloader.ImageLoader.load(mContext, url, imageView);
+                }
             }
         };
         mMessagesList = (MessagesList) findViewById(R.id.messagesList);
+        ((HeaderView) findViewById(R.id.header_view)).bindActivity(mContext);
         initInput();
         initAdapter();
         Observable.create(new ObservableOnSubscribe<Object>() {
@@ -159,7 +180,6 @@ public class ChatActivity extends TakePhotoActivity implements
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(@NonNull Object o) throws Exception {
-                        ToastUtils.show(mContext, "注册成功");
                         login();
                     }
                 }, new Consumer<Throwable>() {
@@ -288,7 +308,21 @@ public class ChatActivity extends TakePhotoActivity implements
                 mEditText.getEtChat().setText(null);
             }
         });
-        mEditText.getBtnVoice().setVisibility(View.GONE);
+//        mEditText.getBtnVoice().setVisibility(View.GONE);
+        mEditText.getBtnVoice().setOnTouchListener(new View.OnTouchListener() {
+
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     private void login() {
@@ -347,7 +381,7 @@ public class ChatActivity extends TakePhotoActivity implements
             }
         }));
         EMClient.getInstance().chatManager().sendMessage(message);
-        messagesAdapter.addToStart(new Message(System.currentTimeMillis() + "", new User(mUserInfo.getAccount(), mUserInfo.getName(), mMineUrl, true), input.toString()), true);
+        messagesAdapter.addToStart(new Message(DateUtils.nowTime() + "", new User(mUserInfo.getAccount(), mUserInfo.getName(), mMineUrl, true), input.toString()), true);
         return true;
     }
 
@@ -359,7 +393,7 @@ public class ChatActivity extends TakePhotoActivity implements
         imageSendMessage.setMessageStatusCallback(new YJChat(mContext, new YJChat.CallBack() {
             @Override
             public void onSuccess() {
-                Message message = new Message(System.currentTimeMillis() + "", new User(mUserInfo.getAccount(), mUserInfo.getName(), mMineUrl, true), null);
+                Message message = new Message(DateUtils.nowTime() + "", new User(mUserInfo.getAccount(), mUserInfo.getName(), mMineUrl, true), null);
                 message.setImage(new Message.Image("file://" + image.getOriginalPath()));
                 messagesAdapter.addToStart(message, true);
             }
@@ -391,11 +425,17 @@ public class ChatActivity extends TakePhotoActivity implements
 
 
         holdersConfig.setOutcomingTextConfig(Holders.TextMessageHolder.class, R.layout.item_custom_outcoming_message);
-        holdersConfig.setIncomingTextHolder(Holders.IncomingTextMessageHolder.class);
+        holdersConfig.setIncomingTextConfig(Holders.IncomingTextMessageHolder.class, R.layout.item_custom_incoming_text_message);
         holdersConfig.setOutcomingImageConfig(Holders.ImageMessageHolder.class, R.layout.item_custom_outcoming_image_message);
         messagesAdapter = new MessagesListAdapter<>(mUserInfo.getAccount(), holdersConfig, imageLoader);
         messagesAdapter.setOnMessageLongClickListener(this);
         messagesAdapter.setOnMessageClickListener(this);
+        messagesAdapter.setDateHeadersFormatter(new DateFormatter.Formatter() {
+            @Override
+            public String format(Date date) {
+                return DateUtils.formatDateTime(date);
+            }
+        });
         mMessagesList.setAdapter(messagesAdapter);
     }
 
@@ -403,6 +443,7 @@ public class ChatActivity extends TakePhotoActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        EMClient.getInstance().chatManager().importMessages();
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 

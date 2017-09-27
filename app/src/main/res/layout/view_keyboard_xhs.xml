@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/background_dark"
+              android:orientation="vertical">
 
-    <include layout="@layout/ic_spitview_horizontal" />
+    <!--<include layout="@layout/ic_spitview_horizontal"/>-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="12dp"
             android:visibility="gone"
-            android:src="@drawable/btn_voice_or_text" />
+            android:src="@drawable/btn_voice_or_text"/>
 
         <!--语音输入-->
         <Button
@@ -36,8 +36,9 @@
             android:background="@drawable/btn_voice"
             android:text="@string/btn_text_speak"
             android:textColor="#727272"
-            android:visibility="gone" />
-
+            android:visibility="gone"/>
+        <!--
+                    android:background="@drawable/input_bg_gray"-->
         <RelativeLayout
             android:id="@+id/rl_input"
             android:layout_width="match_parent"
@@ -46,7 +47,7 @@
             android:layout_marginLeft="8dp"
             android:layout_toLeftOf="@+id/rl_multi_and_send"
             android:layout_toRightOf="@+id/btn_voice_or_text"
-            android:background="@drawable/input_bg_gray"
+            android:background="@color/white"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
             android:paddingTop="5dp">
@@ -57,42 +58,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/btn_face"
                 android:background="@null"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:lineSpacingExtra="4dp"
                 android:maxLines="4"
                 android:paddingLeft="8dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"/>
 
-            <!--表情-->
-            <ImageView
-                android:id="@+id/btn_face"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_face_nomal" />
+
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_multi_and_send"
-            android:layout_width="58dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
             android:layout_centerVertical="true"
             android:focusableInTouchMode="true"
             android:orientation="horizontal">
-
+            <!--表情-->
+            <ImageView
+                android:id="@+id/btn_face"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/icon_face_pop"/>
             <!--apps 功能-->
             <ImageView
                 android:id="@+id/btn_multimedia"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/btn_multi_bg" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_toRightOf="@id/btn_face"
+                android:src="@drawable/ic_add"/>
 
             <!--发送-->
             <Button
@@ -106,7 +107,7 @@
                 android:text="@string/btn_text_send"
                 android:textColor="@color/btn_send_textcolor"
                 android:textSize="12sp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </RelativeLayout>
     </RelativeLayout>
 
@@ -116,5 +117,5 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 </LinearLayout>

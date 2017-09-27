@@ -15,6 +15,7 @@ import android.view.WindowManager;
 
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.IpResponse;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.store.ConfigSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
@@ -24,12 +25,18 @@ import com.yjjr.yjfutures.ui.mine.SetTradePwdActivity;
 import com.yjjr.yjfutures.ui.mine.UserInfoActivity;
 import com.yjjr.yjfutures.ui.mine.WithdrawActivity;
 import com.yjjr.yjfutures.ui.trade.DepositActivity;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 /**
@@ -189,6 +196,24 @@ public class ActivityTools {
         } else {
             WithdrawActivity.startActivity(context);
         }
+    }
+
+    /**
+     * 通过网络获取ip，同步请求，只能从子线程调用
+     */
+    public static String getIpByNetwork() {
+        String ip = getIpAddressString();
+        Call<IpResponse> call = HttpManager.getHttpService().getIp(HttpConfig.IP_URL);
+        try {
+            Response<IpResponse> response = call.execute();
+            IpResponse body = response.body();
+            if (response.isSuccessful() && body != null && body.getCode() == 0) {
+                ip = body.getData().getIp();
+            }
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
+        return ip;
     }
 
     public static String getIpAddressString() {

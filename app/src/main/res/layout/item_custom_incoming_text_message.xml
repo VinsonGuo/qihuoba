@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,26 +8,34 @@
     android:layout_marginRight="16dp"
     android:layout_marginTop="8dp">
 
+    <com.stfalcon.chatkit.utils.ShapeImageView
+        android:id="@id/messageUserAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"/>
+
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:layout_marginRight="@dimen/root_padding_15"
-        android:layout_toLeftOf="@id/messageUserAvatar"
-        android:textSize="@dimen/sp_12"
-        android:textColor="@color/second_text_color"/>
+        android:layout_marginLeft="@dimen/root_padding_15"
+        android:layout_toRightOf="@id/messageUserAvatar"
+        android:textColor="@color/second_text_color"
+        android:textSize="@dimen/sp_12"/>
 
     <com.google.android.flexbox.FlexboxLayout
         android:id="@id/bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/message_incoming_bubble_margin_right"
         android:layout_below="@id/tv_name"
-        android:layout_marginLeft="@dimen/message_incoming_bubble_margin_right"
-        android:layout_toStartOf="@id/messageUserAvatar"
-        android:layout_toLeftOf="@id/messageUserAvatar"
+        android:layout_marginEnd="@dimen/message_incoming_bubble_margin_right"
+        android:layout_marginRight="@dimen/message_incoming_bubble_margin_right"
         android:layout_marginTop="@dimen/dp_10"
+        android:layout_toEndOf="@id/messageUserAvatar"
+        android:layout_toRightOf="@id/messageUserAvatar"
         android:orientation="vertical"
         app:alignContent="stretch"
         app:alignItems="stretch"
@@ -38,8 +45,8 @@
         <TextView
             android:id="@id/messageText"
             android:layout_width="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"/>
 
         <TextView
             android:id="@id/messageTime"
@@ -53,12 +60,4 @@
 
     </com.google.android.flexbox.FlexboxLayout>
 
-    <com.stfalcon.chatkit.utils.ShapeImageView
-        android:id="@id/messageUserAvatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"/>
 </RelativeLayout>

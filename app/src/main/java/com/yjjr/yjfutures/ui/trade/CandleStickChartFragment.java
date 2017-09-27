@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
@@ -107,9 +108,6 @@ public class CandleStickChartFragment extends BaseFragment {
         mChart.setNoDataText(mContext.getString(R.string.loading));
         mChart.setNoDataTextColor(ContextCompat.getColor(mContext, R.color.third_text_color));
 
-        // if more than 60 entries are displayed in the chart, no values will be
-        // drawn
-//        mChart.setMaxVisibleValueCount(30);
         mChart.setScaleYEnabled(false);
 
         mChart.setAutoScaleMinMaxEnabled(true);
@@ -123,6 +121,8 @@ public class CandleStickChartFragment extends BaseFragment {
         xAxis.setTextColor(whiteColor);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
+        xAxis.setLabelCount(5, true);
+        xAxis.setAvoidFirstLastClipping(true);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -143,7 +143,7 @@ public class CandleStickChartFragment extends BaseFragment {
         rightAxis.setDrawGridLines(true);
         rightAxis.setGridColor(dividerColor);
         rightAxis.setGridLineWidth(0.5f);
-
+        rightAxis.setDrawAxisLine(false);
         rightAxis.enableGridDashedLine(5, 5, 0);
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
@@ -320,8 +320,10 @@ public class CandleStickChartFragment extends BaseFragment {
         set1.setDrawValues(false);
         CandleData data = new CandleData(set1);
 
-        mChart.setVisibleXRange(30, 10); // allow 20 values to be displayed at once on the x-axis, not more
         mChart.setData(data);
+        ViewPortHandler port = mChart.getViewPortHandler();
+        mChart.setViewPortOffsets(0, port.offsetTop(), port.offsetRight(), port.offsetBottom());
+        mChart.setVisibleXRange(60, 20); // allow 20 values to be displayed at once on the x-axis, not more
 //        mChart.notifyDataSetChanged();
         mChart.invalidate();
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());

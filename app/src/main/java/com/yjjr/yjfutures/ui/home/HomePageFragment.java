@@ -19,7 +19,6 @@ import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
-import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.ReloginDialogEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
@@ -151,7 +150,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                                 EventBus.getDefault().post(new ShowRedDotEvent());
                             }
                             BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
-                            return HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpAddressString());
+
+                            return HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpByNetwork());
                         }
                     })
                     .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
@@ -375,7 +375,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.getQuoteValues(false).size());
         }
     }*/
-
     @Override
     public void onDestroy() {
         super.onDestroy();

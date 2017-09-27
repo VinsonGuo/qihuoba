@@ -2,9 +2,11 @@ package com.yjjr.yjfutures.ui.mine;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.messages.MessageHolders;
+import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.chat.Message;
 import com.yjjr.yjfutures.widget.listener.EmojiFilter;
 
@@ -16,10 +18,12 @@ public class Holders {
     public static class TextMessageHolder extends MessageHolders.OutcomingTextMessageViewHolder<IMessage> {
 
         protected ImageView userAvatar;
+        private TextView tvName;
 
         public TextMessageHolder(View itemView) {
             super(itemView);
             userAvatar = (ImageView) itemView.findViewById(com.stfalcon.chatkit.R.id.messageUserAvatar);
+            tvName = (TextView) itemView.findViewById(R.id.tv_name);
         }
 
         @Override
@@ -39,6 +43,7 @@ public class Holders {
                     getImageLoader().loadImage(userAvatar, message.getUser().getAvatar());
                 }
             }
+            tvName.setText(message.getUser().getName());
         }
 
     }
@@ -57,7 +62,7 @@ public class Holders {
             super.onBind(message);
             if (userAvatar != null) {
                 boolean isAvatarExists = getImageLoader() != null
-                    && message.getUser().getAvatar() != null
+                        && message.getUser().getAvatar() != null
                         && !message.getUser().getAvatar().isEmpty();
 
                 userAvatar.setVisibility(isAvatarExists ? View.VISIBLE : View.GONE);
@@ -72,8 +77,11 @@ public class Holders {
 
     public static class IncomingTextMessageHolder extends MessageHolders.IncomingTextMessageViewHolder<IMessage> {
 
+        private TextView tvName;
+
         public IncomingTextMessageHolder(View itemView) {
             super(itemView);
+            tvName = (TextView) itemView.findViewById(R.id.tv_name);
         }
 
         @Override
@@ -83,6 +91,7 @@ public class Holders {
                 EmojiFilter.filter(text, text.getText(), 0);
                 text.setTextIsSelectable(true);
             }
+            tvName.setText(message.getUser().getName());
         }
 
     }

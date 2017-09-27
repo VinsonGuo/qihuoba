@@ -8,6 +8,7 @@ import com.yjjr.yjfutures.model.FilledOrder;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.HistoryDataRequest;
 import com.yjjr.yjfutures.model.Holding;
+import com.yjjr.yjfutures.model.IpResponse;
 import com.yjjr.yjfutures.model.OpenOrder;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.Symbol;
@@ -18,6 +19,7 @@ import com.yjjr.yjfutures.utils.ActivityTools;
 import java.util.List;
 
 import io.reactivex.Observable;
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -261,4 +263,7 @@ public interface HttpService {
     @POST
     Observable<List<HisData>> getHistoryData(@Url String url, @Body HistoryDataRequest request);
 
+
+    @GET
+    Call<IpResponse> getIp(@Url String url);
 }

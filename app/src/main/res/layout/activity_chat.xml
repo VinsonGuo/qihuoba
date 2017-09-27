@@ -25,7 +25,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/chart_background"/>
+            android:background="@color/chart_background"
+            app:incomingBubbleDrawable="@drawable/bg_custom_incoming_message"
+            app:incomingTextColor="@color/color_333333"
+            app:outcomingBubbleDrawable="@drawable/bg_custom_outcoming_message"
+            app:outcomingTextColor="@color/color_333333"/>
 
     </LinearLayout>
 

@@ -140,14 +140,18 @@ public class TimeSharingplanChart extends RelativeLayout {
         mChart.notifyDataSetChanged();
         mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, 50);
 
-//        ViewPortHandler port = mChart.getViewPortHandler();
-//        mChart.setViewPortOffsets(0, port.offsetTop(), port.offsetRight(), port.offsetBottom());
+        ViewPortHandler port = mChart.getViewPortHandler();
+        mChart.setViewPortOffsets(0, port.offsetTop(), port.offsetRight(), port.offsetBottom());
 
         mChart.moveViewToX(data.getEntryCount());
 
     }
 
 
+    /**
+     * 刷新最后一个
+     * @param bid 价格
+     */
     public void refreshEntry(float bid) {
         if (bid <= 0) {
             return;
@@ -174,6 +178,9 @@ public class TimeSharingplanChart extends RelativeLayout {
     }
 
 
+    /**
+     * 增加一个entry
+     */
     public void addEntry(HisData hisData) {
         mList.add(hisData);
         float price = (float) hisData.getClose();
@@ -339,6 +346,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         xAxis.setTextColor(mTextColor);
         xAxis.setGridColor(candleGridColor);
         xAxis.setLabelCount(5,true);
+        xAxis.setAvoidFirstLastClipping(true);
 
         xAxis.setValueFormatter(xValueFormatter);
 

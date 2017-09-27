@@ -60,6 +60,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import io.socket.engineio.client.transports.WebSocket;
+import okhttp3.OkHttpClient;
 
 public class MainActivity extends BaseActivity {
 
@@ -91,13 +92,18 @@ public class MainActivity extends BaseActivity {
 
     private void initSocketIO() {
         try {
+
+//            OkHttpClient okHttpClient = HttpManager.getUnsafeOkHttpClient(new OkHttpClient.Builder());
             IO.Options options = new IO.Options();
             options.forceNew = true;
             options.reconnection = true;
             options.transports = new String[]{WebSocket.NAME};
 
+//            options.callFactory = okHttpClient;
+//            options.webSocketFactory = okHttpClient;
+            options.secure = true;
             //创建连接
-            mSocket = IO.socket("http://dev.qihuofa.com:9092"/*"http://139.224.8.133:9092"*/, options);
+            mSocket = IO.socket(/*"http://192.168.1.52:9092"*/"http://dev.qihuofa.com:9092", options);
             //监听事件获取服务端的返回数据
             mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
@@ -139,6 +145,8 @@ public class MainActivity extends BaseActivity {
                         oldQuote.setLastSize(quote.getLastSize());
                         oldQuote.setAskSize(quote.getAskSize());
                         oldQuote.setBidSize(quote.getBidSize());
+                        oldQuote.setHigh(quote.getHigh());
+                        oldQuote.setLow(quote.getLow());
                         oldQuote.setVol(quote.getVol());
                     }
 
@@ -154,6 +162,8 @@ public class MainActivity extends BaseActivity {
                         demoQuote.setLastSize(quote.getLastSize());
                         demoQuote.setAskSize(quote.getAskSize());
                         demoQuote.setBidSize(quote.getBidSize());
+                        demoQuote.setHigh(quote.getHigh());
+                        demoQuote.setLow(quote.getLow());
                         demoQuote.setVol(quote.getVol());
                     }
                     EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));

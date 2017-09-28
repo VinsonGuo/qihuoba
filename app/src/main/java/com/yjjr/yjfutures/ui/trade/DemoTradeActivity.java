@@ -107,7 +107,8 @@ public class DemoTradeActivity extends BaseActivity {
     private void loadData() {
         final String account = UserSharePrefernce.getAccount(mContext);
         final String password = /*UserSharePrefernce.getPassword(mContext)*/"123456";
-        HttpManager.getHttpService(true).userLogin(account, password, ActivityTools.getIpAddressString())
+//        HttpManager.getHttpService(true).userLogin(account, password, ActivityTools.getIpAddressString())
+        RxUtils.createZTLoginObservable(account, password,true)
                 .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
                     @Override
                     public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {

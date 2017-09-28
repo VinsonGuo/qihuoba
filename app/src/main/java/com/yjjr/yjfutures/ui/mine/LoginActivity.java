@@ -135,7 +135,7 @@ public class LoginActivity extends BaseActivity {
                             throw new RuntimeException(loginBizResponse.getRmsg());
                         }
                         BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
-                        return HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpAddressString());
+                        return HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpByNetwork());
                     }
                 })
                 .map(new Function<UserLoginResponse, UserLoginResponse>() {

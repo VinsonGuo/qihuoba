@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.annotation.RawRes;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.yjjr.yjfutures.BuildConfig;
@@ -28,15 +29,20 @@ import com.yjjr.yjfutures.ui.trade.DepositActivity;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 
-import java.io.IOException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URL;
 import java.util.Enumeration;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 
 /**
@@ -203,11 +209,10 @@ public class ActivityTools {
      */
     public static String getIpByNetwork() {
         String ip = getIpAddressString();
-        Call<IpResponse> call = HttpManager.getHttpService().getIp(HttpConfig.IP_URL);
+        Call<IpResponse> call = HttpManager.getHttpService().getIp();
         try {
-            Response<IpResponse> response = call.execute();
-            IpResponse body = response.body();
-            if (response.isSuccessful() && body != null && body.getCode() == 0) {
+            IpResponse body = call.execute().body();
+            if (body != null && body.getCode() == 0) {
                 ip = body.getData().getIp();
             }
         } catch (Exception e) {

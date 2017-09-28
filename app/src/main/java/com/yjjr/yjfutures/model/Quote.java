@@ -2,6 +2,7 @@ package com.yjjr.yjfutures.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.yjjr.yjfutures.utils.DateUtils;
 
@@ -275,6 +276,9 @@ public class Quote implements Parcelable {
 
     public boolean isRest() {
 //        return AskPrice == -1 && BidPrice == -1;
+        if (TextUtils.isEmpty(TradingTime)) {
+            return true;
+        }
         if (TradingTime.contains(",")) {
             String[] timeRanges = TradingTime.split(",");
             for (String timeRange : timeRanges) {

@@ -1,9 +1,6 @@
 package com.yjjr.yjfutures.utils;
 
-import android.app.Activity;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
@@ -11,19 +8,22 @@ import com.yjjr.yjfutures.event.ReloginDialogEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.Holding;
+import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.http.HttpManager;
-import com.yjjr.yjfutures.widget.CustomPromptDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -175,6 +175,20 @@ public class RxUtils {
                             throw new RuntimeException("可用余额不足，请充值后再下单");
                         }
                         return HttpManager.getBizService(isDemo).sendOrder(BaseApplication.getInstance().getTradeToken(isDemo), symbol, buysell, 0, qty, "市价", lossPriceLine, profitPriceLine, fee, marginYJ);
+                    }
+                });
+    }
+
+    /**
+     * 统一中铁登录接口
+     *
+     */
+    public static Observable<UserLoginResponse> createZTLoginObservable(final String phone, final String password, final boolean isDemo) {
+        return Observable.just(1)
+                .flatMap(new Function<Object, ObservableSource<UserLoginResponse>>() {
+                    @Override
+                    public ObservableSource<UserLoginResponse> apply(@NonNull Object o) throws Exception {
+                        return HttpManager.getHttpService(isDemo).userLogin(phone, password, ActivityTools.getIpByNetwork());
                     }
                 });
     }

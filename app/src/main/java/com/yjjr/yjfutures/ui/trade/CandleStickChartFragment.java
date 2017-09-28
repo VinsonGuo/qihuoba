@@ -11,14 +11,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
-import com.github.mikephil.charting.charts.CandleStickChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
+import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -33,11 +34,17 @@ import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
+import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
+import com.yjjr.yjfutures.widget.chart.AppCombinedChart;
+import com.yjjr.yjfutures.widget.chart.InfoViewListener;
+import com.yjjr.yjfutures.widget.chart.LineChartInfoView;
+import com.yjjr.yjfutures.widget.chart.LineChartXMarkerView;
+import com.yjjr.yjfutures.widget.chart.LineChartYMarkerView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,31 +71,30 @@ public class CandleStickChartFragment extends BaseFragment {
     public static final String HOUR = "hour";
     public static final String DAY = "day";
 
-    private CandleStickChart mChart;
+    private AppCombinedChart mChart;
     private String mSymbol;
     private boolean mIsDemo;
     /**
      * 数据类型  day=日线 hour=小时图 min15=15分钟图 min5=5分钟图 min=1分钟图
      */
     private String mType = MIN;
-    private List<HisData> mList;
+    private List<HisData> mList = new ArrayList<>(200);
+    private LineChartInfoView mInfoView;
 
     public CandleStickChartFragment() {
         // Required empty public constructor
     }
 
-    public static CandleStickChartFragment newInstance(String symbol, boolean isDemo) {
+    public static CandleStickChartFragment newInstance(String symbol, boolean isDemo, String type) {
         CandleStickChartFragment fragment = new CandleStickChartFragment();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.CONTENT_PARAMETER, symbol);
         bundle.putBoolean(Constants.CONTENT_PARAMETER_2, isDemo);
+        bundle.putString(Constants.CONTENT_PARAMETER_3, type);
         fragment.setArguments(bundle);
         return fragment;
     }
 
-    public void setType(String type) {
-        mType = type;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,12 +103,21 @@ public class CandleStickChartFragment extends BaseFragment {
         if (getArguments() != null) {
             mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER);
             mIsDemo = getArguments().getBoolean(Constants.CONTENT_PARAMETER_2);
+            mType = getArguments().getString(Constants.CONTENT_PARAMETER_3);
         }
     }
 
     @Override
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mChart = new CandleStickChart(mContext);
+        final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+        FrameLayout fl = new FrameLayout(mContext);
+        mChart = new AppCombinedChart(mContext);
+        mInfoView = new LineChartInfoView(mContext);
+        mInfoView.setLayoutParams(new FrameLayout.LayoutParams(DisplayUtils.dip2px(mContext, 120), ViewGroup.LayoutParams.WRAP_CONTENT));
+        mInfoView.setVisibility(View.GONE);
+        fl.addView(mChart);
+        fl.addView(mInfoView);
+
         mChart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.chart_background));
         mChart.getDescription().setEnabled(false);
         mChart.setNoDataText(mContext.getString(R.string.loading));
@@ -111,10 +126,16 @@ public class CandleStickChartFragment extends BaseFragment {
         mChart.setScaleYEnabled(false);
 
         mChart.setAutoScaleMinMaxEnabled(true);
-
-        // scaling can now only be done on x- and y-axis separately
         mChart.setPinchZoom(true);
         mChart.setDrawGridBackground(false);
+        LineChartXMarkerView mvx = new LineChartXMarkerView(mContext, mList);
+        mvx.setChartView(mChart);
+        mChart.setXMarker(mvx);
+
+        LineChartYMarkerView mv = new LineChartYMarkerView(mContext, quote.getTick());
+        mv.setChartView(mChart);
+        mChart.setMarker(mv);
+
         int whiteColor = ContextCompat.getColor(mContext, R.color.main_text_color);
         int dividerColor = ContextCompat.getColor(mContext, R.color.divider_color);
         XAxis xAxis = mChart.getXAxis();
@@ -145,7 +166,6 @@ public class CandleStickChartFragment extends BaseFragment {
         rightAxis.setGridLineWidth(0.5f);
         rightAxis.setDrawAxisLine(false);
         rightAxis.enableGridDashedLine(5, 5, 0);
-        final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -159,24 +179,22 @@ public class CandleStickChartFragment extends BaseFragment {
 
 
         mChart.getLegend().setEnabled(false);
+        mChart.setOnChartValueSelectedListener(new InfoViewListener(mContext, quote, mList, mInfoView));
+
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
             }
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                if (lastPerformedGesture.equals(ChartTouchListener.ChartGesture.DRAG) || lastPerformedGesture.equals(ChartTouchListener.ChartGesture.FLING)) {
-                    float lowestVisibleX = mChart.getLowestVisibleX();
-                    if (lowestVisibleX <= 0) {
-                    }
-                }
+                mChart.setDragEnabled(true);
+//                mInfoView.setVisibility(View.GONE);
             }
 
             @Override
             public void onChartLongPressed(MotionEvent me) {
-
+                mChart.setDragEnabled(false);
             }
 
             @Override
@@ -191,7 +209,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
             @Override
             public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-//                LogUtils.d("onChartFling--------------X is %f, Y is %f", velocityX, velocityY);
+
             }
 
             @Override
@@ -201,9 +219,10 @@ public class CandleStickChartFragment extends BaseFragment {
 
             @Override
             public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
             }
         });
-        return mChart;
+        return fl;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -277,7 +296,8 @@ public class CandleStickChartFragment extends BaseFragment {
                 .subscribe(new Consumer<List<HisData>>() {
                     @Override
                     public void accept(@NonNull List<HisData> list) throws Exception {
-                        mList = list;
+                        mList.clear();
+                        mList.addAll(list);
                         fullData(list);
                     }
                 }, new Consumer<Throwable>() {
@@ -318,11 +338,12 @@ public class CandleStickChartFragment extends BaseFragment {
         set1.setNeutralColor(ContextCompat.getColor(getContext(), R.color.main_color_red));
         //set1.setHighlightLineWidth(1f);
         set1.setDrawValues(false);
-        CandleData data = new CandleData(set1);
-
+        CandleData cd = new CandleData(set1);
+        CombinedData data = new CombinedData();
+        data.setData(cd);
         mChart.setData(data);
         ViewPortHandler port = mChart.getViewPortHandler();
-        mChart.setViewPortOffsets(0, port.offsetTop(), port.offsetRight(), port.offsetBottom());
+        mChart.setViewPortOffsets(10, port.offsetTop(), port.offsetRight(), port.offsetBottom());
         mChart.setVisibleXRange(60, 20); // allow 20 values to be displayed at once on the x-axis, not more
 //        mChart.notifyDataSetChanged();
         mChart.invalidate();

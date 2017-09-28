@@ -184,7 +184,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 WebActivity.startActivity(mContext, String.format(HttpConfig.URL_RULE, StringUtils.getRuleName(quote)));
             }
         });
-        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo);
+        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, CandleStickChartFragment.MIN);
         Fragment[] fragments = {/*TickChartFragment.newInstance(mSymbol)*/new Fragment(), TimeSharingplanFragment.newInstance(mSymbol, mIsDemo),
                 mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol, mIsDemo)};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
@@ -278,7 +278,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      * @param quote
      */
     private void setRestView(Quote quote) {
-        if (quote.isRest()) { // 休市的状态
+        if (quote == null || quote.isRest()) { // 休市的状态
             tradeView1.setVisibility(View.GONE);
             tradeView2.setVisibility(View.GONE);
             tradeView3.setVisibility(View.GONE);
@@ -406,6 +406,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             leftText = "看涨";
                             rightText = "看跌";
                         }
+                        // 成功后刷新UI
+                        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+                        fillViews(quote);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

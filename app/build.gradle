@@ -34,6 +34,25 @@ android {
         exclude 'META-INF/rxjava.properties'
         exclude 'META-INF/LICENSE'
     }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include /*'x86', 'x86_64',*/ 'armeabi-v7a' //select ABIs to build APKs for
+            universalApk true //generate an additional APK that contains all the ABIs
+        }
+    }
+
+
+    productFlavors {
+        xiaomi {}
+        yingyongbao {}
+    }
+
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
     repositories {
         mavenCentral()
         maven { url "https://jitpack.io" }

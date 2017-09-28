@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              tools:background="@color/background_dark">
 
     <TextView
         android:id="@+id/tv_select_photo"
-        android:text="图片"
-        android:gravity="center"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_height="0dp"/>
+        android:drawablePadding="@dimen/dp_10"
+        android:drawableTop="@drawable/ic_gallery"
+        android:gravity="center"
+        android:padding="@dimen/root_padding_15"
+        android:text="图片"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_14"/>
 
 
     <TextView
         android:id="@+id/tv_take_photo"
-        android:text="拍照"
-        android:gravity="center"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_height="0dp"/>
+        android:drawablePadding="@dimen/dp_10"
+        android:drawableTop="@drawable/ic_take_photo"
+        android:gravity="center"
+        android:padding="@dimen/root_padding_15"
+        android:text="拍照"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_14"/>
 
 </LinearLayout>

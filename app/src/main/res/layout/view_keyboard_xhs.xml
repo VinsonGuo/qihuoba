@@ -86,7 +86,7 @@
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/icon_face_pop"/>
+                android:src="@drawable/icon_face_nomal"/>
             <!--apps 功能-->
             <ImageView
                 android:id="@+id/btn_multimedia"

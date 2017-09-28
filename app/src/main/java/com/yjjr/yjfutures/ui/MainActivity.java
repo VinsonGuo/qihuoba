@@ -19,8 +19,6 @@ import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
-import com.yjjr.yjfutures.model.HisData;
-import com.yjjr.yjfutures.model.HistoryDataRequest;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
@@ -50,7 +48,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -60,7 +57,6 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import io.socket.engineio.client.transports.WebSocket;
-import okhttp3.OkHttpClient;
 
 public class MainActivity extends BaseActivity {
 
@@ -93,15 +89,11 @@ public class MainActivity extends BaseActivity {
     private void initSocketIO() {
         try {
 
-//            OkHttpClient okHttpClient = HttpManager.getUnsafeOkHttpClient(new OkHttpClient.Builder());
             IO.Options options = new IO.Options();
             options.forceNew = true;
             options.reconnection = true;
             options.transports = new String[]{WebSocket.NAME};
-
-//            options.callFactory = okHttpClient;
-//            options.webSocketFactory = okHttpClient;
-            options.secure = true;
+//            options.secure = true;
             //创建连接
             mSocket = IO.socket(/*"http://192.168.1.52:9092"*/"http://dev.qihuofa.com:9092", options);
             //监听事件获取服务端的返回数据
@@ -287,7 +279,8 @@ public class MainActivity extends BaseActivity {
                         BaseApplication.getInstance().setUserInfo(response.getResult());
                     }
                 }, RxUtils.commonErrorConsumer());
-        HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpAddressString())
+//        HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpAddressString())
+        RxUtils.createZTLoginObservable(account, password, false)
                 .compose(RxUtils.<UserLoginResponse>applySchedulers())
                 .compose(this.<UserLoginResponse>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<UserLoginResponse>() {

@@ -20,7 +20,6 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.HisData;
@@ -150,6 +149,7 @@ public class TimeSharingplanChart extends RelativeLayout {
 
     /**
      * 刷新最后一个
+     *
      * @param bid 价格
      */
     public void refreshEntry(float bid) {
@@ -254,24 +254,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         mChart.setScaleYEnabled(false);
         mChart.setAutoScaleMinMaxEnabled(true);
 
-
-        mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-//                mChart.highlightValue(h);
-                int x = (int) e.getX();
-                if (x < mList.size() && mQuote != null) {
-                    mInfoView.setVisibility(VISIBLE);
-                    mInfoView.setData(mQuote.getOpen(), mList.get(x));
-                }
-            }
-
-            @Override
-            public void onNothingSelected() {
-                mInfoView.setVisibility(GONE);
-            }
-        });
+        mChart.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mList, mInfoView));
 
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
@@ -345,7 +328,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         xAxis.setDrawGridLines(false);
         xAxis.setTextColor(mTextColor);
         xAxis.setGridColor(candleGridColor);
-        xAxis.setLabelCount(5,true);
+        xAxis.setLabelCount(5, true);
         xAxis.setAvoidFirstLastClipping(true);
 
         xAxis.setValueFormatter(xValueFormatter);

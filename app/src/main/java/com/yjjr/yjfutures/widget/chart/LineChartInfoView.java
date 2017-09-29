@@ -49,6 +49,11 @@ public class LineChartInfoView extends LinearLayout {
         mTvPrice.setText(DoubleUtil.formatDecimal(data.getClose()));
         mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose() - data.getOpen()) / data.getOpen() * 100));
         mTvVol.setText(data.getVol() + "");
-
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setVisibility(GONE);
+            }
+        }, 2000);
     }
 }

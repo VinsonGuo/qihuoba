@@ -71,7 +71,7 @@ public class HomePageAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
             helper.setTextColor(R.id.tv_icon, colors[colorIndex]);
             TextView tvInfo = helper.getView(R.id.tv_info);
             double changeRate = item.getChangeRate();
-            String changeText = changeRate == 0 ? "-" : DoubleUtil.format2Decimal(changeRate) + "%";
+            String changeText = DoubleUtil.format2Decimal(changeRate) + "%";
             tvInfo.setText(StringUtils.getStringByTick(item.getLastPrice(), item.getTick()) + "\n" + changeText);
             double change = item.getChange();
             tvInfo.setTextColor(ContextCompat.getColor(mContext, change >= 0 ? R.color.main_color_red : R.color.main_color_green));

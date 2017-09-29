@@ -14,11 +14,8 @@ import java.util.Set;
  */
 
 public class StaticStore {
-    public static String sSymbols;
-    public static String sExchange;
+
     public static Set<String> sHoldSet = new HashSet<>();
-    public static String sDemoSymbols;
-    public static String sDemoExchange;
     public static Set<String> sDemoHoldSet = new HashSet<>();
     // 实盘
     private static Map<String, Quote> sQuoteMap = new LinkedHashMap<>();

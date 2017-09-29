@@ -17,6 +17,8 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
@@ -24,7 +26,6 @@ import com.yjjr.yjfutures.event.ReloginDialogEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.model.Quote;
-import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.Active;
 import com.yjjr.yjfutures.model.biz.BizResponse;
@@ -43,6 +44,7 @@ import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -54,6 +56,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -61,6 +64,8 @@ import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 /**
  * "主页"
@@ -71,7 +76,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     private ConvenientBanner<Info> mBanner;
     private HomePageAdapter mAdapter;
     private LoadingView mLoadingView;
-    private View mDemoView;
+    private Gson mGson = new Gson();
 
     public HomePageFragment() {
         // Required empty public constructor
@@ -103,8 +108,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         mAdapter = new HomePageAdapter(null);
         View headerView = LayoutInflater.from(mContext).inflate(R.layout.header_home_page, rvList, false);
         mBanner = (ConvenientBanner<Info>) headerView.findViewById(R.id.banner);
-        mDemoView = headerView.findViewById(R.id.tv_header_title1);
-        mDemoView.setOnClickListener(this);
+        View demoView = headerView.findViewById(R.id.tv_header_title1);
+        demoView.setOnClickListener(this);
         headerView.findViewById(R.id.tv_title2).setOnClickListener(this);
         headerView.findViewById(R.id.tv_title3).setOnClickListener(this);
 
@@ -154,41 +159,14 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                             return HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpByNetwork());
                         }
                     })
-                    .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
+                    .map(new Function<UserLoginResponse, Boolean>() {
                         @Override
-                        public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
+                        public Boolean apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
                             if (userLoginResponse.getReturnCode() != 1) {// 账号密法错误，重新登录
                                 ToastUtils.show(mContext, R.string.please_login_again);
                                 BaseApplication.getInstance().logout(mContext);
                             }
                             BaseApplication.getInstance().setTradeToken(userLoginResponse.getCid());
-                            return HttpManager.getHttpService().getSymbols(BaseApplication.getInstance().getTradeToken());
-                        }
-                    })
-                    .flatMap(new Function<List<Symbol>, ObservableSource<List<Quote>>>() {
-                        @Override
-                        public ObservableSource<List<Quote>> apply(@NonNull List<Symbol> symbols) throws Exception {
-                            StringBuilder symbol = new StringBuilder();
-                            StringBuilder exchange = new StringBuilder();
-                            for (int i = 0; i < symbols.size(); i++) {
-                                symbol.append(symbols.get(i).getSymbol());
-                                exchange.append(symbols.get(i).getExchange());
-                                if (i < symbols.size() - 1) {
-                                    symbol.append(",");
-                                    exchange.append(",");
-                                }
-                            }
-                            StaticStore.sSymbols = symbol.toString();
-                            StaticStore.sExchange = exchange.toString();
-                            return HttpManager.getHttpService().getQuoteList(symbol.toString(), exchange.toString());
-                        }
-                    })
-                    .map(new Function<List<Quote>, Boolean>() {
-                        @Override
-                        public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
-                            for (Quote quote : quotes) {
-                                StaticStore.putQuote(quote, false);
-                            }
                             return true;
                         }
                     })
@@ -197,11 +175,10 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                     .subscribe(new Consumer<Boolean>() {
                         @Override
                         public void accept(@NonNull Boolean symbols) throws Exception {
-                            mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
                             mLoadingView.setVisibility(View.GONE);
-                            DialogUtils.showGuideView(getActivity(), mDemoView);
                             getHolding();
                             getHuodong();
+                            initSocket();
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -211,52 +188,10 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         }
                     });
         } else {
-            HttpManager.getHttpService().getSymbols(BaseApplication.getInstance().getTradeToken())
-                    .flatMap(new Function<List<Symbol>, ObservableSource<List<Quote>>>() {
-                        @Override
-                        public ObservableSource<List<Quote>> apply(@NonNull List<Symbol> symbols) throws Exception {
-                            StringBuilder symbol = new StringBuilder();
-                            StringBuilder exchange = new StringBuilder();
-                            for (int i = 0; i < symbols.size(); i++) {
-                                symbol.append(symbols.get(i).getSymbol());
-                                exchange.append(symbols.get(i).getExchange());
-                                if (i < symbols.size() - 1) {
-                                    symbol.append(",");
-                                    exchange.append(",");
-                                }
-                                StaticStore.sSymbols = symbol.toString();
-                                StaticStore.sExchange = exchange.toString();
-                            }
-                            return HttpManager.getHttpService().getQuoteList(symbol.toString(), exchange.toString());
-                        }
-                    })
-                    .map(new Function<List<Quote>, Boolean>() {
-                        @Override
-                        public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
-                            for (Quote quote : quotes) {
-                                StaticStore.putQuote(quote, false);
-                            }
-                            return true;
-                        }
-                    })
-                    .compose(RxUtils.<Boolean>applySchedulers())
-                    .compose(this.<Boolean>bindUntilEvent(FragmentEvent.DESTROY))
-                    .subscribe(new Consumer<Boolean>() {
-                        @Override
-                        public void accept(@NonNull Boolean symbols) throws Exception {
-                            getHolding();
-                            getHuodong();
-                            mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
-                            mLoadingView.setVisibility(View.GONE);
-                            DialogUtils.showGuideView(getActivity(), mDemoView);
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception {
-                            LogUtils.e(throwable);
-                            mLoadingView.loadFail();
-                        }
-                    });
+            mLoadingView.setVisibility(View.GONE);
+            getHolding();
+            getHuodong();
+            initSocket();
         }
         //获得banner
         HttpManager.getBizService().getBanner()
@@ -275,6 +210,97 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         }, images);
                     }
                 }, RxUtils.commonErrorConsumer());
+    }
+
+    private void initSocket() {
+        SocketUtils.init();
+        if (SocketUtils.getSocket() == null) {
+            mLoadingView.loadFail();
+            return;
+        }
+        //监听事件获取服务端的返回数据
+        SocketUtils.getSocket().on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                LogUtils.d("socket io connect");
+            }
+        }).on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                LogUtils.d("socket io connect timeout");
+            }
+        }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                LogUtils.d("socket io connect error %s", Arrays.toString(args));
+            }
+        }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                LogUtils.d("socket io disconnect");
+            }
+        }).on("singleTopMarketData", new Emitter.Listener() {//获取行情数据事件。连接打开后由服务端自动推送数据到这个监听方法，不用APP发生请求
+            @Override
+            public void call(Object... args) {
+                if (BaseApplication.getInstance().isBackground()) {
+                    return;
+                }
+                String data = (String) args[0];
+                Quote quote = mGson.fromJson(data, Quote.class);
+                // 真实
+                Quote oldQuote = StaticStore.getQuote(quote.getSymbol(), false);
+                if (oldQuote != null) {
+                    oldQuote.setAskPrice(quote.getAskPrice());
+                    oldQuote.setBidPrice(quote.getBidPrice());
+                    oldQuote.setChange(quote.getChange());
+                    oldQuote.setChangeRate(quote.getChangeRate());
+                    oldQuote.setLastclose(quote.getLastclose());
+                    oldQuote.setLastPrice(quote.getLastPrice());
+                    oldQuote.setLastSize(quote.getLastSize());
+                    oldQuote.setAskSize(quote.getAskSize());
+                    oldQuote.setBidSize(quote.getBidSize());
+                    oldQuote.setHigh(quote.getHigh());
+                    oldQuote.setLow(quote.getLow());
+                    oldQuote.setVol(quote.getVol());
+                }
+
+                // 模拟
+                Quote demoQuote = StaticStore.getQuote(quote.getSymbol(), true);
+                if (demoQuote != null) {
+                    demoQuote.setAskPrice(quote.getAskPrice());
+                    demoQuote.setBidPrice(quote.getBidPrice());
+                    demoQuote.setChange(quote.getChange());
+                    demoQuote.setChangeRate(quote.getChangeRate());
+                    demoQuote.setLastclose(quote.getLastclose());
+                    demoQuote.setLastPrice(quote.getLastPrice());
+                    demoQuote.setLastSize(quote.getLastSize());
+                    demoQuote.setAskSize(quote.getAskSize());
+                    demoQuote.setBidSize(quote.getBidSize());
+                    demoQuote.setHigh(quote.getHigh());
+                    demoQuote.setLow(quote.getLow());
+                    demoQuote.setVol(quote.getVol());
+                }
+                EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
+            }
+        }).on("getSymbolList", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                List<Quote> list = mGson.fromJson(args[0].toString(), new TypeToken<List<Quote>>() {
+                }.getType());
+                for (Quote quote : list) {
+                    StaticStore.putQuote(quote, false);
+                    StaticStore.putQuote(quote, true);
+                }
+                mLoadingView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
+                    }
+                });
+            }
+        });
+        SocketUtils.getSocket().connect();
+        SocketUtils.getSocket().emit("getSymbolList");
     }
 
     private void getHolding() {
@@ -379,6 +405,9 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        if (SocketUtils.getSocket() != null && SocketUtils.getSocket().connected()) {
+            SocketUtils.getSocket().disconnect();
+        }
     }
 
 

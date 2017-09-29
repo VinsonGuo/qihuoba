@@ -268,7 +268,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         mTvDeposit.setOnClickListener(this);
         v.findViewById(R.id.tv_kchart).setOnClickListener(this);
         v.findViewById(R.id.tv_fullscreen).setOnClickListener(this);
-        DialogUtils.showGuideView(getActivity(), mTvDeposit);
         return v;
     }
 

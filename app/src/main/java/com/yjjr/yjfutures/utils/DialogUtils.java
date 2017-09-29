@@ -41,9 +41,6 @@ import java.util.Map;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import zhy.com.highlight.HighLight;
-import zhy.com.highlight.position.OnLeftPosCallback;
-import zhy.com.highlight.shape.RectLightShape;
 
 /**
  * Created by dell on 2017/7/26.
@@ -307,63 +304,4 @@ public class DialogUtils {
         return dialog;
     }
 
-    public static void showGuideView(final Activity activity, final View view) {
-        //test
-      /*  final GuideBuilder builder1 = new GuideBuilder();
-        builder1.setTargetView(view)
-//                .setFullingViewId(R.id.tv_title1)
-                .setAlpha(150)
-                .setHighTargetCorner(20)
-//                .setHighTargetPadding(10)
-                .setOverlayTarget(false)
-                .setOutsideTouchable(false);
-        builder1.setOnVisibilityChangedListener(new GuideBuilder.OnVisibilityChangedListener() {
-            @Override
-            public void onShown() {
-            }
-
-            @Override
-            public void onDismiss() {
-                view.performClick();
-            }
-        });
-
-        builder1.addComponent(new SimpleComponent());
-        final Guide guide = builder1.createGuide();
-        guide.setShouldCheckLocInWindow(false);
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                guide.show(activity);
-            }
-        });*/
-    }
-
-    public static void showGuideView(final Activity activity, final int... views) {
-        final HighLight mHightLight = new HighLight(activity)//
-                .autoRemove(false)//设置背景点击高亮布局自动移除为false 默认为true
-                .intercept(false)//设置拦截属性为false 高亮布局不影响后面布局的滑动效果 而且使下方点击回调失效
-                .setClickCallback(new HighLight.OnClickCallback() {
-                    @Override
-                    public void onClick() {
-                        Toast.makeText(activity, "clicked and remove HightLight view by yourself", Toast.LENGTH_SHORT).show();
-                    }
-                });
-        for (int v : views) {
-            mHightLight.addHighLight(v, R.layout.item_market_price, new OnLeftPosCallback(45), new RectLightShape());
-        }
-        mHightLight.show();
-
-//        //added by isanwenyu@163.com 设置监听器只有最后一个添加到HightLightView的knownView响应了事件
-//        //优化在布局中声明onClick方法 {@link #clickKnown(view)}响应所有R.id.iv_known的控件的点击事件
-//        View decorLayout = mHightLight.getHightLightView();
-//        ImageView knownView = (ImageView) decorLayout.findViewById(R.id.iv_known);
-//        knownView.setOnClickListener(new View.OnClickListener()
-//          {
-//            @Override
-//            public void onClick(View view) {
-//                remove(null);
-//            }
-//        });
-    }
 }

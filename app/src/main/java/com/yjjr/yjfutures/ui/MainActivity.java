@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.google.gson.Gson;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.umeng.analytics.MobclickAgent;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
@@ -16,10 +15,8 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.HideRedDotEvent;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.PollRefreshEvent;
-import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.event.UpdateUserInfoEvent;
-import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
@@ -35,7 +32,6 @@ import com.yjjr.yjfutures.ui.trade.TradeGuideActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DialogUtils;
-import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
@@ -47,16 +43,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
-import io.socket.engineio.client.transports.WebSocket;
 
 public class MainActivity extends BaseActivity {
 
@@ -64,8 +55,6 @@ public class MainActivity extends BaseActivity {
     private Timer mTimer = new Timer();
     private long mBackPressed;
     private AlphaTabsIndicator mBottomBar;
-    private Gson mGson = new Gson();
-    private Socket mSocket;
 
     public static void startActivity(Context context) {
         context.startActivity(new Intent(context, MainActivity.class));
@@ -78,7 +67,6 @@ public class MainActivity extends BaseActivity {
         initViews();
         checkUpdate();
         startPoll();
-        initSocketIO();
         if (ActivityTools.isNeedShowGuide(mContext)) {
             TradeGuideActivity.startActivity(mContext);
         }
@@ -86,87 +74,6 @@ public class MainActivity extends BaseActivity {
         MobclickAgent.onProfileSignIn(UserSharePrefernce.getAccount(this));
     }
 
-    private void initSocketIO() {
-        try {
-
-            IO.Options options = new IO.Options();
-            options.forceNew = true;
-            options.reconnection = true;
-            options.transports = new String[]{WebSocket.NAME};
-//            options.secure = true;
-            //创建连接
-            mSocket = IO.socket(/*"http://192.168.1.52:9092"*/"http://dev.qihuofa.com:9092", options);
-            //监听事件获取服务端的返回数据
-            mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    LogUtils.d("socket io connect");
-                }
-            }).on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    LogUtils.d("socket io connect timeout");
-                }
-            }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    LogUtils.d("socket io connect error %s", Arrays.toString(args));
-                }
-            }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    LogUtils.d("socket io disconnect");
-                }
-            }).on("singleTopMarketData", new Emitter.Listener() {//获取行情数据事件。连接打开后由服务端自动推送数据到这个监听方法，不用APP发生请求
-                @Override
-                public void call(Object... args) {
-                    if (BaseApplication.getInstance().isBackground()) {
-                        return;
-                    }
-                    String data = (String) args[0];
-                    Quote quote = mGson.fromJson(data, Quote.class);
-                    // 真实
-                    Quote oldQuote = StaticStore.getQuote(quote.getSymbol(), false);
-                    if (oldQuote != null) {
-                        oldQuote.setAskPrice(quote.getAskPrice());
-                        oldQuote.setBidPrice(quote.getBidPrice());
-                        oldQuote.setChange(quote.getChange());
-                        oldQuote.setChangeRate(quote.getChangeRate());
-                        oldQuote.setLastclose(quote.getLastclose());
-                        oldQuote.setLastPrice(quote.getLastPrice());
-                        oldQuote.setLastSize(quote.getLastSize());
-                        oldQuote.setAskSize(quote.getAskSize());
-                        oldQuote.setBidSize(quote.getBidSize());
-                        oldQuote.setHigh(quote.getHigh());
-                        oldQuote.setLow(quote.getLow());
-                        oldQuote.setVol(quote.getVol());
-                    }
-
-                    // 模拟
-                    Quote demoQuote = StaticStore.getQuote(quote.getSymbol(), true);
-                    if (demoQuote != null) {
-                        demoQuote.setAskPrice(quote.getAskPrice());
-                        demoQuote.setBidPrice(quote.getBidPrice());
-                        demoQuote.setChange(quote.getChange());
-                        demoQuote.setChangeRate(quote.getChangeRate());
-                        demoQuote.setLastclose(quote.getLastclose());
-                        demoQuote.setLastPrice(quote.getLastPrice());
-                        demoQuote.setLastSize(quote.getLastSize());
-                        demoQuote.setAskSize(quote.getAskSize());
-                        demoQuote.setBidSize(quote.getBidSize());
-                        demoQuote.setHigh(quote.getHigh());
-                        demoQuote.setLow(quote.getLow());
-                        demoQuote.setVol(quote.getVol());
-                    }
-                    EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
-                }
-            });
-            mSocket.connect();
-        } catch (Exception e) {
-            LogUtils.e(e);
-        }
-
-    }
 
     private void checkUpdate() {
         HttpManager.getBizService().checkUpdate(BuildConfig.VERSION_NAME)
@@ -211,9 +118,6 @@ public class MainActivity extends BaseActivity {
                 DateTime dateTime = DateUtils.nowDateTime();
                 if (dateTime.getSecondOfMinute() == 5) {
                     EventBus.getDefault().post(new OneMinuteEvent());
-                }
-                if (TextUtils.isEmpty(StaticStore.sSymbols)) {
-                    return;
                 }
                 if (BaseApplication.getInstance().isBackground()) {
                     return;
@@ -297,8 +201,5 @@ public class MainActivity extends BaseActivity {
         mTimer.cancel();
         // 统计用户登出
         MobclickAgent.onProfileSignOff();
-        if (mSocket != null && mSocket.connected()) {
-            mSocket.disconnect();
-        }
     }
 }

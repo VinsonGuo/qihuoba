@@ -9,8 +9,6 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
-import com.yjjr.yjfutures.model.Quote;
-import com.yjjr.yjfutures.model.Symbol;
 import com.yjjr.yjfutures.model.UserLoginResponse;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
@@ -20,7 +18,6 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
-import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -35,7 +32,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -63,9 +59,6 @@ public class DemoTradeActivity extends BaseActivity {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (TextUtils.isEmpty(StaticStore.sDemoSymbols)) {
-                    return;
-                }
                 if (BaseApplication.getInstance().isBackground()) {
                     return;
                 }
@@ -97,6 +90,7 @@ public class DemoTradeActivity extends BaseActivity {
                             public void accept(@NonNull BizResponse<Funds> fundsBizResponse) throws Exception {
                                 Funds result = fundsBizResponse.getResult();
                                 StaticStore.setFunds(true, result);
+                                mTradeInfoView.setValues(result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
                             }
                         }, RxUtils.commonErrorConsumer());
             }
@@ -107,66 +101,42 @@ public class DemoTradeActivity extends BaseActivity {
     private void loadData() {
         final String account = UserSharePrefernce.getAccount(mContext);
         final String password = /*UserSharePrefernce.getPassword(mContext)*/"123456";
-//        HttpManager.getHttpService(true).userLogin(account, password, ActivityTools.getIpAddressString())
-        RxUtils.createZTLoginObservable(account, password,true)
-                .flatMap(new Function<UserLoginResponse, ObservableSource<List<Symbol>>>() {
-                    @Override
-                    public ObservableSource<List<Symbol>> apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
-                        if (userLoginResponse.getReturnCode() != 1) {// 账号密法错误，重新登录
-//                            BaseApplication.getInstance().logout(mContext);
-                            throw new RuntimeException("账号密码错误");
-                        }
-                        BaseApplication.getInstance().setDemoTradeToken(userLoginResponse.getCid());
-                        return HttpManager.getHttpService(true).getSymbols(BaseApplication.getInstance().getTradeToken(true));
-                    }
-                })
-                .flatMap(new Function<List<Symbol>, ObservableSource<List<Quote>>>() {
-                    @Override
-                    public ObservableSource<List<Quote>> apply(@NonNull List<Symbol> symbols) throws Exception {
-                        StringBuilder symbol = new StringBuilder();
-                        StringBuilder exchange = new StringBuilder();
-                        for (int i = 0; i < symbols.size(); i++) {
-                            symbol.append(symbols.get(i).getSymbol());
-                            exchange.append(symbols.get(i).getExchange());
-                            if (i < symbols.size() - 1) {
-                                symbol.append(",");
-                                exchange.append(",");
+        if(TextUtils.isEmpty(BaseApplication.getInstance().getTradeToken(true))) {
+            RxUtils.createZTLoginObservable(account, password, true)
+                    .map(new Function<UserLoginResponse, Boolean>() {
+                        @Override
+                        public Boolean apply(@NonNull UserLoginResponse userLoginResponse) throws Exception {
+                            if (userLoginResponse.getReturnCode() != 1) {// 账号密法错误，重新登录
+                                throw new RuntimeException("账号密码错误");
                             }
+                            BaseApplication.getInstance().setDemoTradeToken(userLoginResponse.getCid());
+                            return true;
                         }
-                        StaticStore.sDemoSymbols = symbol.toString();
-                        StaticStore.sDemoExchange = exchange.toString();
-                        return HttpManager.getHttpService(true).getQuoteList(symbol.toString(), exchange.toString());
-                    }
-                })
-                .map(new Function<List<Quote>, Boolean>() {
-                    @Override
-                    public Boolean apply(@NonNull List<Quote> quotes) throws Exception {
-                        for (Quote quote : quotes) {
-                            StaticStore.putQuote(quote, true);
-                        }
-                        return true;
-                    }
-                })
-                .compose(RxUtils.<Boolean>applySchedulers())
-                .compose(this.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(@NonNull Boolean symbols) throws Exception {
-//                        mAdapter.setNewData(new ArrayList<>(StaticStore.sQuoteMap.values()));
-//                        mLoadingView.setVisibility(View.GONE);
-                        // 设置fragment
-                        MarketPriceFragment fragment = MarketPriceFragment.newInstance(false);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
+                    })
+                    .compose(RxUtils.<Boolean>applySchedulers())
+                    .compose(this.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
+                    .subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(@NonNull Boolean symbols) throws Exception {
+                            // 设置fragment
+                            MarketPriceFragment fragment = MarketPriceFragment.newInstance(false);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
 //                        fragment.setUserVisibleHint(true);
-                        getHolding();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
-//                        mLoadingView.loadFail();
-                    }
-                });
+                            getHolding();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception {
+                            LogUtils.e(throwable);
+                        }
+                    });
+        }else{
+            // 设置fragment
+            MarketPriceFragment fragment = MarketPriceFragment.newInstance(false);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();
+//                        fragment.setUserVisibleHint(true);
+            getHolding();
+        }
     }
 
     private void getHolding() {
@@ -198,9 +168,4 @@ public class DemoTradeActivity extends BaseActivity {
         mTradeInfoView.setValues(result.getFrozenMargin(), result.getAvailableFunds(), result.getNetAssets());
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

@@ -26,7 +26,7 @@ public class DateUtils {
 
     public static String formatDataOnly(long time) {
         try {
-            DateFormat dateFormat2 = new SimpleDateFormat("MM-dd");
+            DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
             String formatDate = dateFormat2.format(time);
             return formatDate;
         } catch (Exception e) {

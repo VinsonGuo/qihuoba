@@ -266,7 +266,6 @@ public class TimeSharingplanChart extends RelativeLayout {
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
                 isIdle = true;
                 mChart.setDragEnabled(true);
-                mInfoView.setVisibility(GONE);
             }
 
             @Override

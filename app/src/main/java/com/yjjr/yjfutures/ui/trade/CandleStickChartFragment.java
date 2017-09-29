@@ -24,7 +24,8 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.ViewPortHandler;
-import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
@@ -36,10 +37,8 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
-import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
-import com.yjjr.yjfutures.utils.http.HttpConfig;
-import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.chart.AppCombinedChart;
 import com.yjjr.yjfutures.widget.chart.InfoViewListener;
 import com.yjjr.yjfutures.widget.chart.LineChartInfoView;
@@ -54,10 +53,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
+import io.socket.emitter.Emitter;
 
 /**
  * K线图Fragment
@@ -71,6 +67,8 @@ public class CandleStickChartFragment extends BaseFragment {
     public static final String HOUR = "hour";
     public static final String DAY = "day";
 
+    private Gson mGson = new Gson();
+
     private AppCombinedChart mChart;
     private String mSymbol;
     private boolean mIsDemo;
@@ -80,6 +78,7 @@ public class CandleStickChartFragment extends BaseFragment {
     private String mType = MIN;
     private List<HisData> mList = new ArrayList<>(200);
     private LineChartInfoView mInfoView;
+    private LineChartXMarkerView mMvx;
 
     public CandleStickChartFragment() {
         // Required empty public constructor
@@ -128,9 +127,9 @@ public class CandleStickChartFragment extends BaseFragment {
         mChart.setAutoScaleMinMaxEnabled(true);
         mChart.setPinchZoom(true);
         mChart.setDrawGridBackground(false);
-        LineChartXMarkerView mvx = new LineChartXMarkerView(mContext, mList);
-        mvx.setChartView(mChart);
-        mChart.setXMarker(mvx);
+        mMvx = new LineChartXMarkerView(mContext, mList);
+        mMvx.setChartView(mChart);
+        mChart.setXMarker(mMvx);
 
         LineChartYMarkerView mv = new LineChartYMarkerView(mContext, quote.getTick());
         mv.setChartView(mChart);
@@ -227,11 +226,11 @@ public class CandleStickChartFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(OneMinuteEvent event) {
-        if (mList != null && TextUtils.equals(mType, MIN)) {
+        if (mList != null && TextUtils.equals(mType, MIN) && SocketUtils.getSocket() != null) {
             final HisData hisData = mList.get(mList.size() - 1);
             final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
 //            HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)
-            HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType))
+           /* HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType))
                     .filter(new Predicate<List<HisData>>() {
                         @Override
                         public boolean test(@NonNull List<HisData> hisDatas) throws Exception {
@@ -243,24 +242,47 @@ public class CandleStickChartFragment extends BaseFragment {
                     .subscribe(new Consumer<List<HisData>>() {
                         @Override
                         public void accept(@NonNull List<HisData> hisDatas) throws Exception {
-//                            HisData data = hisDatas.get(hisDatas.size() - 1);
-//                            mList.add(data);
-//                            mChart.notifyDataSetChanged();
-//                            mChart.moveViewToX(mChart.getCandleData().getEntryCount());
                             for (HisData data : hisDatas) {
-                                if (!hisDatas.contains(data)) {
+                                if (!mList.contains(data)) {
                                     mList.add(data);
                                     mChart.notifyDataSetChanged();
                                     mChart.moveViewToX(mChart.getCandleData().getEntryCount());
                                 }
                             }
                         }
-                    }, RxUtils.commonErrorConsumer());
+                    }, RxUtils.commonErrorConsumer());*/
+            SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, mGson.toJson(new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)));
+            SocketUtils.getSocket().once(SocketUtils.HIS_DATA, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    LogUtils.d("history data -> " + args[0].toString());
+                    try {
+                        final List<HisData> hisDatas = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
+                        }.getType());
+                        mChart.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (HisData data : hisDatas) {
+                                    if (!mList.contains(data)) {
+                                        mList.add(data);
+                                        mChart.notifyDataSetChanged();
+                                        mChart.moveViewToX(mChart.getCandleData().getEntryCount());
+                                    }
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        LogUtils.e(e);
+                        mChart.setNoDataText(getString(R.string.data_load_fail));
+                    }
+                }
+            });
         }
     }
 
     public void loadDataByType(String type) {
         mType = type;
+        mMvx.setType(type);
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         DateTime dateTime;
         if (quote.isRest()) { //未开盘，数据加载前一天的
@@ -281,7 +303,7 @@ public class CandleStickChartFragment extends BaseFragment {
             dateTime = dateTime.minusMonths(1);
         }
 //        HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)
-        HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType))
+      /*  HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType))
                 .map(new Function<List<HisData>, List<HisData>>() {
                     @Override
                     public List<HisData> apply(@NonNull List<HisData> hisDatas) throws Exception {
@@ -306,7 +328,34 @@ public class CandleStickChartFragment extends BaseFragment {
                         LogUtils.e(throwable);
                         mChart.setNoDataText(getString(R.string.data_load_fail));
                     }
-                });
+                });*/
+        if (SocketUtils.getSocket() == null) {
+            mChart.setNoDataText(getString(R.string.data_load_fail));
+            return;
+        }
+
+        SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, mGson.toJson(new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)));
+        SocketUtils.getSocket().once(SocketUtils.HIS_DATA, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    LogUtils.d("history data -> " + args[0].toString());
+                    List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
+                    }.getType());
+                    mList.clear();
+                    mList.addAll(list);
+                    mChart.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            fullData(mList);
+                        }
+                    });
+                } catch (Exception e) {
+                    LogUtils.e(e);
+                    mChart.setNoDataText(getString(R.string.data_load_fail));
+                }
+            }
+        });
     }
 
     private void fullData(List<HisData> datas) {
@@ -345,8 +394,10 @@ public class CandleStickChartFragment extends BaseFragment {
         ViewPortHandler port = mChart.getViewPortHandler();
         mChart.setViewPortOffsets(10, port.offsetTop(), port.offsetRight(), port.offsetBottom());
         mChart.setVisibleXRange(60, 20); // allow 20 values to be displayed at once on the x-axis, not more
-//        mChart.notifyDataSetChanged();
-        mChart.invalidate();
+        mChart.highlightValue(null);
+        mInfoView.setVisibility(View.GONE);
+        mChart.notifyDataSetChanged();
+//        mChart.invalidate();
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
     }
 

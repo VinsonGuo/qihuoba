@@ -37,9 +37,9 @@ android {
 
     splits {
         abi {
-            enable true
+            enable false
             reset()
-            include /*'x86', 'x86_64',*/ 'armeabi-v7a' //select ABIs to build APKs for
+            include 'x86', 'armeabi-v7a' //select ABIs to build APKs for
             universalApk true //generate an additional APK that contains all the ABIs
         }
     }
@@ -113,7 +113,6 @@ dependencies {
     compile 'com.jungly:gridPasswordView:0.3'
     compile 'com.bigkoo:convenientbanner:2.0.5'
     compile 'com.umeng.analytics:analytics:6.1.1'
-    compile 'com.isanwenyu.highlight:highlight:1.8.0'
     compile 'com.github.stfalcon:chatkit:0.2.2'
     compile 'com.hyphenate:hyphenate-sdk-lite:3.3.0'
     compile 'com.github.w446108264:XhsEmoticonsKeyboard:2.0.4'

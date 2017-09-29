@@ -19,9 +19,7 @@ import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessageBody;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.chat.EMVideoMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
-import com.hyphenate.chat.adapter.EMAChatClient;
 import com.jph.takephoto.model.TImage;
 import com.jph.takephoto.model.TResult;
 import com.sj.emoji.DefEmoticons;
@@ -77,7 +75,7 @@ public class ChatActivity extends TakePhotoActivity implements
     protected MessagesListAdapter<Message> messagesAdapter;
 
     //    private String toSendId = "13163725850";
-    private String toSendId = "pdw";
+    private String toSendId = "yj";
 
     private MessagesList mMessagesList;
     private UserInfo mUserInfo;
@@ -128,16 +126,16 @@ public class ChatActivity extends TakePhotoActivity implements
         for (EMMessage msg : messages) {
             String from = msg.getFrom();
             boolean isMe = TextUtils.equals(mUserInfo.getAccount(), from);
-            User user = new User(from, isMe ? mUserInfo.getName() : msg.getUserName(), isMe ? mMineUrl : mOtherUrl, true);
+            User user = new User(from, isMe ? mUserInfo.getName() : "有间客服", isMe ? mMineUrl : mOtherUrl, true);
             EMMessageBody body = msg.getBody();
             final Message message = new Message(msg.getMsgId(), user, body.toString());
             if (body instanceof EMTextMessageBody) {
                 message.setText(((EMTextMessageBody) body).getMessage());
             } else if (body instanceof EMImageMessageBody) {
                 message.setImage(new Message.Image(((EMImageMessageBody) body).getRemoteUrl()));
-            }else if(body instanceof EMVoiceMessageBody) {
+            } else if (body instanceof EMVoiceMessageBody) {
                 EMVoiceMessageBody b = (EMVoiceMessageBody) body;
-                message.setVoice(new Message.Voice(b.getRemoteUrl(),b.getLength()));
+                message.setVoice(new Message.Voice(b.getRemoteUrl(), b.getLength()));
             }
             mMessagesList.post(new Runnable() {
                 @Override
@@ -314,7 +312,7 @@ public class ChatActivity extends TakePhotoActivity implements
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         break;
                     case MotionEvent.ACTION_UP:
@@ -329,7 +327,7 @@ public class ChatActivity extends TakePhotoActivity implements
         EMClient.getInstance().login(mUserInfo.getAccount(), "123456", new YJChat(mContext, new YJChat.CallBack() {
             @Override
             public void onSuccess() {
-                ToastUtils.show(mContext, "登录成功");
+                ToastUtils.show(mContext, "连接客服成功");
                 loadMessages();
             }
 

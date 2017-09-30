@@ -1,5 +1,6 @@
 package com.yjjr.yjfutures.ui.mine;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,12 +19,10 @@ public class Holders {
     public static class TextMessageHolder extends MessageHolders.OutcomingTextMessageViewHolder<IMessage> {
 
         protected ImageView userAvatar;
-        private TextView tvName;
 
         public TextMessageHolder(View itemView) {
             super(itemView);
             userAvatar = (ImageView) itemView.findViewById(com.stfalcon.chatkit.R.id.messageUserAvatar);
-            tvName = (TextView) itemView.findViewById(R.id.tv_name);
         }
 
         @Override
@@ -43,7 +42,6 @@ public class Holders {
                     getImageLoader().loadImage(userAvatar, message.getUser().getAvatar());
                 }
             }
-            tvName.setText(message.getUser().getName());
         }
 
     }
@@ -77,11 +75,9 @@ public class Holders {
 
     public static class IncomingTextMessageHolder extends MessageHolders.IncomingTextMessageViewHolder<IMessage> {
 
-        private TextView tvName;
 
         public IncomingTextMessageHolder(View itemView) {
             super(itemView);
-            tvName = (TextView) itemView.findViewById(R.id.tv_name);
         }
 
         @Override
@@ -91,7 +87,6 @@ public class Holders {
                 EmojiFilter.filter(text, text.getText(), 0);
                 text.setTextIsSelectable(true);
             }
-            tvName.setText(message.getUser().getName());
         }
 
     }

@@ -18,7 +18,7 @@ public class HttpConfig {
     /**
      * socket io url
      */
-    public static final String SOCKET_URL = BuildConfig.DEBUG ? "http://dev.qihuofa.com:9092" : "http://www.qihuofa.com:9092";
+    public static final String SOCKET_URL = DOMAIN + ":9093";
     /**
      * 获取K线图的url
      */

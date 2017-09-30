@@ -119,7 +119,7 @@
     <string name="kaicang">开仓</string>
     <string name="pingcang">平仓</string>
     <string name="network_not_connect">请检查网络连接</string>
-    <string name="data_is_null">数据加载失败，点击重试</string>
+    <string name="data_is_null">暂时没有数据，请稍后重试</string>
     <string name="not_setting">没有设置</string>
     <string name="circles">圈子</string>
     <string name="i_want_evaluation">我要评价</string>
@@ -1349,4 +1349,8 @@
     <string name="price">价格</string>
     <string name="change_rate">涨跌幅</string>
     <string name="volume">成交量</string>
+    <string name="socket_timeout">连接超时</string>
+    <string name="socket_connect_error">连接行情失败</string>
+    <string name="socket_connect_success">行情连接成功</string>
+    <string name="socket_connect_disconnect">行情连接断开</string>
 </resources>

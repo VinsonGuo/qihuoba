@@ -9,9 +9,11 @@ import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.umeng.analytics.MobclickAgent;
+import com.yinglan.alphatabs.AlphaTabView;
 import com.yinglan.alphatabs.AlphaTabsIndicator;
 import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.CSUnreadEvent;
 import com.yjjr.yjfutures.event.HideRedDotEvent;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.event.PollRefreshEvent;
@@ -99,6 +101,16 @@ public class MainActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(HideRedDotEvent event) {
         mBottomBar.getTabView(2).removeShow();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(CSUnreadEvent event) {
+        AlphaTabView tabView = mBottomBar.getTabView(2);
+        if(event.getCount() == 0){
+            tabView.removeShow();
+        }else {
+            tabView.showPoint();
+        }
     }
 
     private void initViews() {

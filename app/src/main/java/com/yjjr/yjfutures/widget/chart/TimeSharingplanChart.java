@@ -118,8 +118,8 @@ public class TimeSharingplanChart extends RelativeLayout {
             data.addDataSet(paddingSet);
         }
 
-        for (int i = 0; i < list.size(); i++) {
-            HisData hisData = list.get(i);
+        for (int i = 0; i < mList.size(); i++) {
+            HisData hisData = mList.get(i);
             data.addEntry(new Entry(setSell.getEntryCount(), (float) hisData.getClose()), DATA_SET_PRICE);
         }
 
@@ -131,7 +131,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         }
 
         for (int i = mList.size(); i < size; i++) {
-            data.addEntry(new Entry(i, (float) mList.get(list.size() - 1).getClose()), DATA_SET_PADDING);
+            data.addEntry(new Entry(i, (float) mList.get(mList.size() - 1).getClose()), DATA_SET_PADDING);
         }
 
         Highlight chartHighlighter = new Highlight(setSell.getEntryCount() - 1, (float) list.get(setSell.getEntryCount() - 1).getClose(), DATA_SET_PRICE);

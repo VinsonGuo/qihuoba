@@ -275,7 +275,9 @@ public class Quote implements Parcelable {
     }
 
     public boolean isRest() {
-//        return AskPrice == -1 && BidPrice == -1;
+        if (AskPrice == -1 && BidPrice == -1) {
+            return true;
+        }
         if (TextUtils.isEmpty(TradingTime)) {
             return true;
         }

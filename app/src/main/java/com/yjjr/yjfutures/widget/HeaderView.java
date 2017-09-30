@@ -29,6 +29,7 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
     private TextView mTextSubtitle;
 
     private Activity mBindActivity;
+    private View mReddot;
 
     public HeaderView(Context context) {
         this(context, null);
@@ -47,18 +48,19 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
         LayoutInflater.from(context).inflate(R.layout.view_header, this);
         View rootView = findViewById(R.id.root_view);
         mImage = (ImageView) findViewById(R.id.view_header_image_back);
-        if(context instanceof InputPayPwdActivity) {
+        if (context instanceof InputPayPwdActivity) {
             mImage.setImageResource(R.drawable.ic_back_black);
         }
         mTextMainTitle = (TextView) findViewById(R.id.view_header_text_maintitle);
         mTextSubtitle = (TextView) findViewById(R.id.view_header_text_subtitle);
+        mReddot = findViewById(R.id.reddot);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.headerView, defStyleAttr, 0);
 
         String mainTitle = a.getString(R.styleable.headerView_main_title);
         String subTitle = a.getString(R.styleable.headerView_sub_title);
         int bgColor = a.getColor(R.styleable.headerView_background_color, 0);
-        int mainTitleColor = a.getColor(R.styleable.headerView_main_title_color, ContextCompat.getColor(context,R.color.main_text_color));
+        int mainTitleColor = a.getColor(R.styleable.headerView_main_title_color, ContextCompat.getColor(context, R.color.main_text_color));
         if (bgColor != 0) {
             rootView.setBackgroundColor(bgColor);
         }
@@ -141,6 +143,10 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
         if (null != mBindActivity && !mBindActivity.isFinishing()) {
             mBindActivity.finish();
         }
+    }
+
+    public void showRedDot(boolean isShow) {
+        mReddot.setVisibility(isShow ? VISIBLE : GONE);
     }
 
     public void setSubtitleClickListener(OnClickListener subtitleClickListener) {

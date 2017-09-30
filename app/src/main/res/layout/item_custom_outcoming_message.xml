@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:layout_marginRight="@dimen/root_padding_15"
+        android:visibility="gone"
         android:layout_toLeftOf="@id/messageUserAvatar"
         android:textSize="@dimen/sp_12"
         android:textColor="@color/second_text_color"/>

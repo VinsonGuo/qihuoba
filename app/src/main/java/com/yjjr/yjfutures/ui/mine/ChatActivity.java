@@ -30,6 +30,7 @@ import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import com.stfalcon.chatkit.utils.DateFormatter;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.CSUnreadEvent;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.model.chat.Message;
 import com.yjjr.yjfutures.model.chat.User;
@@ -38,12 +39,12 @@ import com.yjjr.yjfutures.ui.BigPhotoActivity;
 import com.yjjr.yjfutures.ui.TakePhotoActivity;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
-import com.yjjr.yjfutures.utils.RxUtils;
-import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.widget.ChatFuncView;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.listener.EmojiFilter;
 import com.yjjr.yjfutures.widget.listener.YJChat;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,11 +52,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 import sj.keyboard.XhsEmoticonsKeyBoard;
 import sj.keyboard.adpater.EmoticonsAdapter;
 import sj.keyboard.adpater.PageSetAdapter;
@@ -75,7 +71,7 @@ public class ChatActivity extends TakePhotoActivity implements
     protected MessagesListAdapter<Message> messagesAdapter;
 
     //    private String toSendId = "13163725850";
-    private String toSendId = "yj";
+    private String toSendId;
 
     private MessagesList mMessagesList;
     private UserInfo mUserInfo;
@@ -111,7 +107,8 @@ public class ChatActivity extends TakePhotoActivity implements
     private XhsEmoticonsKeyBoard mEditText;
 
     public static void startActivity(Context context) {
-        if (BaseApplication.getInstance().getUserInfo() == null) {
+        UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if (userInfo == null || TextUtils.isEmpty(userInfo.getEmchatAccount()) || TextUtils.isEmpty(userInfo.getEmchatPwd())) {
             return;
         }
         context.startActivity(new Intent(context, ChatActivity.class));
@@ -125,7 +122,7 @@ public class ChatActivity extends TakePhotoActivity implements
     private void showMsg(List<EMMessage> messages) {
         for (EMMessage msg : messages) {
             String from = msg.getFrom();
-            boolean isMe = TextUtils.equals(mUserInfo.getAccount(), from);
+            boolean isMe = TextUtils.equals(mUserInfo.getEmchatAccount(), from);
             User user = new User(from, isMe ? mUserInfo.getName() : "有间客服", isMe ? mMineUrl : mOtherUrl, true);
             EMMessageBody body = msg.getBody();
             final Message message = new Message(msg.getMsgId(), user, body.toString());
@@ -151,6 +148,7 @@ public class ChatActivity extends TakePhotoActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         mUserInfo = BaseApplication.getInstance().getUserInfo();
+        toSendId = mUserInfo.getYjEmchat();
         imageLoader = new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {
@@ -168,27 +166,8 @@ public class ChatActivity extends TakePhotoActivity implements
         ((HeaderView) findViewById(R.id.header_view)).bindActivity(mContext);
         initInput();
         initAdapter();
-        Observable.create(new ObservableOnSubscribe<Object>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<Object> e) throws Exception {
-                EMClient.getInstance().createAccount(mUserInfo.getAccount(), "123456");
-            }
-        })
-                .compose(RxUtils.applySchedulers())
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(@NonNull Object o) throws Exception {
-                        login();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
-                        login();
-                    }
-                });
-
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
+        loadMessages();
     }
 
     private void initInput() {
@@ -323,26 +302,6 @@ public class ChatActivity extends TakePhotoActivity implements
         });
     }
 
-    private void login() {
-        EMClient.getInstance().login(mUserInfo.getAccount(), "123456", new YJChat(mContext, new YJChat.CallBack() {
-            @Override
-            public void onSuccess() {
-                ToastUtils.show(mContext, "连接客服成功");
-                loadMessages();
-            }
-
-            @Override
-            public void onError(int code, String error) {
-                LogUtils.e(code + error);
-                ToastUtils.show(mContext, "登录失败" + code + error);
-            }
-
-            @Override
-            public void onProgress(int progress, String status) {
-
-            }
-        }));
-    }
 
     protected void loadMessages() {
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(toSendId);
@@ -379,7 +338,7 @@ public class ChatActivity extends TakePhotoActivity implements
             }
         }));
         EMClient.getInstance().chatManager().sendMessage(message);
-        messagesAdapter.addToStart(new Message(DateUtils.nowTime() + "", new User(mUserInfo.getAccount(), mUserInfo.getName(), mMineUrl, true), input.toString()), true);
+        messagesAdapter.addToStart(new Message(DateUtils.nowTime() + "", new User(mUserInfo.getEmchatAccount(), mUserInfo.getName(), mMineUrl, true), input.toString()), true);
         return true;
     }
 
@@ -391,7 +350,7 @@ public class ChatActivity extends TakePhotoActivity implements
         imageSendMessage.setMessageStatusCallback(new YJChat(mContext, new YJChat.CallBack() {
             @Override
             public void onSuccess() {
-                Message message = new Message(DateUtils.nowTime() + "", new User(mUserInfo.getAccount(), mUserInfo.getName(), mMineUrl, true), null);
+                Message message = new Message(DateUtils.nowTime() + "", new User(mUserInfo.getEmchatAccount(), mUserInfo.getName(), mMineUrl, true), null);
                 message.setImage(new Message.Image("file://" + image.getOriginalPath()));
                 messagesAdapter.addToStart(message, true);
             }
@@ -425,7 +384,7 @@ public class ChatActivity extends TakePhotoActivity implements
         holdersConfig.setOutcomingTextConfig(Holders.TextMessageHolder.class, R.layout.item_custom_outcoming_message);
         holdersConfig.setIncomingTextConfig(Holders.IncomingTextMessageHolder.class, R.layout.item_custom_incoming_text_message);
         holdersConfig.setOutcomingImageConfig(Holders.ImageMessageHolder.class, R.layout.item_custom_outcoming_image_message);
-        messagesAdapter = new MessagesListAdapter<>(mUserInfo.getAccount(), holdersConfig, imageLoader);
+        messagesAdapter = new MessagesListAdapter<>(mUserInfo.getEmchatAccount(), holdersConfig, imageLoader);
         messagesAdapter.setOnMessageLongClickListener(this);
         messagesAdapter.setOnMessageClickListener(this);
         messagesAdapter.setDateHeadersFormatter(new DateFormatter.Formatter() {
@@ -441,6 +400,8 @@ public class ChatActivity extends TakePhotoActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // 将未读消息标志位已读
+        EventBus.getDefault().post(new CSUnreadEvent(0));
 //        EMClient.getInstance().chatManager().importMessages();
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }

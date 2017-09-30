@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.CSUnreadEvent;
 import com.yjjr.yjfutures.event.HideRedDotEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.ui.BaseFragment;
@@ -25,6 +26,10 @@ public class FoundFragment extends BaseFragment implements View.OnClickListener 
 
 
     private View mRedDot;
+    /**
+     * 客服中心小红点
+     */
+    private View mCSRedDot;
 
     public FoundFragment() {
         // Required empty public constructor
@@ -44,12 +49,18 @@ public class FoundFragment extends BaseFragment implements View.OnClickListener 
         v.findViewById(R.id.root_view3).setOnClickListener(this);
         v.findViewById(R.id.root_view4).setOnClickListener(this);
         mRedDot = v.findViewById(R.id.reddot);
+        mCSRedDot = v.findViewById(R.id.cs_reddot);
         return v;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ShowRedDotEvent event) {
         mRedDot.setVisibility(View.VISIBLE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(CSUnreadEvent event) {
+        mCSRedDot.setVisibility(event.getCount() == 0 ? View.GONE : View.VISIBLE);
     }
 
     @Override

@@ -24,6 +24,7 @@
         android:layout_marginLeft="@dimen/root_padding_15"
         android:layout_toRightOf="@id/messageUserAvatar"
         android:textColor="@color/second_text_color"
+        android:visibility="gone"
         android:textSize="@dimen/sp_12"/>
 
     <com.google.android.flexbox.FlexboxLayout

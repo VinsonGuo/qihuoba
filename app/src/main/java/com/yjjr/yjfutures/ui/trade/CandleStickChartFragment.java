@@ -256,25 +256,24 @@ public class CandleStickChartFragment extends BaseFragment {
                 @Override
                 public void call(Object... args) {
                     LogUtils.d("history data -> " + args[0].toString());
-                    try {
-                        final List<HisData> hisDatas = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
-                        }.getType());
-                        mChart.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (HisData data : hisDatas) {
-                                    if (!mList.contains(data)) {
-                                        mList.add(data);
-                                        mChart.notifyDataSetChanged();
-                                        mChart.moveViewToX(mChart.getCandleData().getEntryCount());
-                                    }
+                    final List<HisData> hisDatas = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
+                    }.getType());
+                    if (hisDatas == null || hisDatas.isEmpty()) {
+                        mChart.setNoDataText(getString(R.string.data_is_null));
+                        return;
+                    }
+                    mChart.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (HisData data : hisDatas) {
+                                if (!mList.contains(data)) {
+                                    mList.add(data);
+                                    mChart.notifyDataSetChanged();
+                                    mChart.moveViewToX(mChart.getCandleData().getEntryCount());
                                 }
                             }
-                        });
-                    } catch (Exception e) {
-                        LogUtils.e(e);
-                        mChart.setNoDataText(getString(R.string.data_load_fail));
-                    }
+                        }
+                    });
                 }
             });
         }
@@ -338,22 +337,22 @@ public class CandleStickChartFragment extends BaseFragment {
         SocketUtils.getSocket().once(SocketUtils.HIS_DATA, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                try {
-                    LogUtils.d("history data -> " + args[0].toString());
-                    List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
-                    }.getType());
-                    mList.clear();
-                    mList.addAll(list);
-                    mChart.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            fullData(mList);
-                        }
-                    });
-                } catch (Exception e) {
-                    LogUtils.e(e);
-                    mChart.setNoDataText(getString(R.string.data_load_fail));
+                LogUtils.d("history data -> " + args[0].toString());
+                List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
+                }.getType());
+
+                if (list == null || list.isEmpty()) {
+                    mChart.setNoDataText(getString(R.string.data_is_null));
+                    return;
                 }
+                mList.clear();
+                mList.addAll(list);
+                mChart.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        fullData(mList);
+                    }
+                });
             }
         });
     }

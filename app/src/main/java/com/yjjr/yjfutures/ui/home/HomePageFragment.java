@@ -19,8 +19,14 @@ import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.event.CSUnreadEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.ReloginDialogEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
@@ -37,11 +43,11 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
-import com.yjjr.yjfutures.ui.mine.ChatActivity;
 import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
+import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
@@ -49,6 +55,7 @@ import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
+import com.yjjr.yjfutures.widget.BadgeView;
 import com.yjjr.yjfutures.widget.LoadingView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -77,7 +84,28 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     private HomePageAdapter mAdapter;
     private LoadingView mLoadingView;
     private Gson mGson = new Gson();
+    private EMMessageListener msgListener = new EMMessageListener() {
+        @Override
+        public void onMessageReceived(List<EMMessage> messages) {
+            EventBus.getDefault().post(new CSUnreadEvent(messages.size()));
+        }
 
+        @Override
+        public void onCmdMessageReceived(List<EMMessage> messages) {
+        }
+
+        @Override
+        public void onMessageRead(List<EMMessage> messages) {
+        }
+
+        @Override
+        public void onMessageDelivered(List<EMMessage> messages) {
+        }
+
+        @Override
+        public void onMessageChanged(EMMessage message, Object change) {
+        }
+    };
     public HomePageFragment() {
         // Required empty public constructor
     }
@@ -121,7 +149,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             }
         });
         mAdapter.bindToRecyclerView(rvList);
-        view.findViewById(R.id.tv_customer_service).setOnClickListener(this);
+        View csService = view.findViewById(R.id.tv_customer_service);
+        csService.setOnClickListener(this);
         view.findViewById(R.id.tv_guide).setOnClickListener(this);
         return view;
     }
@@ -155,7 +184,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                                 EventBus.getDefault().post(new ShowRedDotEvent());
                             }
                             BaseApplication.getInstance().setUserInfo(loginBizResponse.getResult());
-
                             return HttpManager.getHttpService().userLogin(account, password, ActivityTools.getIpByNetwork());
                         }
                     })
@@ -179,6 +207,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                             getHolding();
                             getHuodong();
                             initSocket();
+                            loginHx();
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -192,6 +221,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             getHolding();
             getHuodong();
             initSocket();
+            loginHx();
         }
         //获得banner
         HttpManager.getBizService().getBanner()
@@ -212,6 +242,35 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 }, RxUtils.commonErrorConsumer());
     }
 
+    /**
+     * 登陆环信
+     */
+    private void loginHx() {
+        final UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        EMClient.getInstance().login(userInfo.getEmchatAccount(), userInfo.getEmchatPwd(), new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                //获取未读消息数量
+                EMConversation conversation = EMClient.getInstance().chatManager().getConversation(userInfo.getYjEmchat());
+                if (conversation != null) {
+                    LogUtils.d("未读消息%s条", conversation.getUnreadMsgCount());
+                    EventBus.getDefault().post(new CSUnreadEvent(conversation.getUnreadMsgCount()));
+                } else {
+                    EventBus.getDefault().post(new CSUnreadEvent(0));
+                }
+                EMClient.getInstance().chatManager().addMessageListener(msgListener);
+            }
+
+            @Override
+            public void onError(int code, String error) {
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+            }
+        });
+    }
+
     private void initSocket() {
         SocketUtils.init();
         if (SocketUtils.getSocket() == null) {
@@ -228,11 +287,13 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void call(Object... args) {
                 LogUtils.d("socket io connect timeout");
+                ToastUtils.show(mContext, R.string.socket_timeout);
             }
         }).on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 LogUtils.d("socket io connect error %s", Arrays.toString(args));
+                ToastUtils.show(mContext, R.string.socket_connect_error);
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
@@ -242,61 +303,70 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         }).on("singleTopMarketData", new Emitter.Listener() {//获取行情数据事件。连接打开后由服务端自动推送数据到这个监听方法，不用APP发生请求
             @Override
             public void call(Object... args) {
-                if (BaseApplication.getInstance().isBackground()) {
-                    return;
-                }
-                String data = (String) args[0];
-                Quote quote = mGson.fromJson(data, Quote.class);
-                // 真实
-                Quote oldQuote = StaticStore.getQuote(quote.getSymbol(), false);
-                if (oldQuote != null) {
-                    oldQuote.setAskPrice(quote.getAskPrice());
-                    oldQuote.setBidPrice(quote.getBidPrice());
-                    oldQuote.setChange(quote.getChange());
-                    oldQuote.setChangeRate(quote.getChangeRate());
-                    oldQuote.setLastclose(quote.getLastclose());
-                    oldQuote.setLastPrice(quote.getLastPrice());
-                    oldQuote.setLastSize(quote.getLastSize());
-                    oldQuote.setAskSize(quote.getAskSize());
-                    oldQuote.setBidSize(quote.getBidSize());
-                    oldQuote.setHigh(quote.getHigh());
-                    oldQuote.setLow(quote.getLow());
-                    oldQuote.setVol(quote.getVol());
-                }
+                try {
+                    if (BaseApplication.getInstance().isBackground()) {
+                        return;
+                    }
+                    String data = (String) args[0];
+                    Quote quote = mGson.fromJson(data, Quote.class);
+                    // 真实
+                    Quote oldQuote = StaticStore.getQuote(quote.getSymbol(), false);
+                    if (oldQuote != null) {
+                        oldQuote.setAskPrice(quote.getAskPrice());
+                        oldQuote.setBidPrice(quote.getBidPrice());
+                        oldQuote.setChange(quote.getChange());
+                        oldQuote.setChangeRate(quote.getChangeRate());
+                        oldQuote.setLastclose(quote.getLastclose());
+                        oldQuote.setLastPrice(quote.getLastPrice());
+                        oldQuote.setLastSize(quote.getLastSize());
+                        oldQuote.setAskSize(quote.getAskSize());
+                        oldQuote.setBidSize(quote.getBidSize());
+                        oldQuote.setHigh(quote.getHigh());
+                        oldQuote.setLow(quote.getLow());
+                        oldQuote.setVol(quote.getVol());
+                    }
 
-                // 模拟
-                Quote demoQuote = StaticStore.getQuote(quote.getSymbol(), true);
-                if (demoQuote != null) {
-                    demoQuote.setAskPrice(quote.getAskPrice());
-                    demoQuote.setBidPrice(quote.getBidPrice());
-                    demoQuote.setChange(quote.getChange());
-                    demoQuote.setChangeRate(quote.getChangeRate());
-                    demoQuote.setLastclose(quote.getLastclose());
-                    demoQuote.setLastPrice(quote.getLastPrice());
-                    demoQuote.setLastSize(quote.getLastSize());
-                    demoQuote.setAskSize(quote.getAskSize());
-                    demoQuote.setBidSize(quote.getBidSize());
-                    demoQuote.setHigh(quote.getHigh());
-                    demoQuote.setLow(quote.getLow());
-                    demoQuote.setVol(quote.getVol());
+                    // 模拟
+                    Quote demoQuote = StaticStore.getQuote(quote.getSymbol(), true);
+                    if (demoQuote != null) {
+                        demoQuote.setAskPrice(quote.getAskPrice());
+                        demoQuote.setBidPrice(quote.getBidPrice());
+                        demoQuote.setChange(quote.getChange());
+                        demoQuote.setChangeRate(quote.getChangeRate());
+                        demoQuote.setLastclose(quote.getLastclose());
+                        demoQuote.setLastPrice(quote.getLastPrice());
+                        demoQuote.setLastSize(quote.getLastSize());
+                        demoQuote.setAskSize(quote.getAskSize());
+                        demoQuote.setBidSize(quote.getBidSize());
+                        demoQuote.setHigh(quote.getHigh());
+                        demoQuote.setLow(quote.getLow());
+                        demoQuote.setVol(quote.getVol());
+                    }
+                    EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
+                } catch (Exception e) {
+                    LogUtils.e(e);
                 }
-                EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
             }
         }).on("getSymbolList", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                List<Quote> list = mGson.fromJson(args[0].toString(), new TypeToken<List<Quote>>() {
-                }.getType());
-                for (Quote quote : list) {
-                    StaticStore.putQuote(quote, false);
-                    StaticStore.putQuote(quote, true);
-                }
-                mLoadingView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
+                LogUtils.d("getSymbolList -> %s", args[0]);
+                try {
+                    List<Quote> list = mGson.fromJson(args[0].toString(), new TypeToken<List<Quote>>() {
+                    }.getType());
+                    for (Quote quote : list) {
+                        StaticStore.putQuote(quote, false);
+                        StaticStore.putQuote(quote, true);
                     }
-                });
+                    mLoadingView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.setNewData(new ArrayList<>(StaticStore.getQuoteValues(false)));
+                        }
+                    });
+                } catch (Exception e) {
+                    LogUtils.e(e);
+                }
             }
         });
         SocketUtils.getSocket().connect();
@@ -361,8 +431,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_customer_service:
-//                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
-                ChatActivity.startActivity(mContext);
+                WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
+//                ChatActivity.startActivity(mContext);
                 break;
             case R.id.tv_guide:
                 WebActivity.startActivity(mContext, HttpConfig.URL_GUIDE);
@@ -388,23 +458,13 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    /**
-     * 旧的方式，新版可以弃用
-     *
-     * @param event
-     */
-    /*@Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(PollRefreshEvent event) {
-        if (isResumed()) {
-            mAdapter.getData().clear();
-            mAdapter.getData().addAll(StaticStore.getQuoteValues(false));
-            mAdapter.notifyItemRangeChanged(mAdapter.getHeaderLayoutCount(), StaticStore.getQuoteValues(false).size());
-        }
-    }*/
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+        EMClient.getInstance().logout(true);
         if (SocketUtils.getSocket() != null && SocketUtils.getSocket().connected()) {
             SocketUtils.getSocket().disconnect();
         }

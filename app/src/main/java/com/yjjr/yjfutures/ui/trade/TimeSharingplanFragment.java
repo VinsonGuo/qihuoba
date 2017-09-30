@@ -129,21 +129,21 @@ public class TimeSharingplanFragment extends BaseFragment {
             @Override
             public void call(Object... args) {
                 LogUtils.d("history data -> " + args[0].toString());
-                try {
-                    List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
-                    }.getType());
-                    mDatas.clear();
-                    mDatas.addAll(list);
-                    mChart.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mChart.addEntries(mDatas);
-                        }
-                    });
-                } catch (Exception e) {
-                    LogUtils.e(e);
-                    mChart.setNoDataText(getString(R.string.data_load_fail));
+                List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
+                }.getType());
+
+                if (list == null || list.isEmpty()) {
+                    mChart.setNoDataText(getString(R.string.data_is_null));
+                    return;
                 }
+                mDatas.clear();
+                mDatas.addAll(list);
+                mChart.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mChart.addEntries(mDatas);
+                    }
+                });
             }
         });
     }
@@ -181,24 +181,23 @@ public class TimeSharingplanFragment extends BaseFragment {
             @Override
             public void call(Object... args) {
                 LogUtils.d("history data -> " + args[0].toString());
-                try {
-                    final List<HisData> hisDatas = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
-                    }.getType());
-                    mChart.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (HisData data : hisDatas) {
-                                if (!mDatas.contains(data)) {
-                                    mDatas.add(data);
-                                    mChart.addEntry(data);
-                                }
+                final List<HisData> hisDatas = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
+                }.getType());
+                if (hisDatas == null || hisDatas.isEmpty()) {
+                    mChart.setNoDataText(getString(R.string.data_is_null));
+                    return;
+                }
+                mChart.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (HisData data : hisDatas) {
+                            if (!mDatas.contains(data)) {
+                                mDatas.add(data);
+                                mChart.addEntry(data);
                             }
                         }
-                    });
-                } catch (Exception e) {
-                    LogUtils.e(e);
-                    mChart.setNoDataText(getString(R.string.data_load_fail));
-                }
+                    }
+                });
             }
         });
     }

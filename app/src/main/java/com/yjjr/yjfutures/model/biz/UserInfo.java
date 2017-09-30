@@ -20,7 +20,25 @@ public class UserInfo {
     private String idcard;
     private boolean existPayPwd;
     private boolean isExistUnreadNotice;
+    private String emchatAccount;
+    private String emchatPwd;
+    private String yjEmchat;
 
+    public String getEmchatAccount() {
+        return emchatAccount;
+    }
+
+    public void setEmchatAccount(String emchatAccount) {
+        this.emchatAccount = emchatAccount;
+    }
+
+    public String getEmchatPwd() {
+        return emchatPwd;
+    }
+
+    public void setEmchatPwd(String emchatPwd) {
+        this.emchatPwd = emchatPwd;
+    }
 
     public String getAccount() {
         return account;
@@ -86,6 +104,14 @@ public class UserInfo {
         isExistUnreadNotice = existUnreadNotice;
     }
 
+    public String getYjEmchat() {
+        return yjEmchat;
+    }
+
+    public void setYjEmchat(String yjEmchat) {
+        this.yjEmchat = yjEmchat;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
@@ -97,6 +123,9 @@ public class UserInfo {
                 ", idcard='" + idcard + '\'' +
                 ", existPayPwd=" + existPayPwd +
                 ", isExistUnreadNotice=" + isExistUnreadNotice +
+                ", emchatAccount='" + emchatAccount + '\'' +
+                ", emchatPwd='" + emchatPwd + '\'' +
+                ", yjEmchat='" + yjEmchat + '\'' +
                 '}';
     }
 }

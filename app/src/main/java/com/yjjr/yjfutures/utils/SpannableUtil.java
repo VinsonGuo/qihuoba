@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.utils;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -96,12 +97,25 @@ public class SpannableUtil {
         return ssb;
     }
 
-    public static SpannableString getStringBySize(CharSequence content ,float size) {
+    public static SpannableString getStringByDrawable(Context ctx, @DrawableRes int id) {
+        Drawable drawable = ctx.getResources().getDrawable(id);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        //需要处理的文本，[smile]是需要被替代的文本
+        SpannableString spannable = new SpannableString("[smile]");
+        //要让图片替代指定的文字就要用ImageSpan
+        ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+        //开始替换，注意第2和第3个参数表示从哪里开始替换到哪里替换结束（start和end）
+//最后一个参数类似数学中的集合,[5,12)表示从5到12，包括5但不包括12
+        spannable.setSpan(span, 0, "[smile]".length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        return spannable;
+    }
+
+    public static SpannableString getStringBySize(CharSequence content, float size) {
         if (content == null) {
             content = "";
         }
         SpannableString ssb = new SpannableString(content);
-        ssb.setSpan(new RelativeSizeSpan(size),0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssb.setSpan(new RelativeSizeSpan(size), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return ssb;
     }
 }

@@ -44,6 +44,8 @@ public class PositionListAdapter extends BaseQuickAdapter<Holds, BaseViewHolder>
                     .setText(R.id.tv_ticket, "订单ID " + item.getOrderId())
                     .addOnClickListener(R.id.tv_close_order)
                     .addOnClickListener(R.id.tv_setting);
+            TextView tvCloseOrder = helper.getView(R.id.tv_close_order);
+//            tvCloseOrder.setEnabled(3==3);
             TextView tvHand = helper.getView(R.id.tv_hand);
             if ( TextUtils.equals(item.getBuySell(), "买入")) {
                 tvHand.setBackgroundResource(R.drawable.shape_online_tx_red);

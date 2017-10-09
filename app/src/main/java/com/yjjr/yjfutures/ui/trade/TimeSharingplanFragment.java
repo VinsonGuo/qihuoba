@@ -132,15 +132,15 @@ public class TimeSharingplanFragment extends BaseFragment {
                 List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
                 }.getType());
 
-                if (list == null || list.isEmpty()) {
-                    mChart.setNoDataText(getString(R.string.data_is_null));
-                    return;
-                }
                 mDatas.clear();
                 mDatas.addAll(list);
                 mChart.post(new Runnable() {
                     @Override
                     public void run() {
+                        if (mDatas == null || mDatas.isEmpty()) {
+                            mChart.setNoDataText(getString(R.string.data_is_null));
+                            return;
+                        }
                         mChart.addEntries(mDatas);
                     }
                 });
@@ -183,13 +183,12 @@ public class TimeSharingplanFragment extends BaseFragment {
                 LogUtils.d("history data -> " + args[0].toString());
                 final List<HisData> hisDatas = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
                 }.getType());
-                if (hisDatas == null || hisDatas.isEmpty()) {
-                    mChart.setNoDataText(getString(R.string.data_is_null));
-                    return;
-                }
                 mChart.post(new Runnable() {
                     @Override
                     public void run() {
+                        if (hisDatas == null || hisDatas.isEmpty()) {
+                            return;
+                        }
                         for (HisData data : hisDatas) {
                             if (!mDatas.contains(data)) {
                                 mDatas.add(data);

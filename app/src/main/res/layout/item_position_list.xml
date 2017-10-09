@@ -139,10 +139,11 @@
             android:id="@+id/tv_setting"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_third_text_color_border_bg"
+            android:background="@drawable/selector_third_text_color_border_bg"
             android:gravity="center"
             android:padding="2dp"
             android:text="@string/setting_lose_stop_and_lose_win"
+            android:visibility="gone"
             android:textColor="@color/third_text_color"
             android:textSize="@dimen/sp_12"/>
 
@@ -151,7 +152,7 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:background="@drawable/shape_third_text_color_border_bg"
+            android:background="@drawable/selector_third_text_color_border_bg"
             android:gravity="center"
             android:padding="2dp"
             android:text="X 平仓"

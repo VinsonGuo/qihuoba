@@ -112,6 +112,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      */
     private TextView tvRest;
     private TextView mTvDeposit;
+    private SimpleFragmentPagerAdapter mKLineAdapter;
 
 
     public TradeFragment() {
@@ -187,7 +188,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, CandleStickChartFragment.MIN);
         Fragment[] fragments = {/*TickChartFragment.newInstance(mSymbol)*/new Fragment(), TimeSharingplanFragment.newInstance(mSymbol, mIsDemo),
                 mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol, mIsDemo)};
-        mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments));
+        mKLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
+        mViewpager.setAdapter(mKLineAdapter);
         mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
             @Override
@@ -254,6 +256,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                                 break;
                         }
                         mCandleStickChartFragment.loadDataByType(type);
+//                        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, type);
+////                        mKLineAdapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
+//                        mViewpager.setAdapter(mKLineAdapter);
+//                        mViewpager.setCurrentItem(2, false);
                     }
                 });
         tvCenter.setText(FastOrderSharePrefernce.getFastTakeOrder(mContext, mSymbol) != null ? R.string.opened : R.string.closed);

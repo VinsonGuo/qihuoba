@@ -47,7 +47,6 @@ import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
-import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
@@ -55,7 +54,6 @@ import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
-import com.yjjr.yjfutures.widget.BadgeView;
 import com.yjjr.yjfutures.widget.LoadingView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -106,6 +104,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         public void onMessageChanged(EMMessage message, Object change) {
         }
     };
+
     public HomePageFragment() {
         // Required empty public constructor
     }
@@ -247,6 +246,9 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
      */
     private void loginHx() {
         final UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if (TextUtils.isEmpty(userInfo.getEmchatAccount()) || TextUtils.isEmpty(userInfo.getEmchatPwd())) {
+            return;
+        }
         EMClient.getInstance().login(userInfo.getEmchatAccount(), userInfo.getEmchatPwd(), new EMCallBack() {
             @Override
             public void onSuccess() {

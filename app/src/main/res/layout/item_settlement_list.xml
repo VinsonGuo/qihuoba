@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginLeft="@dimen/root_padding_15"
-            android:background="@drawable/shape_third_text_color_border_bg"
+            android:background="@drawable/selector_third_text_color_border_bg"
             android:gravity="center"
             android:padding="2dp"
             android:text="止损卖出"

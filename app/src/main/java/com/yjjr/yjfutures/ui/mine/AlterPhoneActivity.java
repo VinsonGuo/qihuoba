@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,8 +15,8 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.model.biz.BizResponse;
-import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
+import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SmsCountDownTimer;
@@ -28,7 +27,6 @@ import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -92,8 +90,10 @@ public class AlterPhoneActivity extends BaseActivity {
                             .subscribe(new Consumer<BizResponse>() {
                                 @Override
                                 public void accept(@NonNull BizResponse response) throws Exception {
-                                    CommonSuccessActivity.startActivity(mContext, "手机号码更改成功", "手机号码", riPhone.getValue());
-                                    UserSharePrefernce.setAccount(mContext, riPhone.getValue());
+//                                    CommonSuccessActivity.startActivity(mContext, "手机号码更改成功", "手机号码", riPhone.getValue());
+//                                    UserSharePrefernce.setAccount(mContext, riPhone.getValue());
+                                    ToastUtils.show(mContext, "手机号码更改成功");
+                                    BaseApplication.getInstance().logout(mContext);
                                 }
                             }, new Consumer<Throwable>() {
                                 @Override

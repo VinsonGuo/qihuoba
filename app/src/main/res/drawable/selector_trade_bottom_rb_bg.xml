@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_checked="true" android:drawable="@drawable/shape_third_text_color_border_bg"/>
+    <item android:state_checked="true" android:drawable="@drawable/selector_third_text_color_border_bg"/>
     <item android:state_checked="false">
         <shape>
             <corners android:radius="4dp"/>

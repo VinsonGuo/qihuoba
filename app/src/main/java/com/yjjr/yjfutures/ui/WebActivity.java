@@ -29,7 +29,6 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.widget.HeaderView;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -84,7 +83,7 @@ public class WebActivity extends BaseActivity {
             mHeaderView.getSubTitle().setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(mContext, R.drawable.ic_message), null, null, null);
             TextView tv = new TextView(mContext);
             tv.setGravity(Gravity.CENTER);
-            tv.setText(TextUtils.concat("没有解决问题？", SpannableUtil.getStringByColor(mContext, "点击提问", R.color.main_color)));
+            tv.setText(TextUtils.concat("没有解决问题？", SpannableUtil.getStringByDrawable(mContext, R.drawable.ic_tel), SpannableUtil.getStringByColor(mContext, " 联系客服", R.color.main_color)));
             int padding = DisplayUtils.dip2px(mContext, 10);
             tv.setPadding(padding, padding, padding, padding);
             tv.setTextColor(ContextCompat.getColor(mContext, R.color.main_text_color));
@@ -96,9 +95,9 @@ public class WebActivity extends BaseActivity {
                 }
             });
             UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
-            if(userInfo != null) {
+            if (userInfo != null) {
                 EMConversation conversation = EMClient.getInstance().chatManager().getConversation(userInfo.getYjEmchat());
-                if (conversation != null && conversation.getUnreadMsgCount()>0) {
+                if (conversation != null && conversation.getUnreadMsgCount() > 0) {
                     mHeaderView.showRedDot(true);
                 } else {
                     mHeaderView.showRedDot(false);

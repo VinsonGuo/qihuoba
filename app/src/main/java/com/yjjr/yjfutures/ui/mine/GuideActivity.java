@@ -28,9 +28,7 @@ public class GuideActivity extends BaseActivity {
         Fragment[] fragments = {
                 GuideFragment.newInstance(1),
                 GuideFragment.newInstance(2),
-                GuideFragment.newInstance(3),
-                GuideFragment.newInstance(4),
-                GuideFragment.newInstance(5)};
+                GuideFragment.newInstance(3)};
         viewPager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
     }
 }

@@ -128,7 +128,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void run() {
                 DateTime dateTime = DateUtils.nowDateTime();
-                if (dateTime.getSecondOfMinute() == 5) {
+                if (dateTime.getSecondOfMinute() == 10) {
                     EventBus.getDefault().post(new OneMinuteEvent());
                 }
                 if (BaseApplication.getInstance().isBackground()) {

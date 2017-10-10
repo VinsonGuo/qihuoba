@@ -1,6 +1,7 @@
 package com.yjjr.yjfutures.ui.trade;
 
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.widget.TextView;
 
@@ -45,9 +46,13 @@ public class PositionListAdapter extends BaseQuickAdapter<Holds, BaseViewHolder>
                     .addOnClickListener(R.id.tv_close_order)
                     .addOnClickListener(R.id.tv_setting);
             TextView tvCloseOrder = helper.getView(R.id.tv_close_order);
-//            tvCloseOrder.setEnabled(3==3);
+            // 是否为平仓中
+            boolean isClosing = item.getStatue() == 2;
+            tvCloseOrder.setEnabled(!isClosing);
+            tvCloseOrder.setText(isClosing ? "平仓中" : "X 平仓");
+            tvCloseOrder.setTextColor(ContextCompat.getColor(mContext, isClosing ? R.color.color_666666 : R.color.third_text_color));
             TextView tvHand = helper.getView(R.id.tv_hand);
-            if ( TextUtils.equals(item.getBuySell(), "买入")) {
+            if (TextUtils.equals(item.getBuySell(), "买入")) {
                 tvHand.setBackgroundResource(R.drawable.shape_online_tx_red);
             } else {
                 tvHand.setBackgroundResource(R.drawable.shape_online_tx_green);

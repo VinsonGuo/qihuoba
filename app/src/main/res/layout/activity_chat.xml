@@ -18,7 +18,8 @@
         <com.yjjr.yjfutures.widget.HeaderView
             android:id="@+id/header_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:main_title="在线客服"/>
 
         <com.stfalcon.chatkit.messages.MessagesList
             android:id="@+id/messagesList"

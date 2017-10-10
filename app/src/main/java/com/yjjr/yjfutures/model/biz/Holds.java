@@ -52,6 +52,8 @@ public class Holds {
 
     private double RivalPrice;
 
+    private int statue;
+
     public String getAccount() {
         return Account;
     }
@@ -173,5 +175,16 @@ public class Holds {
                 ", UnrealizedPL=" + UnrealizedPL +
                 ", RivalPrice=" + RivalPrice +
                 '}';
+    }
+
+    /**
+     *  -1已失效 0正常 1已触发 2平仓中
+     */
+    public int getStatue() {
+        return statue;
+    }
+
+    public void setStatue(int statue) {
+        this.statue = statue;
     }
 }

@@ -26,6 +26,12 @@ public class LineChartInfoView extends LinearLayout {
     private TextView mTvChangeRate;
     private TextView mTvVol;
     private TextView mTvTime;
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            setVisibility(GONE);
+        }
+    };
 
     public LineChartInfoView(Context context) {
         this(context, null);
@@ -49,11 +55,7 @@ public class LineChartInfoView extends LinearLayout {
         mTvPrice.setText(DoubleUtil.formatDecimal(data.getClose()));
         mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose() - data.getOpen()) / data.getOpen() * 100));
         mTvVol.setText(data.getVol() + "");
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setVisibility(GONE);
-            }
-        }, 2000);
+        removeCallbacks(mRunnable);
+        postDelayed(mRunnable, 2000);
     }
 }

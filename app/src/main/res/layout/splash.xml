@@ -41,6 +41,7 @@
         android:layout_marginBottom="15dp"
         android:textColor="@color/main_text_color"
         android:textSize="@dimen/sp_14"
+        android:visibility="gone"
         tools:text="V1.0"/>
 
 </FrameLayout>

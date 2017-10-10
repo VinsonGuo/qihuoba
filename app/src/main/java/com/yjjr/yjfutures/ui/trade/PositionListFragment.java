@@ -173,14 +173,15 @@ public class PositionListFragment extends ListFragment<Holds> {
     private void closeOrder(Holds holding) {
         mProgressDialog.show();
         RxUtils.createCloseObservable(mIsDemo, holding)
-                .delay(1, TimeUnit.SECONDS)
+//                .delay(1, TimeUnit.SECONDS)
                 .compose(RxUtils.<CommonResponse>applySchedulers())
                 .compose(this.<CommonResponse>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<CommonResponse>() {
                     @Override
                     public void accept(@NonNull CommonResponse commonResponse) throws Exception {
                         mProgressDialog.dismiss();
-                        mSuccessDialog.show();
+//                        mSuccessDialog.show();
+                        ToastUtils.show(mContext, commonResponse.getMessage());
                         EventBus.getDefault().post(new SendOrderEvent());
                     }
                 }, new Consumer<Throwable>() {
@@ -206,18 +207,18 @@ public class PositionListFragment extends ListFragment<Holds> {
                         List<Holds> list = new ArrayList<>(10);
                         double profit = 0;
                         //将持仓的品种保存起来
-                        if(mIsDemo) {
+                        if (mIsDemo) {
                             StaticStore.sDemoHoldSet = new HashSet<>();
-                        }else {
+                        } else {
                             StaticStore.sHoldSet = new HashSet<>();
                         }
                         for (Holds holding : result) {
                             profit += holding.getUnrealizedPL();
                             if (holding.getQty() != 0) {
                                 list.add(holding);
-                                if(mIsDemo) {
+                                if (mIsDemo) {
                                     StaticStore.sDemoHoldSet.add(holding.getSymbol());
-                                }else {
+                                } else {
                                     StaticStore.sHoldSet.add(holding.getSymbol());
                                 }
                             }

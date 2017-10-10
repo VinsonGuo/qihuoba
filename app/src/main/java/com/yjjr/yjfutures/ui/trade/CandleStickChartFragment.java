@@ -148,7 +148,6 @@ public class CandleStickChartFragment extends BaseFragment {
         xAxis.setDrawGridLines(false);
         xAxis.setLabelCount(5, true);
         xAxis.setAvoidFirstLastClipping(true);
-//        xAxis.setAxisMinimum(-0.5f);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -174,7 +173,7 @@ public class CandleStickChartFragment extends BaseFragment {
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return StringUtils.getStringByTick(value, quote.getTick());
+                return StringUtils.getStringByDigits(value, StringUtils.getDigitByTick(quote.getTick()) + 1);
             }
         });
 //        rightAxis.setDrawAxisLine(false);
@@ -232,31 +231,9 @@ public class CandleStickChartFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(OneMinuteEvent event) {
-        if (mList != null && TextUtils.equals(mType, MIN) && SocketUtils.getSocket() != null) {
+        if (!mList.isEmpty() && TextUtils.equals(mType, MIN) && SocketUtils.getSocket() != null) {
             final HisData hisData = mList.get(mList.size() - 1);
             final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-//            HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)
-           /* HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType))
-                    .filter(new Predicate<List<HisData>>() {
-                        @Override
-                        public boolean test(@NonNull List<HisData> hisDatas) throws Exception {
-                            return hisDatas != null && hisDatas.size() > 0;
-                        }
-                    })
-                    .compose(RxUtils.<List<HisData>>applySchedulers())
-                    .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
-                    .subscribe(new Consumer<List<HisData>>() {
-                        @Override
-                        public void accept(@NonNull List<HisData> hisDatas) throws Exception {
-                            for (HisData data : hisDatas) {
-                                if (!mList.contains(data)) {
-                                    mList.add(data);
-                                    mChart.notifyDataSetChanged();
-                                    mChart.moveViewToX(mChart.getCandleData().getEntryCount());
-                                }
-                            }
-                        }
-                    }, RxUtils.commonErrorConsumer());*/
             SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, mGson.toJson(new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)));
             SocketUtils.getSocket().once(SocketUtils.HIS_DATA, new Emitter.Listener() {
                 @Override
@@ -270,13 +247,9 @@ public class CandleStickChartFragment extends BaseFragment {
                     mChart.post(new Runnable() {
                         @Override
                         public void run() {
-                            for (HisData data : hisDatas) {
-                                if (!mList.contains(data)) {
-                                    mList.add(data);
-                                    mChart.notifyDataSetChanged();
-                                    mChart.moveViewToX(mChart.getCandleData().getEntryCount());
-                                }
-                            }
+                            mList.removeAll(hisDatas);
+                            mList.addAll(hisDatas);
+                            fullData(mList);
                         }
                     });
                 }
@@ -348,7 +321,6 @@ public class CandleStickChartFragment extends BaseFragment {
                 LogUtils.d("history data -> " + args[0].toString());
                 List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
                 }.getType());
-
                 mList.clear();
                 mList.addAll(list);
                 mChart.post(new Runnable() {

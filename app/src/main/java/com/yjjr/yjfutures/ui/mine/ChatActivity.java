@@ -70,7 +70,6 @@ public class ChatActivity extends TakePhotoActivity implements
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
 
-    //    private String toSendId = "13163725850";
     private String toSendId;
 
     private MessagesList mMessagesList;
@@ -275,6 +274,7 @@ public class ChatActivity extends TakePhotoActivity implements
             }
         });
         mEditText.addFuncView(funcView);
+        mEditText.getEtChat().setHint("请输入您要咨询的问题");
 
         // add a filter
         mEditText.getEtChat().addEmoticonFilter(new EmojiFilter());

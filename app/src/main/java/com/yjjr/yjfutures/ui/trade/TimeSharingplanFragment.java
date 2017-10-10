@@ -29,7 +29,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.socket.emitter.Emitter;
@@ -42,7 +41,7 @@ public class TimeSharingplanFragment extends BaseFragment {
 
     private TimeSharingplanChart mChart;
     private String mSymbol;
-    private List<HisData> mDatas = new ArrayList<>(100);
+    //    private List<HisData> mDatas = new ArrayList<>(100);
     private Quote mQuote;
     private boolean mIsDemo;
     private Gson mGson = new Gson();
@@ -129,19 +128,17 @@ public class TimeSharingplanFragment extends BaseFragment {
             @Override
             public void call(Object... args) {
                 LogUtils.d("history data -> " + args[0].toString());
-                List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
+                final List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
                 }.getType());
 
-                mDatas.clear();
-                mDatas.addAll(list);
                 mChart.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (mDatas == null || mDatas.isEmpty()) {
+                        if (list == null || list.isEmpty()) {
                             mChart.setNoDataText(getString(R.string.data_is_null));
                             return;
                         }
-                        mChart.addEntries(mDatas);
+                        mChart.addEntries(list);
                     }
                 });
             }
@@ -150,32 +147,11 @@ public class TimeSharingplanFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(OneMinuteEvent event) {
-        if (mQuote == null || mQuote.isRest() || SocketUtils.getSocket() == null) {
+        //一分钟更新一下数据
+        final HisData hisData = mChart.getLastData();
+        if (mQuote == null || mQuote.isRest() || SocketUtils.getSocket() == null || hisData == null) {
             return;
         }
-        //一分钟更新一下数据
-        final HisData hisData = mDatas.get(mDatas.size() - 1);
-//        HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), hisData.getsDate())
-       /* HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), hisData.getsDate(), "min"))
-                .filter(new Predicate<List<HisData>>() {
-                    @Override
-                    public boolean test(@NonNull List<HisData> hisDatas) throws Exception {
-                        return hisDatas != null && hisDatas.size() > 0;
-                    }
-                })
-                .compose(RxUtils.<List<HisData>>applySchedulers())
-                .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<List<HisData>>() {
-                    @Override
-                    public void accept(@NonNull List<HisData> hisDatas) throws Exception {
-                        for (HisData data : hisDatas) {
-                            if (!mDatas.contains(data)) {
-                                mDatas.add(data);
-                                mChart.addEntry(data);
-                            }
-                        }
-                    }
-                }, RxUtils.commonErrorConsumer());*/
         SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, mGson.toJson(new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), hisData.getsDate(), "min")));
         SocketUtils.getSocket().once(SocketUtils.HIS_DATA, new Emitter.Listener() {
             @Override
@@ -190,10 +166,7 @@ public class TimeSharingplanFragment extends BaseFragment {
                             return;
                         }
                         for (HisData data : hisDatas) {
-                            if (!mDatas.contains(data)) {
-                                mDatas.add(data);
-                                mChart.addEntry(data);
-                            }
+                            mChart.addEntry(data);
                         }
                     }
                 });

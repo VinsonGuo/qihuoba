@@ -182,8 +182,6 @@ public class TimeSharingplanChart extends RelativeLayout {
      * 增加一个entry
      */
     public void addEntry(HisData hisData) {
-        mList.add(hisData);
-        float price = (float) hisData.getClose();
         LineData data = mChart.getData();
 
         if (data != null) {
@@ -192,6 +190,14 @@ public class TimeSharingplanChart extends RelativeLayout {
                 setSell = createSet(TYPE_FULL);
                 data.addDataSet(setSell);
             }
+
+            int index = mList.indexOf(hisData);
+            if (index >= 0) {
+                mList.remove(hisData);
+                data.removeEntry(index, DATA_SET_PRICE);
+            }
+            mList.add(hisData);
+            float price = (float) hisData.getClose();
             data.addEntry(new Entry(setSell.getEntryCount(), price), DATA_SET_PRICE);
 
             // 给padding添加entry
@@ -216,6 +222,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         if (type == TYPE_FULL) {
             set.setHighLightColor(mLineColor);
             set.setDrawHighlightIndicators(true);
+//            set.setDrawVerticalHighlightIndicator(false);
             set.setHighlightLineWidth(0.5f);
             set.setCircleColor(mLineColor);
             set.setCircleRadius(2);
@@ -275,27 +282,22 @@ public class TimeSharingplanChart extends RelativeLayout {
 
             @Override
             public void onChartDoubleTapped(MotionEvent me) {
-
             }
 
             @Override
             public void onChartSingleTapped(MotionEvent me) {
-
             }
 
             @Override
             public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
             }
 
             @Override
             public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
             }
 
             @Override
             public void onChartTranslate(MotionEvent me, float dX, float dY) {
-
             }
         });
 
@@ -312,7 +314,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return StringUtils.getStringByTick(value, mQuote.getTick());
+                return StringUtils.getStringByDigits(value, StringUtils.getDigitByTick(mQuote.getTick()) + 1);
             }
         });
         Legend legend = mChart.getLegend();
@@ -343,5 +345,16 @@ public class TimeSharingplanChart extends RelativeLayout {
         LineChartYMarkerView mv = new LineChartYMarkerView(mContext, quote.getTick());
         mv.setChartView(mChart);
         mChart.setMarker(mv);
+    }
+
+    /**
+     * 获取最后一个数据
+     */
+    public HisData getLastData() {
+        try {
+            return mList.get(mList.size() - 1);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

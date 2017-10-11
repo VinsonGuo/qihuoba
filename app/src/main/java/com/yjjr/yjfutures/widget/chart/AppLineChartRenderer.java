@@ -19,8 +19,6 @@ import java.util.List;
 
 public class AppLineChartRenderer extends LineChartRenderer {
 
-    private Path mHighlightLinePath = new Path();
-
 
     private float[] mCirclesBuffer = new float[2];
 
@@ -85,6 +83,7 @@ public class AppLineChartRenderer extends LineChartRenderer {
                     dataSet.getEntryCount() == 0)
                 continue;
 
+            mRenderPaint.setColor(dataSet.getCircleColor(0));
             mCirclePaintInner.setColor(dataSet.getCircleHoleColor());
 
             Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());

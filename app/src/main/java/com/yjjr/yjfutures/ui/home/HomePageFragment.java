@@ -29,7 +29,6 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.CSUnreadEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.ReloginDialogEvent;
-import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.UserLoginResponse;
@@ -83,6 +82,10 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     private LoadingView mLoadingView;
     private Gson mGson = new Gson();
     private EMMessageListener msgListener = new EMMessageListener() {
+        @Override
+        public void onMessageRecalled(List<EMMessage> messages) {
+        }
+
         @Override
         public void onMessageReceived(List<EMMessage> messages) {
             EventBus.getDefault().post(new CSUnreadEvent(messages.size()));
@@ -326,6 +329,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         oldQuote.setHigh(quote.getHigh());
                         oldQuote.setLow(quote.getLow());
                         oldQuote.setVol(quote.getVol());
+                        oldQuote.setHolding(StaticStore.sHoldSet.contains(quote.getSymbol()));
                     }
 
                     // 模拟
@@ -343,6 +347,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         demoQuote.setHigh(quote.getHigh());
                         demoQuote.setLow(quote.getLow());
                         demoQuote.setVol(quote.getVol());
+                        demoQuote.setHolding(StaticStore.sDemoHoldSet.contains(quote.getSymbol()));
                     }
                     EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
                 } catch (Exception e) {
@@ -357,7 +362,14 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                     List<Quote> list = mGson.fromJson(args[0].toString(), new TypeToken<List<Quote>>() {
                     }.getType());
                     for (Quote quote : list) {
+                        quote.setHolding(StaticStore.sHoldSet.contains(quote.getSymbol()));
                         StaticStore.putQuote(quote, false);
+                    }
+
+                    List<Quote> demoList = mGson.fromJson(args[0].toString(), new TypeToken<List<Quote>>() {
+                    }.getType());
+                    for (Quote quote : demoList) {
+                        quote.setHolding(StaticStore.sDemoHoldSet.contains(quote.getSymbol()));
                         StaticStore.putQuote(quote, true);
                     }
                     mLoadingView.post(new Runnable() {
@@ -405,10 +417,10 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 }, RxUtils.commonErrorConsumer());
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+  /*  @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SendOrderEvent event) {
         getHolding();
-    }
+    }*/
 
     @Override
     public void onResume() {

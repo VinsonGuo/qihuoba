@@ -77,6 +77,10 @@ public class ChatActivity extends TakePhotoActivity implements
     private String mOtherUrl = "1";
     private String mMineUrl = "0";
     private EMMessageListener msgListener = new EMMessageListener() {
+        @Override
+        public void onMessageRecalled(List<EMMessage> messages) {
+
+        }
 
         @Override
         public void onMessageReceived(List<EMMessage> messages) {
@@ -148,6 +152,7 @@ public class ChatActivity extends TakePhotoActivity implements
         setContentView(R.layout.activity_chat);
         mUserInfo = BaseApplication.getInstance().getUserInfo();
         toSendId = mUserInfo.getYjEmchat();
+//        toSendId = "13631649574-1506743413020";
         imageLoader = new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {

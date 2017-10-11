@@ -114,7 +114,7 @@ dependencies {
     compile 'com.bigkoo:convenientbanner:2.0.5'
     compile 'com.umeng.analytics:analytics:6.1.1'
     compile 'com.github.stfalcon:chatkit:0.2.2'
-    compile 'com.hyphenate:hyphenate-sdk-lite:3.3.0'
+    compile 'com.hyphenate:hyphenate-sdk-lite:3.3.4'
     compile 'com.github.w446108264:XhsEmoticonsKeyboard:2.0.4'
     compile 'com.github.w446108264:AndroidEmoji:1.0.0'
     compile 'io.github.rockerhieu:emojicon:1.4.0'

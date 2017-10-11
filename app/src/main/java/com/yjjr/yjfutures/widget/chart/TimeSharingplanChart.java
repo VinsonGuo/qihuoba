@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
@@ -16,7 +17,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -47,7 +47,8 @@ public class TimeSharingplanChart extends RelativeLayout {
      */
     public static final int TYPE_DASHED = 1;
 
-    public static final int FULL_SCREEN_SHOW_COUNT = 200;
+    public static final int FULL_SCREEN_SHOW_COUNT = 160;
+    public static final int PADDING_COUNT = 30;
     public static final int DATA_SET_PRICE = 0;
     public static final int DATA_SET_PADDING = 1;
     private List<HisData> mList = new ArrayList<>();
@@ -61,6 +62,11 @@ public class TimeSharingplanChart extends RelativeLayout {
      * 是否处于闲置状态
      */
     private boolean isIdle = true;
+
+    /**
+     * 上一次的价格
+     */
+    private float mLastPrice;
 
     private Quote mQuote;
 
@@ -98,7 +104,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.view_mp_line_chart, this);
         mChart = (AppLineChart) findViewById(R.id.line_chart);
         mInfoView = (LineChartInfoView) findViewById(R.id.info);
-        setupSettingParameter();
+        mInfoView.setLineChart(mChart);
     }
 
     public void addEntries(List<HisData> list) {
@@ -124,18 +130,18 @@ public class TimeSharingplanChart extends RelativeLayout {
         }
 
         int size;
-        if (mList.size() < FULL_SCREEN_SHOW_COUNT - 20) {//小于最大的个数，补充个数与最大的相同
+        if (mList.size() < FULL_SCREEN_SHOW_COUNT - PADDING_COUNT) {//小于最大的个数，补充个数与最大的相同
             size = FULL_SCREEN_SHOW_COUNT;
         } else { // 大于最大个数，向后面添加20个
-            size = mList.size() + 20;
+            size = mList.size() + PADDING_COUNT;
         }
 
         for (int i = mList.size(); i < size; i++) {
             data.addEntry(new Entry(i, (float) mList.get(mList.size() - 1).getClose()), DATA_SET_PADDING);
         }
 
-        Highlight chartHighlighter = new Highlight(setSell.getEntryCount() - 1, (float) list.get(setSell.getEntryCount() - 1).getClose(), DATA_SET_PRICE);
-        mChart.highlightValue(chartHighlighter);
+//        Highlight chartHighlighter = new Highlight(setSell.getEntryCount() - 1, (float) list.get(setSell.getEntryCount() - 1).getClose(), DATA_SET_PRICE);
+//        mChart.highlightValue(chartHighlighter);
         mChart.notifyDataSetChanged();
         mChart.setVisibleXRange(FULL_SCREEN_SHOW_COUNT, 50);
 
@@ -153,9 +159,10 @@ public class TimeSharingplanChart extends RelativeLayout {
      * @param bid 价格
      */
     public void refreshEntry(float bid) {
-        if (bid <= 0) {
+        if (bid <= 0 || bid == mLastPrice) {
             return;
         }
+//        mLastPrice = bid;
         LineData data = mChart.getData();
 
         if (data != null) {
@@ -166,13 +173,28 @@ public class TimeSharingplanChart extends RelativeLayout {
             }
 
             data.removeEntry(setSell.getEntryCount(), DATA_SET_PRICE);
-            data.addEntry(new Entry(setSell.getEntryCount(), bid), DATA_SET_PRICE);
+            Entry entry = new Entry(setSell.getEntryCount(), bid);
+            data.addEntry(entry, DATA_SET_PRICE);
 
-            if (isIdle) {
-                Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_PRICE).getEntryCount() - 1, bid, DATA_SET_PRICE);
-                mChart.highlightValue(chartHighlighter);
+             ILineDataSet paddingSet = data.getDataSetByIndex(DATA_SET_PADDING);
+            if (paddingSet == null) {
+                paddingSet = createSet(TYPE_DASHED);
+                data.addDataSet(paddingSet);
             }
+
+            int count = paddingSet.getEntryCount();
+           paddingSet.clear();
+            for (int i = 0; i < count; i++) {
+                paddingSet.addEntry(new Entry(setSell.getEntryCount() + i, bid));
+            }
+
+
+//            if (isIdle) {
+//                Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_PRICE).getEntryCount() - 1, bid, DATA_SET_PRICE);
+//                mChart.highlightValue(chartHighlighter);
+//            }
             mChart.notifyDataSetChanged();
+
 
         }
     }
@@ -206,11 +228,15 @@ public class TimeSharingplanChart extends RelativeLayout {
                 paddingSet = createSet(TYPE_DASHED);
                 data.addDataSet(paddingSet);
             }
-            data.addEntry(new Entry(setSell.getEntryCount() + paddingSet.getEntryCount(), price), DATA_SET_PADDING);
-            data.removeEntry(0, DATA_SET_PADDING);
 
-            Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_PRICE).getEntryCount() - 1, price, DATA_SET_PRICE);
-            mChart.highlightValue(chartHighlighter);
+            int count = paddingSet.getEntryCount();
+            paddingSet.clear();
+            for (int i = 0; i < count; i++) {
+                paddingSet.addEntry(new Entry(setSell.getEntryCount() + i, price));
+            }
+
+//            Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_PRICE).getEntryCount() - 1, price, DATA_SET_PRICE);
+//            mChart.highlightValue(chartHighlighter);
             mChart.notifyDataSetChanged();
 
         }
@@ -234,7 +260,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         } else {
             set.setHighlightEnabled(false);
             set.setVisible(false);
-            set.setColor(mTextColor);
+            set.setColor(mLineColor);
             set.enableDashedLine(5, 10, 0);
             set.setDrawCircleHole(false);
             set.setCircleColor(transparentColor);
@@ -261,8 +287,10 @@ public class TimeSharingplanChart extends RelativeLayout {
         mChart.setScaleYEnabled(false);
         mChart.setAutoScaleMinMaxEnabled(true);
 
+        LineChartYMarkerView mv = new LineChartYMarkerView(mContext, mQuote.getTick());
+        mv.setChartView(mChart);
+        mChart.setMarker(mv);
         mChart.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mList, mInfoView));
-
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -314,7 +342,10 @@ public class TimeSharingplanChart extends RelativeLayout {
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return StringUtils.getStringByDigits(value, StringUtils.getDigitByTick(mQuote.getTick()) + 1);
+                if (mQuote == null) {
+                    return value + "";
+                }
+                return StringUtils.getStringByTick(value, mQuote.getTick());
             }
         });
         Legend legend = mChart.getLegend();
@@ -342,9 +373,7 @@ public class TimeSharingplanChart extends RelativeLayout {
 
     public void setQuote(Quote quote) {
         mQuote = quote;
-        LineChartYMarkerView mv = new LineChartYMarkerView(mContext, quote.getTick());
-        mv.setChartView(mChart);
-        mChart.setMarker(mv);
+        setupSettingParameter();
     }
 
     /**

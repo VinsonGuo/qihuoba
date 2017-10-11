@@ -59,7 +59,7 @@ public class AlterLoginPwdActivity2 extends BaseActivity {
         EditText etPassword = riPwd.getEtInput();
         if (type == AlterLoginPwdActivity.TYPE_TRADE_PWD) {
             headerView.setMainTitle(R.string.alter_trade_password);
-            riPwd.setName("输入密码");
+            riPwd.setName("新密码");
             etPassword.setHint("请输入新交易密码");
             etPassword.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         } else {

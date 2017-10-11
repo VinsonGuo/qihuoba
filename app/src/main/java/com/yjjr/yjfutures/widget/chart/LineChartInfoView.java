@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.utils.DateUtils;
@@ -26,10 +27,14 @@ public class LineChartInfoView extends LinearLayout {
     private TextView mTvChangeRate;
     private TextView mTvVol;
     private TextView mTvTime;
+    private LineChart mLineChart;
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             setVisibility(GONE);
+            if (mLineChart != null) {
+                mLineChart.highlightValue(null);
+            }
         }
     };
 
@@ -50,12 +55,17 @@ public class LineChartInfoView extends LinearLayout {
         mTvVol = (TextView) findViewById(R.id.tv_vol);
     }
 
-    public void setData(double open, HisData data) {
+    public void setData(double lastClose, HisData data) {
         mTvTime.setText(DateUtils.formatData(new DateTime(data.getsDate()).getMillis()));
         mTvPrice.setText(DoubleUtil.formatDecimal(data.getClose()));
-        mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose() - data.getOpen()) / data.getOpen() * 100));
+//        mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose()- data.getOpen()) / data.getOpen() * 100));
+        mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose()- lastClose) / lastClose * 100));
         mTvVol.setText(data.getVol() + "");
         removeCallbacks(mRunnable);
         postDelayed(mRunnable, 2000);
+    }
+
+    public void setLineChart(LineChart lineChart) {
+        mLineChart = lineChart;
     }
 }

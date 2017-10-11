@@ -173,7 +173,7 @@ public class CandleStickChartFragment extends BaseFragment {
         rightAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return StringUtils.getStringByDigits(value, StringUtils.getDigitByTick(quote.getTick()) + 1);
+                return StringUtils.getStringByTick(value, quote.getTick());
             }
         });
 //        rightAxis.setDrawAxisLine(false);
@@ -271,42 +271,19 @@ public class CandleStickChartFragment extends BaseFragment {
             }
         } else {
             dateTime = DateUtils.nowDateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+            // 如果现在的时间在六点之前，减少一天
+            if (DateUtils.nowDateTime().isBefore(dateTime)) {
+                dateTime.minusDays(1);
+            }
         }
         if (DAY.equals(type)) {
             dateTime = dateTime.minusYears(1);
         } else if (MIN15.equals(type) || MIN5.equals(type)) {
 //            dateTime = dateTime.minusWeeks(1);
-            dateTime = dateTime.minusDays(1);
+            dateTime = dateTime.minusDays(4);
         } else if (HOUR.equals(type)) {
             dateTime = dateTime.minusMonths(1);
         }
-//        HttpManager.getHttpService().getHistoryData(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)
-      /*  HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType))
-                .map(new Function<List<HisData>, List<HisData>>() {
-                    @Override
-                    public List<HisData> apply(@NonNull List<HisData> hisDatas) throws Exception {
-                        if (hisDatas == null || hisDatas.isEmpty()) {
-                            throw new RuntimeException("数据为空");
-                        }
-                        return hisDatas;
-                    }
-                })
-                .compose(RxUtils.<List<HisData>>applySchedulers())
-                .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<List<HisData>>() {
-                    @Override
-                    public void accept(@NonNull List<HisData> list) throws Exception {
-                        mList.clear();
-                        mList.addAll(list);
-                        fullData(list);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
-                        mChart.setNoDataText(getString(R.string.data_load_fail));
-                    }
-                });*/
         if (SocketUtils.getSocket() == null) {
             mChart.setNoDataText(getString(R.string.data_load_fail));
             return;

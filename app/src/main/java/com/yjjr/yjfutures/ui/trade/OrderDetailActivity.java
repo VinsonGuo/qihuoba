@@ -9,8 +9,6 @@ import android.widget.TextView;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.model.CloseOrder;
-import com.yjjr.yjfutures.model.Quote;
-import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
@@ -56,7 +54,6 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     private void fillViews(CloseOrder order) {
-        Quote quote = StaticStore.getQuote(order.getSymbol(), false);
         headerView.bindActivity(mContext);
         if (TextUtils.equals(order.getOpenBuySell(), "买入")) {
             tvDirection.setText("看涨");
@@ -72,8 +69,8 @@ public class OrderDetailActivity extends BaseActivity {
         tvProfitDollar.setText(StringUtils.getCurrencySymbol(order.getCurrency().trim()) + DoubleUtil.format2Decimal(order.getRealizedPL()) + String.format("(汇率%s)", DoubleUtil.formatDecimal(order.getExchangeRate())));
         tvTradeSymbol.setText(order.getSymbol());
         tvTradeNum.setText(Math.abs(order.getQty()) + "手");
-        tvBuyPrice.setText(StringUtils.getStringByTick(order.getOpenPrice(), quote.getTick()));
-        tvSellPrice.setText(StringUtils.getStringByTick(order.getClosePrice(), quote.getTick()));
+        tvBuyPrice.setText(order.getOpenPrice() + "");
+        tvSellPrice.setText(order.getClosePrice() + "");
         tvBuyTime.setText(DateUtils.formatData(order.getOpenDate()));
         tvSellTime.setText(DateUtils.formatData(order.getCloseDate()));
 //        tvTicket.setText(order.getFilledID());

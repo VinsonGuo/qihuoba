@@ -41,7 +41,6 @@ public class TimeSharingplanFragment extends BaseFragment {
 
     private TimeSharingplanChart mChart;
     private String mSymbol;
-    //    private List<HisData> mDatas = new ArrayList<>(100);
     private Quote mQuote;
     private boolean mIsDemo;
     private Gson mGson = new Gson();
@@ -90,34 +89,12 @@ public class TimeSharingplanFragment extends BaseFragment {
             }
         } else {
             dateTime = DateUtils.nowDateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+            // 如果现在的时间在六点之前，减少一天
+            if (DateUtils.nowDateTime().isBefore(dateTime)) {
+                dateTime.minusDays(1);
+            }
         }
-//        HttpManager.getHttpService().getFsData(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()))
-       /* HttpManager.getHttpService().getHistoryData(HttpConfig.KLINE_URL, new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()), "min"))
-                .map(new Function<List<HisData>, List<HisData>>() {
-                    @Override
-                    public List<HisData> apply(@NonNull List<HisData> hisDatas) throws Exception {
-                        if (hisDatas == null || hisDatas.isEmpty()) {
-                            throw new RuntimeException("数据为空");
-                        }
-                        return hisDatas;
-                    }
-                })
-                .compose(RxUtils.<List<HisData>>applySchedulers())
-                .compose(this.<List<HisData>>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<List<HisData>>() {
-                    @Override
-                    public void accept(@NonNull List<HisData> list) throws Exception {
-                        mDatas.clear();
-                        mDatas.addAll(list);
-                        mChart.addEntries(list);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        LogUtils.e(throwable);
-                        mChart.setNoDataText(getString(R.string.data_load_fail));
-                    }
-                });*/
+
         if (SocketUtils.getSocket() == null) {
             mChart.setNoDataText(getString(R.string.data_load_fail));
             return;

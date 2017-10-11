@@ -61,7 +61,7 @@ public class AlterLoginPwdActivity extends BaseActivity {
         EditText etPassword = riPwd.getEtInput();
         if (mType == TYPE_TRADE_PWD) {
             headerView.setMainTitle(R.string.alter_trade_password);
-            riPwd.setName("输入密码");
+            riPwd.setName("旧密码");
             etPassword.setHint("请输入原交易密码");
             etPassword.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         } else {
@@ -90,10 +90,6 @@ public class AlterLoginPwdActivity extends BaseActivity {
                         // 交易密码必须为6位
                         if (riPwd.getValue().length() != 6) {
                             ToastUtils.show(mContext, "交易密码必须为6位");
-                            return;
-                        }
-                        if (StringUtils.isInValidTradePwd(riPwd.getValue())) {
-                            ToastUtils.show(mContext, R.string.trade_pwd_wrong);
                             return;
                         }
                         HttpManager.getBizService().validPayPwd(UserSharePrefernce.getAccount(mContext), riPwd.getValue())

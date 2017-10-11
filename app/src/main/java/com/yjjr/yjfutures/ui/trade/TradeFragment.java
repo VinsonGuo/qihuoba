@@ -57,6 +57,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -381,6 +382,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     public void accept(@NonNull List<Holds> holdses) throws Exception {
                         mHoldsList = holdses;
                         if (!holdses.isEmpty()) {
+                            if (mIsDemo) {
+                                StaticStore.sDemoHoldSet = new HashSet<>();
+                            } else {
+                                StaticStore.sHoldSet = new HashSet<>();
+                            }
                             Holds holding = holdses.get(0);
                             // 总手数
                             int sumQty = 0;
@@ -389,6 +395,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             for (Holds h : holdses) {
                                 sumQty += Math.abs(h.getQty());
                                 sumUnrealizedPL += h.getUnrealizedPL();
+
+                                if (mIsDemo) {
+                                    StaticStore.sDemoHoldSet.add(h.getSymbol());
+                                } else {
+                                    StaticStore.sHoldSet.add(h.getSymbol());
+                                }
                             }
                             vgSettlement.setVisibility(View.GONE);
                             vgOrder.setVisibility(View.VISIBLE);

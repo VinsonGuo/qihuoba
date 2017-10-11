@@ -87,7 +87,9 @@ public class BaseApplication extends Application implements Application.Activity
         }
         EMOptions options = new EMOptions();
         options.setAutoLogin(false);
+        options.setAppKey(BuildConfig.DEBUG ? "1172170907115694#qihuodev" : "1172170907115694#qihuo");
         options.setMipushConfig("2882303761517603946", "5871760360946");
+//        options.setHuaweiPushAppId("100059489");
 //初始化
         EMClient.getInstance().init(this, options);
 //在做打包混淆时，关闭debug模式，避免消耗不必要的资源

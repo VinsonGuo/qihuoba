@@ -75,7 +75,9 @@ public class GuideFragment extends BaseFragment implements View.OnClickListener 
         if (BaseApplication.getInstance().isLogin()) {
             MainActivity.startActivity(mContext);
         } else {
-            LoginActivity.startActivity(mContext);
+            //入口改成注册
+//            LoginActivity.startActivity(mContext);
+            RegisterActivity.startActivity(mContext);
         }
         getActivity().finish();
     }

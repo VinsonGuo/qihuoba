@@ -16,15 +16,16 @@
         android:layout_height="60dp"
         android:paddingLeft="20dp"
         android:paddingRight="35dp"
-        android:src="@drawable/drawable_header_back1"/>
+        android:src="@drawable/drawable_header_back1"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:gravity="center"
-        android:text="@string/register_by_phone"
+        android:text="@string/quick_register"
         android:textColor="@color/main_text_color"
         android:textSize="30sp"/>
 
@@ -43,8 +44,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/root_padding_15"
         android:layout_marginRight="@dimen/root_padding_15"
-        app:hint="请输入短信验证码"
         app:button_text="@string/get_confirm_code"
+        app:hint="请输入短信验证码"
         app:name="@string/activation_code"
         />
 
@@ -71,25 +72,11 @@
         android:textSize="@dimen/common_btn_text_size"/>
 
 
-    <TextView
-        android:id="@+id/tv_info"
-        android:gravity="center"
-        android:layout_marginTop="@dimen/root_padding_15"
-        android:textSize="@dimen/sp_12"
-        android:layout_width="match_parent"
-        tools:text="info"
-        android:textColor="@color/main_text_color"
-        android:layout_height="wrap_content"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_marginTop="@dimen/dp_10"
+        android:gravity="center_vertical">
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/cb_check"
@@ -108,8 +95,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="-15dp"
-            android:text="《平台服务协议》"
+            android:text="《用户服务协议》"
             android:textColor="@color/main_color"
-            android:textSize="@dimen/sp_12"/>
+            android:textSize="@dimen/sp_14"/>
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/root_padding_15"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:text="@string/contact_customer_server"
+            android:textColor="@color/main_color"
+            android:textSize="@dimen/sp_14"/>
     </LinearLayout>
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:text="我有账号，直接登录"
+        android:textColor="@color/third_text_color"
+        android:textSize="@dimen/text_size_15sp"/>
 </LinearLayout>

@@ -2,12 +2,12 @@ package com.yjjr.yjfutures.widget.chart;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
@@ -162,7 +162,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         if (bid <= 0 || bid == mLastPrice) {
             return;
         }
-//        mLastPrice = bid;
+        mLastPrice = bid;
         LineData data = mChart.getData();
 
         if (data != null) {
@@ -176,14 +176,14 @@ public class TimeSharingplanChart extends RelativeLayout {
             Entry entry = new Entry(setSell.getEntryCount(), bid);
             data.addEntry(entry, DATA_SET_PRICE);
 
-             ILineDataSet paddingSet = data.getDataSetByIndex(DATA_SET_PADDING);
+            ILineDataSet paddingSet = data.getDataSetByIndex(DATA_SET_PADDING);
             if (paddingSet == null) {
                 paddingSet = createSet(TYPE_DASHED);
                 data.addDataSet(paddingSet);
             }
 
             int count = paddingSet.getEntryCount();
-           paddingSet.clear();
+            paddingSet.clear();
             for (int i = 0; i < count; i++) {
                 paddingSet.addEntry(new Entry(setSell.getEntryCount() + i, bid));
             }
@@ -193,7 +193,7 @@ public class TimeSharingplanChart extends RelativeLayout {
 //                Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_PRICE).getEntryCount() - 1, bid, DATA_SET_PRICE);
 //                mChart.highlightValue(chartHighlighter);
 //            }
-            mChart.notifyDataSetChanged();
+            mChart.invalidate();
 
 
         }
@@ -230,6 +230,10 @@ public class TimeSharingplanChart extends RelativeLayout {
             }
 
             int count = paddingSet.getEntryCount();
+            // 如果count大于规定的值，将count减少1，从而让实线向前走
+            if (count > PADDING_COUNT && index < 0) {
+                count--;
+            }
             paddingSet.clear();
             for (int i = 0; i < count; i++) {
                 paddingSet.addEntry(new Entry(setSell.getEntryCount() + i, price));
@@ -251,7 +255,7 @@ public class TimeSharingplanChart extends RelativeLayout {
 //            set.setDrawVerticalHighlightIndicator(false);
             set.setHighlightLineWidth(0.5f);
             set.setCircleColor(mLineColor);
-            set.setCircleRadius(2);
+            set.setCircleRadius(1.5f);
             set.setDrawCircleHole(false);
             set.setDrawFilled(true);
             set.setColor(mLineColor);
@@ -259,9 +263,9 @@ public class TimeSharingplanChart extends RelativeLayout {
             set.setFillDrawable(ContextCompat.getDrawable(mContext, R.drawable.bg_chart_fade));
         } else {
             set.setHighlightEnabled(false);
-            set.setVisible(false);
+            set.setVisible(true);
             set.setColor(mLineColor);
-            set.enableDashedLine(5, 10, 0);
+            set.enableDashedLine(3, 40, 0);
             set.setDrawCircleHole(false);
             set.setCircleColor(transparentColor);
         }

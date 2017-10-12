@@ -47,7 +47,7 @@ import retrofit2.http.Query;
 public interface BizService {
     @FormUrlEncoded
     @POST("user/login")
-    Observable<BizResponse<UserInfo>> login(@Field("account") String account, @Field("password") String password);
+    Observable<BizResponse<UserInfo>> login(@Field("account") String account, @Field("password") String password, @Field("versionType") String versionType);
 
     @FormUrlEncoded
     @POST("user/bindAlipay")
@@ -123,7 +123,7 @@ public interface BizService {
      */
     @FormUrlEncoded
     @POST("user/register")
-    Observable<BizResponse> register(@Field("account") String account, @Field("password") String password, @Field("code") String code);
+    Observable<BizResponse> register(@Field("account") String account, @Field("password") String password, @Field("code") String code, @Field("versionType") String versionType);
 
     @POST("user/queryAssetRecord/{start}/{count}")
     Observable<BizResponse<PageResponse<AssetRecord>>> getAssetRecord(@Path("start") int start, @Path("count") int count);

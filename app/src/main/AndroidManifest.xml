@@ -114,7 +114,7 @@
         <!--华为-->
         <meta-data
             android:name="com.huawei.hms.client.appid"
-            android:value="100059489" />
+            android:value="100059489"/>
         <!--华为推送广播接收器，可以直接使用环信 sdk 封装好的，也可以继承自环信重写，如果继承自环信，实现 onToken 方法时必须要调用 super 方法-->
         <receiver android:name="com.hyphenate.chat.EMHWPushReceiver">
             <intent-filter>
@@ -211,6 +211,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.mine.LoginActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -247,6 +248,7 @@
         </activity>
         <activity
             android:name=".ui.mine.RegisterActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
         <activity

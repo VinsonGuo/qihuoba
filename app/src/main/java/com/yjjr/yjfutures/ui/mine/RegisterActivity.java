@@ -27,10 +27,10 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.MainActivity;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SmsCountDownTimer;
-import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -88,7 +88,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         RegisterInput riPassword = (RegisterInput) findViewById(R.id.ri_password);
         mBtnConfirm = (Button) findViewById(R.id.btn_confirm);
         TextView tvInfo = (TextView) findViewById(R.id.tv_info);
-        tvInfo.setText(TextUtils.concat("如收不到验证码，请拨打", SpannableUtil.getStringByColor(mContext, "客服热线", R.color.main_color), "索取"));
+//        tvInfo.setText(TextUtils.concat("如收不到验证码，请拨打", SpannableUtil.getStringByColor(mContext, "客服热线", R.color.main_color), "索取"));
         tvInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,6 +121,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
         });
         findViewById(R.id.iv_back).setOnClickListener(this);
+        findViewById(R.id.tv_login).setOnClickListener(this);
         mOperaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,6 +161,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_agreement:
                 WebActivity.startActivity(mContext, HttpConfig.URL_HELP);
                 break;
+            case R.id.tv_login:
+//                finish();
+                LoginActivity.startActivity(mContext);
+                break;
         }
     }
 
@@ -168,7 +173,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             mBtnConfirm.setSelected(false);
             final String account = mEtPhone.getText().toString();
             final String password = mEtPassword.getText().toString();
-            HttpManager.getBizService().register(account, password, mEtSmsCode.getText().toString())
+            HttpManager.getBizService().register(account, password, mEtSmsCode.getText().toString(), ActivityTools.getDeviceAndVerson())
                     .compose(RxUtils.applyBizSchedulers())
                     .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
                     .subscribe(new Consumer<BizResponse>() {

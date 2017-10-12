@@ -280,7 +280,7 @@ public class CandleStickChartFragment extends BaseFragment {
             dateTime = dateTime.minusYears(1);
         } else if (MIN15.equals(type) || MIN5.equals(type)) {
 //            dateTime = dateTime.minusWeeks(1);
-            dateTime = dateTime.minusDays(4);
+            dateTime = dateTime.minusDays(2);
         } else if (HOUR.equals(type)) {
             dateTime = dateTime.minusMonths(1);
         }
@@ -315,6 +315,8 @@ public class CandleStickChartFragment extends BaseFragment {
             mChart.setNoDataText(getString(R.string.data_is_null));
             return;
         }
+        mChart.resetTracking();
+        mChart.resetZoom();
 
         //调整x轴第一个和最后一个的位置，否则会显示不完整
         mChart.getXAxis().setAxisMinimum(-0.5f);
@@ -366,7 +368,8 @@ public class CandleStickChartFragment extends BaseFragment {
         ViewPortHandler port = mChart.getViewPortHandler();
         mChart.setViewPortOffsets(0, port.offsetTop(), port.offsetRight(), port.offsetBottom());
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
-        mChart.zoom(0.1f, 0.1f, 0.1f, 0.1f);
+//        mChart.zoom(0.1f, 0.1f, 0.1f, 0.1f);
+        mChart.invalidate();
     }
 
     @Override

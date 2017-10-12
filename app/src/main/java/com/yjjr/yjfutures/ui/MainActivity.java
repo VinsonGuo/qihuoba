@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
@@ -106,9 +105,12 @@ public class MainActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(CSUnreadEvent event) {
         AlphaTabView tabView = mBottomBar.getTabView(2);
-        if(event.getCount() == 0){
-            tabView.removeShow();
-        }else {
+        if (event.getCount() == 0) {
+            UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+            if (userInfo == null || !userInfo.isExistUnreadNotice()) {
+                tabView.removeShow();
+            }
+        } else {
             tabView.showPoint();
         }
     }
@@ -166,7 +168,7 @@ public class MainActivity extends BaseActivity {
                             }
                         }, RxUtils.commonErrorConsumer());
             }
-        }, 0, 1000);
+        }, 1000, 1000);
     }
 
     @Override
@@ -186,7 +188,7 @@ public class MainActivity extends BaseActivity {
     public void onEvent(UpdateUserInfoEvent event) {
         final String account = UserSharePrefernce.getAccount(mContext);
         final String password = UserSharePrefernce.getPassword(mContext);
-        HttpManager.getBizService().login(account, password)
+        HttpManager.getBizService().login(account, password, ActivityTools.getDeviceAndVerson())
                 .compose(RxUtils.<BizResponse<UserInfo>>applyBizSchedulers())
                 .compose(this.<BizResponse<UserInfo>>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<UserInfo>>() {

@@ -42,7 +42,6 @@ import io.reactivex.functions.Function;
 
 public class LoginActivity extends BaseActivity {
 
-    public static final int REQUEST_REGISTER = 10;
     private EditText etUsername;
     private EditText etPassword;
     private Button btnLogin;
@@ -124,7 +123,7 @@ public class LoginActivity extends BaseActivity {
 //        LastInputSharePrefernce.setLastAccount(mContext, account);
         final String password = etPassword.getText().toString().trim();
 //        final String password = StringUtils.encodePassword(etPassword.getText().toString().trim());
-        HttpManager.getBizService().login(account, password)
+        HttpManager.getBizService().login(account, password, ActivityTools.getDeviceAndVerson())
                 .flatMap(new Function<BizResponse<UserInfo>, ObservableSource<UserLoginResponse>>() {
                     @Override
                     public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {
@@ -166,24 +165,13 @@ public class LoginActivity extends BaseActivity {
                         mLoginDialog.dismiss();
                         LogUtils.e(throwable);
                         btnLogin.setSelected(true);
-                        if(throwable instanceof UserNotExistException) {
+                        if (throwable instanceof UserNotExistException) {
                             DialogUtils.createToRegisterDialog(mContext, account).show();
-                        }else {
+                        } else {
                             ToastUtils.show(mContext, throwable.getMessage());
                         }
                     }
                 });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_REGISTER && resultCode == RESULT_OK) {
-//            long account = LastInputSharePrefernce.getLastAccount(mContext);
-//            etUsername.setText(account == 0 ? null : String.valueOf(account));
-//            etUsername.setSelection(etUsername.getText().length());
-//            etPassword.setText(null);
-        }
     }
 
 }

@@ -170,7 +170,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         if (TextUtils.isEmpty(BaseApplication.getInstance().getTradeToken())) {
             final String account = UserSharePrefernce.getAccount(mContext);
             final String password = UserSharePrefernce.getPassword(mContext);
-            HttpManager.getBizService().login(account, password)
+            HttpManager.getBizService().login(account, password, ActivityTools.getDeviceAndVerson())
                     .flatMap(new Function<BizResponse<UserInfo>, ObservableSource<UserLoginResponse>>() {
                         @Override
                         public ObservableSource<UserLoginResponse> apply(@NonNull BizResponse<UserInfo> loginBizResponse) throws Exception {

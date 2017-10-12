@@ -21,6 +21,7 @@ import com.yjjr.yjfutures.model.biz.Info;
 import com.yjjr.yjfutures.model.biz.NumberResult;
 import com.yjjr.yjfutures.ui.mine.GuideActivity;
 import com.yjjr.yjfutures.ui.mine.LoginActivity;
+import com.yjjr.yjfutures.ui.mine.RegisterActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SystemBarHelper;
@@ -155,7 +156,9 @@ public class SplashScreen extends BaseActivity {
             if (BaseApplication.getInstance().isLogin()) {
                 MainActivity.startActivity(mContext);
             } else {
-                LoginActivity.startActivity(mContext);
+                //入口改成注册
+//                LoginActivity.startActivity(mContext);
+                RegisterActivity.startActivity(mContext);
             }
         }
         finishDelay();

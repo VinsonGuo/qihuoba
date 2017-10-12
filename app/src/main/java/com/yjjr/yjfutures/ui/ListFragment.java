@@ -102,6 +102,7 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     @Override
     public void onRefresh() {
         mPage = 1;
+        mAdapter.loadMoreComplete();
         loadData();
     }
 

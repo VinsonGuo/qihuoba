@@ -5,13 +5,10 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Handler;
-import android.support.annotation.RawRes;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.WindowManager;
 
 import com.yjjr.yjfutures.BuildConfig;
@@ -26,20 +23,12 @@ import com.yjjr.yjfutures.ui.mine.SetTradePwdActivity;
 import com.yjjr.yjfutures.ui.mine.UserInfoActivity;
 import com.yjjr.yjfutures.ui.mine.WithdrawActivity;
 import com.yjjr.yjfutures.ui.trade.DepositActivity;
-import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.URL;
 import java.util.Enumeration;
 
 import retrofit2.Call;
@@ -50,35 +39,6 @@ import retrofit2.Call;
  */
 public class ActivityTools {
 
-    private static MediaPlayer mMediaPlayer;
-    /**
-     * 打开后60s不提示声音
-     */
-    private static boolean is60Second = false;
-
-
-   /* public static void playSound(Context context, @RawRes int res) {
-        try {
-            if (SettingSharePrefernce.isTraderSound(context)) {
-                MediaPlayer.create(context, res).start();
-                AudioPlayer player = new AudioPlayer();
-                player.play(context, res);
-//                int id = soundPool.load(context, res, 1);
-//                soundPool.play(id, 1, 1, 0, 5, 1);
-            }
-        } catch (Exception e) {
-            LogUtils.e(e);
-        }
-    }*/
-
-    static {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                is60Second = true;
-            }
-        }, 60 * 1000);
-    }
 
     public static void setFullscreen(Activity a, boolean fullscreen) {
         WindowManager.LayoutParams attrs = a.getWindow().getAttributes();
@@ -111,27 +71,6 @@ public class ActivityTools {
             }
         }
         return null;
-    }
-
-    private static void stop() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
-    }
-
-    public static void playSound(Context c, @RawRes int rid) {
-        stop();
-        if (c == null || !is60Second) return;
-        mMediaPlayer = MediaPlayer.create(c, rid);
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                stop();
-            }
-        });
-
-        mMediaPlayer.start();
     }
 
 
@@ -242,5 +181,9 @@ public class ActivityTools {
 
     public static boolean isNeedShowGuide(Context context) {
         return BuildConfig.VERSION_CODE > ConfigSharePrefernce.getVersionCode(context);
+    }
+
+    public static String getDeviceAndVerson() {
+        return Build.MODEL + "," + BuildConfig.VERSION_NAME;
     }
 }

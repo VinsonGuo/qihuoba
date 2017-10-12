@@ -2,7 +2,6 @@ package com.yjjr.yjfutures.widget.chart;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.data.Entry;
@@ -90,13 +89,13 @@ public class AppLineChartRenderer extends LineChartRenderer {
 
             mXBounds.set(mChart, dataSet);
 
-            float circleRadius = dataSet.getCircleRadius()*2.0f;
-            float circleHoleRadius = dataSet.getCircleHoleRadius()*2.0f;
+            float circleRadius = dataSet.getCircleRadius() * 2.0f;
+            float circleHoleRadius = dataSet.getCircleHoleRadius() * 2.0f;
             boolean drawCircleHole = dataSet.isDrawCircleHoleEnabled() &&
                     circleHoleRadius < circleRadius &&
                     circleHoleRadius > 0.f;
 
-            Entry e = dataSet.getEntryForIndex(dataSet.getEntryCount()-1);
+            Entry e = dataSet.getEntryForIndex(dataSet.getEntryCount() - 1);
 
             if (e == null) return;
 

@@ -1353,4 +1353,5 @@
     <string name="socket_connect_error">连接行情失败</string>
     <string name="socket_connect_success">行情连接成功</string>
     <string name="socket_connect_disconnect">行情连接断开</string>
+    <string name="quick_register">快速注册</string>
 </resources>

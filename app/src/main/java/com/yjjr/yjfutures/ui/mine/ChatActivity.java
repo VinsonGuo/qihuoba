@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -171,7 +172,32 @@ public class ChatActivity extends TakePhotoActivity implements
         initInput();
         initAdapter();
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
-        loadMessages();
+        if (EMClient.getInstance().isLoggedInBefore()) {
+            loadMessages();
+        } else {
+            login();
+        }
+    }
+
+    private void login() {
+        final UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+        if (TextUtils.isEmpty(userInfo.getEmchatAccount()) || TextUtils.isEmpty(userInfo.getEmchatPwd())) {
+            return;
+        }
+        EMClient.getInstance().login(userInfo.getEmchatAccount(), userInfo.getEmchatPwd(), new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                loadMessages();
+            }
+
+            @Override
+            public void onError(int code, String error) {
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+            }
+        });
     }
 
     private void initInput() {

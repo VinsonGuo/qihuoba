@@ -71,12 +71,12 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     protected abstract void loadData();
 
     protected void loadDataFinish() {
-        if(mPage == 1) {
+        mAdapter.loadMoreComplete();
+        if (mPage == 1) {
             mAdapter.getData().clear();
         }
         mLoadView.setVisibility(View.GONE);
         mRefreshLayout.setRefreshing(false);
-        mAdapter.loadMoreComplete();
     }
 
     protected void loadFailed() {
@@ -102,7 +102,6 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
     @Override
     public void onRefresh() {
         mPage = 1;
-        mAdapter.loadMoreComplete();
         loadData();
     }
 

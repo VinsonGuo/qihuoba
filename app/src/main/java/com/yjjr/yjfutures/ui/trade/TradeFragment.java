@@ -57,7 +57,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -223,11 +222,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         menuItems.add(new MenuItem(R.drawable.transport, "1小时"));
         menuItems.add(new MenuItem(R.drawable.transport, "日线"));
         mTopRightMenu
-                .setWidth(DisplayUtils.dip2px(mContext, 100))      //默认宽度wrap_content
+                .setWidth(DisplayUtils.getWidthHeight(mContext)[0] / 3)      //默认宽度wrap_content
                 .setHeight(DisplayUtils.dip2px(mContext, 30 * menuItems.size()))
                 .showIcon(false)     //显示菜单图标，默认为true
-                .dimBackground(true)        //背景变暗，默认为true
-                .needAnimationStyle(true)   //显示动画，默认为true
+                .dimBackground(false)        //背景变暗，默认为true
+                .needAnimationStyle(false)   //显示动画，默认为true
                 .addMenuList(menuItems)
                 .setOnMenuItemClickListener(new TopRightMenu.OnMenuItemClickListener() {
                     @Override
@@ -257,10 +256,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                                 break;
                         }
                         mCandleStickChartFragment.loadDataByType(type);
-//                        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, type);
-////                        mKLineAdapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager(), mFragments);
-//                        mViewpager.setAdapter(mKLineAdapter);
-//                        mViewpager.setCurrentItem(2, false);
                     }
                 });
         tvCenter.setText(FastOrderSharePrefernce.getFastTakeOrder(mContext, mSymbol) != null ? R.string.opened : R.string.closed);
@@ -382,11 +377,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     public void accept(@NonNull List<Holds> holdses) throws Exception {
                         mHoldsList = holdses;
                         if (!holdses.isEmpty()) {
-                            if (mIsDemo) {
-                                StaticStore.sDemoHoldSet = new HashSet<>();
-                            } else {
-                                StaticStore.sHoldSet = new HashSet<>();
-                            }
                             Holds holding = holdses.get(0);
                             // 总手数
                             int sumQty = 0;
@@ -395,12 +385,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             for (Holds h : holdses) {
                                 sumQty += Math.abs(h.getQty());
                                 sumUnrealizedPL += h.getUnrealizedPL();
-
-                                if (mIsDemo) {
-                                    StaticStore.sDemoHoldSet.add(h.getSymbol());
-                                } else {
-                                    StaticStore.sHoldSet.add(h.getSymbol());
-                                }
                             }
                             vgSettlement.setVisibility(View.GONE);
                             vgOrder.setVisibility(View.VISIBLE);
@@ -540,7 +524,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 }
                 break;
             case R.id.tv_kchart:
-                mTopRightMenu.showAsDropDown(mTvKchart, 0, DisplayUtils.dip2px(mContext, 10));
+                mTopRightMenu.showAsDropDown(mTvKchart, 0, 0);
                 break;
             case R.id.tv_fullscreen:
                 FullScreenChartActivity.startActivity(mContext, mSymbol, mIsDemo);

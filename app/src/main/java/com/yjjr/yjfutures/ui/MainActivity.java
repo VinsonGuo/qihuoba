@@ -137,25 +137,6 @@ public class MainActivity extends BaseActivity {
                     return;
                 }
                 EventBus.getDefault().post(new PollRefreshEvent());
-               /* HttpManager.getHttpService().getQuoteList(StaticStore.sSymbols, StaticStore.sExchange)
-                        .map(new Function<List<Quote>, List<Quote>>() {
-                            @Override
-                            public List<Quote> apply(@NonNull List<Quote> quotes) throws Exception {
-                                for (Quote quote : quotes) {
-                                    //设置一下商品是否持仓
-                                    quote.setHolding(StaticStore.sHoldSet.contains(quote.getSymbol()));
-                                    StaticStore.putQuote(quote, false);
-                                }
-                                return quotes;
-                            }
-                        })
-                        .compose(RxUtils.<List<Quote>>applySchedulers())
-                        .compose(mContext.<List<Quote>>bindUntilEvent(ActivityEvent.DESTROY))
-                        .subscribe(new Consumer<List<Quote>>() {
-                            @Override
-                            public void accept(@NonNull List<Quote> quotes) throws Exception {
-                            }
-                        }, RxUtils.commonErrorConsumer());*/
 
                 HttpManager.getBizService().getFunds()
                         .compose(RxUtils.<BizResponse<Funds>>applyBizSchedulers())

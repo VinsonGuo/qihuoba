@@ -19,7 +19,7 @@
         android:layout_height="30dp"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/dp_10"
-        android:textColor="@color/main_text_color"
+        android:textColor="@color/color_333333"
         android:textSize="11sp"/>
     <View
         android:background="@color/black"

@@ -116,7 +116,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 UserInfoActivity.startActivity(mContext);
                 break;
             case R.id.tv_three:
-                WebActivity.startActivity(mContext, HttpConfig.URL_ABOUT);
+                AboutUsActivity.startActivity(mContext);
                 break;
             case R.id.tv_four:
                 WebActivity.startActivity(mContext, HttpConfig.URL_WARNING);

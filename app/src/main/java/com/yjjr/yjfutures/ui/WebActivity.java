@@ -80,7 +80,10 @@ public class WebActivity extends BaseActivity {
                 .ready()
                 .go(url);
         if (type == TYPE_CSCENTER) { //客服中心
-            mHeaderView.getSubTitle().setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(mContext, R.drawable.ic_message), null, null, null);
+            UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
+            if (userInfo != null && !TextUtils.isEmpty(userInfo.getEmchatAccount()) && !TextUtils.isEmpty(userInfo.getEmchatPwd())) {
+                mHeaderView.getSubTitle().setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(mContext, R.drawable.ic_message), null, null, null);
+            }
             TextView tv = new TextView(mContext);
             tv.setGravity(Gravity.CENTER);
             tv.setText(TextUtils.concat("没有解决问题？", SpannableUtil.getStringByDrawable(mContext, R.drawable.ic_tel), SpannableUtil.getStringByColor(mContext, " 联系客服", R.color.main_color)));
@@ -94,7 +97,6 @@ public class WebActivity extends BaseActivity {
                     DialogUtils.createCustomServiceDialog(mContext).show();
                 }
             });
-            UserInfo userInfo = BaseApplication.getInstance().getUserInfo();
             if (userInfo != null) {
                 EMConversation conversation = EMClient.getInstance().chatManager().getConversation(userInfo.getYjEmchat());
                 if (conversation != null && conversation.getUnreadMsgCount() > 0) {

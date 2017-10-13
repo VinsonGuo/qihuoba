@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_about_us"
+    android:orientation="vertical"
+    tools:context="com.yjjr.yjfutures.ui.mine.AboutUsActivity">
+
+    <com.yjjr.yjfutures.widget.HeaderView
+        android:id="@+id/header_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:main_title="@string/about_us"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="60dp"
+        android:drawablePadding="@dimen/dp_10"
+        android:drawableTop="@mipmap/ic_launcher_icon"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_16"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/root_padding_15"
+        android:text="         公司团队成员来自国内外知名券商、期货、基金、互联网公司等，专业知识扎实，精通外盘流程，软件技术精湛，内部合规严格，有着丰富的从业经验，经历过市场牛熊转换，对金融市场的理解较为深刻。公司从客户资金安全及利益的根本原则出发，竭诚为广大投资人、操盘手服务。"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_14"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/tv_version"
+        tools:text="123"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/root_padding_15"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_14"/>
+</LinearLayout>

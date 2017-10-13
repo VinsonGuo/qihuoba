@@ -111,13 +111,14 @@
             </intent-filter>
         </receiver>
 
-        <!--华为-->
+        <!-- 华为 -->
         <meta-data
             android:name="com.huawei.hms.client.appid"
             android:value="100059489"/>
-        <!--华为推送广播接收器，可以直接使用环信 sdk 封装好的，也可以继承自环信重写，如果继承自环信，实现 onToken 方法时必须要调用 super 方法-->
+        <!-- 华为推送广播接收器，可以直接使用环信 sdk 封装好的，也可以继承自环信重写，如果继承自环信，实现 onToken 方法时必须要调用 super 方法 -->
         <receiver android:name="com.hyphenate.chat.EMHWPushReceiver">
             <intent-filter>
+
                 <!-- 必须,用于接收 TOKEN -->
                 <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
                 <!-- 必须，用于接收消息 -->
@@ -128,9 +129,9 @@
                 <action android:name="com.huawei.intent.action.PUSH_STATE"/>
             </intent-filter>
         </receiver>
-
         <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver">
             <intent-filter>
+
                 <!-- 接收通道发来的通知栏消息，兼容老版本 PUSH -->
                 <action android:name="com.huawei.intent.action.PUSH"/>
             </intent-filter>
@@ -183,14 +184,14 @@
             android:launchMode="singleTask">
         </activity>
 
-        <!--启动页面-->
+        <!-- 启动页面 -->
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <!--http://qihuofa.com/d  打开主页-->
+            <!-- http://qihuofa.com/d  打开主页 -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -342,6 +343,10 @@
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".ui.trade.FullScreenChartActivity">
+        </activity>
+        <activity
+            android:name=".ui.mine.AboutUsActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

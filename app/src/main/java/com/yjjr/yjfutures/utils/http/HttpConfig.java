@@ -19,10 +19,7 @@ public class HttpConfig {
      * socket io url
      */
     public static final String SOCKET_URL = DOMAIN + ":9093";
-    /**
-     * 获取K线图的url
-     */
-    public static final String KLINE_URL = BuildConfig.DEBUG ? "http://dev.qihuofa.com:6666/historyMarketData" : "http://www.qihuofa.com:6666/historyMarketData";
+
     public static final String IP_URL = "http://ip.taobao.com/service/getIpInfo.php?ip=myip";
     /**
      * 手机号码的正则

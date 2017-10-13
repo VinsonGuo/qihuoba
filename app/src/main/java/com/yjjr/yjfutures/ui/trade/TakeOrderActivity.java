@@ -16,11 +16,11 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
-import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
@@ -135,6 +135,7 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
         cbCheck.setChecked(true);
         btnConfirm.setOnClickListener(this);
         findViewById(R.id.tv_agreement).setOnClickListener(this);
+        findViewById(R.id.tv_trade_fee).setOnClickListener(this);
         requestData();
     }
 
@@ -247,6 +248,12 @@ public class TakeOrderActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.tv_agreement:
                 WebActivity.startActivity(mContext, HttpConfig.URL_AGREEMENT1);
+                break;
+            case R.id.tv_trade_fee:
+                Toast toast = Toast.makeText(mContext, "买进卖出各收取一次", Toast.LENGTH_SHORT);
+//                toast.setGravity(Gravity.NO_GRAVITY, (int) v.getX(), (int) v.getY() - DisplayUtils.dip2px(mContext, 80));
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 break;
         }
     }

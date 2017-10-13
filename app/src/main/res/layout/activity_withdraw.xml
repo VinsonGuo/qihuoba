@@ -121,11 +121,12 @@
         android:textSize="@dimen/common_btn_text_size"/>
 
     <TextView
+        android:id="@+id/tv_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/root_padding_15"
         android:gravity="center"
-        android:text="每日提现次数限1次\n提现处理时间为8:30-17:00\n到账时间以银行为准，节假日延后处理"
+        tools:text="每日提现次数限1次\n提现处理时间为工作日8:30-17:00\n到账时间以银行为准，节假日延后处理"
         android:textColor="@color/second_text_color"
         android:textSize="12sp"/>
 </LinearLayout>

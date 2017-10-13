@@ -29,6 +29,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.CSUnreadEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.ReloginDialogEvent;
+import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.UserLoginResponse;
@@ -298,7 +299,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void call(Object... args) {
                 LogUtils.d("socket io connect error %s", Arrays.toString(args));
-                ToastUtils.show(mContext, R.string.socket_connect_error);
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
@@ -417,10 +417,10 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 }, RxUtils.commonErrorConsumer());
     }
 
-  /*  @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SendOrderEvent event) {
         getHolding();
-    }*/
+    }
 
     @Override
     public void onResume() {

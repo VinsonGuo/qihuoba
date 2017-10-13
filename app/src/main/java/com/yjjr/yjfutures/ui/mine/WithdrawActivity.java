@@ -18,6 +18,7 @@ import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
@@ -60,6 +61,14 @@ public class WithdrawActivity extends BaseActivity {
                 }
             }
         });
+
+
+        TextView tvInfo = (TextView) findViewById(R.id.tv_info);
+        tvInfo.setText(TextUtils.concat("每日提现次数限",
+                SpannableUtil.getStringByColor(mContext, "1次", R.color.third_text_color),
+                "\n提现处理时间为",
+                SpannableUtil.getStringByColor(mContext, "工作日8:30-17:00", R.color.third_text_color),
+                "\n到账时间以银行为准，节假日延后处理"));
 
         headerView.setOperateClickListener(new View.OnClickListener() {
             @Override

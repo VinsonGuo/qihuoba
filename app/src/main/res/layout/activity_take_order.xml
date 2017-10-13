@@ -212,8 +212,11 @@
                 android:padding="@dimen/root_padding_15">
 
                 <TextView
+                    android:id="@+id/tv_trade_fee"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:drawablePadding="4dp"
+                    android:drawableRight="@drawable/ic_trade_fee_question"
                     android:gravity="center"
                     android:text="支付：交易综合费"
                     android:textColor="@color/main_text_color"

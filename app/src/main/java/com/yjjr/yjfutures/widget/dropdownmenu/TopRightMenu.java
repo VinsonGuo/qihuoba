@@ -21,22 +21,19 @@ import java.util.List;
  * Author：Bro0cL on 2016/12/26.
  */
 public class TopRightMenu {
+    private static final int DEFAULT_HEIGHT = 480;
+    private static final int DEFAULT_ANIM_STYLE = R.style.TRM_ANIM_STYLE;
     private Activity mContext;
     private PopupWindow mPopupWindow;
     private RecyclerView mRecyclerView;
     private View content;
-
     private TRMenuAdapter mAdapter;
     private List<MenuItem> menuItemList;
-
-    private static final int DEFAULT_HEIGHT = 480;
     private int popHeight = DEFAULT_HEIGHT;
     private int popWidth = RecyclerView.LayoutParams.WRAP_CONTENT;
     private boolean showIcon = true;
     private boolean dimBackground = true;
     private boolean needAnimationStyle = true;
-
-    private static final int DEFAULT_ANIM_STYLE = R.style.TRM_ANIM_STYLE;
     private int animationStyle;
 
     private float alpha = 0.75f;
@@ -57,18 +54,19 @@ public class TopRightMenu {
         mAdapter = new TRMenuAdapter(mContext, this, menuItemList, showIcon);
     }
 
-    private PopupWindow getPopupWindow(){
+    private PopupWindow getPopupWindow() {
         mPopupWindow = new PopupWindow(mContext);
         mPopupWindow.setContentView(content);
         mPopupWindow.setHeight(popHeight);
         mPopupWindow.setWidth(popWidth);
-        if (needAnimationStyle){
+        if (needAnimationStyle) {
             mPopupWindow.setAnimationStyle(animationStyle <= 0 ? DEFAULT_ANIM_STYLE : animationStyle);
         }
 
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_999_circle));
+//        mPopupWindow.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.shape_bg_999_circle));
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(mContext, R.color.third_text_color)));
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
@@ -84,20 +82,20 @@ public class TopRightMenu {
         return mPopupWindow;
     }
 
-    public TopRightMenu setHeight(int height){
+    public TopRightMenu setHeight(int height) {
         if (height <= 0 && height != RecyclerView.LayoutParams.MATCH_PARENT
-                && height != RecyclerView.LayoutParams.WRAP_CONTENT){
+                && height != RecyclerView.LayoutParams.WRAP_CONTENT) {
             this.popHeight = DEFAULT_HEIGHT;
-        }else {
+        } else {
             this.popHeight = height;
         }
         return this;
     }
 
-    public TopRightMenu setWidth(int width){
-        if (width <= 0 && width != RecyclerView.LayoutParams.MATCH_PARENT){
+    public TopRightMenu setWidth(int width) {
+        if (width <= 0 && width != RecyclerView.LayoutParams.MATCH_PARENT) {
             this.popWidth = RecyclerView.LayoutParams.WRAP_CONTENT;
-        }else {
+        } else {
             this.popWidth = width;
         }
         return this;
@@ -105,81 +103,87 @@ public class TopRightMenu {
 
     /**
      * 是否显示菜单图标
+     *
      * @param show
      * @return
      */
-    public TopRightMenu showIcon(boolean show){
+    public TopRightMenu showIcon(boolean show) {
         this.showIcon = show;
         return this;
     }
 
     /**
      * 添加单个菜单
+     *
      * @param item
      * @return
      */
-    public TopRightMenu addMenuItem(MenuItem item){
+    public TopRightMenu addMenuItem(MenuItem item) {
         menuItemList.add(item);
         return this;
     }
 
     /**
      * 添加多个菜单
+     *
      * @param list
      * @return
      */
-    public TopRightMenu addMenuList(List<MenuItem> list){
+    public TopRightMenu addMenuList(List<MenuItem> list) {
         menuItemList.addAll(list);
         return this;
     }
 
     /**
      * 是否让背景变暗
+     *
      * @param b
      * @return
      */
-    public TopRightMenu dimBackground(boolean b){
+    public TopRightMenu dimBackground(boolean b) {
         this.dimBackground = b;
         return this;
     }
 
     /**
      * 否是需要动画
+     *
      * @param need
      * @return
      */
-    public TopRightMenu needAnimationStyle(boolean need){
+    public TopRightMenu needAnimationStyle(boolean need) {
         this.needAnimationStyle = need;
         return this;
     }
 
     /**
      * 设置动画
+     *
      * @param style
      * @return
      */
-    public TopRightMenu setAnimationStyle(int style){
+    public TopRightMenu setAnimationStyle(int style) {
         this.animationStyle = style;
         return this;
     }
 
-    public TopRightMenu setOnMenuItemClickListener(OnMenuItemClickListener listener){
+    public TopRightMenu setOnMenuItemClickListener(OnMenuItemClickListener listener) {
         mAdapter.setOnMenuItemClickListener(listener);
         return this;
     }
 
-    public TopRightMenu showAsDropDown(View anchor){
+    public TopRightMenu showAsDropDown(View anchor) {
         showAsDropDown(anchor, 0, 0);
         return this;
     }
 
-    public TopRightMenu showAsDropDown(View anchor, int xoff, int yoff){
-        if (mPopupWindow == null){
+    public TopRightMenu showAsDropDown(View anchor, int xoff, int yoff) {
+        if (mPopupWindow == null) {
             getPopupWindow();
         }
         if (!mPopupWindow.isShowing()) {
             mPopupWindow.showAsDropDown(anchor, xoff, yoff);
-            if (dimBackground){
+            if (dimBackground) {
                 setBackgroundAlpha(1f, alpha, 240);
             }
         }
@@ -200,13 +204,13 @@ public class TopRightMenu {
         animator.start();
     }
 
-    public void dismiss(){
-        if (mPopupWindow != null && mPopupWindow.isShowing()){
+    public void dismiss() {
+        if (mPopupWindow != null && mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
         }
     }
 
-    public interface OnMenuItemClickListener{
+    public interface OnMenuItemClickListener {
         void onMenuItemClick(int position);
     }
 }

@@ -48,6 +48,7 @@ android {
     productFlavors {
         xiaomi {}
         yingyongbao {}
+        huawei {}
     }
 
     productFlavors.all {

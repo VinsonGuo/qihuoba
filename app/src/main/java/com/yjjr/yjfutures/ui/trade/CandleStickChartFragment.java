@@ -20,9 +20,6 @@ import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -122,7 +119,7 @@ public class CandleStickChartFragment extends BaseFragment {
         fl.addView(mChart);
         fl.addView(mInfoView);
 
-        mChart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.chart_background));
+        mChart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.background_dark));
         mChart.getDescription().setEnabled(false);
         mChart.setNoDataText(mContext.getString(R.string.loading));
         mChart.setNoDataTextColor(ContextCompat.getColor(mContext, R.color.third_text_color));
@@ -178,8 +175,11 @@ public class CandleStickChartFragment extends BaseFragment {
         });
 //        rightAxis.setDrawAxisLine(false);
 
-        YAxis left = mChart.getAxisLeft();
-        left.setEnabled(false);
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        leftAxis.setTextColor(ContextCompat.getColor(mContext, R.color.transparent));
+        leftAxis.setDrawAxisLine(false);
+        leftAxis.setDrawGridLines(false);
 
 
         mChart.getLegend().setEnabled(false);
@@ -348,19 +348,6 @@ public class CandleStickChartFragment extends BaseFragment {
         CandleData cd = new CandleData(set1);
         CombinedData data = new CombinedData();
         data.setData(cd);
-        // 如果达不到最大个数，用一个看不见的线来填充
-        if (datas.size() < MAX_COUNT) {
-            int count = MAX_COUNT - datas.size();
-            List<Entry> values = new ArrayList<>(count);
-            for (int i = 0; i < count; i++) {
-                Entry entry = new Entry(datas.size() + count, (float) datas.get(datas.size() - 1).getClose());
-                values.add(entry);
-            }
-            LineDataSet set = new LineDataSet(values, "empty");
-            set.setVisible(false);
-            LineData lineData = new LineData(set);
-            data.setData(lineData);
-        }
         mChart.setData(data);
         mChart.highlightValue(null);
         mInfoView.setVisibility(View.GONE);
@@ -368,7 +355,7 @@ public class CandleStickChartFragment extends BaseFragment {
         ViewPortHandler port = mChart.getViewPortHandler();
         mChart.setViewPortOffsets(0, port.offsetTop(), port.offsetRight(), port.offsetBottom());
         mChart.moveViewToX(mChart.getCandleData().getEntryCount());
-//        mChart.zoom(0.1f, 0.1f, 0.1f, 0.1f);
+        mChart.notifyDataSetChanged();
         mChart.invalidate();
     }
 
@@ -377,4 +364,5 @@ public class CandleStickChartFragment extends BaseFragment {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
 }

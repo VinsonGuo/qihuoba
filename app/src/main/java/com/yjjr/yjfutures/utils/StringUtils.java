@@ -26,7 +26,10 @@ import android.text.style.AbsoluteSizeSpan;
 import android.util.Base64;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Quote;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -35,6 +38,7 @@ import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +48,7 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
 
+    private static Gson sGson = new Gson();
     private static final Map<String, String> sCurrencyMap = new HashMap<String, String>() {{
         put("USD", "美元");
         put("HKD", "港币");
@@ -578,5 +583,40 @@ public class StringUtils {
             return "$";
         }
         return s;
+    }
+
+
+    /**
+     * 解析数据，增加了均线
+     */
+    public static List<HisData> parseHisData(String json, HisData lastData) {
+        final List<HisData> list = sGson.fromJson(json, new TypeToken<List<HisData>>() {
+        }.getType());
+        int amountVol = 0;
+        if (lastData != null) {
+            amountVol = lastData.getAmountVol();
+        }
+        for (int i = 0; i < list.size(); i++) {
+            HisData hisData = list.get(i);
+            amountVol += hisData.getVol();
+            hisData.setAmountVol(amountVol);
+            if (i > 0) {
+                double total = hisData.getVol() * hisData.getClose() + list.get(i - 1).getTotal();
+                hisData.setTotal(total);
+                double avePrice = total / amountVol;
+                hisData.setAvePrice(avePrice);
+            } else if (lastData != null) {
+                double total = hisData.getVol() * hisData.getClose() + lastData.getTotal();
+                hisData.setTotal(total);
+                double avePrice = total / amountVol;
+                hisData.setAvePrice(avePrice);
+            } else {
+                hisData.setAmountVol(hisData.getVol());
+                hisData.setAvePrice(hisData.getClose());
+                hisData.setTotal(hisData.getAmountVol() * hisData.getAvePrice());
+            }
+
+        }
+        return list;
     }
 }

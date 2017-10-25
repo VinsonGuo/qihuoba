@@ -19,18 +19,9 @@ public class HisData {
     private double Open;
     private int Vol;
     private String sDate;
-
-    public HisData() {
-    }
-
-    public HisData(double close, double high, double low, double open, int vol, String sDate) {
-        Close = close;
-        High = high;
-        Low = low;
-        Open = open;
-        Vol = vol;
-        this.sDate = sDate;
-    }
+    private int amountVol;
+    private double avePrice;
+    private double total;
 
     public double getClose() {
         return Close;
@@ -80,6 +71,14 @@ public class HisData {
         this.sDate = sDate;
     }
 
+    public double getAvePrice() {
+        return avePrice;
+    }
+
+    public void setAvePrice(double avePrice) {
+        this.avePrice = avePrice;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -96,6 +95,23 @@ public class HisData {
         return sDate != null ? sDate.hashCode() : 0;
     }
 
+    public int getAmountVol() {
+        return amountVol;
+    }
+
+    public void setAmountVol(int amountVol) {
+        this.amountVol = amountVol;
+    }
+
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
     @Override
     public String toString() {
         return "HisData{" +
@@ -105,6 +121,9 @@ public class HisData {
                 ", Open=" + Open +
                 ", Vol=" + Vol +
                 ", sDate='" + sDate + '\'' +
+                ", amountVol=" + amountVol +
+                ", avePrice=" + avePrice +
+                ", total=" + total +
                 '}';
     }
 }

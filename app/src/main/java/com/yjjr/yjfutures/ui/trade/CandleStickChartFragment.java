@@ -40,8 +40,9 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.widget.chart.AppCombinedChart;
+import com.yjjr.yjfutures.widget.chart.ChartInfoView;
 import com.yjjr.yjfutures.widget.chart.InfoViewListener;
-import com.yjjr.yjfutures.widget.chart.LineChartInfoView;
+import com.yjjr.yjfutures.widget.chart.KLineChartInfoView;
 import com.yjjr.yjfutures.widget.chart.LineChartXMarkerView;
 import com.yjjr.yjfutures.widget.chart.LineChartYMarkerView;
 
@@ -79,7 +80,7 @@ public class CandleStickChartFragment extends BaseFragment {
      */
     private String mType = MIN;
     private List<HisData> mList = new ArrayList<>(200);
-    private LineChartInfoView mInfoView;
+    private ChartInfoView mInfoView;
     private LineChartXMarkerView mMvx;
 
     public CandleStickChartFragment() {
@@ -113,7 +114,7 @@ public class CandleStickChartFragment extends BaseFragment {
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         FrameLayout fl = new FrameLayout(mContext);
         mChart = new AppCombinedChart(mContext);
-        mInfoView = new LineChartInfoView(mContext);
+        mInfoView = new KLineChartInfoView(mContext);
         mInfoView.setLayoutParams(new FrameLayout.LayoutParams(DisplayUtils.dip2px(mContext, 120), ViewGroup.LayoutParams.WRAP_CONTENT));
         mInfoView.setVisibility(View.GONE);
         fl.addView(mChart);

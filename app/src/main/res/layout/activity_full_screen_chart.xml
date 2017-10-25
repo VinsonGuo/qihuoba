@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.FullScreenChartActivity">
 
-    <com.yjjr.yjfutures.widget.chart.AppLineChart
+    <com.yjjr.yjfutures.widget.chart.AppCombinedChart
         android:id="@+id/line_chart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -22,7 +22,7 @@
 
      </com.github.mikephil.charting.charts.BarChart>-->
 
-    <com.github.mikephil.charting.charts.BarChart
+    <com.yjjr.yjfutures.widget.chart.AppCombinedChart
         android:id="@+id/bar_chart"
         android:layout_width="match_parent"
         android:layout_height="0dp"

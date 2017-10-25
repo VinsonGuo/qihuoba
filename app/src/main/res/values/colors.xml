@@ -140,4 +140,21 @@
     <color name="color_0d0d0d">#0d0d0d</color>
     <color name="color_111111">#111111</color>
     <color name="color_d1d1d1">#d1d1d1</color>
+
+
+
+    <!--图表-->
+
+    <color name="mine_label_txt">#A7ADBC</color>
+    <color name="minute_jizhun">#7F9976</color>
+    <color name="minute_blue">#00D0FC</color>
+    <color name="minute_yellow">#E7B448</color>
+
+    <color name="ma5">#823E66</color>
+    <color name="ma10">#B99C7A</color>
+    <color name="ma20">#3C7193</color>
+    <color name="ma30">#7F9976</color>
+
+    <color name="increasing_color">@color/main_color_red</color>
+    <color name="decreasing_color">@color/main_color_green</color>
 </resources>

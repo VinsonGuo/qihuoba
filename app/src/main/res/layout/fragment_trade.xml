@@ -224,7 +224,6 @@
             android:text="全屏"
             android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"
-            android:visibility="gone"
             />
 
     </com.yjjr.yjfutures.widget.NestRadioGroup>

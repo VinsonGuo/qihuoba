@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
@@ -22,6 +21,7 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
+import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.widget.chart.TimeSharingplanChart;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,6 +32,7 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 import io.socket.emitter.Emitter;
+
 
 /**
  * 分时图Fragment
@@ -105,8 +106,7 @@ public class TimeSharingplanFragment extends BaseFragment {
             @Override
             public void call(Object... args) {
                 LogUtils.d("history data -> " + args[0].toString());
-                final List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
-                }.getType());
+                final List<HisData> list = StringUtils.parseHisData(args[0].toString(), mChart.getLastData());
 
                 mChart.post(new Runnable() {
                     @Override
@@ -134,8 +134,7 @@ public class TimeSharingplanFragment extends BaseFragment {
             @Override
             public void call(Object... args) {
                 LogUtils.d("history data -> " + args[0].toString());
-                final List<HisData> hisDatas = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
-                }.getType());
+                final List<HisData> hisDatas = StringUtils.parseHisData(args[0].toString(), mChart.getLastData());
                 mChart.post(new Runnable() {
                     @Override
                     public void run() {

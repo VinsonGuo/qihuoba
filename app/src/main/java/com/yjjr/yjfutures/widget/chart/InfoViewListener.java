@@ -22,10 +22,10 @@ public class InfoViewListener implements OnChartValueSelectedListener {
 
     private List<HisData> mList;
     private Quote mQuote;
-    private LineChartInfoView mInfoView;
+    private ChartInfoView mInfoView;
     private int mWidth;
 
-    public InfoViewListener(Context context, Quote quote, List<HisData> list, LineChartInfoView infoView) {
+    public InfoViewListener(Context context, Quote quote, List<HisData> list, ChartInfoView infoView) {
         mWidth = DisplayUtils.getWidthHeight(context)[0];
         mQuote = quote;
         mList = list;

@@ -1354,4 +1354,9 @@
     <string name="socket_connect_success">行情连接成功</string>
     <string name="socket_connect_disconnect">行情连接断开</string>
     <string name="quick_register">快速注册</string>
+
+    <string name="open_price">开盘价</string>
+    <string name="close_price">收盘价</string>
+    <string name="high_price">最高价</string>
+    <string name="low_price">最低价</string>
 </resources>

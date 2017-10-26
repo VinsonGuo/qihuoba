@@ -380,7 +380,7 @@ public class TimeSharingplanChart extends RelativeLayout {
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
-        leftAxis.setTextColor(transparentColor);
+        leftAxis.setDrawLabels(false);
         leftAxis.setDrawAxisLine(false);
         leftAxis.setDrawGridLines(false);
 

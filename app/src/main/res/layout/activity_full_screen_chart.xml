@@ -8,23 +8,26 @@
     android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.FullScreenChartActivity">
 
-    <com.yjjr.yjfutures.widget.chart.AppCombinedChart
-        android:id="@+id/line_chart"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <!-- <com.github.mikephil.charting.charts.BarChart
-         android:id="@+id/bar_chart"
-         android:layout_width="match_parent"
-         android:layout_height="0dp"
-         android:layout_weight="1">
+        <Button
+            android:id="@+id/btn1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="btn1"/>
 
-     </com.github.mikephil.charting.charts.BarChart>-->
+        <Button
+            android:id="@+id/btn2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="btn1"/>
+    </LinearLayout>
 
-    <com.yjjr.yjfutures.widget.chart.AppCombinedChart
-        android:id="@+id/bar_chart"
+    <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>

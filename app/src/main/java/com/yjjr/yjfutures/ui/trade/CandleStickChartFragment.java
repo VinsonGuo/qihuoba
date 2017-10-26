@@ -178,7 +178,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
-        leftAxis.setTextColor(ContextCompat.getColor(mContext, R.color.transparent));
+        leftAxis.setDrawLabels(false);
         leftAxis.setDrawAxisLine(false);
         leftAxis.setDrawGridLines(false);
 

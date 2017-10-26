@@ -42,7 +42,7 @@ public class AppLineChart extends LineChart {
 
     @Override
     protected void drawMarkers(Canvas canvas) {
-        if (mMarker == null || mXMarker == null || !isDrawMarkersEnabled() || !valuesToHighlight())
+        if (mMarker == null || !isDrawMarkersEnabled() || !valuesToHighlight())
             return;
 
         for (int i = 0; i < mIndicesToHighlight.length; i++) {
@@ -66,7 +66,9 @@ public class AppLineChart extends LineChart {
 
             // callbacks to update the content
             mMarker.refreshContent(e, highlight);
-            mXMarker.refreshContent(e, highlight);
+            if (mXMarker != null) {
+                mXMarker.refreshContent(e, highlight);
+            }
 
             // draw the marker
 //            if (mMarker instanceof LineChartYMarkerView) {
@@ -75,7 +77,9 @@ public class AppLineChart extends LineChart {
             int width = yMarker.getMeasuredWidth();
             mMarker.draw(canvas, getMeasuredWidth() - width * 1.05f, pos[1] - yMarker.getMeasuredHeight() / 2);
 
-            mXMarker.draw(canvas, pos[0] - (xMarker.getMeasuredWidth() / 2), getMeasuredHeight());
+            if (mXMarker != null) {
+                mXMarker.draw(canvas, pos[0] - (xMarker.getMeasuredWidth() / 2), getMeasuredHeight());
+            }
 //            } else {
 //                mMarker.draw(canvas, pos[0], pos[1]);
 //            }

@@ -185,7 +185,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 WebActivity.startActivity(mContext, String.format(HttpConfig.URL_RULE, StringUtils.getRuleName(quote)));
             }
         });
-        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, CandleStickChartFragment.MIN);
+        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
         Fragment[] fragments = {/*TickChartFragment.newInstance(mSymbol)*/new Fragment(), TimeSharingplanFragment.newInstance(mSymbol, mIsDemo),
                 mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol, mIsDemo)};
         mKLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
@@ -237,22 +237,22 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.third_text_color));
                         mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow), null);
                         mViewpager.setCurrentItem(2, false);
-                        String type = CandleStickChartFragment.MIN;
+                        String type = HttpConfig.MIN;
                         switch (position) {
                             case 0:
-                                type = CandleStickChartFragment.MIN;
+                                type = HttpConfig.MIN;
                                 break;
                             case 1:
-                                type = CandleStickChartFragment.MIN5;
+                                type = HttpConfig.MIN5;
                                 break;
                             case 2:
-                                type = CandleStickChartFragment.MIN15;
+                                type = HttpConfig.MIN15;
                                 break;
                             case 3:
-                                type = CandleStickChartFragment.HOUR;
+                                type = HttpConfig.HOUR;
                                 break;
                             case 4:
-                                type = CandleStickChartFragment.DAY;
+                                type = HttpConfig.DAY;
                                 break;
                         }
                         mCandleStickChartFragment.loadDataByType(type);

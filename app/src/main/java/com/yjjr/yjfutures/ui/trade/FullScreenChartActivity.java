@@ -10,6 +10,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
 public class FullScreenChartActivity extends BaseActivity {
@@ -33,7 +34,7 @@ public class FullScreenChartActivity extends BaseActivity {
         mIsDemo = getIntent().getBooleanExtra(Constants.CONTENT_PARAMETER_2, false);
         mViewpager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), new Fragment[]{FullScreenLineChartFragment.newInstance(mSymbol, mIsDemo),
-                FullScreenKLineChartFragment.newInstance(mSymbol, mIsDemo)}));
+                FullScreenKLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN)}));
         findViewById(R.id.btn1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

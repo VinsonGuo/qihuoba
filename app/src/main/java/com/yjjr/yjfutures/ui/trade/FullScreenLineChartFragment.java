@@ -3,7 +3,9 @@ package com.yjjr.yjfutures.ui.trade;
 
 import android.os.Bundle;
 
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.google.gson.Gson;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
@@ -55,6 +57,16 @@ public class FullScreenLineChartFragment extends BaseFullScreenChartFragment {
 
     @Override
     protected void initData() {
+        xAxisVolume.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                if (mData != null && value < mData.size()) {
+                    DateTime dateTime = new DateTime(mData.get((int) value).getsDate());
+                    return DateUtils.formatTime(dateTime.getMillis());
+                }
+                return "";
+            }
+        });
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (quote == null) return;
         DateTime dateTime;

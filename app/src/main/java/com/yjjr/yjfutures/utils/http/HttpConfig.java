@@ -1,6 +1,7 @@
 package com.yjjr.yjfutures.utils.http;
 
 import com.yjjr.yjfutures.BuildConfig;
+import com.yjjr.yjfutures.ui.BaseApplication;
 
 /**
  * HTTP配置
@@ -69,7 +70,7 @@ public class HttpConfig {
     public static final String URL_GUIDE = DOMAIN + ":9100/serviceInfo/guide1.html";
     public static final String URL_CSCENTER = DOMAIN + ":9100/serviceInfo/CScenter.html";
     public static final String URL_HELP = DOMAIN + ":9100/serviceInfo/help.html";
-    public static final String URL_PROMOTION = DOMAIN + ":9100/serviceInfo/promotion.html";
+    public static final String URL_PROMOTION = DOMAIN + ":9300/manage/promote/promotePage.do?account=";
     public static final String URL_WARNING = DOMAIN + ":9100/serviceInfo/warning.html";
     public static final String URL_RULE = DOMAIN + ":9100/serviceInfo/%srules.html";
     public static final String URL_NOTICE = DOMAIN + ":9300/service/notice/html/";
@@ -93,5 +94,13 @@ public class HttpConfig {
      * 投诉电话
      */
     public static String COMPLAINT_PHONE = "0755-86534610";
+
+
+
+    public static final String MIN = "min";
+    public static final String MIN5 = "min5";
+    public static final String MIN15 = "min15";
+    public static final String HOUR = "hour";
+    public static final String DAY = "day";
 
 }

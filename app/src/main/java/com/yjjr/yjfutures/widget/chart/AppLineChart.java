@@ -9,6 +9,7 @@ import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 /**
  * Created by dell on 2017/6/22.
@@ -49,7 +50,7 @@ public class AppLineChart extends LineChart {
 
             Highlight highlight = mIndicesToHighlight[i];
 
-            IDataSet set = mData.getDataSetByIndex(highlight.getDataSetIndex());
+            ILineDataSet set = mData.getDataSetByIndex(highlight.getDataSetIndex());
 
             Entry e = mData.getEntryForHighlight(mIndicesToHighlight[i]);
             int entryIndex = set.getEntryIndex(e);
@@ -66,7 +67,7 @@ public class AppLineChart extends LineChart {
 
             // callbacks to update the content
             mMarker.refreshContent(e, highlight);
-            if (mXMarker != null) {
+            if (mXMarker != null && set.isVerticalHighlightIndicatorEnabled()) {
                 mXMarker.refreshContent(e, highlight);
             }
 
@@ -77,7 +78,7 @@ public class AppLineChart extends LineChart {
             int width = yMarker.getMeasuredWidth();
             mMarker.draw(canvas, getMeasuredWidth() - width * 1.05f, pos[1] - yMarker.getMeasuredHeight() / 2);
 
-            if (mXMarker != null) {
+            if (mXMarker != null && set.isVerticalHighlightIndicatorEnabled()) {
                 mXMarker.draw(canvas, pos[0] - (xMarker.getMeasuredWidth() / 2), getMeasuredHeight());
             }
 //            } else {

@@ -56,6 +56,16 @@ public class LineChartRenderer extends LineRadarRenderer {
 
     protected Path cubicPath = new Path();
     protected Path cubicFillPath = new Path();
+    protected Path mGenerateFilledPathBuffer = new Path();
+    private float[] mLineBuffer = new float[4];
+    /**
+     * cache for the circle bitmaps of all datasets
+     */
+    private HashMap<IDataSet, DataSetImageCache> mImageCaches = new HashMap<>();
+    /**
+     * buffer for drawing the circles
+     */
+    private float[] mCirclesBuffer = new float[2];
 
     public LineChartRenderer(LineDataProvider chart, ChartAnimator animator,
                              ViewPortHandler viewPortHandler) {
@@ -282,8 +292,6 @@ public class LineChartRenderer extends LineRadarRenderer {
         }
     }
 
-    private float[] mLineBuffer = new float[4];
-
     /**
      * Draws a normal line.
      *
@@ -421,8 +429,6 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         mRenderPaint.setPathEffect(null);
     }
-
-    protected Path mGenerateFilledPathBuffer = new Path();
 
     /**
      * Draws a filled linear path on the canvas.
@@ -577,8 +583,8 @@ public class LineChartRenderer extends LineRadarRenderer {
                         Utils.drawImage(
                                 c,
                                 icon,
-                                (int)(x + iconsOffset.x),
-                                (int)(y + iconsOffset.y),
+                                (int) (x + iconsOffset.x),
+                                (int) (y + iconsOffset.y),
                                 icon.getIntrinsicWidth(),
                                 icon.getIntrinsicHeight());
                     }
@@ -593,16 +599,6 @@ public class LineChartRenderer extends LineRadarRenderer {
     public void drawExtras(Canvas c) {
         drawCircles(c);
     }
-
-    /**
-     * cache for the circle bitmaps of all datasets
-     */
-    private HashMap<IDataSet, DataSetImageCache> mImageCaches = new HashMap<>();
-
-    /**
-     * buffer for drawing the circles
-     */
-    private float[] mCirclesBuffer = new float[2];
 
     protected void drawCircles(Canvas c) {
 
@@ -706,7 +702,82 @@ public class LineChartRenderer extends LineRadarRenderer {
 
             // draw the lines
             drawHighlightLines(c, (float) pix.x, (float) pix.y, set);
+
+            // draw circle
+            drawCircle(c, high, (float) pix.x);
         }
+    }
+
+    public void drawCircle(Canvas c, Highlight high, float x) {
+        mRenderPaint.setStyle(Paint.Style.FILL);
+        float phaseY = mAnimator.getPhaseY();
+        mCirclesBuffer[0] = 0;
+        mCirclesBuffer[1] = 0;
+
+        List<ILineDataSet> dataSets = mChart.getLineData().getDataSets();
+
+        for (int i = 0; i < dataSets.size(); i++) {
+
+            ILineDataSet dataSet = dataSets.get(i);
+
+            if (!dataSet.isVisible() /*|| !dataSet.isDrawCirclesEnabled()*/ ||
+                    dataSet.getEntryCount() == 0)
+                continue;
+
+            mRenderPaint.setColor(dataSet.getCircleColor(0));
+            mCirclePaintInner.setColor(dataSet.getCircleHoleColor());
+
+            Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());
+
+            mXBounds.set(mChart, dataSet);
+
+            float circleRadius = dataSet.getCircleRadius() * 2.0f;
+            float circleHoleRadius = dataSet.getCircleHoleRadius() * 2.0f;
+            boolean drawCircleHole = dataSet.isDrawCircleHoleEnabled() &&
+                    circleHoleRadius < circleRadius &&
+                    circleHoleRadius > 0.f;
+
+            if (high.getX() < dataSet.getEntryCount() - 1) {
+                Entry e = dataSet.getEntryForIndex((int) high.getX());
+
+                if (e == null) return;
+
+                mCirclesBuffer[1] = e.getY() * phaseY;
+
+                trans.pointValuesToPixel(mCirclesBuffer);
+
+                mCirclesBuffer[0] = x;
+                if (!mViewPortHandler.isInBoundsRight(mCirclesBuffer[0]))
+                    return;
+
+                if (!mViewPortHandler.isInBoundsLeft(mCirclesBuffer[0]) ||
+                        !mViewPortHandler.isInBoundsY(mCirclesBuffer[1]))
+                    return;
+
+                c.drawCircle(
+                        mCirclesBuffer[0],
+                        mCirclesBuffer[1],
+                        circleRadius,
+                        mRenderPaint);
+
+                if (drawCircleHole) {
+                    c.drawCircle(
+                            mCirclesBuffer[0],
+                            mCirclesBuffer[1],
+                            circleHoleRadius,
+                            mCirclePaintInner);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the Bitmap.Config that is used by this renderer.
+     *
+     * @return
+     */
+    public Bitmap.Config getBitmapConfig() {
+        return mBitmapConfig;
     }
 
     /**
@@ -719,15 +790,6 @@ public class LineChartRenderer extends LineRadarRenderer {
     public void setBitmapConfig(Bitmap.Config config) {
         mBitmapConfig = config;
         releaseBitmap();
-    }
-
-    /**
-     * Returns the Bitmap.Config that is used by this renderer.
-     *
-     * @return
-     */
-    public Bitmap.Config getBitmapConfig() {
-        return mBitmapConfig;
     }
 
     /**

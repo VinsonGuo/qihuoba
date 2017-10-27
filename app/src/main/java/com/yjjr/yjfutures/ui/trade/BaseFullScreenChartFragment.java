@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -23,6 +24,7 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -31,9 +33,12 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.ui.BaseFragment;
+import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.widget.chart.AppCombinedChart;
 import com.yjjr.yjfutures.widget.chart.CoupleChartGestureListener;
 import com.yjjr.yjfutures.widget.chart.LineChartXMarkerView;
+
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +66,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
     protected List<HisData> mData = new ArrayList<>(300);
 
     private int textColor;
+
 
     @Override
     protected View initViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -139,6 +145,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         xAxisVolume.setDrawGridLines(false);
         xAxisVolume.setTextColor(textColor);
         xAxisVolume.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxisVolume.setLabelCount(5,true);
 
 
         //左边y
@@ -147,7 +154,6 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         axisLeftVolume.setDrawGridLines(false);//参考上面
         /*轴不显示 避免和border冲突*/
         axisLeftVolume.setDrawAxisLine(false);//参考上面
-        axisLeftVolume.setAxisMinValue(0);
         axisLeftVolume.setTextColor(textColor);
         axisLeftVolume.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
 

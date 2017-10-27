@@ -15,6 +15,7 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.ui.trade.CandleStickChartFragment;
 import com.yjjr.yjfutures.utils.DateUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 
 import org.joda.time.DateTime;
 
@@ -29,7 +30,7 @@ public class LineChartXMarkerView extends MarkerView {
 
     private List<HisData> mList;
     private TextView tvContent;
-    private String mType = CandleStickChartFragment.MIN;
+    private String mType = HttpConfig.MIN;
 
     public LineChartXMarkerView(Context context, List<HisData> list) {
         super(context, R.layout.view_mp_real_price_marker);
@@ -46,7 +47,7 @@ public class LineChartXMarkerView extends MarkerView {
         int value = (int) e.getX();
         if (mList != null && value < mList.size()) {
             DateTime dateTime = new DateTime(mList.get(value).getsDate());
-            if (TextUtils.equals(mType, CandleStickChartFragment.DAY)) {
+            if (TextUtils.equals(mType, HttpConfig.DAY)) {
                 tvContent.setText(DateUtils.formatDataOnly(dateTime.getMillis()));
             } else {
                 tvContent.setText(DateUtils.formatTime(dateTime.getMillis()));

@@ -3,6 +3,8 @@ package com.yjjr.yjfutures.ui.trade;
 
 import android.os.Bundle;
 
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.google.gson.Gson;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
@@ -14,6 +16,7 @@ import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 
 import org.joda.time.DateTime;
 
@@ -26,17 +29,19 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
     private String mSymbol;
     private boolean mIsDemo;
     private Gson mGson = new Gson();
+    private String mType;
 
 
     public FullScreenKLineChartFragment() {
         // Required empty public constructor
     }
 
-    public static FullScreenKLineChartFragment newInstance(String symbol, boolean isDemo) {
+    public static FullScreenKLineChartFragment newInstance(String symbol, boolean isDemo, String type) {
         FullScreenKLineChartFragment fragment = new FullScreenKLineChartFragment();
         Bundle args = new Bundle();
         args.putString(Constants.CONTENT_PARAMETER, symbol);
         args.putBoolean(Constants.CONTENT_PARAMETER_2, isDemo);
+        args.putString(Constants.CONTENT_PARAMETER_3, type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,12 +52,28 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
         if (getArguments() != null) {
             mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER);
             mIsDemo = getArguments().getBoolean(Constants.CONTENT_PARAMETER_2, false);
+            mType = getArguments().getString(Constants.CONTENT_PARAMETER_3);
         }
     }
 
 
     @Override
     protected void initData() {
+
+        xAxisVolume.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                if (mData != null && value < mData.size()) {
+                    DateTime dateTime = new DateTime(mData.get((int) value).getsDate());
+                    if (mType.equals(HttpConfig.DAY)) {
+                        return DateUtils.formatDataOnly(dateTime.getMillis());
+                    }
+                    return DateUtils.formatTime(dateTime.getMillis());
+                }
+                return "";
+            }
+        });
+
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (quote == null) return;
         DateTime dateTime;
@@ -72,7 +93,7 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
             mChartVolume.setNoDataText(getString(R.string.data_load_fail));
             return;
         }
-        SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, mGson.toJson(new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), "min")));
+        SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, mGson.toJson(new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)));
         SocketUtils.getSocket().once(SocketUtils.HIS_DATA, new Emitter.Listener() {
             @Override
             public void call(Object... args) {

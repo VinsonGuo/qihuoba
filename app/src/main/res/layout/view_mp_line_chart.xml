@@ -7,8 +7,7 @@
     <com.yjjr.yjfutures.widget.chart.AppLineChart
         android:id="@+id/line_chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/chart_background"/>
+        android:layout_height="match_parent"/>
 
     <com.yjjr.yjfutures.widget.chart.LineChartInfoView
         android:id="@+id/info"

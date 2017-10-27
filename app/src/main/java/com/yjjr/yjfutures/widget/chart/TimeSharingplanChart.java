@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.BuildConfig;
@@ -17,6 +18,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -63,10 +65,6 @@ public class TimeSharingplanChart extends RelativeLayout {
     private int transparentColor = getResources().getColor(R.color.transparent);
     private int candleGridColor = getResources().getColor(R.color.color_333333);
     private int mTextColor = getResources().getColor(R.color.second_text_color);
-    /**
-     * 是否处于闲置状态
-     */
-    private boolean isIdle = true;
 
     /**
      * 上一次的价格
@@ -109,7 +107,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.view_mp_line_chart, this);
         mChart = (AppLineChart) findViewById(R.id.line_chart);
         mInfoView = (LineChartInfoView) findViewById(R.id.info);
-        mInfoView.setChart(mChart);
+//        mInfoView.setChart(mChart);
     }
 
     public void addEntries(List<HisData> list) {
@@ -151,9 +149,11 @@ public class TimeSharingplanChart extends RelativeLayout {
             data.addEntry(new Entry(i, (float) mList.get(mList.size() - 1).getClose()), DATA_SET_PADDING);
         }
 
-//        Highlight chartHighlighter = new Highlight(setSell.getEntryCount() - 1, (float) list.get(setSell.getEntryCount() - 1).getClose(), DATA_SET_PRICE);
-//        mChart.highlightValue(chartHighlighter);
         mChart.setData(data);
+
+        Highlight chartHighlighter = new Highlight(setSell.getEntryCount()+paddingSet.getEntryCount(), (float) mList.get(mList.size() - 1).getClose(), DATA_SET_PADDING);
+        mChart.highlightValue(chartHighlighter);
+
         mChart.notifyDataSetChanged();
         mChart.invalidate();
 
@@ -200,11 +200,11 @@ public class TimeSharingplanChart extends RelativeLayout {
                 paddingSet.addEntry(new Entry(setSell.getEntryCount() + i, bid));
             }
 
+//            paddingSet.setHighlightEnabled(true);
 
-//            if (isIdle) {
-//                Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_PRICE).getEntryCount() - 1, bid, DATA_SET_PRICE);
-//                mChart.highlightValue(chartHighlighter);
-//            }
+                Highlight chartHighlighter = new Highlight(setSell.getEntryCount()+paddingSet.getEntryCount(), bid, DATA_SET_PADDING);
+                mChart.highlightValue(chartHighlighter);
+
             data.notifyDataChanged();
             mChart.notifyDataSetChanged();
             mChart.invalidate();
@@ -260,8 +260,9 @@ public class TimeSharingplanChart extends RelativeLayout {
                 paddingSet.addEntry(new Entry(setSell.getEntryCount() + i, price));
             }
 
-//            Highlight chartHighlighter = new Highlight(data.getDataSetByIndex(DATA_SET_PRICE).getEntryCount() - 1, price, DATA_SET_PRICE);
-//            mChart.highlightValue(chartHighlighter);
+            Highlight chartHighlighter = new Highlight(setSell.getEntryCount()+paddingSet.getEntryCount(), price, DATA_SET_PADDING);
+            mChart.highlightValue(chartHighlighter);
+
             data.notifyDataChanged();
             mChart.notifyDataSetChanged();
             mChart.invalidate();
@@ -281,28 +282,34 @@ public class TimeSharingplanChart extends RelativeLayout {
             set.setDrawCircleHole(false);
             set.setDrawFilled(true);
             set.setColor(mLineColor);
+            set.setLineWidth(1f);
             set.setFillDrawable(ContextCompat.getDrawable(mContext, R.drawable.bg_chart_fade));
-        }else if(type == TYPE_AVE){
+        } else if (type == TYPE_AVE) {
             set.setHighlightEnabled(true);
-            set.setColor(mLineColor);
+            set.setColor(ContextCompat.getColor(mContext,R.color.main_color));
+            set.setLineWidth(1f);
+            set.setCircleRadius(1.5f);
             set.setDrawCircleHole(false);
             set.setCircleColor(transparentColor);
+            set.setLineWidth(0.5f);
         } else {
-            set.setHighlightEnabled(false);
+            set.setHighlightEnabled(true);
+            set.setDrawVerticalHighlightIndicator(false);
             set.setColor(mLineColor);
             set.enableDashedLine(3, 40, 0);
             set.setDrawCircleHole(false);
             set.setCircleColor(transparentColor);
+            set.setLineWidth(1f);
+            set.setVisible(false);
         }
         set.setDrawCircles(false);
-        set.setLineWidth(1f);
         set.setDrawValues(false);
         return set;
     }
 
     private void setupSettingParameter() {
         mChart.setDrawGridBackground(false);
-        mChart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.background_dark));
+        mChart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.chart_background));
         LineChartXMarkerView mvx = new LineChartXMarkerView(mContext, mList);
         mvx.setChartView(mChart);
         mChart.setXMarker(mvx);
@@ -318,21 +325,20 @@ public class TimeSharingplanChart extends RelativeLayout {
         mv.setChartView(mChart);
         mChart.setMarker(mv);
         mChart.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mList, mInfoView));
+        mChart.setOnTouchListener(new ChartInfoViewHandler(mChart));
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
-            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                isIdle = false;
+            public void onChartGestureStart(MotionEvent event, ChartTouchListener.ChartGesture lastPerformedGesture) {
             }
 
             @Override
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-                isIdle = true;
                 mChart.setDragEnabled(true);
             }
 
             @Override
             public void onChartLongPressed(MotionEvent me) {
-                mChart.setDragEnabled(false);
+//                mChart.setDragEnabled(false);
             }
 
             @Override

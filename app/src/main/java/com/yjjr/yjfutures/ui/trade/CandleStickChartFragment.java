@@ -41,6 +41,7 @@ import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.widget.chart.AppCombinedChart;
 import com.yjjr.yjfutures.widget.chart.ChartInfoView;
+import com.yjjr.yjfutures.widget.chart.ChartInfoViewHandler;
 import com.yjjr.yjfutures.widget.chart.InfoViewListener;
 import com.yjjr.yjfutures.widget.chart.KLineChartInfoView;
 import com.yjjr.yjfutures.widget.chart.LineChartXMarkerView;
@@ -56,17 +57,12 @@ import java.util.List;
 
 import io.socket.emitter.Emitter;
 
+import  com.yjjr.yjfutures.utils.http.HttpConfig;
+
 /**
  * K线图Fragment
  */
 public class CandleStickChartFragment extends BaseFragment {
-
-
-    public static final String MIN = "min";
-    public static final String MIN5 = "min5";
-    public static final String MIN15 = "min15";
-    public static final String HOUR = "hour";
-    public static final String DAY = "day";
 
     public static final int MAX_COUNT = 60;
 
@@ -78,7 +74,7 @@ public class CandleStickChartFragment extends BaseFragment {
     /**
      * 数据类型  day=日线 hour=小时图 min15=15分钟图 min5=5分钟图 min=1分钟图
      */
-    private String mType = MIN;
+    private String mType = HttpConfig.MIN;
     private List<HisData> mList = new ArrayList<>(200);
     private ChartInfoView mInfoView;
     private LineChartXMarkerView mMvx;
@@ -120,7 +116,7 @@ public class CandleStickChartFragment extends BaseFragment {
         fl.addView(mChart);
         fl.addView(mInfoView);
 
-        mChart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.background_dark));
+        mChart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.chart_background));
         mChart.getDescription().setEnabled(false);
         mChart.setNoDataText(mContext.getString(R.string.loading));
         mChart.setNoDataTextColor(ContextCompat.getColor(mContext, R.color.third_text_color));
@@ -151,7 +147,7 @@ public class CandleStickChartFragment extends BaseFragment {
             public String getFormattedValue(float value, AxisBase axis) {
                 if (mList != null && value < mList.size()) {
                     DateTime dateTime = new DateTime(mList.get((int) value).getsDate());
-                    if (mType.equals(DAY)) {
+                    if (mType.equals(HttpConfig.DAY)) {
                         return DateUtils.formatDataOnly(dateTime.getMillis());
                     }
                     return DateUtils.formatTime(dateTime.getMillis());
@@ -185,7 +181,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
         mChart.getLegend().setEnabled(false);
         mChart.setOnChartValueSelectedListener(new InfoViewListener(mContext, quote, mList, mInfoView));
-
+        mChart.setOnTouchListener(new ChartInfoViewHandler(mChart));
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override
             public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
@@ -199,7 +195,6 @@ public class CandleStickChartFragment extends BaseFragment {
 
             @Override
             public void onChartLongPressed(MotionEvent me) {
-                mChart.setDragEnabled(false);
             }
 
             @Override
@@ -232,7 +227,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(OneMinuteEvent event) {
-        if (!mList.isEmpty() && TextUtils.equals(mType, MIN) && SocketUtils.getSocket() != null) {
+        if (!mList.isEmpty() && TextUtils.equals(mType, HttpConfig.MIN) && SocketUtils.getSocket() != null) {
             final HisData hisData = mList.get(mList.size() - 1);
             final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
             SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, mGson.toJson(new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)));
@@ -277,12 +272,12 @@ public class CandleStickChartFragment extends BaseFragment {
                 dateTime.minusDays(1);
             }
         }
-        if (DAY.equals(type)) {
+        if (HttpConfig.DAY.equals(type)) {
             dateTime = dateTime.minusYears(1);
-        } else if (MIN15.equals(type) || MIN5.equals(type)) {
+        } else if (HttpConfig.MIN15.equals(type) || HttpConfig.MIN5.equals(type)) {
 //            dateTime = dateTime.minusWeeks(1);
-            dateTime = dateTime.minusDays(2);
-        } else if (HOUR.equals(type)) {
+            dateTime = dateTime.minusDays(5);
+        } else if (HttpConfig.HOUR.equals(type)) {
             dateTime = dateTime.minusMonths(1);
         }
         if (SocketUtils.getSocket() == null) {
@@ -316,8 +311,6 @@ public class CandleStickChartFragment extends BaseFragment {
             mChart.setNoDataText(getString(R.string.data_is_null));
             return;
         }
-        mChart.resetTracking();
-        mChart.resetZoom();
 
         //调整x轴第一个和最后一个的位置，否则会显示不完整
         mChart.getXAxis().setAxisMinimum(-0.5f);
@@ -355,9 +348,9 @@ public class CandleStickChartFragment extends BaseFragment {
         mChart.setVisibleXRange(MAX_COUNT, 20);
         ViewPortHandler port = mChart.getViewPortHandler();
         mChart.setViewPortOffsets(0, port.offsetTop(), port.offsetRight(), port.offsetBottom());
-        mChart.moveViewToX(mChart.getCandleData().getEntryCount());
         mChart.notifyDataSetChanged();
         mChart.invalidate();
+        mChart.moveViewToX(mChart.getCandleData().getEntryCount());
     }
 
     @Override

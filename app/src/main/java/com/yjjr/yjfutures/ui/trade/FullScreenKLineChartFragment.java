@@ -3,8 +3,6 @@ package com.yjjr.yjfutures.ui.trade;
 
 import android.os.Bundle;
 
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.google.gson.Gson;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
@@ -17,6 +15,10 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.widget.chart.ChartInfoViewHandler;
+import com.yjjr.yjfutures.widget.chart.InfoViewListener;
+import com.yjjr.yjfutures.widget.chart.KLineXValueFormatter;
+import com.yjjr.yjfutures.widget.chart.YValueFormatter;
 
 import org.joda.time.DateTime;
 
@@ -60,22 +62,14 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
     @Override
     protected void initData() {
 
-        xAxisVolume.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                if (mData != null && value < mData.size()) {
-                    DateTime dateTime = new DateTime(mData.get((int) value).getsDate());
-                    if (mType.equals(HttpConfig.DAY)) {
-                        return DateUtils.formatDataOnly(dateTime.getMillis());
-                    }
-                    return DateUtils.formatTime(dateTime.getMillis());
-                }
-                return "";
-            }
-        });
-
+        xAxisVolume.setValueFormatter(new KLineXValueFormatter(mType, mData));
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (quote == null) return;
+
+        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, quote, mData, mKInfo));
+        mChartPrice.setOnTouchListener(new ChartInfoViewHandler(mChartPrice));
+        axisLeftPrice.setValueFormatter(new YValueFormatter(quote.getTick()));
+//        mMvx.setType(type);
         DateTime dateTime;
         if (quote.isRest()) { //未开盘，数据加载前一天的
             dateTime = DateUtils.nowDateTime();
@@ -86,6 +80,18 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
             }
         } else {
             dateTime = DateUtils.nowDateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
+            // 如果现在的时间在六点之前，减少一天
+            if (DateUtils.nowDateTime().isBefore(dateTime)) {
+                dateTime.minusDays(1);
+            }
+        }
+        if (HttpConfig.DAY.equals(mType)) {
+            dateTime = dateTime.minusYears(1);
+        } else if (HttpConfig.MIN15.equals(mType) || HttpConfig.MIN5.equals(mType)) {
+//            dateTime = dateTime.minusWeeks(1);
+            dateTime = dateTime.minusDays(5);
+        } else if (HttpConfig.HOUR.equals(mType)) {
+            dateTime = dateTime.minusMonths(1);
         }
 
         if (SocketUtils.getSocket() == null) {

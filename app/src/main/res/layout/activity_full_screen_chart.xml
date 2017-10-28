@@ -7,24 +7,124 @@
     android:background="@color/chart_background"
     android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.FullScreenChartActivity">
-
-    <LinearLayout
+    <com.yjjr.yjfutures.widget.NestRadioGroup
+        android:id="@+id/rg_nav"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
+        android:background="@color/chart_background"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="btn1"/>
+        <RadioButton
+            android:id="@+id/rb_chart1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="分时图"
+            android:textColor="@color/selector_chart_rb_text_color"
+            android:textSize="@dimen/sp_12"
+            />
 
-        <Button
-            android:id="@+id/btn2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="btn1"/>
-    </LinearLayout>
+        <RadioButton
+            android:id="@+id/rb_chart2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="1分钟"
+            android:textColor="@color/selector_chart_rb_text_color"
+            android:textSize="@dimen/sp_12"
+            />
+
+        <View
+            android:layout_width="@dimen/common_divider_small"
+            android:layout_height="match_parent"
+            android:background="@color/divider_color"/>
+
+        <RadioButton
+            android:id="@+id/rb_chart3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="5分钟"
+            android:textColor="@color/selector_chart_rb_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <View
+            android:layout_width="@dimen/common_divider_small"
+            android:layout_height="match_parent"
+            android:background="@color/divider_color"/>
+
+        <RadioButton
+            android:id="@+id/rb_chart4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="15分钟"
+            android:textColor="@color/selector_chart_rb_text_color"
+            android:textSize="@dimen/sp_12"/>
+        <View
+            android:layout_width="@dimen/common_divider_small"
+            android:layout_height="match_parent"
+            android:background="@color/divider_color"/>
+
+        <RadioButton
+            android:id="@+id/rb_chart5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="60分钟"
+            android:textColor="@color/selector_chart_rb_text_color"
+            android:textSize="@dimen/sp_12"/>
+        <View
+            android:layout_width="@dimen/common_divider_small"
+            android:layout_height="match_parent"
+            android:background="@color/divider_color"/>
+
+        <RadioButton
+            android:id="@+id/rb_chart6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="1日"
+            android:textColor="@color/selector_chart_rb_text_color"
+            android:textSize="@dimen/sp_12"/>
+        <View
+            android:layout_width="@dimen/common_divider_small"
+            android:layout_height="match_parent"
+            android:background="@color/divider_color"/>
+
+        <RadioButton
+            android:id="@+id/rb_chart7"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="盘口"
+            android:textColor="@color/selector_chart_rb_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+    </com.yjjr.yjfutures.widget.NestRadioGroup>
+
 
     <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
         android:id="@+id/viewpager"

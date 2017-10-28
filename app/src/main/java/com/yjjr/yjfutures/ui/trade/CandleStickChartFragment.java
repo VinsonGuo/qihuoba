@@ -39,13 +39,16 @@ import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.widget.chart.AppCombinedChart;
 import com.yjjr.yjfutures.widget.chart.ChartInfoView;
 import com.yjjr.yjfutures.widget.chart.ChartInfoViewHandler;
 import com.yjjr.yjfutures.widget.chart.InfoViewListener;
 import com.yjjr.yjfutures.widget.chart.KLineChartInfoView;
+import com.yjjr.yjfutures.widget.chart.KLineXValueFormatter;
 import com.yjjr.yjfutures.widget.chart.LineChartXMarkerView;
 import com.yjjr.yjfutures.widget.chart.LineChartYMarkerView;
+import com.yjjr.yjfutures.widget.chart.YValueFormatter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,8 +59,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.socket.emitter.Emitter;
-
-import  com.yjjr.yjfutures.utils.http.HttpConfig;
 
 /**
  * K线图Fragment
@@ -142,19 +143,7 @@ public class CandleStickChartFragment extends BaseFragment {
         xAxis.setDrawGridLines(false);
         xAxis.setLabelCount(5, true);
         xAxis.setAvoidFirstLastClipping(true);
-        xAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                if (mList != null && value < mList.size()) {
-                    DateTime dateTime = new DateTime(mList.get((int) value).getsDate());
-                    if (mType.equals(HttpConfig.DAY)) {
-                        return DateUtils.formatDataOnly(dateTime.getMillis());
-                    }
-                    return DateUtils.formatTime(dateTime.getMillis());
-                }
-                return "";
-            }
-        });
+        xAxis.setValueFormatter(new KLineXValueFormatter(mType, mList));
 
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setTextColor(whiteColor);
@@ -164,12 +153,7 @@ public class CandleStickChartFragment extends BaseFragment {
         rightAxis.setGridLineWidth(0.5f);
         rightAxis.setDrawAxisLine(false);
         rightAxis.enableGridDashedLine(5, 5, 0);
-        rightAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return StringUtils.getStringByTick(value, quote.getTick());
-            }
-        });
+        rightAxis.setValueFormatter(new YValueFormatter(quote.getTick()));
 //        rightAxis.setDrawAxisLine(false);
 
         YAxis leftAxis = mChart.getAxisLeft();

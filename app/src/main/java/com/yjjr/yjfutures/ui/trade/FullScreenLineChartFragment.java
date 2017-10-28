@@ -4,7 +4,6 @@ package com.yjjr.yjfutures.ui.trade;
 import android.os.Bundle;
 
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.google.gson.Gson;
 import com.yjjr.yjfutures.R;
@@ -17,10 +16,12 @@ import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
+import com.yjjr.yjfutures.widget.chart.ChartInfoViewHandler;
+import com.yjjr.yjfutures.widget.chart.InfoViewListener;
+import com.yjjr.yjfutures.widget.chart.YValueFormatter;
 
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.socket.emitter.Emitter;
@@ -69,6 +70,9 @@ public class FullScreenLineChartFragment extends BaseFullScreenChartFragment {
         });
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (quote == null) return;
+        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, quote, mData, mLineInfo));
+        mChartPrice.setOnTouchListener(new ChartInfoViewHandler(mChartPrice));
+        axisLeftPrice.setValueFormatter(new YValueFormatter(quote.getTick()));
         DateTime dateTime;
         if (quote.isRest()) { //未开盘，数据加载前一天的
             dateTime = DateUtils.nowDateTime();
@@ -99,7 +103,7 @@ public class FullScreenLineChartFragment extends BaseFullScreenChartFragment {
                     @Override
                     public void run() {
                         if (list.isEmpty()) {
-                           mChartPrice.setNoDataText(getString(R.string.data_load_fail));
+                            mChartPrice.setNoDataText(getString(R.string.data_load_fail));
                             mChartVolume.setNoDataText(getString(R.string.data_load_fail));
                             return;
                         }

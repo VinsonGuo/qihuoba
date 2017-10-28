@@ -5,7 +5,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.BuildConfig;
@@ -27,7 +26,6 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.utils.DateUtils;
-import com.yjjr.yjfutures.utils.StringUtils;
 
 import org.joda.time.DateTime;
 
@@ -151,7 +149,7 @@ public class TimeSharingplanChart extends RelativeLayout {
 
         mChart.setData(data);
 
-        Highlight chartHighlighter = new Highlight(setSell.getEntryCount()+paddingSet.getEntryCount(), (float) mList.get(mList.size() - 1).getClose(), DATA_SET_PADDING);
+        Highlight chartHighlighter = new Highlight(setSell.getEntryCount() + paddingSet.getEntryCount(), (float) mList.get(mList.size() - 1).getClose(), DATA_SET_PADDING);
         mChart.highlightValue(chartHighlighter);
 
         mChart.notifyDataSetChanged();
@@ -202,8 +200,8 @@ public class TimeSharingplanChart extends RelativeLayout {
 
 //            paddingSet.setHighlightEnabled(true);
 
-                Highlight chartHighlighter = new Highlight(setSell.getEntryCount()+paddingSet.getEntryCount(), bid, DATA_SET_PADDING);
-                mChart.highlightValue(chartHighlighter);
+            Highlight chartHighlighter = new Highlight(setSell.getEntryCount() + paddingSet.getEntryCount(), bid, DATA_SET_PADDING);
+            mChart.highlightValue(chartHighlighter);
 
             data.notifyDataChanged();
             mChart.notifyDataSetChanged();
@@ -260,7 +258,7 @@ public class TimeSharingplanChart extends RelativeLayout {
                 paddingSet.addEntry(new Entry(setSell.getEntryCount() + i, price));
             }
 
-            Highlight chartHighlighter = new Highlight(setSell.getEntryCount()+paddingSet.getEntryCount(), price, DATA_SET_PADDING);
+            Highlight chartHighlighter = new Highlight(setSell.getEntryCount() + paddingSet.getEntryCount(), price, DATA_SET_PADDING);
             mChart.highlightValue(chartHighlighter);
 
             data.notifyDataChanged();
@@ -286,7 +284,7 @@ public class TimeSharingplanChart extends RelativeLayout {
             set.setFillDrawable(ContextCompat.getDrawable(mContext, R.drawable.bg_chart_fade));
         } else if (type == TYPE_AVE) {
             set.setHighlightEnabled(true);
-            set.setColor(ContextCompat.getColor(mContext,R.color.main_color));
+            set.setColor(ContextCompat.getColor(mContext, R.color.main_color));
             set.setLineWidth(1f);
             set.setCircleRadius(1.5f);
             set.setDrawCircleHole(false);
@@ -372,15 +370,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         rightAxis.setLabelCount(6, true);
         rightAxis.setDrawAxisLine(false);
 
-        rightAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                if (mQuote == null) {
-                    return value + "";
-                }
-                return StringUtils.getStringByTick(value, mQuote.getTick());
-            }
-        });
+        rightAxis.setValueFormatter(new YValueFormatter(mQuote.getTick()));
         Legend legend = mChart.getLegend();
         legend.setEnabled(false);
 

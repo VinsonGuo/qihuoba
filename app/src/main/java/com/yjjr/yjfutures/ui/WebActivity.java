@@ -22,10 +22,10 @@ import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.CSUnreadEvent;
 import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.ui.mine.ChatActivity;
-import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
+import com.yjjr.yjfutures.utils.ShareUtils;
 import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.widget.HeaderView;
 
@@ -114,8 +114,8 @@ public class WebActivity extends BaseActivity {
                 if (type == TYPE_CSCENTER) {
                     ChatActivity.startActivity(mContext);
                 } else if (type == TYPE_SHARE) {
-                    ActivityTools.share(mContext, getString(R.string.app_name), url);
-//                    ShareUtils.share(mContext,url,"外盘期货原油黄金白银","美国顶级券商盈透证券，国内外盘期货领先者，原油黄金恒指德指，绝对实盘保证，自主研发系统。");
+//                    ActivityTools.share(mContext, getString(R.string.app_name), url);
+                    ShareUtils.share(mContext, url, "一个账户通全球，期货市场一网打尽", "专业玩期货，上期货吧！24小时全球市场，精准行情报价，百万投资用户首选！");
                 }
             }
         });

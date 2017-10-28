@@ -5,11 +5,25 @@
               android:orientation="vertical"
              tools:context="com.yjjr.yjfutures.ui.trade.FullScreenLineChartFragment">
 
-    <com.yjjr.yjfutures.widget.chart.AppCombinedChart
-        android:id="@+id/line_chart"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"/>
+        android:layout_weight="2">
+        <com.yjjr.yjfutures.widget.chart.AppCombinedChart
+            android:id="@+id/line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <com.yjjr.yjfutures.widget.chart.LineChartInfoView
+            android:id="@+id/line_info"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+        <com.yjjr.yjfutures.widget.chart.KLineChartInfoView
+            android:id="@+id/k_info"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+    </FrameLayout>
 
     <!-- <com.github.mikephil.charting.charts.BarChart
          android:id="@+id/bar_chart"

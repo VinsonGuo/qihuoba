@@ -342,7 +342,8 @@
             android:name=".ui.trade.TradeGuideActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.trade.FullScreenChartActivity">
+        <activity android:name=".ui.trade.FullScreenChartActivity"
+                  android:screenOrientation="landscape">
         </activity>
         <activity
             android:name=".ui.mine.AboutUsActivity"

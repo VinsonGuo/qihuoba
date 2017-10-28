@@ -5,6 +5,7 @@ import android.graphics.Matrix;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -16,10 +17,10 @@ public class CoupleChartGestureListener implements OnChartGestureListener {
 
     private static final String TAG = CoupleChartGestureListener.class.getSimpleName();
 
-    private Chart srcChart;
+    private BarLineChartBase srcChart;
     private Chart[] dstCharts;
 
-    public CoupleChartGestureListener(Chart srcChart, Chart... dstCharts) {
+    public CoupleChartGestureListener(BarLineChartBase srcChart, Chart... dstCharts) {
         this.srcChart = srcChart;
         this.dstCharts = dstCharts;
     }
@@ -32,6 +33,7 @@ public class CoupleChartGestureListener implements OnChartGestureListener {
     @Override
     public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
         syncCharts();
+        srcChart.setDragEnabled(true);
     }
 
     @Override

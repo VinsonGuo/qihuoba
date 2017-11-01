@@ -14,6 +14,7 @@ import com.yjjr.yjfutures.event.ShowRedDotEvent;
 import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.WebActivity;
+import com.yjjr.yjfutures.utils.DES3Util;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 
 import org.greenrobot.eventbus.EventBus;
@@ -79,7 +80,7 @@ public class FoundFragment extends BaseFragment implements View.OnClickListener 
                 WebActivity.startActivity(mContext, HttpConfig.URL_CSCENTER, WebActivity.TYPE_CSCENTER);
                 break;
             case R.id.root_view4:
-                WebActivity.startActivity(mContext, HttpConfig.URL_PROMOTION + UserSharePrefernce.getAccount(mContext), WebActivity.TYPE_SHARE);
+                WebActivity.startActivity(mContext, HttpConfig.URL_PROMOTION + DES3Util.encode(UserSharePrefernce.getAccount(mContext)), WebActivity.TYPE_SHARE);
                 break;
         }
     }

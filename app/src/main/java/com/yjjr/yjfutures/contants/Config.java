@@ -14,18 +14,6 @@ import java.io.File;
 
 public class Config {
 
-    public static final String HOST = "http://192.168.9.156:80";
-//    public static final String HOST = "http://ap.leoset.hk";
-    /**
-     * baseurl最后要以/结尾
-     */
-    public static final String BASE_URL = HOST + "/api/";
-
-    /**
-     * 在线交易的url
-     */
-    public static final String ONLINE_TRADE_URL = "http://10.50.0.3:9938/";
-    //   public static String ONLINE_TRADE_URL = "http://139.219.232.193:9938/";
 
     /**
      * 手机号码的正则
@@ -37,8 +25,8 @@ public class Config {
      */
     public static final String REG_IDCARD = "^(\\d{6})(19|20)(\\d{2})(1[0-2]|0[1-9])(0[1-9]|[1-2][0-9]|3[0-1])(\\d{3})(\\d|X|x)?$";
 
-    public static final String DES_KEY = "KVBAx159";
-    public static final String DES_IV = "KVBBn159";
+    public static final String DES_KEY = "pR3t8Bp16BeDAMErGwnditpFhf9ZY4a1";
+    public static final String DES_IV = "12345678";
 
     /**
      * 上传照片的最大大小 512M
@@ -61,22 +49,4 @@ public class Config {
         return dir;
     }
 
-
-    public static String getPicDir(String fileName) {
-        String dir = getDir() + "/pic";
-        File f = new File(dir);
-        if (!f.exists()) {
-            f.mkdirs();
-        }
-        return dir + "/" + fileName;
-    }
-
-    public static String getLogDir(String fileName) {
-        String dir = getDir() + "/log";
-        File f = new File(dir);
-        if (!f.exists()) {
-            f.mkdirs();
-        }
-        return dir + "/" + fileName;
-    }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -23,20 +24,19 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.Quote;
-import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseFragment;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.widget.chart.AppCombinedChart;
 import com.yjjr.yjfutures.widget.chart.ChartInfoView;
 import com.yjjr.yjfutures.widget.chart.CoupleChartGestureListener;
 import com.yjjr.yjfutures.widget.chart.LineChartXMarkerView;
-import com.yjjr.yjfutures.widget.chart.YValueFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +47,10 @@ import java.util.List;
 
 public class BaseFullScreenChartFragment extends BaseFragment {
 
-    public static final int MAX_COUNT_LINE = 480;
-    public static final int MAX_COUNT_K = 120;
+    public static final int MAX_COUNT_LINE = 200;
+    public static final int MIN_COUNT_LINE = 100;
+    public static final int MAX_COUNT_K = 100;
+    public static final int MIN_COUNT_K = 60;
 
 
     protected AppCombinedChart mChartPrice;
@@ -62,11 +64,9 @@ public class BaseFullScreenChartFragment extends BaseFragment {
     protected YAxis axisRightVolume;
     protected YAxis axisLeftVolume;
     protected List<HisData> mData = new ArrayList<>(300);
-
-    private int textColor;
     protected ChartInfoView mLineInfo;
     protected ChartInfoView mKInfo;
-
+    private int textColor;
 
     @Override
     protected View initViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -138,7 +138,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         mChartVolume.setScaleYEnabled(false);//启用Y轴上的缩放
 //        mChartVolume.setBorderColor(getResources().getColor(R.color.border_color));//边线颜色
         mChartVolume.getDescription().setEnabled(false);//右下角对图表的描述信息
-
+//        mChartVolume.setAutoScaleMinMaxEnabled(true);
         Legend lineChartLegend = mChartVolume.getLegend();
         lineChartLegend.setEnabled(false);//是否绘制 Legend 图例
 
@@ -158,10 +158,22 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         axisLeftVolume.setDrawLabels(true);//参考上面
         axisLeftVolume.setDrawGridLines(false);//参考上面
         /*轴不显示 避免和border冲突*/
-        axisLeftVolume.setLabelCount(3, false);
+        axisLeftVolume.setLabelCount(3, true);
         axisLeftVolume.setDrawAxisLine(false);//参考上面
         axisLeftVolume.setTextColor(textColor);
+        axisLeftVolume.setAxisMinimum(0);
         axisLeftVolume.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        axisLeftVolume.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                if (value > 10000) {
+                    return (int) (value / 10000) + "万";
+                } else if (value > 1000) {
+                    return (int) (value / 1000) + "千";
+                }
+                return (int) value + "";
+            }
+        });
 
 
         //右边y
@@ -178,33 +190,6 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         mChartPrice.setOnChartGestureListener(new CoupleChartGestureListener(mChartPrice, mChartVolume));
 //        // 将交易量控件的滑动事件传递给K线控件
         mChartVolume.setOnChartGestureListener(new CoupleChartGestureListener(mChartVolume, mChartPrice));
-        mChartPrice.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                mChartVolume.highlightValues(new Highlight[]{h});
-            }
-
-
-            @Override
-            public void onNothingSelected() {
-                mChartVolume.highlightValue(null);
-            }
-        });
-
-        mChartVolume.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                mChartPrice.highlightValues(new Highlight[]{h});
-            }
-
-            @Override
-            public void onNothingSelected() {
-                mChartPrice.highlightValue(null);
-            }
-        });
-
     }
 
     protected void initChartKData(AppCombinedChart combinedChartX) {
@@ -226,9 +211,10 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         combinedData.setData(candleData);
         combinedChartX.setData(combinedData);
 
-//        combinedChartX.setVisibleXRange(MAX_COUNT_K, MAX_COUNT_K);
+        combinedChartX.setVisibleXRange(MAX_COUNT_K, MIN_COUNT_K);
         combinedChartX.notifyDataSetChanged();
         combinedChartX.invalidate();
+        combinedChartX.moveViewToX(combinedData.getEntryCount());
     }
 
     protected void initChartPriceData(AppCombinedChart combinedChartX) {
@@ -254,10 +240,11 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         combinedData.setData(lineData);
         combinedChartX.setData(combinedData);
 
-//        combinedChartX.setVisibleXRange(MAX_COUNT_LINE, MAX_COUNT_LINE);
+        combinedChartX.setVisibleXRange(MAX_COUNT_LINE, MIN_COUNT_LINE);
 
         combinedChartX.notifyDataSetChanged();
         combinedChartX.invalidate();
+        combinedChartX.moveViewToX(combinedData.getEntryCount());
     }
 
     @android.support.annotation.NonNull
@@ -271,6 +258,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         } else if (type == 1) {
             lineDataSetMa.setColor(getResources().getColor(R.color.minute_yellow));
             lineDataSetMa.setCircleColor(ContextCompat.getColor(mContext, R.color.minute_yellow));
+            lineDataSetMa.setCircleColor(getResources().getColor(R.color.transparent));
         } else {
 //            lineDataSetMa.setColor(getResources().getColor(R.color.main_color_green));
             lineDataSetMa.setVisible(false);
@@ -312,7 +300,6 @@ public class BaseFullScreenChartFragment extends BaseFragment {
             barEntries.add(new BarEntry(i, t.getVol()));
         }
         BarDataSet barDataSet = new BarDataSet(barEntries, "成交量");
-//        barDataSet.setBarSpacePercent(20); //bar空隙，可以控制树状图的大小，空隙越大，树状图越窄
         barDataSet.setDrawValues(false);//是否在线上绘制数值
         barDataSet.setColor(getResources().getColor(R.color.increasing_color));//设置树状图颜色
         List<Integer> list = new ArrayList<>();
@@ -325,9 +312,59 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         combinedData.setData(barData);
         combinedChartX.setData(combinedData);
 
+        if (mChartPrice.getData().getCandleData() != null) {
+            combinedChartX.setVisibleXRange(MAX_COUNT_K, MIN_COUNT_K);
+        } else {
+            combinedChartX.setVisibleXRange(MAX_COUNT_LINE, MIN_COUNT_LINE);
+        }
         setOffset();
         combinedChartX.notifyDataSetChanged();
         combinedChartX.invalidate();
+        combinedChartX.moveViewToX(combinedData.getEntryCount());
+    }
+
+    protected void refreshData(float price) {
+        try {
+            LineData lineData = mChartPrice.getData().getLineData();
+            if (lineData == null) return;
+            ILineDataSet set = lineData.getDataSetByIndex(0);
+            if (set.removeLast()) {
+                set.addEntry(new Entry(set.getEntryCount(), price));
+            }
+            mChartPrice.notifyDataSetChanged();
+            mChartPrice.invalidate();
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
+    }
+
+    protected void addData(List<HisData> hisDatas) {
+        try {
+            LineData priceData = mChartPrice.getData().getLineData();
+            ILineDataSet priceSet = priceData.getDataSetByIndex(0);
+            ILineDataSet aveSet = priceData.getDataSetByIndex(1);
+            IBarDataSet volSet = mChartVolume.getData().getBarData().getDataSetByIndex(0);
+            for (int i = 0; i < hisDatas.size(); i++) {
+                HisData hisData = hisDatas.get(i);
+                if (mData.contains(hisData)) {
+                    int index = mData.indexOf(hisData);
+                    priceSet.removeEntry(index);
+                    aveSet.removeEntry(index);
+                    volSet.removeEntry(index);
+                    mData.remove(index);
+                }
+                mData.add(hisData);
+                priceSet.addEntry(new Entry(priceSet.getEntryCount(), (float) hisData.getClose()));
+                aveSet.addEntry(new Entry(aveSet.getEntryCount(), (float) hisData.getAvePrice()));
+                volSet.addEntry(new BarEntry(volSet.getEntryCount(), hisData.getVol()));
+                mChartPrice.notifyDataSetChanged();
+                mChartPrice.invalidate();
+                mChartVolume.notifyDataSetChanged();
+                mChartVolume.invalidate();
+            }
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
     }
 
     protected void setOffset() {

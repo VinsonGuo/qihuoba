@@ -48,19 +48,16 @@ import java.util.regex.Pattern;
  */
 public class StringUtils {
 
-    private static Gson sGson = new Gson();
     private static final Map<String, String> sCurrencyMap = new HashMap<String, String>() {{
         put("USD", "美元");
         put("HKD", "港币");
         put("EUR", "欧元");
     }};
-
     private static final Map<String, String> sCurrencySymbolMap = new HashMap<String, String>() {{
         put("USD", "$");
         put("HKD", "HK$");
         put("EUR", "€");
     }};
-
     private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
             "[a-zA-Z0-9\\+\\._%\\-\\+]{1,256}" +
                     "@" +
@@ -69,6 +66,7 @@ public class StringUtils {
                     "\\." +
                     "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
                     ")+");
+    private static Gson sGson = new Gson();
 
     public static String parseSpan(String s) {
         String replaceSpan = "<span class=\"highlight\">";
@@ -619,4 +617,6 @@ public class StringUtils {
         }
         return list;
     }
+
+
 }

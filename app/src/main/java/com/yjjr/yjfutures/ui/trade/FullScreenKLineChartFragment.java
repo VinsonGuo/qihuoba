@@ -2,6 +2,7 @@ package com.yjjr.yjfutures.ui.trade;
 
 
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.yjjr.yjfutures.R;
@@ -66,8 +67,8 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (quote == null) return;
 
-        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, quote, mData, mKInfo,mChartVolume));
-        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, quote, mData, mLineInfo,mChartPrice));
+        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, quote, mData, mKInfo, mChartVolume));
+        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, quote, mData, mLineInfo, mChartPrice));
         mChartPrice.setOnTouchListener(new ChartInfoViewHandler(mChartPrice));
         axisLeftPrice.setValueFormatter(new YValueFormatter(quote.getTick()));
 //        mMvx.setType(type);
@@ -118,8 +119,11 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
                             return;
                         }
 
-                        setLimitLine(quote);
-                        initChartKData(mChartPrice);
+                        boolean isMin = TextUtils.equals(mType, HttpConfig.MIN);
+                        if (isMin) {
+                            setLimitLine(quote);
+                        }
+                        initChartKData(mChartPrice, isMin);
                         initChartVolumeData(mChartVolume);
                     }
                 });

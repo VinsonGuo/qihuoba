@@ -27,6 +27,10 @@
             android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"
             />
+        <View
+            android:layout_width="@dimen/common_divider_small"
+            android:layout_height="match_parent"
+            android:background="@color/divider_color"/>
 
         <RadioButton
             android:id="@+id/rb_chart2"

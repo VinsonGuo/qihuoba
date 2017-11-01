@@ -155,9 +155,6 @@
         <item name="android:textSize">@dimen/text_size_20sp</item>
     </style>
 
-    <style name="text_color_ffffff_20sp" parent="@color/white">
-        <item name="android:textSize">@dimen/text_size_20sp</item>
-    </style>
 
     <style name="text_color_333333_17sp" parent="@style/color_333333">
         <item name="android:textSize">@dimen/text_size_17sp</item>

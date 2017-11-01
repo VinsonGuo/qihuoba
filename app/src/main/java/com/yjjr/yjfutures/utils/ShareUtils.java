@@ -27,7 +27,6 @@ public class ShareUtils {
         final CustomShareListener listener = new CustomShareListener(activity);
         ShareAction mShareAction = new ShareAction(activity).setDisplayList(
                 SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
-                SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE,
                 SHARE_MEDIA.SMS)
                 .withMedia(web)
                 .setCallback(listener);

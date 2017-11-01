@@ -181,7 +181,8 @@
         </activity>
         <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
         </activity>
 
         <!-- 启动页面 -->
@@ -342,8 +343,9 @@
             android:name=".ui.trade.TradeGuideActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.trade.FullScreenChartActivity"
-                  android:screenOrientation="landscape">
+        <activity
+            android:name=".ui.trade.FullScreenChartActivity"
+            android:screenOrientation="landscape">
         </activity>
         <activity
             android:name=".ui.mine.AboutUsActivity"

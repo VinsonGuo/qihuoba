@@ -293,12 +293,13 @@ public class TimeSharingplanChart extends RelativeLayout {
         } else {
             set.setHighlightEnabled(true);
             set.setDrawVerticalHighlightIndicator(false);
+            set.setHighLightColor(transparentColor);
             set.setColor(mLineColor);
             set.enableDashedLine(3, 40, 0);
             set.setDrawCircleHole(false);
             set.setCircleColor(transparentColor);
             set.setLineWidth(1f);
-            set.setVisible(false);
+            set.setVisible(true);
         }
         set.setDrawCircles(false);
         set.setDrawValues(false);

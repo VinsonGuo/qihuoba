@@ -192,10 +192,10 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         mChartVolume.setOnChartGestureListener(new CoupleChartGestureListener(mChartVolume, mChartPrice));
     }
 
-    protected void initChartKData(AppCombinedChart combinedChartX) {
+    protected void initChartKData(AppCombinedChart combinedChartX, boolean isShowAve) {
 
-        ArrayList<CandleEntry> lineCJEntries = new ArrayList<>();
-        ArrayList<Entry> lineJJEntries = new ArrayList<>();
+        ArrayList<CandleEntry> lineCJEntries = new ArrayList<>(MAX_COUNT_K);
+        ArrayList<Entry> lineJJEntries = new ArrayList<>(MAX_COUNT_K);
 
         for (int i = 0, j = 0; i < mData.size(); i++, j++) {
             HisData hisData = mData.get(i);
@@ -207,7 +207,9 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         LineData lineData = new LineData(setLine(1, lineJJEntries));
         CandleData candleData = new CandleData(setKLine(0, lineCJEntries));
         CombinedData combinedData = new CombinedData();
-        combinedData.setData(lineData);
+        if (isShowAve) {
+            combinedData.setData(lineData);
+        }
         combinedData.setData(candleData);
         combinedChartX.setData(combinedData);
 

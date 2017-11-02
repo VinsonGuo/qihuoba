@@ -153,7 +153,7 @@ public class ChatActivity extends TakePhotoActivity implements
         setContentView(R.layout.activity_chat);
         mUserInfo = BaseApplication.getInstance().getUserInfo();
         toSendId = mUserInfo.getYjEmchat();
-//        toSendId = "13631649574-1506743413020";
+//        toSendId = "13631649574-1509446318445";
         imageLoader = new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {
@@ -351,6 +351,15 @@ public class ChatActivity extends TakePhotoActivity implements
         message.setTo(toSendId);
 // 设置自定义扩展字段
         message.setAttribute("em_force_notification", true);
+//        JSONObject extObject = new JSONObject();
+//        try {
+//            extObject.put("em_push_name", "离线推送标题");
+//            extObject.put("em_push_content", "离线推送内容部分");
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//// 将推送扩展设置到消息中
+//        message.setAttribute("em_apns_ext", extObject);
 // 发送消息
         message.setMessageStatusCallback(new YJChat(mContext, new YJChat.CallBack() {
             @Override

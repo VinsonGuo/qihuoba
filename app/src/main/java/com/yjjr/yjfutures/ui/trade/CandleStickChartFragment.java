@@ -13,14 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.ViewPortHandler;
@@ -211,7 +212,8 @@ public class CandleStickChartFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(OneMinuteEvent event) {
-        if (!mList.isEmpty() && TextUtils.equals(mType, HttpConfig.MIN) && SocketUtils.getSocket() != null) {
+        final boolean isMin = TextUtils.equals(mType, HttpConfig.MIN);
+        if (!mList.isEmpty() && isMin && SocketUtils.getSocket() != null) {
             final HisData hisData = mList.get(mList.size() - 1);
             final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
             SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, mGson.toJson(new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), hisData.getsDate(), mType)));
@@ -219,8 +221,7 @@ public class CandleStickChartFragment extends BaseFragment {
                 @Override
                 public void call(Object... args) {
                     LogUtils.d("history data -> " + args[0].toString());
-                    final List<HisData> hisDatas = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
-                    }.getType());
+                    final List<HisData> hisDatas = StringUtils.parseHisData(args[0].toString(), hisData);
                     if (hisDatas == null || hisDatas.isEmpty()) {
                         return;
                     }
@@ -229,7 +230,7 @@ public class CandleStickChartFragment extends BaseFragment {
                         public void run() {
                             mList.removeAll(hisDatas);
                             mList.addAll(hisDatas);
-                            fullData(mList);
+                            fullData(mList, isMin);
                         }
                     });
                 }
@@ -276,21 +277,20 @@ public class CandleStickChartFragment extends BaseFragment {
             @Override
             public void call(Object... args) {
                 LogUtils.d("history data -> " + args[0].toString());
-                List<HisData> list = mGson.fromJson(args[0].toString(), new TypeToken<List<HisData>>() {
-                }.getType());
+                final List<HisData> hisDatas = StringUtils.parseHisData(args[0].toString(), null);
                 mList.clear();
-                mList.addAll(list);
+                mList.addAll(hisDatas);
                 mChart.post(new Runnable() {
                     @Override
                     public void run() {
-                        fullData(mList);
+                        fullData(mList, TextUtils.equals(mType, HttpConfig.MIN));
                     }
                 });
             }
         });
     }
 
-    private void fullData(List<HisData> datas) {
+    private void fullData(List<HisData> datas, boolean isShowAve) {
         if (datas == null || datas.isEmpty()) {
             mChart.setNoDataText(getString(R.string.data_is_null));
             return;
@@ -300,6 +300,7 @@ public class CandleStickChartFragment extends BaseFragment {
         mChart.getXAxis().setAxisMinimum(-0.5f);
         mChart.getXAxis().setAxisMaximum(datas.size() - 0.5f);
         ArrayList<CandleEntry> yVals1 = new ArrayList<>();
+        ArrayList<Entry> aveList = new ArrayList<>();
         for (int i = 0; i < datas.size(); i++) {
             HisData data = datas.get(i);
             yVals1.add(new CandleEntry(
@@ -308,24 +309,37 @@ public class CandleStickChartFragment extends BaseFragment {
                     (float) data.getOpen(),
                     (float) data.getClose()
             ));
+            aveList.add(new Entry(i, (float) data.getAvePrice()));
         }
 
+        // K线
         CandleDataSet set1 = new CandleDataSet(yVals1, "日期");
         set1.setDrawIcons(false);
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
         set1.setShadowColor(Color.DKGRAY);
         set1.setShadowWidth(0.7f);
-        set1.setDecreasingColor(ContextCompat.getColor(getContext(), R.color.main_color_green));
+        set1.setDecreasingColor(ContextCompat.getColor(getContext(), R.color.decreasing_color));
         set1.setDecreasingPaintStyle(Paint.Style.FILL);
         set1.setShadowColorSameAsCandle(true);
-        set1.setIncreasingColor(ContextCompat.getColor(getContext(), R.color.main_color_red));
+        set1.setIncreasingColor(ContextCompat.getColor(getContext(), R.color.increasing_color));
         set1.setIncreasingPaintStyle(Paint.Style.FILL);
-        set1.setNeutralColor(ContextCompat.getColor(getContext(), R.color.main_color_red));
+        set1.setNeutralColor(ContextCompat.getColor(getContext(), R.color.increasing_color));
         //set1.setHighlightLineWidth(1f);
         set1.setDrawValues(false);
         CandleData cd = new CandleData(set1);
+
+        // 均线
+        LineDataSet lineDataSet = new LineDataSet(aveList, "均线");
+        lineDataSet.setCircleColor(ContextCompat.getColor(mContext, R.color.transparent));
+        lineDataSet.setColor(ContextCompat.getColor(mContext, R.color.ave_color));
+        lineDataSet.setLineWidth(1f);
+        lineDataSet.setDrawCircleHole(false);
+
         CombinedData data = new CombinedData();
         data.setData(cd);
+        if (isShowAve) {
+            data.setData(new LineData(lineDataSet));
+        }
         mChart.setData(data);
         mChart.highlightValue(null);
         mInfoView.setVisibility(View.GONE);

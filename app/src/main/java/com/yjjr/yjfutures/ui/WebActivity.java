@@ -21,12 +21,15 @@ import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
 import com.yjjr.yjfutures.event.CSUnreadEvent;
 import com.yjjr.yjfutures.model.biz.UserInfo;
+import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.mine.ChatActivity;
+import com.yjjr.yjfutures.utils.DES3Util;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.ShareUtils;
 import com.yjjr.yjfutures.utils.SpannableUtil;
+import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.widget.HeaderView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -115,7 +118,8 @@ public class WebActivity extends BaseActivity {
                     ChatActivity.startActivity(mContext);
                 } else if (type == TYPE_SHARE) {
 //                    ActivityTools.share(mContext, getString(R.string.app_name), url);
-                    ShareUtils.share(mContext, url, "一个账户通全球，期货市场一网打尽", "专业玩期货，上期货吧！24小时全球市场，精准行情报价，百万投资用户首选！");
+                    String shareUrl = HttpConfig.DOMAIN + ":9300/manage/promote/sharePage?account=" + DES3Util.encode(UserSharePrefernce.getAccount(mContext));
+                    ShareUtils.share(mContext, shareUrl, "一个账户通全球，期货市场一网打尽", "专业玩期货，上期货吧！24小时全球市场，精准行情报价，百万投资用户首选！");
                 }
             }
         });

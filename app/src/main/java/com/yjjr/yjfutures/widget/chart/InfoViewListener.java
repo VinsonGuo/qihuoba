@@ -37,7 +37,7 @@ public class InfoViewListener implements OnChartValueSelectedListener {
         mInfoView = infoView;
     }
 
-    public InfoViewListener(Context context, Quote quote, List<HisData> list, ChartInfoView infoView,Chart otherChart) {
+    public InfoViewListener(Context context, Quote quote, List<HisData> list, ChartInfoView infoView, Chart otherChart) {
         mWidth = DisplayUtils.getWidthHeight(context)[0];
         mQuote = quote;
         mList = list;
@@ -59,14 +59,15 @@ public class InfoViewListener implements OnChartValueSelectedListener {
             lp.gravity = Gravity.LEFT;
         }
         mInfoView.setLayoutParams(lp);
-        if(mOtherChart != null) {
+        if (mOtherChart != null) {
             mOtherChart.highlightValues(new Highlight[]{h});
         }
     }
 
     @Override
     public void onNothingSelected() {
-        mInfoView.setVisibility(View.GONE); if(mOtherChart != null) {
+        mInfoView.setVisibility(View.GONE);
+        if (mOtherChart != null) {
             mOtherChart.highlightValues(null);
         }
     }

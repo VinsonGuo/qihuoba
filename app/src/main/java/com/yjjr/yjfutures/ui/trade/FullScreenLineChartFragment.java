@@ -153,7 +153,7 @@ public class FullScreenLineChartFragment extends BaseFullScreenChartFragment {
                         if (hisDatas == null || hisDatas.isEmpty()) {
                             return;
                         }
-                        addData(hisDatas);
+                        addLineData(hisDatas);
                     }
                 });
             }

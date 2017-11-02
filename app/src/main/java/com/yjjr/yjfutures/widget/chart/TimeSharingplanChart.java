@@ -284,7 +284,7 @@ public class TimeSharingplanChart extends RelativeLayout {
             set.setFillDrawable(ContextCompat.getDrawable(mContext, R.drawable.bg_chart_fade));
         } else if (type == TYPE_AVE) {
             set.setHighlightEnabled(true);
-            set.setColor(ContextCompat.getColor(mContext, R.color.main_color));
+            set.setColor(ContextCompat.getColor(mContext, R.color.ave_color));
             set.setLineWidth(1f);
             set.setCircleRadius(1.5f);
             set.setDrawCircleHole(false);

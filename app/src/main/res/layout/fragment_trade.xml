@@ -251,11 +251,57 @@
     <View
         style="@style/style_divider"/>
 
-    <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
-        android:id="@+id/viewpager"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/ll_list_title"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="时间"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_12"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="位价"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_12"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="现手"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_12"/>
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_list"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignLeft="@id/ll_list_title"
+            android:layout_alignRight="@id/ll_list_title"
+            android:layout_below="@id/ll_list_title"/>
+
+        <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/rv_list"/>
+
+    </RelativeLayout>
 
 
     <com.yjjr.yjfutures.widget.MarketDepthView

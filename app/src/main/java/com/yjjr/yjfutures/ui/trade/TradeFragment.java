@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -179,7 +181,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             }
         });
         mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
-        Fragment[] fragments = {FullScreenLineChartFragment.newInstance(mSymbol, mIsDemo),
+        Fragment[] fragments = {LineChartFragment.newInstance(mSymbol, mIsDemo),
                 mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol, mIsDemo)};
         mKLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
         mViewpager.setAdapter(mKLineAdapter);
@@ -323,6 +325,15 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvDirection = (TextView) v.findViewById(R.id.tv_direction);
         tvYueValue = (TextView) v.findViewById(R.id.tv_yue_value);
         tvMarginValue = (TextView) v.findViewById(R.id.tv_margin_value);
+        RecyclerView rvMarketHis = (RecyclerView) v.findViewById(R.id.rv_list);
+        rvMarketHis.setLayoutManager(new LinearLayoutManager(mContext));
+        MarketHisAdapter marketHisAdapter = new MarketHisAdapter(null);
+        marketHisAdapter.bindToRecyclerView(rvMarketHis);
+        ArrayList<String> test = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            test.add(i + "");
+        }
+        marketHisAdapter.addData(test);
         if (mIsDemo) {
             TextView tvYue = (TextView) v.findViewById(R.id.tv_yue);
             TextView tvMargin = (TextView) v.findViewById(R.id.tv_margin);

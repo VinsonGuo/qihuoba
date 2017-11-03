@@ -1,7 +1,5 @@
 package com.yjjr.yjfutures.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.yjjr.yjfutures.utils.DateUtils;
@@ -12,18 +10,7 @@ import org.joda.time.DateTime;
  * Created by dell on 2017/7/6.
  */
 
-public class Quote implements Parcelable {
-    public static final Parcelable.Creator<Quote> CREATOR = new Parcelable.Creator<Quote>() {
-        @Override
-        public Quote createFromParcel(Parcel source) {
-            return new Quote(source);
-        }
-
-        @Override
-        public Quote[] newArray(int size) {
-            return new Quote[size];
-        }
-    };
+public class Quote {
     private int askSize;
     private double Lastclose;
     private double openinterest;
@@ -47,39 +34,13 @@ public class Quote implements Parcelable {
     private int Multiple;
     private double low;
     private String Currency;
+    private int sort;
     /**
      * 是否持仓，根据需求加的字段
      */
     private boolean isHolding;
 
     public Quote() {
-    }
-
-    protected Quote(Parcel in) {
-        this.askSize = in.readInt();
-        this.Lastclose = in.readDouble();
-        this.openinterest = in.readDouble();
-        this.Change = in.readDouble();
-        this.SecurityType = in.readString();
-        this.TradingTime = in.readString();
-        this.Vol = in.readInt();
-        this.Tick = in.readDouble();
-        this.open = in.readDouble();
-        this.ChangeRate = in.readDouble();
-        this.Exchange = in.readString();
-        this.Symbolname = in.readString();
-        this.AskPrice = in.readDouble();
-        this.ExchangeRate = in.readDouble();
-        this.BidSize = in.readInt();
-        this.Symbol = in.readString();
-        this.LastSize = in.readDouble();
-        this.LastPrice = in.readDouble();
-        this.BidPrice = in.readDouble();
-        this.high = in.readDouble();
-        this.Multiple = in.readInt();
-        this.low = in.readDouble();
-        this.Currency = in.readString();
-        this.isHolding = in.readByte() != 0;
     }
 
     public boolean isHolding() {
@@ -340,40 +301,17 @@ public class Quote implements Parcelable {
                 ", Multiple=" + Multiple +
                 ", low=" + low +
                 ", Currency='" + Currency + '\'' +
+                ", sort='" + sort + '\'' +
                 ", isHolding=" + isHolding +
                 '}';
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+
+    public int getSort() {
+        return sort;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.askSize);
-        dest.writeDouble(this.Lastclose);
-        dest.writeDouble(this.openinterest);
-        dest.writeDouble(this.Change);
-        dest.writeString(this.SecurityType);
-        dest.writeString(this.TradingTime);
-        dest.writeInt(this.Vol);
-        dest.writeDouble(this.Tick);
-        dest.writeDouble(this.open);
-        dest.writeDouble(this.ChangeRate);
-        dest.writeString(this.Exchange);
-        dest.writeString(this.Symbolname);
-        dest.writeDouble(this.AskPrice);
-        dest.writeDouble(this.ExchangeRate);
-        dest.writeInt(this.BidSize);
-        dest.writeString(this.Symbol);
-        dest.writeDouble(this.LastSize);
-        dest.writeDouble(this.LastPrice);
-        dest.writeDouble(this.BidPrice);
-        dest.writeDouble(this.high);
-        dest.writeInt(this.Multiple);
-        dest.writeDouble(this.low);
-        dest.writeString(this.Currency);
-        dest.writeByte(this.isHolding ? (byte) 1 : (byte) 0);
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 }

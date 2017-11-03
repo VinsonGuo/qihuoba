@@ -19,7 +19,6 @@ import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 public class TradeActivity extends BaseActivity {
 
     private NoTouchScrollViewpager mViewpager;
-    private RadioGroup mRgNav;
     public int mIndex;
 
     public static void startActivity(Context context, String symbol, boolean isDemo) {
@@ -38,24 +37,8 @@ public class TradeActivity extends BaseActivity {
         final String symbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
         final boolean isDemo = getIntent().getBooleanExtra(Constants.CONTENT_PARAMETER_2, false);
         mViewpager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
-        Fragment[] fragments = new Fragment[]{TradeFragment.newInstance(isDemo, symbol), OrderFragment.newInstance(isDemo)};
+        Fragment[] fragments = new Fragment[]{TradeFragment.newInstance(isDemo, symbol)};
         mViewpager.setAdapter(new SimpleFragmentPagerAdapter(getSupportFragmentManager(), fragments));
-        mRgNav = (RadioGroup) findViewById(R.id.rg_nav);
-        mRgNav.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                switch (checkedId) {
-                    case R.id.rb_market:
-                        mIndex = 0;
-                        mViewpager.setCurrentItem(0, false);
-                        break;
-                    case R.id.rb_order:
-                        mIndex = 1;
-                        mViewpager.setCurrentItem(1, false);
-                        break;
-                }
-            }
-        });
 
         /*new Handler().postDelayed(new Runnable() {
             @Override
@@ -67,12 +50,4 @@ public class TradeActivity extends BaseActivity {
         },3000);*/
     }
 
-    @Override
-    public void onBackPressed() {
-        if(mViewpager.getCurrentItem() == 0) {
-            super.onBackPressed();
-        }else {
-            ((RadioButton)mRgNav.getChildAt(0)).setChecked(true);
-        }
-    }
 }

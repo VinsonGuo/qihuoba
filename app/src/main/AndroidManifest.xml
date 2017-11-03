@@ -351,6 +351,8 @@
             android:name=".ui.mine.AboutUsActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".ui.trade.PositionActivity">
+        </activity>
     </application>
 
 </manifest>

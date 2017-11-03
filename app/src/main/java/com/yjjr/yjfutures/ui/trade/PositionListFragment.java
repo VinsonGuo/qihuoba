@@ -244,7 +244,7 @@ public class PositionListFragment extends ListFragment<Holds> {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PollRefreshEvent event) {
-        if (getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 1 && isResumed()) {
+        if (isResumed()) {
             loadData();
         }
     }

@@ -86,7 +86,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         return v;
     }
 
-    private void initChartPrice() {
+    protected void initChartPrice() {
         mChartPrice.setScaleEnabled(true);//启用图表缩放事件
         mChartPrice.setDrawBorders(false);//是否绘制边线
         mChartPrice.setBorderWidth(1);//边线宽度，单位dp
@@ -131,7 +131,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
     }
 
 
-    private void initChartVolume() {
+    protected void initChartVolume() {
         mChartVolume.setScaleEnabled(true);//启用图表缩放事件
         mChartVolume.setDrawBorders(false);//是否绘制边线
         mChartVolume.setBorderWidth(1);//边线宽度，单位dp

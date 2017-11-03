@@ -382,12 +382,12 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                     LogUtils.e(e);
                 }
             }
-        })/*.on("topMarketDepth1", new Emitter.Listener() {
+        }).on("topMarketDepth1", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 LogUtils.d("topMarketDepth1 -> %s", args[0]);
             }
-        })*/;
+        });
         SocketUtils.getSocket().connect();
         SocketUtils.getSocket().emit("getSymbolList");
     }

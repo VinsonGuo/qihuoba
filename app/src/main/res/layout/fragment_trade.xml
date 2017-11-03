@@ -17,6 +17,40 @@
         app:main_title="美原油 CL1078"
         app:sub_title="玩法"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_dark"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:textColor="@color/third_text_color"
+            android:textSize="@dimen/sp_12"
+            tools:text="123"/>
+
+        <TextView
+            android:id="@+id/tv_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:textColor="@color/third_text_color"
+            android:textSize="@dimen/sp_12"
+            tools:text="123"/>
+
+        <TextView
+            android:id="@+id/tv_change_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:textColor="@color/third_text_color"
+            android:textSize="@dimen/sp_12"
+            tools:text="123"/>
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/vg_settlement"
         android:layout_width="match_parent"
@@ -159,21 +193,6 @@
                 android:background="@drawable/selector_chart_rb_bg"
                 android:button="@null"
                 android:gravity="center"
-                android:padding="10dp"
-                android:text="闪电图"
-                android:textColor="@color/selector_chart_rb_text_color"
-                android:textSize="@dimen/sp_12"
-                android:visibility="gone"
-                />
-
-            <RadioButton
-                android:id="@+id/rb_chart2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/selector_chart_rb_bg"
-                android:button="@null"
-                android:gravity="center"
                 android:text="分时图"
                 android:textColor="@color/selector_chart_rb_text_color"
                 android:textSize="@dimen/sp_12"
@@ -206,7 +225,7 @@
                 android:background="@color/divider_color"/>
 
             <RadioButton
-                android:id="@+id/rb_chart4"
+                android:id="@+id/rb_chart2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -238,160 +257,53 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <LinearLayout
-        android:id="@+id/trade_view1"
+
+    <com.yjjr.yjfutures.widget.MarketDepthView
+        android:id="@+id/market_depth_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:textColor="@color/third_text_color"
-            android:textSize="@dimen/sp_12"
-            tools:text="123"/>
-
-        <TextView
-            android:id="@+id/tv_change"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:textColor="@color/third_text_color"
-            android:textSize="@dimen/sp_12"
-            tools:text="123"/>
-
-        <TextView
-            android:id="@+id/tv_change_rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:textColor="@color/third_text_color"
-            android:textSize="@dimen/sp_12"
-            tools:text="123"/>
-    </LinearLayout>
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
-        android:id="@+id/trade_view2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            android:id="@+id/pb_left"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="67dp"
-            android:layout_height="10dp"
-            android:max="100"
-            android:progress="45"
-            android:progressDrawable="@drawable/bg_horizontal_pb_trade_red"/>
+        android:layout_height="48dp"
+        android:layout_gravity="center">
 
         <TextView
-            android:id="@+id/tv_left_pb"
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:id="@+id/tv_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/main_color_red"
-            android:textSize="@dimen/sp_12"
-            tools:text="5"/>
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_16"
+            tools:text="平仓"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:text="买卖量"
-            android:textColor="@color/third_text_color"
-            android:textSize="@dimen/sp_12"/>
-
-        <TextView
-            android:id="@+id/tv_right_pb"
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:id="@+id/tv_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/main_color_green"
-            android:textSize="@dimen/sp_12"
-            tools:text="5"/>
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_16"
+            tools:text="追加"/>
 
-        <ProgressBar
-            android:id="@+id/pb_right"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="67dp"
-            android:layout_height="10dp"
-            android:max="100"
-            android:progress="45"
-            android:progressDrawable="@drawable/bg_horizontal_pb_trade_green"/>
+        <TextView
+            android:id="@+id/tv_position"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/positions"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_16"/>
+
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/trade_view3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/root_padding_10"
-        android:background="@color/chart_background">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_gravity="center">
+    <View
+        style="@style/style_divider"/>
 
-            <TextView
-                android:id="@+id/tv_left"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/shape_online_tx_red"
-                android:gravity="center"
-                android:textColor="@color/main_text_color"
-                android:textSize="@dimen/sp_16"
-                tools:text="113.881"/>
-
-            <TextView
-                android:id="@+id/tv_right"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/shape_online_tx_green"
-                android:gravity="center"
-                android:textColor="@color/main_text_color"
-                android:textSize="@dimen/sp_16"
-                tools:text="113.881"/>
-
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/up_arrow"/>
-
-        <ImageView
-            android:id="@+id/tv_right_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/down_arrow"/>
-
-        <TextView
-            android:id="@+id/tv_center"
-            style="@style/text_color_333333_12sp"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_fast_order"
-            android:drawableTop="@drawable/ic_fast_order"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/closed"
-            android:textColor="@color/third_text_color"/>
-    </FrameLayout>
 
     <TextView
         android:id="@+id/tv_rest"

@@ -17,54 +17,57 @@
         app:main_title="美原油 CL1078"
         app:sub_title="玩法"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/background_dark"
-        android:gravity="center">
+        android:padding="@dimen/root_padding_15">
 
         <TextView
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:textColor="@color/third_text_color"
-            android:textSize="@dimen/sp_12"
+            android:textColor="@color/main_color_red"
+            android:textSize="24sp"
             tools:text="123"/>
 
         <TextView
             android:id="@+id/tv_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:textColor="@color/third_text_color"
-            android:textSize="@dimen/sp_12"
+            android:layout_alignBaseline="@id/tv_price"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@id/tv_price"
+            android:textColor="@color/main_color_red"
+            android:textSize="@dimen/sp_14"
             tools:text="123"/>
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_price"
+            android:layout_marginTop="9dp"
+            android:text="已开盘"
+            android:textColor="@color/color_bbbbbb"/>
 
         <TextView
             android:id="@+id/tv_change_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:textColor="@color/third_text_color"
-            android:textSize="@dimen/sp_12"
+            android:layout_alignBaseline="@id/tv_price"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@id/tv_change"
+            android:textColor="@color/main_color_red"
+            android:textSize="@dimen/sp_14"
             tools:text="123"/>
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/vg_settlement"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/background_dark"
-        android:paddingBottom="18dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="15dp"
-        android:paddingTop="@dimen/dp_10">
 
         <TextView
             android:id="@+id/tv_yue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_price"
+            android:layout_alignLeft="@+id/tv_yue_value"
             android:text="可用余额:"
             android:textColor="@color/main_text_color"
             android:textSize="@dimen/sp_14"/>
@@ -73,49 +76,32 @@
             android:id="@+id/tv_yue_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_below="@id/tv_yue"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="9dp"
+            android:minWidth="80dp"
             android:textColor="@color/third_text_color"
             android:textSize="18sp"
             tools:text="￥5000"/>
 
-        <TextView
-            android:id="@+id/tv_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="保证金:"
-            android:textColor="@color/main_text_color"
-            android:textSize="@dimen/sp_14"/>
+    </RelativeLayout>
+
+    <View
+        style="@style/style_divider"/>
+
+    <RelativeLayout
+        android:id="@+id/vg_settlement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_dark"
+        android:padding="@dimen/root_padding_15">
 
         <TextView
-            android:id="@+id/tv_margin_value"
+            android:id="@+id/tv_high_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tv_margin"
-            android:layout_below="@id/tv_margin"
-            android:layout_marginTop="@dimen/dp_10"
-            android:textColor="@color/second_text_color"
-            android:textSize="18sp"
-            tools:text="￥5000"/>
-
-        <TextView
-            android:id="@+id/tv_deposit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/selector_common_btn_bg"
-            android:drawableLeft="@drawable/ic_wallet"
-            android:drawablePadding="4dp"
-            android:gravity="center"
-            android:paddingBottom="6dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:paddingTop="6dp"
-            android:text="@string/deposit"
-            android:textColor="@color/selector_common_btn_text_color"
-            android:textSize="18sp"/>
+            android:text="todo"
+            android:textColor="@color/color_bbbbbb"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -312,7 +298,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:background="@color/background_dark">
 
         <TextView
             android:id="@+id/tv_left"
@@ -320,8 +308,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/main_text_color"
-            android:textSize="@dimen/sp_16"
+            android:textColor="@color/main_color_red"
+            android:textSize="@dimen/sp_14"
             tools:text="平仓"/>
 
         <TextView
@@ -330,8 +318,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/main_text_color"
-            android:textSize="@dimen/sp_16"
+            android:textColor="@color/main_color_green"
+            android:textSize="@dimen/sp_14"
             tools:text="追加"/>
 
         <TextView
@@ -341,8 +329,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/positions"
-            android:textColor="@color/main_text_color"
-            android:textSize="@dimen/sp_16"/>
+            android:textColor="@color/third_text_color"
+            android:textSize="@dimen/sp_14"/>
 
     </LinearLayout>
 

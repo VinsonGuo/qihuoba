@@ -62,6 +62,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -306,9 +307,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvLeft.setText(leftText);
         tvRight.setText(rightText);
 
+        int profitColor = StringUtils.getProfitColor(mContext, quote.getChange());
+        tvPrice.setTextColor(profitColor);
+        tvChange.setTextColor(profitColor);
+        tvChangeRate.setTextColor(profitColor);
         tvPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()));
-        tvChange.setText(DoubleUtil.format2Decimal(quote.getChange()));
-        tvChangeRate.setText(DoubleUtil.format2Decimal(quote.getChangeRate()) + "%");
+        tvChange.setText(String.format(Locale.getDefault(), "%+.2f", quote.getChange()));
+        tvChangeRate.setText(String.format(Locale.getDefault(), "(%+.2f%%)", quote.getChangeRate()));
     }
 
 

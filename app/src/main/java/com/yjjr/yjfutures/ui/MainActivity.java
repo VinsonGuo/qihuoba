@@ -29,6 +29,7 @@ import com.yjjr.yjfutures.ui.found.FoundFragment;
 import com.yjjr.yjfutures.ui.home.HomePageFragment;
 import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
 import com.yjjr.yjfutures.ui.mine.MineFragment;
+import com.yjjr.yjfutures.ui.publish.PublishActivity;
 import com.yjjr.yjfutures.ui.trade.TradeGuideActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DateUtils;
@@ -66,29 +67,12 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
-        checkUpdate();
         startPoll();
-        if (ActivityTools.isNeedShowGuide(mContext)) {
-            TradeGuideActivity.startActivity(mContext);
-        }
+//        if (ActivityTools.isNeedShowGuide(mContext)) {
+//            TradeGuideActivity.startActivity(mContext);
+//        }
         // 统计用户登录
         MobclickAgent.onProfileSignIn(UserSharePrefernce.getAccount(this));
-    }
-
-
-    private void checkUpdate() {
-        HttpManager.getBizService().checkUpdate(BuildConfig.VERSION_NAME)
-                .compose(RxUtils.<BizResponse<Update>>applyBizSchedulers())
-                .compose(this.<BizResponse<Update>>bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribe(new Consumer<BizResponse<Update>>() {
-                    @Override
-                    public void accept(@NonNull BizResponse<Update> response) throws Exception {
-                        Update result = response.getResult();
-                        if (result.getUpdateOS() != 0) {
-                            DialogUtils.createUpdateDialog(mContext, result).show();
-                        }
-                    }
-                }, RxUtils.commonErrorConsumer());
     }
 
 

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.yjjr.yjfutures.ui.MainActivity">
+
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/publish_main_color"
+        android:gravity="center"
+        android:text="@string/home_page"
+        android:textColor="@color/color_333333"
+        android:textSize="20sp"/>
+
+    <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <View
+        style="@style/style_divider"
+        android:background="#313131"/>
+
+    <com.yinglan.alphatabs.AlphaTabsIndicator
+        android:id="@+id/alphaIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/color_f8f8f8"
+        android:orientation="horizontal">
+
+        <com.yinglan.alphatabs.AlphaTabView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingBottom="6dp"
+            android:paddingTop="10dp"
+            app:tabIconNormal="@drawable/ic_home_pub"
+            app:tabIconSelected="@drawable/ic_home_pub_active"
+            app:tabText="@string/home_page"
+            app:textColorNormal="@color/color_333333"
+            app:textColorSelected="@color/color_333333"/>
+
+        <com.yinglan.alphatabs.AlphaTabView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingBottom="6dp"
+            android:paddingTop="10dp"
+            app:tabIconNormal="@drawable/ic_trade_pub"
+            app:tabIconSelected="@drawable/ic_trade_pub_active"
+            app:tabText="行情"
+            app:textColorNormal="@color/color_333333"
+            app:textColorSelected="@color/color_333333"/>
+
+    </com.yinglan.alphatabs.AlphaTabsIndicator>
+
+</LinearLayout>

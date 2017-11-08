@@ -1,5 +1,6 @@
 package com.yjjr.yjfutures.utils.http;
 
+import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.biz.Active;
@@ -17,6 +18,7 @@ import com.yjjr.yjfutures.model.biz.NumberResult;
 import com.yjjr.yjfutures.model.biz.PageResponse;
 import com.yjjr.yjfutures.model.biz.Update;
 import com.yjjr.yjfutures.model.biz.UserInfo;
+import com.yjjr.yjfutures.model.publish.News;
 
 import java.util.List;
 
@@ -46,7 +48,7 @@ import retrofit2.http.Query;
 
 public interface BizService {
     @FormUrlEncoded
-    @POST("user/login")
+    @POST("user/login?smartisanOS=android")
     Observable<BizResponse<UserInfo>> login(@Field("account") String account, @Field("password") String password, @Field("versionType") String versionType);
 
     @FormUrlEncoded
@@ -86,9 +88,8 @@ public interface BizService {
     @POST("user/validPayPwd")
     Observable<BizResponse> validPayPwd(@Field("account") String account, @Field("payPwd") String payPwd);
 
-    @FormUrlEncoded
-    @POST("version/checkUpdate/android")
-    Observable<BizResponse<Update>> checkUpdate(@Field("version") String version);
+    @GET("version/checkUpdate/android?appCode=" + BuildConfig.APPLICATION_ID)
+    Observable<BizResponse<Update>> checkUpdate(@Query("version") String version);
 
     @FormUrlEncoded
     @POST("trader/getContractInfo")
@@ -122,7 +123,7 @@ public interface BizService {
      * 注册
      */
     @FormUrlEncoded
-    @POST("user/register")
+    @POST("user/register?smartisanOS=android")
     Observable<BizResponse> register(@Field("account") String account, @Field("password") String password, @Field("code") String code, @Field("versionType") String versionType);
 
     @POST("user/queryAssetRecord/{start}/{count}")
@@ -190,5 +191,8 @@ public interface BizService {
 
     @GET("activict/queryActivict")
     Observable<BizResponse<Active>> getActivity();
+
+    @GET("http://www.junchengtz.com/news/newsList.htm?type=0&date=")
+    Observable<List<News>> getNewsList();
 
 }

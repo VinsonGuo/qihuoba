@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +36,10 @@ public abstract class ListFragment<T> extends BaseFragment implements SwipeRefre
         View v = inflater.inflate(R.layout.fragment_list, container, false);
         mRefreshLayout = (SwipeRefreshLayout) v;
         mRvList = (RecyclerView) v.findViewById(R.id.rv_list);
+        RecyclerView.ItemAnimator animator = mRvList.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
         setManager();
         mLoadView = (LoadingView) v.findViewById(R.id.load_view);
         mLoadView.setOnReloadListener(new LoadingView.OnReloadListener() {

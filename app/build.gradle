@@ -4,11 +4,8 @@ android {
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.yjjr.yjfutures"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 8
-        versionName "2.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -47,14 +44,23 @@ android {
     flavorDimensions "default"
 
     productFlavors {
-        xiaomi {}
-        yingyongbao {}
-        huawei {}
+        app {
+            applicationId "com.yjjr.yjfutures"
+            versionCode 8
+            versionName "2.2.0"
+        }
+        gjqh {
+            applicationId "com.yjjr.yjapp2"
+            versionCode 1
+            versionName "1.0.0"
+        }
+        zsqh {
+            applicationId "com.yjjr.yjapp3"
+            versionCode 1
+            versionName "1.0.0"
+        }
     }
 
-    productFlavors.all {
-        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-    }
     repositories {
         mavenCentral()
         maven { url "https://jitpack.io" }

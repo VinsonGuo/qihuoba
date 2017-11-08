@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
+import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.R;
+import com.yjjr.yjfutures.store.ConfigSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.utils.SystemBarHelper;
@@ -22,6 +24,7 @@ public class GuideActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ViewPager viewPager = new ViewPager(mContext);
         viewPager.setId(R.id.viewpager);
+        ConfigSharePrefernce.setVersionCode(mContext, BuildConfig.VERSION_CODE);
         resetStatusBar();
         SystemBarHelper.immersiveStatusBar(this, 0);
         setContentView(viewPager);

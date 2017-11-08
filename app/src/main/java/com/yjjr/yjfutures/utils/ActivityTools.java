@@ -184,6 +184,6 @@ public class ActivityTools {
     }
 
     public static String getDeviceAndVerson() {
-        return Build.MODEL + "," + BuildConfig.VERSION_NAME;
+        return Build.MODEL + "," + BuildConfig.VERSION_NAME + "," + BuildConfig.APPLICATION_ID;
     }
 }

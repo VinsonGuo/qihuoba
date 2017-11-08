@@ -1,7 +1,6 @@
 package com.yjjr.yjfutures.ui.home;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,11 +10,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
-import com.bigkoo.convenientbanner.holder.Holder;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -53,7 +50,6 @@ import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
-import com.yjjr.yjfutures.utils.imageloader.ImageLoader;
 import com.yjjr.yjfutures.widget.LoadingView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -489,28 +485,4 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-
-    public class ImageHolderView implements Holder<Info> {
-        private ImageView imageView;
-
-        @Override
-        public View createView(Context context) {
-            imageView = new ImageView(context);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            return imageView;
-        }
-
-        @Override
-        public void UpdateUI(Context context, final int position, final Info data) {
-            ImageLoader.load(context, HttpConfig.BIZ_HOST + data.getName(), imageView);
-            if (!TextUtils.isEmpty(data.getValue())) {
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        WebActivity.startActivity(mContext, data.getValue());
-                    }
-                });
-            }
-        }
-    }
 }

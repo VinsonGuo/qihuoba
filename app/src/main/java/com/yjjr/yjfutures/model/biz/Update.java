@@ -11,6 +11,7 @@ public class Update {
     private String updateUrl;
     private String remark;
     private String verNo;
+    private int statue;
 
 
     /**
@@ -48,6 +49,18 @@ public class Update {
         this.verNo = verNo;
     }
 
+
+    /**
+     * 1的时候为审核状态
+     */
+    public int getStatue() {
+        return statue;
+    }
+
+    public void setStatue(int statue) {
+        this.statue = statue;
+    }
+
     @Override
     public String toString() {
         return "Update{" +
@@ -55,6 +68,7 @@ public class Update {
                 ", updateUrl='" + updateUrl + '\'' +
                 ", remark='" + remark + '\'' +
                 ", verNo='" + verNo + '\'' +
+                ", statue=" + statue +
                 '}';
     }
 }

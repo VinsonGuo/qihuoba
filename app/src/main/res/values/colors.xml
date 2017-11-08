@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--马甲包的颜色-->
+    <color name="publish_main_color">#ffd600</color>
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">@color/third_text_color</color>
@@ -140,7 +144,6 @@
     <color name="color_0d0d0d">#0d0d0d</color>
     <color name="color_111111">#111111</color>
     <color name="color_d1d1d1">#d1d1d1</color>
-
 
 
     <!--图表-->

@@ -91,8 +91,15 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private View vgSettlement;
     private TextView tvDirection;
     private TextView tvYueValue;
-    private TextView tvMarginValue;
     private TextView tvTotal;
+
+
+    private TextView tvOpen;
+    private TextView tvHigh;
+    private TextView tvLow;
+    private TextView tvVol;
+    private TextView tvLastClose;
+
     private View colorView;
     private List<Holds> mHoldsList;
     private TextView tvPrice;
@@ -106,7 +113,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      * 休市信息，休市时显示出来
      */
     private TextView tvRest;
-    private TextView mTvDeposit;
     private SimpleFragmentPagerAdapter mKLineAdapter;
     private MarketDepthView marketDepthView;
 
@@ -182,8 +188,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             }
         });
         mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
-        Fragment[] fragments = {LineChartFragment.newInstance(mSymbol, mIsDemo),
-                mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol, mIsDemo)};
+        Fragment[] fragments = {LineChartFragment.newInstance(mSymbol, mIsDemo), FullScreenKLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN5),
+                mCandleStickChartFragment};
         mKLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
         mViewpager.setAdapter(mKLineAdapter);
         mViewpager.setOffscreenPageLimit(fragments.length);
@@ -195,7 +201,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mViewpager.setCurrentItem(0, false);
                         break;
                     case R.id.rb_chart2:
-                        mViewpager.setCurrentItem(2, false);
+                        mViewpager.setCurrentItem(1, false);
                         break;
                 }
                 mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.background_dark));
@@ -228,7 +234,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.color_333333));
                         mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.third_text_color));
                         mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow), null);
-                        mViewpager.setCurrentItem(1, false);
+                        mViewpager.setCurrentItem(2, false);
                         String type = HttpConfig.MIN;
                         switch (position) {
                             case 0:
@@ -256,9 +262,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvRight.setOnClickListener(this);
         v.findViewById(R.id.tv_position).setOnClickListener(this);
         v.findViewById(R.id.tv_close_order).setOnClickListener(this);
-        mTvDeposit = (TextView) v.findViewById(R.id.tv_deposit);
-        mTvDeposit.setSelected(true);
-        mTvDeposit.setOnClickListener(this);
         v.findViewById(R.id.tv_kchart).setOnClickListener(this);
         v.findViewById(R.id.tv_fullscreen).setOnClickListener(this);
         getMarketDepth(quote);
@@ -295,10 +298,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      */
     private void setRestView(Quote quote) {
         if (quote == null || quote.isRest()) { // 休市的状态
-            tvRest.setVisibility(View.VISIBLE);
-            tvRest.setText(TextUtils.concat(SpannableUtil.getStringBySize("休市中", 1.4f), String.format("\n下一个交易时间段：%s", quote.getTradingTime())));
+            tvRest.setText(TextUtils.concat(SpannableUtil.getStringBySize("休市中", 1.4f), String.format("\t下一个交易时间段：%s", quote.getTradingTime())));
         } else {
-            tvRest.setVisibility(View.GONE);
+            tvRest.setText("交易中");
         }
     }
 
@@ -314,6 +316,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()));
         tvChange.setText(String.format(Locale.getDefault(), "%+.2f", quote.getChange()));
         tvChangeRate.setText(String.format(Locale.getDefault(), "(%+.2f%%)", quote.getChangeRate()));
+
+        tvOpen.setText(StringUtils.getStringByTick(quote.getOpen(), quote.getTick()));
+        tvHigh.setText(StringUtils.getStringByTick(quote.getHigh(), quote.getTick()));
+        tvLow.setText(StringUtils.getStringByTick(quote.getLow(), quote.getTick()));
+        tvVol.setText(quote.getVol() + "");
+        tvLastClose.setText(StringUtils.getStringByTick(quote.getLastclose(), quote.getTick()));
     }
 
 
@@ -329,7 +337,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         vgSettlement = v.findViewById(R.id.vg_settlement);
         tvDirection = (TextView) v.findViewById(R.id.tv_direction);
         tvYueValue = (TextView) v.findViewById(R.id.tv_yue_value);
-        tvMarginValue = (TextView) v.findViewById(R.id.tv_margin_value);
         RecyclerView rvMarketHis = (RecyclerView) v.findViewById(R.id.rv_list);
         rvMarketHis.setLayoutManager(new LinearLayoutManager(mContext));
         MarketHisAdapter marketHisAdapter = new MarketHisAdapter(null);
@@ -341,15 +348,20 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         marketHisAdapter.addData(test);
         if (mIsDemo) {
             TextView tvYue = (TextView) v.findViewById(R.id.tv_yue);
-            TextView tvMargin = (TextView) v.findViewById(R.id.tv_margin);
             tvYue.setText("可用金币");
-            tvMargin.setText("保证金币");
         }
         tvTotal = (TextView) v.findViewById(R.id.tv_total);
         colorView = v.findViewById(R.id.view_color);
         tvPrice = (TextView) v.findViewById(R.id.tv_price);
         tvChange = (TextView) v.findViewById(R.id.tv_change);
         tvChangeRate = (TextView) v.findViewById(R.id.tv_change_rate);
+
+        tvOpen = (TextView) v.findViewById(R.id.tv_open);
+        tvHigh = (TextView) v.findViewById(R.id.tv_high);
+        tvLow = (TextView) v.findViewById(R.id.tv_low);
+        tvVol = (TextView) v.findViewById(R.id.tv_vol);
+        tvLastClose = (TextView) v.findViewById(R.id.tv_last_close);
+
         tvRest = (TextView) v.findViewById(R.id.tv_rest);
         marketDepthView = (MarketDepthView) v.findViewById(R.id.market_depth_view);
         mProgressDialog = new ProgressDialog(mContext);
@@ -437,7 +449,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             getHolding();
             Funds result = StaticStore.getFunds(mIsDemo);
             tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
-            tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
         }
     }
 
@@ -449,7 +460,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             setRestView(quote);
             Funds result = StaticStore.getFunds(mIsDemo);
             tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
-            tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
         }
     }
 

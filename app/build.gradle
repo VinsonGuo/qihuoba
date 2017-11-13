@@ -46,8 +46,8 @@ android {
     productFlavors {
         app {
             applicationId "com.yjjr.yjfutures"
-            versionCode 8
-            versionName "2.2.0"
+            versionCode 7
+            versionName "2.1.0"
         }
         gjqh {
             applicationId "com.yjjr.yjapp2"
@@ -127,5 +127,6 @@ dependencies {
     compile 'com.github.w446108264:AndroidEmoji:1.0.0'
     compile 'io.github.rockerhieu:emojicon:1.4.0'
     compile 'com.github.instacart.truetime-android:library:3.3'
+    compile 'com.android.support:gridlayout-v7:25.3.1'
     testCompile 'junit:junit:4.12'
 }

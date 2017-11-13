@@ -350,6 +350,10 @@
             android:name=".ui.mine.AboutUsActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".ui.trade.PositionActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".ui.publish.PublishActivity">
         </activity>
     </application>

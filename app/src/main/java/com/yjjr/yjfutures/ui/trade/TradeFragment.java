@@ -300,7 +300,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         if (quote == null || quote.isRest()) { // 休市的状态
             tvRest.setText(TextUtils.concat(SpannableUtil.getStringBySize("休市中", 1.4f), String.format("\t下一个交易时间段：%s", quote.getTradingTime())));
         } else {
-            tvRest.setText("交易中");
+            tvRest.setText("交易中 "+quote.getLastTime());
         }
     }
 

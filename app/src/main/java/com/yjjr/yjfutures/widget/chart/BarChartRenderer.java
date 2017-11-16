@@ -1,4 +1,3 @@
-
 package com.yjjr.yjfutures.widget.chart;
 
 import android.graphics.Canvas;
@@ -20,6 +19,7 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.yjjr.yjfutures.model.HisData;
 
 import java.util.List;
 
@@ -36,6 +36,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
     protected Paint mShadowPaint;
     protected Paint mBarBorderPaint;
+    private RectF mBarShadowRectBuffer = new RectF();
 
     public BarChartRenderer(BarDataProvider chart, ChartAnimator animator,
                             ViewPortHandler viewPortHandler) {
@@ -83,8 +84,6 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
         }
     }
 
-    private RectF mBarShadowRectBuffer = new RectF();
-
     protected void drawDataSet(Canvas c, IBarDataSet dataSet, int index) {
 
         Transformer trans = mChart.getTransformer(dataSet.getAxisDependency());
@@ -107,9 +106,9 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
             final float barWidthHalf = barWidth / 2.0f;
             float x;
 
-            for (int i = 0, count = Math.min((int)(Math.ceil((float)(dataSet.getEntryCount()) * phaseX)), dataSet.getEntryCount());
-                i < count;
-                i++) {
+            for (int i = 0, count = Math.min((int) (Math.ceil((float) (dataSet.getEntryCount()) * phaseX)), dataSet.getEntryCount());
+                 i < count;
+                 i++) {
 
                 BarEntry e = dataSet.getEntryForIndex(i);
 
@@ -161,7 +160,29 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
             if (!isSingleColor) {
                 // Set the color for the currently drawn value. If the index
                 // is out of bounds, reuse colors.
-                mRenderPaint.setColor(dataSet.getColor(j / 4));
+//                mRenderPaint.setColor(dataSet.getColor(j / 4));
+
+                   /*这里给出的规则是假如成交量上涨，则为红，下跌则为绿*/
+                int i = j / 4;
+                BarEntry entryForIndex = dataSet.getEntryForIndex(i);
+                Object data = entryForIndex.getData();
+                if (data == null || !(data instanceof HisData)) {
+                    mRenderPaint.setColor(dataSet.getColor(i));
+                } else {
+                    if (((HisData) data).getClose() < ((HisData) data).getOpen()) {
+                        mRenderPaint.setColor(dataSet.getColors().get(1));
+                    } else {
+                        mRenderPaint.setColor(dataSet.getColors().get(0));
+                    }
+
+                    if (((HisData) data).getClose() == 0f && ((HisData) data).getOpen() == 0f) {
+                        if (((HisData) data).getVol() > 0) {
+                            mRenderPaint.setColor(dataSet.getColors().get(0));
+                        } else {
+                            mRenderPaint.setColor(dataSet.getColors().get(1));
+                        }
+                    }
+                }
             }
 
             c.drawRect(buffer.buffer[j], buffer.buffer[j + 1], buffer.buffer[j + 2],
@@ -271,8 +292,8 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                             Utils.drawImage(
                                     c,
                                     icon,
-                                    (int)px,
-                                    (int)py,
+                                    (int) px,
+                                    (int) py,
                                     icon.getIntrinsicWidth(),
                                     icon.getIntrinsicHeight());
                         }
@@ -328,8 +349,8 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                                 Utils.drawImage(
                                         c,
                                         icon,
-                                        (int)px,
-                                        (int)py,
+                                        (int) px,
+                                        (int) py,
                                         icon.getIntrinsicWidth(),
                                         icon.getIntrinsicHeight());
                             }
@@ -397,8 +418,8 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                                     Utils.drawImage(
                                             c,
                                             icon,
-                                            (int)(x + iconsOffset.x),
-                                            (int)(y + iconsOffset.y),
+                                            (int) (x + iconsOffset.x),
+                                            (int) (y + iconsOffset.y),
                                             icon.getIntrinsicWidth(),
                                             icon.getIntrinsicHeight());
                                 }
@@ -437,14 +458,14 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
             mHighlightPaint.setColor(set.getHighLightColor());
             mHighlightPaint.setAlpha(set.getHighLightAlpha());
 
-            boolean isStack = (high.getStackIndex() >= 0  && e.isStacked()) ? true : false;
+            boolean isStack = (high.getStackIndex() >= 0 && e.isStacked()) ? true : false;
 
             final float y1;
             final float y2;
 
             if (isStack) {
 
-                if(mChart.isHighlightFullBarEnabled()) {
+                if (mChart.isHighlightFullBarEnabled()) {
 
                     y1 = e.getPositiveSum();
                     y2 = -e.getNegativeSum();
@@ -472,6 +493,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
     /**
      * Sets the drawing position of the highlight object based on the riven bar-rect.
+     *
      * @param high
      */
     protected void setHighlightDrawPos(Highlight high, RectF bar) {

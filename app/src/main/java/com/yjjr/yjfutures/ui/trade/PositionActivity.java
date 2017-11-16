@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.ui.trade;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
@@ -27,6 +28,13 @@ public class PositionActivity extends BaseActivity {
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
         headerView.bindActivity(mContext);
         headerView.setMainTitle("我的持仓");
+        headerView.setSubtitleText("订单记录");
+        headerView.setOperateClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettlementActivity.startActivity(mContext, mIsDemo);
+            }
+        });
         PositionListFragment fragment = PositionListFragment.newInstance(mIsDemo);
         getSupportFragmentManager()
                 .beginTransaction()

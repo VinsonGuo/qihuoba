@@ -111,6 +111,7 @@ public class SplashScreen extends BaseActivity {
                     }
                 }, RxUtils.commonErrorConsumer());*/
 
+        ToastUtils.show(mContext, ActivityTools.getChannelName(mContext));
         HttpManager.getBizService().checkUpdate(BuildConfig.VERSION_NAME)
                 .compose(RxUtils.<BizResponse<Update>>applyBizSchedulers())
                 .compose(this.<BizResponse<Update>>bindUntilEvent(ActivityEvent.DESTROY))
@@ -124,6 +125,7 @@ public class SplashScreen extends BaseActivity {
                         if (result.getStatue() == 1) {
                             mHandler.removeCallbacks(mRunnable);
                             PublishActivity.startActivity(mContext);
+                            HttpConfig.IS_OPEN_TRADE = false;
                             return;
                         }
                         if (result.getUpdateOS() != 0) {

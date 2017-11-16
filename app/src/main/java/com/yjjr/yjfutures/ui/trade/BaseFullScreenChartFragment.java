@@ -319,7 +319,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         ArrayList<Entry> paddingEntries = new ArrayList<>();
         for (int i = 0; i < mData.size(); i++) {
             HisData t = mData.get(i);
-            barEntries.add(new BarEntry(i, t.getVol()));
+            barEntries.add(new BarEntry(i, t.getVol(), t));
         }
         int maxCount = mChartPrice.getData().getCandleData() == null ? MAX_COUNT_LINE : MAX_COUNT_K;
         if (!mData.isEmpty() && mData.size() < maxCount) {
@@ -329,7 +329,6 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         }
         BarDataSet barDataSet = new BarDataSet(barEntries, "成交量");
         barDataSet.setDrawValues(false);//是否在线上绘制数值
-        barDataSet.setColor(getResources().getColor(R.color.increasing_color));//设置树状图颜色
         List<Integer> list = new ArrayList<>();
         list.add(getResources().getColor(R.color.increasing_color));
         list.add(getResources().getColor(R.color.decreasing_color));

@@ -101,7 +101,6 @@ public class MainActivity extends BaseActivity {
 
     private void initViews() {
         mBottomBar = (AlphaTabsIndicator) findViewById(R.id.alphaIndicator);
-        mBottomBar.setVisibility(HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
         final NoTouchScrollViewpager viewPager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
         Fragment[] fragments = {new HomePageFragment(), MarketPriceFragment.newInstance(true), new FoundFragment(), new MineFragment()};
         viewPager.setOffscreenPageLimit(fragments.length);

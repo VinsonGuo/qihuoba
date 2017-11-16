@@ -43,6 +43,7 @@ import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
+import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
@@ -312,6 +313,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                     Quote quote = mGson.fromJson(data, Quote.class);
                     // 真实
                     Quote oldQuote = StaticStore.getQuote(quote.getSymbol(), false);
+                    String lastTime = DateUtils.formatDateTime(DateUtils.nowTime());
                     if (oldQuote != null) {
                         oldQuote.setAskPrice(quote.getAskPrice());
                         oldQuote.setBidPrice(quote.getBidPrice());
@@ -325,6 +327,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         oldQuote.setHigh(quote.getHigh());
                         oldQuote.setLow(quote.getLow());
                         oldQuote.setVol(quote.getVol());
+                        oldQuote.setLastTime(lastTime);
                         oldQuote.setHolding(StaticStore.sHoldSet.contains(quote.getSymbol()));
                     }
 
@@ -343,6 +346,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         demoQuote.setHigh(quote.getHigh());
                         demoQuote.setLow(quote.getLow());
                         demoQuote.setVol(quote.getVol());
+                        demoQuote.setLastTime(lastTime);
                         demoQuote.setHolding(StaticStore.sDemoHoldSet.contains(quote.getSymbol()));
                     }
                     EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));

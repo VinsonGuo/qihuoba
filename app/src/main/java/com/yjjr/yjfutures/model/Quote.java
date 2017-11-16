@@ -35,6 +35,7 @@ public class Quote {
     private double low;
     private String Currency;
     private int sort;
+    private String lastTime;
     /**
      * 是否持仓，根据需求加的字段
      */
@@ -275,18 +276,27 @@ public class Quote {
         return !(now.isAfter(startTime) && now.isBefore(endTime));
     }
 
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
+    }
+
+    public String getLastTime() {
+        return lastTime;
+    }
+
+    public void setLastTime(String lastTime) {
+        this.lastTime = lastTime;
+    }
+
     @Override
     public String toString() {
         return "Quote{" +
-                "Symbol='" + Symbol + '\'' +
-                ", Symbolname='" + Symbolname + '\'' +
-                ", AskPrice=" + AskPrice +
-                ", ExchangeRate=" + ExchangeRate +
-                ", BidSize=" + BidSize +
-                ", LastSize=" + LastSize +
-                ", LastPrice=" + LastPrice +
-                ", BidPrice=" + BidPrice +
-                ", askSize=" + askSize +
+                "askSize=" + askSize +
                 ", Lastclose=" + Lastclose +
                 ", openinterest=" + openinterest +
                 ", Change=" + Change +
@@ -296,22 +306,22 @@ public class Quote {
                 ", Tick=" + Tick +
                 ", open=" + open +
                 ", ChangeRate=" + ChangeRate +
-                ", Exchange=" + Exchange +
+                ", Exchange='" + Exchange + '\'' +
+                ", Symbolname='" + Symbolname + '\'' +
+                ", AskPrice=" + AskPrice +
+                ", ExchangeRate=" + ExchangeRate +
+                ", BidSize=" + BidSize +
+                ", Symbol='" + Symbol + '\'' +
+                ", LastSize=" + LastSize +
+                ", LastPrice=" + LastPrice +
+                ", BidPrice=" + BidPrice +
                 ", high=" + high +
                 ", Multiple=" + Multiple +
                 ", low=" + low +
                 ", Currency='" + Currency + '\'' +
-                ", sort='" + sort + '\'' +
+                ", sort=" + sort +
+                ", lastTime='" + lastTime + '\'' +
                 ", isHolding=" + isHolding +
                 '}';
-    }
-
-
-    public int getSort() {
-        return sort;
-    }
-
-    public void setSort(int sort) {
-        this.sort = sort;
     }
 }

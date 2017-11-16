@@ -37,6 +37,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -618,5 +619,20 @@ public class StringUtils {
         return list;
     }
 
+    public static List<Double> calculateMA(int dayCount, List<HisData> data) {
+        List<Double> result = new ArrayList<>(data.size());
+        for (int i = 0, len = data.size(); i < len; i++) {
+            if (i < dayCount) {
+                result.add(Double.NaN);
+                continue;
+            }
+            double sum = 0;
+            for (int j = 0; j < dayCount; j++) {
+                sum += data.get(i - j).getOpen();
+            }
+            result.add(+(sum / dayCount));
+        }
+        return result;
+    }
 
 }

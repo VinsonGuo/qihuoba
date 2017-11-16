@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/main_color_red"
                     android:textSize="24sp"
-                    tools:text="123"/>
+                    android:text="@string/number_holder"/>
 
                 <TextView
                     android:id="@+id/tv_change"
@@ -52,7 +52,7 @@
                     android:layout_toRightOf="@id/tv_price"
                     android:textColor="@color/main_color_red"
                     android:textSize="@dimen/sp_14"
-                    tools:text="123"/>
+                    android:text="@string/number_holder"/>
 
                 <TextView
                     android:id="@+id/tv_rest"
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_price"
                     android:layout_marginTop="9dp"
-                    android:text="已开盘"
+                    android:text="@string/number_holder"
                     android:textColor="@color/color_bbbbbb"/>
 
                 <TextView
@@ -72,14 +72,15 @@
                     android:layout_toRightOf="@id/tv_change"
                     android:textColor="@color/main_color_red"
                     android:textSize="@dimen/sp_14"
-                    tools:text="123"/>
+                    android:text="@string/number_holder"/>
 
                 <TextView
                     android:id="@+id/tv_yue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@id/tv_price"
-                    android:layout_alignLeft="@+id/tv_yue_value"
+                    android:layout_alignBaseline="@+id/tv_price"
+                    android:layout_alignBottom="@+id/tv_price"
+                    android:layout_alignStart="@+id/tv_yue_value"
                     android:text="可用余额:"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_14"/>
@@ -94,7 +95,7 @@
                     android:minWidth="80dp"
                     android:textColor="@color/third_text_color"
                     android:textSize="18sp"
-                    tools:text="￥5000"/>
+                    android:text="@string/number_holder"/>
 
             </RelativeLayout>
 
@@ -106,112 +107,123 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/background_dark"
+                android:padding="@dimen/root_padding_15"
                 app:alignmentMode="alignBounds"
                 app:columnCount="6"
-                app:rowOrderPreserved="false"
-                android:padding="@dimen/root_padding_15">
+                app:rowOrderPreserved="false">
 
                 <TextView
                     android:layout_width="0dp"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal"
                     android:layout_height="wrap_content"
                     android:text="最高"
+                    android:textColor="@color/color_bbbbbb"
                     android:textSize="@dimen/sp_12"
-                    android:textColor="@color/color_bbbbbb"/>
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill_horizontal"/>
+
                 <TextView
                     android:id="@+id/tv_high"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/sp_12"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_12"
-                    tools:text="123"
-                    android:textColor="@color/main_text_color"/>
+                    android:text="@string/number_holder"/>
+
                 <TextView
                     android:layout_width="0dp"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_12"
                     android:text="今开"
-                    android:textColor="@color/color_bbbbbb"/>
+                    android:textColor="@color/color_bbbbbb"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill_horizontal"/>
+
                 <TextView
                     android:id="@+id/tv_open"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/sp_12"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_12"
-                    tools:text="todo"
-                    android:textColor="@color/main_text_color"/>
+                    android:text="@string/number_holder"/>
+
                 <TextView
                     android:layout_width="0dp"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_12"
                     android:text="成交量"
-                    android:textColor="@color/color_bbbbbb"/>
+                    android:textColor="@color/color_bbbbbb"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill_horizontal"/>
+
                 <TextView
                     android:id="@+id/tv_vol"
                     android:layout_width="0dp"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal"
                     android:layout_height="wrap_content"
+                    android:text="@string/number_holder"
+                    android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_12"
-                    android:text="1234"
-                    android:textColor="@color/main_text_color"/>
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill_horizontal"/>
+
                 <TextView
                     android:layout_width="0dp"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_12"
                     android:text="最低"
-                    android:textColor="@color/color_bbbbbb"/>
+                    android:textColor="@color/color_bbbbbb"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill_horizontal"/>
+
                 <TextView
                     android:id="@+id/tv_low"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/sp_12"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_12"
-                    tools:text="todo"
-                    android:textColor="@color/main_text_color"/>
+                    android:text="@string/number_holder"/>
+
                 <TextView
                     android:layout_width="0dp"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_12"
                     android:text="昨收"
-                    android:textColor="@color/color_bbbbbb"/>
+                    android:textColor="@color/color_bbbbbb"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill_horizontal"/>
+
                 <TextView
                     android:id="@+id/tv_last_close"
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/sp_12"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_12"
-                    tools:text="todo"
-                    android:textColor="@color/main_text_color"/>
+                    android:text="@string/number_holder"/>
+
                 <TextView
                     android:layout_width="0dp"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill_horizontal"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_12"
                     android:text="量    比"
-                    android:textColor="@color/color_bbbbbb"/>
+                    android:textColor="@color/color_bbbbbb"
+                    android:textSize="@dimen/sp_12"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill_horizontal"/>
+
                 <TextView
                     android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/sp_12"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill_horizontal"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_12"
-                    tools:text="todo"
-                    android:textColor="@color/main_text_color"/>
+                    android:text="@string/number_holder"/>
             </android.support.v7.widget.GridLayout>
 
             <RelativeLayout
@@ -456,20 +468,26 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
+    <View
+        android:paddingTop="4dp"
+        style="@style/style_divider"/>
+
     <LinearLayout
         android:id="@+id/ll_trade"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="4dp"
-        android:background="@color/background_dark">
+        android:layout_marginTop="1dp"
+        android:background="@color/background_dark"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/tv_left"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableTop="@drawable/ic_buy"
+            android:drawablePadding="2dp"
             android:gravity="center"
             android:textColor="@color/main_color_red"
             android:textSize="@dimen/sp_14"
@@ -478,8 +496,10 @@
         <TextView
             android:id="@+id/tv_right"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableTop="@drawable/ic_sell"
+            android:drawablePadding="2dp"
             android:gravity="center"
             android:textColor="@color/main_color_green"
             android:textSize="@dimen/sp_14"
@@ -488,8 +508,9 @@
         <TextView
             android:id="@+id/tv_position"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawableTop="@drawable/ic_position_active"
             android:gravity="center"
             android:text="@string/positions"
             android:textColor="@color/third_text_color"

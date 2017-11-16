@@ -220,10 +220,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.trade.OrderActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name=".ui.trade.FastTakeOrderActivity"
             android:screenOrientation="portrait">
         </activity>

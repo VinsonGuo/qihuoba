@@ -256,7 +256,6 @@ public class PublishActivity extends BaseActivity {
     private void initViews() {
         final TextView tvHeader = (TextView) findViewById(R.id.tv_header);
         mBottomBar = (AlphaTabsIndicator) findViewById(R.id.alphaIndicator);
-        mBottomBar.setVisibility(HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
         final NoTouchScrollViewpager viewPager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
         Fragment[] fragments = {new NewsFragment(), new MarketFragment()};
         viewPager.setOffscreenPageLimit(fragments.length);

@@ -111,8 +111,7 @@ public class SplashScreen extends BaseActivity {
                     }
                 }, RxUtils.commonErrorConsumer());*/
 
-        ToastUtils.show(mContext, ActivityTools.getChannelName(mContext));
-        HttpManager.getBizService().checkUpdate(BuildConfig.VERSION_NAME)
+        HttpManager.getBizService().checkUpdate(BuildConfig.VERSION_NAME, BuildConfig.APPLICATION_ID /*+ "," + ActivityTools.getChannelName(mContext)*/)
                 .compose(RxUtils.<BizResponse<Update>>applyBizSchedulers())
                 .compose(this.<BizResponse<Update>>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<Update>>() {

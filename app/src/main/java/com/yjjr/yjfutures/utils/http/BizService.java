@@ -1,6 +1,5 @@
 package com.yjjr.yjfutures.utils.http;
 
-import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.biz.Active;
@@ -88,8 +87,8 @@ public interface BizService {
     @POST("user/validPayPwd")
     Observable<BizResponse> validPayPwd(@Field("account") String account, @Field("payPwd") String payPwd);
 
-    @GET("version/checkUpdate/android?appCode=" + BuildConfig.APPLICATION_ID)
-    Observable<BizResponse<Update>> checkUpdate(@Query("version") String version);
+    @GET("version/checkUpdate/android")
+    Observable<BizResponse<Update>> checkUpdate(@Query("version") String version, @Query("appCode") String appCode);
 
     @FormUrlEncoded
     @POST("trader/getContractInfo")

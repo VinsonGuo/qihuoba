@@ -449,7 +449,6 @@ public class BaseFullScreenChartFragment extends BaseFragment {
             offsetRight = Utils.convertPixelsToDp(barRight);
             mChartPrice.setExtraRightOffset(offsetRight);
         }
-
     }
 
 

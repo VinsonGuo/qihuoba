@@ -84,7 +84,7 @@ public class HttpConfig {
      * 是否开放了交易功能
      */
     public static boolean IS_OPEN_TRADE = true;
-    public static String ALIPAY_ACCOUNT_CODE = "FKX02544EKPFEEKPCQSYC8";
+    public static String ALIPAY_ACCOUNT_CODE = "";
     /**
      * 客服电话
      */

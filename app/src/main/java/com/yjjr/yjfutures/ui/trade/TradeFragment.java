@@ -364,6 +364,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
         tvRest = (TextView) v.findViewById(R.id.tv_rest);
         marketDepthView = (MarketDepthView) v.findViewById(R.id.market_depth_view);
+        v.findViewById(R.id.iv_more).setOnClickListener(this);
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage(getString(R.string.operaing));
         mProgressDialog.setCancelable(false);
@@ -530,6 +531,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 } else {
                     ActivityTools.toDeposit(mContext);
                 }
+                break;
+            case R.id.iv_more:
                 break;
             case R.id.tv_kchart:
                 mTopRightMenu.showAsDropDown(mTvKchart, 0, 0);

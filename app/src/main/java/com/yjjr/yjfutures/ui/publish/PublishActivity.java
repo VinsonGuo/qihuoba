@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -35,7 +34,6 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
-import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
@@ -238,7 +236,7 @@ public class PublishActivity extends BaseActivity {
 
 
     private void checkUpdate() {
-        HttpManager.getBizService().checkUpdate(BuildConfig.VERSION_NAME)
+        HttpManager.getBizService().checkUpdate(BuildConfig.VERSION_NAME, BuildConfig.APPLICATION_ID + "," + ActivityTools.getChannelName(mContext))
                 .compose(RxUtils.<BizResponse<Update>>applyBizSchedulers())
                 .compose(this.<BizResponse<Update>>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<Update>>() {

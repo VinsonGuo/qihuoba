@@ -13,6 +13,7 @@
         <attr name="sub_title" format="string"/>
         <attr name="background_color" format="color"/>
         <attr name="main_title_color" format="color"/>
+        <attr name="singleline" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="ActionSheet">

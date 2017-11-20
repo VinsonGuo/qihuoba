@@ -76,6 +76,8 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         mChartVolume = (AppCombinedChart) v.findViewById(R.id.bar_chart);
         mLineInfo = (ChartInfoView) v.findViewById(R.id.line_info);
         mKInfo = (ChartInfoView) v.findViewById(R.id.k_info);
+        mLineInfo.setChart(mChartPrice, mChartVolume);
+        mKInfo.setChart(mChartPrice, mChartVolume);
         textColor = ContextCompat.getColor(mContext, R.color.main_text_color);
         mChartVolume.setNoDataText(getString(R.string.loading));
         mChartPrice.setNoDataText(getString(R.string.loading));
@@ -88,8 +90,9 @@ public class BaseFullScreenChartFragment extends BaseFragment {
 
     protected void initChartPrice() {
         mChartPrice.setScaleEnabled(true);//启用图表缩放事件
-        mChartPrice.setDrawBorders(false);//是否绘制边线
+        mChartPrice.setDrawBorders(true);//是否绘制边线
         mChartPrice.setBorderWidth(1);//边线宽度，单位dp
+        mChartPrice.setBorderColor(getResources().getColor(R.color.divider_color));
         mChartPrice.setDragEnabled(true);//启用图表拖拽事件
         mChartPrice.setScaleYEnabled(false);//启用Y轴上的缩放
 //        mChartPrice.setBorderColor(getResources().getColor(R.color.border_color));//边线颜色
@@ -133,13 +136,12 @@ public class BaseFullScreenChartFragment extends BaseFragment {
 
     protected void initChartVolume() {
         mChartVolume.setScaleEnabled(true);//启用图表缩放事件
-        mChartVolume.setDrawBorders(false);//是否绘制边线
+        mChartVolume.setDrawBorders(true);//是否绘制边线
         mChartVolume.setBorderWidth(1);//边线宽度，单位dp
+        mChartVolume.setBorderColor(getResources().getColor(R.color.divider_color));
         mChartVolume.setDragEnabled(true);//启用图表拖拽事件
         mChartVolume.setScaleYEnabled(false);//启用Y轴上的缩放
-//        mChartVolume.setBorderColor(getResources().getColor(R.color.border_color));//边线颜色
         mChartVolume.getDescription().setEnabled(false);//右下角对图表的描述信息
-//        mChartVolume.setAutoScaleMinMaxEnabled(true);
         Legend lineChartLegend = mChartVolume.getLegend();
         lineChartLegend.setEnabled(false);//是否绘制 Legend 图例
 
@@ -275,12 +277,15 @@ public class BaseFullScreenChartFragment extends BaseFragment {
             lineDataSetMa.setCircleColor(ContextCompat.getColor(mContext, R.color.third_text_color));
         } else if (type == 1) {
             lineDataSetMa.setColor(getResources().getColor(R.color.ave_color));
-            lineDataSetMa.setCircleColor(ContextCompat.getColor(mContext, R.color.ave_color));
             lineDataSetMa.setCircleColor(getResources().getColor(R.color.transparent));
-        } else {
-//            lineDataSetMa.setColor(getResources().getColor(R.color.main_color_green));
+            lineDataSetMa.setHighlightEnabled(false);
+        } else if(type == 2){
             lineDataSetMa.setVisible(false);
             lineDataSetMa.setHighlightEnabled(false);
+        } else {
+            lineDataSetMa.setVisible(false);
+            lineDataSetMa.setHighlightEnabled(true);
+            lineDataSetMa.setDrawHorizontalHighlightIndicator(false);
         }
         lineDataSetMa.setAxisDependency(YAxis.AxisDependency.LEFT);
         lineDataSetMa.setLineWidth(1f);
@@ -317,9 +322,11 @@ public class BaseFullScreenChartFragment extends BaseFragment {
 
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         ArrayList<Entry> paddingEntries = new ArrayList<>();
+        ArrayList<Entry> highlightEntries = new ArrayList<>();
         for (int i = 0; i < mData.size(); i++) {
             HisData t = mData.get(i);
             barEntries.add(new BarEntry(i, t.getVol(), t));
+            highlightEntries.add(new BarEntry(i, 0));
         }
         int maxCount = mChartPrice.getData().getCandleData() == null ? MAX_COUNT_LINE : MAX_COUNT_K;
         if (!mData.isEmpty() && mData.size() < maxCount) {
@@ -328,13 +335,14 @@ public class BaseFullScreenChartFragment extends BaseFragment {
             }
         }
         BarDataSet barDataSet = new BarDataSet(barEntries, "成交量");
+        barDataSet.setHighlightEnabled(false);
         barDataSet.setDrawValues(false);//是否在线上绘制数值
         List<Integer> list = new ArrayList<>();
         list.add(getResources().getColor(R.color.increasing_color));
         list.add(getResources().getColor(R.color.decreasing_color));
         barDataSet.setColors(list);//可以给树状图设置多个颜色，判断条件在BarChartRenderer 类的140行以下修改了判断条件
         BarData barData = new BarData(barDataSet);
-        LineData lineData = new LineData(setLine(2, paddingEntries));
+        LineData lineData = new LineData(setLine(3, highlightEntries), setLine(2, paddingEntries));
         CombinedData combinedData = new CombinedData();
         combinedData.setData(barData);
         combinedData.setData(lineData);

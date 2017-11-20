@@ -13,6 +13,21 @@ import com.yjjr.yjfutures.model.HisData;
  */
 
 public abstract class ChartInfoView extends LinearLayout {
+
+
+    protected Chart[] mLineCharts;
+    protected Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            setVisibility(GONE);
+            if (mLineCharts != null) {
+                for (Chart chart : mLineCharts) {
+                    chart.highlightValue(null);
+                }
+            }
+        }
+    };
+
     public ChartInfoView(Context context) {
         super(context);
     }
@@ -27,5 +42,7 @@ public abstract class ChartInfoView extends LinearLayout {
 
     public abstract void setData(double lastClose, HisData data);
 
-    public abstract void setChart(Chart chart);
+    public void setChart(Chart... chart) {
+        mLineCharts = chart;
+    }
 }

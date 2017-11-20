@@ -3,6 +3,7 @@ package com.yjjr.yjfutures.ui.trade;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.google.gson.Gson;
 import com.yjjr.yjfutures.R;
@@ -73,6 +74,14 @@ public class LineChartFragment extends BaseFullScreenChartFragment {
         mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mLineInfo, mChartVolume));
         mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mLineInfo, mChartPrice));
         mChartPrice.setOnTouchListener(new ChartInfoViewHandler(mChartPrice));
+        View.OnClickListener clickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FullScreenChartActivity.startActivity(mContext, mSymbol, mIsDemo);
+            }
+        };
+        mChartPrice.setOnClickListener(clickListener);
+        mChartVolume.setOnClickListener(clickListener);
         axisLeftPrice.setValueFormatter(new YValueFormatter(mQuote.getTick()));
         DateTime dateTime;
         if (mQuote.isRest()) { //未开盘，数据加载前一天的

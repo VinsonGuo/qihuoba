@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:background_color="@color/background_dark"
+        app:singleline="false"
         app:main_title="美原油 CL1078"
         app:sub_title="玩法"/>
 
@@ -427,13 +428,14 @@
 
                 <LinearLayout
                     android:id="@+id/ll_list_title"
-                    android:layout_width="100dp"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="50dp"
+                        android:gravity="center"
                         android:layout_height="wrap_content"
                         android:text="时间"
                         android:textColor="@color/main_text_color"
@@ -449,16 +451,17 @@
                         android:textSize="@dimen/sp_12"/>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="30dp"
                         android:layout_height="wrap_content"
                         android:text="现手"
+                        android:gravity="right"
                         android:textColor="@color/main_text_color"
                         android:textSize="@dimen/sp_12"/>
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_list"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_alignLeft="@id/ll_list_title"
                     android:layout_alignRight="@id/ll_list_title"
@@ -480,10 +483,6 @@
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <View
-        style="@style/style_divider"
-        android:paddingTop="4dp"/>
 
     <LinearLayout
         android:id="@+id/ll_trade"

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,7 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
+import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
@@ -56,6 +58,7 @@ import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 import com.yjjr.yjfutures.widget.dropdownmenu.MenuItem;
 import com.yjjr.yjfutures.widget.dropdownmenu.TopRightMenu;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -93,7 +96,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView tvYueValue;
     private TextView tvTotal;
 
-
     private TextView tvOpen;
     private TextView tvHigh;
     private TextView tvLow;
@@ -113,8 +115,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      * 休市信息，休市时显示出来
      */
     private TextView tvRest;
-    private SimpleFragmentPagerAdapter mKLineAdapter;
     private MarketDepthView marketDepthView;
+    private MarketHisAdapter mMarketHisAdapter;
+    private RecyclerView mRvMarketHis;
+    private ArrayList<Quote> mHisList = new ArrayList<>(10);
 
 
     public TradeFragment() {
@@ -190,8 +194,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
         Fragment[] fragments = {LineChartFragment.newInstance(mSymbol, mIsDemo), FullScreenKLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN5),
                 mCandleStickChartFragment};
-        mKLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
-        mViewpager.setAdapter(mKLineAdapter);
+        SimpleFragmentPagerAdapter KLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
+        mViewpager.setAdapter(KLineAdapter);
         mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
             @Override
@@ -298,9 +302,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      */
     private void setRestView(Quote quote) {
         if (quote == null || quote.isRest()) { // 休市的状态
-            tvRest.setText(TextUtils.concat(SpannableUtil.getStringBySize("休市中", 1.4f), String.format("\t下一个交易时间段：%s", quote.getTradingTime())));
+            tvRest.setText(TextUtils.concat("休市中", String.format("\t下一个交易时间段：%s", quote.getTradingTime())));
         } else {
-            tvRest.setText("交易中 "+quote.getLastTime());
+            tvRest.setText("交易中 " + quote.getLastTime());
         }
     }
 
@@ -337,15 +341,19 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         vgSettlement = v.findViewById(R.id.vg_settlement);
         tvDirection = (TextView) v.findViewById(R.id.tv_direction);
         tvYueValue = (TextView) v.findViewById(R.id.tv_yue_value);
-        RecyclerView rvMarketHis = (RecyclerView) v.findViewById(R.id.rv_list);
-        rvMarketHis.setLayoutManager(new LinearLayoutManager(mContext));
-        MarketHisAdapter marketHisAdapter = new MarketHisAdapter(null);
-        marketHisAdapter.bindToRecyclerView(rvMarketHis);
-        ArrayList<String> test = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            test.add(i + "");
+        mRvMarketHis = (RecyclerView) v.findViewById(R.id.rv_list);
+        RecyclerView.ItemAnimator animator = mRvMarketHis.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
         }
-        marketHisAdapter.addData(test);
+        mRvMarketHis.setLayoutManager(new LinearLayoutManager(mContext){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        mMarketHisAdapter = new MarketHisAdapter(mHisList);
+        mMarketHisAdapter.bindToRecyclerView(mRvMarketHis);
         if (mIsDemo) {
             TextView tvYue = (TextView) v.findViewById(R.id.tv_yue);
             tvYue.setText("可用金币");
@@ -457,6 +465,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     public void onEvent(PriceRefreshEvent event) {
         if (TextUtils.equals(event.getSymbol(), mSymbol)) {
             Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+            if (mHisList.size() > 20) {
+                mHisList.remove(0);
+            }
+            mHisList.add(new Quote(quote));
+            mMarketHisAdapter.notifyDataSetChanged();
+            mRvMarketHis.scrollToPosition(mHisList.size() - 1);
             fillViews(quote);
             setRestView(quote);
             Funds result = StaticStore.getFunds(mIsDemo);
@@ -533,6 +547,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 }
                 break;
             case R.id.iv_more:
+                MarketDetailActivity.startActivity(mContext, mSymbol);
                 break;
             case R.id.tv_kchart:
                 mTopRightMenu.showAsDropDown(mTvKchart, 0, 0);

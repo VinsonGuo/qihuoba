@@ -27,7 +27,7 @@ public class Quote {
     private double ExchangeRate;
     private int BidSize;
     private String Symbol;
-    private double LastSize;
+    private int LastSize;
     private double LastPrice;
     private double BidPrice;
     private double high;
@@ -40,6 +40,34 @@ public class Quote {
      * 是否持仓，根据需求加的字段
      */
     private boolean isHolding;
+
+    public Quote(Quote q) {
+        this.askSize = q.askSize;
+        this.Lastclose = q.Lastclose;
+        this.openinterest = q.openinterest;
+        this.Change = q.Change;
+        this.SecurityType = q.SecurityType;
+        this.TradingTime = q.TradingTime;
+        this.Vol = q.Vol;
+        this.Tick = q.Tick;
+        this.open = q.open;
+        this.ChangeRate = q.ChangeRate;
+        this.Exchange = q.Exchange;
+        this.Symbolname = q.Symbolname;
+        this.AskPrice = q.AskPrice;
+        this.ExchangeRate = q.ExchangeRate;
+        this.BidSize = q.BidSize;
+        this.Symbol = q.Symbol;
+        this.LastSize = q.LastSize;
+        this.LastPrice = q.LastPrice;
+        this.BidPrice = q.BidPrice;
+        this.high = q.high;
+        this.Multiple = q.Multiple;
+        this.low = q.low;
+        this.Currency = q.Currency;
+        this.sort = q.sort;
+        this.lastTime = q.lastTime;
+    }
 
     public Quote() {
     }
@@ -180,11 +208,11 @@ public class Quote {
         Symbol = symbol;
     }
 
-    public double getLastSize() {
+    public int getLastSize() {
         return LastSize;
     }
 
-    public void setLastSize(double lastSize) {
+    public void setLastSize(int lastSize) {
         LastSize = lastSize;
     }
 

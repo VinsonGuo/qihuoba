@@ -29,16 +29,6 @@ public class KLineChartInfoView extends ChartInfoView {
     private TextView mTvChangeRate;
     private TextView mTvVol;
     private TextView mTvTime;
-    private Chart mChart;
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            setVisibility(GONE);
-            if (mChart != null) {
-                mChart.highlightValue(null);
-            }
-        }
-    };
 
     public KLineChartInfoView(Context context) {
         this(context, null);
@@ -74,8 +64,4 @@ public class KLineChartInfoView extends ChartInfoView {
         postDelayed(mRunnable, 2000);
     }
 
-    @Override
-    public void setChart(Chart chart) {
-        mChart = chart;
-    }
 }

@@ -352,6 +352,9 @@
         </activity>
         <activity android:name=".ui.publish.PublishActivity">
         </activity>
+        <activity android:name=".ui.trade.MarketDetailActivity"
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
     </application>
 
 </manifest>

@@ -59,6 +59,7 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
 
         String mainTitle = a.getString(R.styleable.headerView_main_title);
         String subTitle = a.getString(R.styleable.headerView_sub_title);
+        boolean isSingleLine = a.getBoolean(R.styleable.headerView_singleline, true);
         int bgColor = a.getColor(R.styleable.headerView_background_color, 0);
         int mainTitleColor = a.getColor(R.styleable.headerView_main_title_color, ContextCompat.getColor(context, R.color.main_text_color));
         if (bgColor != 0) {
@@ -70,6 +71,7 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
 
         mTextMainTitle.setText(mainTitle);
         mTextMainTitle.setTextColor(mainTitleColor);
+        mTextMainTitle.setLines(isSingleLine ? 1 : 2);
         mTextSubtitle.setText(subTitle);
 
         a.recycle();

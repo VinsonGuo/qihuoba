@@ -25,6 +25,7 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
+import com.yjjr.yjfutures.widget.chart.ChartScrollTouchListener;
 import com.yjjr.yjfutures.widget.chart.InfoViewListener;
 import com.yjjr.yjfutures.widget.chart.KLineXValueFormatter;
 import com.yjjr.yjfutures.widget.chart.YValueFormatter;
@@ -139,24 +140,8 @@ public class LineChartFragment extends BaseFullScreenChartFragment {
         mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mLineInfo, mChartPrice));
         axisLeftPrice.setValueFormatter(new YValueFormatter(mQuote.getTick()));
 
-        mChartPrice.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                       EventBus.getDefault().post(new ChartTouchEvent(true));
-                        break;
-                    }
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP: {
-                        EventBus.getDefault().post(new ChartTouchEvent(false));
-                        break;
-                    }
-                }
-
-                return false;
-            }
-        });
+        mChartPrice.setOnTouchListener(new ChartScrollTouchListener());
+        mChartVolume.setOnTouchListener(new ChartScrollTouchListener());
 
         DateTime dateTime = DateUtils.getChartStartTime(mQuote, HttpConfig.MIN);
         if (SocketUtils.getSocket() == null) {

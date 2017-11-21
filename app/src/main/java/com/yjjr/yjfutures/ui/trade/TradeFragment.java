@@ -89,7 +89,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private TextView mTvKchart;
     private TopRightMenu mTopRightMenu;
     private String mSymbol;
-    private CandleStickChartFragment mCandleStickChartFragment;
+    private KLineChartFragment mCandleStickChartFragment;
     private View vgOrder;
     private View vgSettlement;
     private TextView tvDirection;
@@ -196,7 +196,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 WebActivity.startActivity(mContext, String.format(HttpConfig.URL_RULE, StringUtils.getRuleName(quote)));
             }
         });
-        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
+        mCandleStickChartFragment = KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
         Fragment[] fragments = {
                 LineChartFragment.newInstance(mSymbol, mIsDemo),
                 KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.DAY5),
@@ -319,7 +319,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      */
     private void setRestView(Quote quote) {
         if (quote == null || quote.isRest()) { // 休市的状态
-            tvRest.setText(TextUtils.concat("休市中", String.format("\t下一个交易时间段：%s\n", quote.getTradingTime())));
+            tvRest.setText(String.format("休市中\t下一个交易时间段：\n%s", quote.getTradingTime()));
         } else {
             tvRest.setText("交易中 " + quote.getLastTime());
         }

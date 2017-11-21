@@ -206,78 +206,84 @@ public class BaseFullScreenChartFragment extends BaseFragment {
     }
 
     protected void initChartKData(AppCombinedChart combinedChartX, boolean isShowAve) {
+        try {
+            ArrayList<CandleEntry> lineCJEntries = new ArrayList<>(MAX_COUNT_K);
+            ArrayList<Entry> lineJJEntries = new ArrayList<>(MAX_COUNT_K);
+            ArrayList<Entry> paddingEntries = new ArrayList<>(MAX_COUNT_K);
 
-        ArrayList<CandleEntry> lineCJEntries = new ArrayList<>(MAX_COUNT_K);
-        ArrayList<Entry> lineJJEntries = new ArrayList<>(MAX_COUNT_K);
-        ArrayList<Entry> paddingEntries = new ArrayList<>(MAX_COUNT_K);
-
-        for (int i = 0; i < mData.size(); i++) {
-            HisData hisData = mData.get(i);
-            lineCJEntries.add(new CandleEntry(i, (float) hisData.getHigh(), (float) hisData.getLow(), (float) hisData.getOpen(), (float) hisData.getClose()));
-            lineJJEntries.add(new Entry(i, (float) hisData.getAvePrice()));
-        }
-
-        if (!mData.isEmpty() && mData.size() < MAX_COUNT_K) {
-            for (int i = mData.size(); i < MAX_COUNT_K; i++) {
-                paddingEntries.add(new Entry(i, (float) mData.get(mData.size() - 1).getClose()));
+            for (int i = 0; i < mData.size(); i++) {
+                HisData hisData = mData.get(i);
+                lineCJEntries.add(new CandleEntry(i, (float) hisData.getHigh(), (float) hisData.getLow(), (float) hisData.getOpen(), (float) hisData.getClose()));
+                lineJJEntries.add(new Entry(i, (float) hisData.getAvePrice()));
             }
-        }
+
+            if (!mData.isEmpty() && mData.size() < MAX_COUNT_K) {
+                for (int i = mData.size(); i < MAX_COUNT_K; i++) {
+                    paddingEntries.add(new Entry(i, (float) mData.get(mData.size() - 1).getClose()));
+                }
+            }
 
 
         /*注老版本LineData参数可以为空，最新版本会报错，修改进入ChartData加入if判断*/
-        LineData lineData;
-        if (isShowAve) {
-            lineData = new LineData(setLine(1, lineJJEntries), setLine(2, paddingEntries));
-        } else {
-            lineData = new LineData(setLine(2, paddingEntries));
-        }
-        CandleData candleData = new CandleData(setKLine(0, lineCJEntries));
-        CombinedData combinedData = new CombinedData();
-        combinedData.setData(lineData);
-        combinedData.setData(candleData);
-        combinedChartX.setData(combinedData);
+            LineData lineData;
+            if (isShowAve) {
+                lineData = new LineData(setLine(1, lineJJEntries), setLine(2, paddingEntries));
+            } else {
+                lineData = new LineData(setLine(2, paddingEntries));
+            }
+            CandleData candleData = new CandleData(setKLine(0, lineCJEntries));
+            CombinedData combinedData = new CombinedData();
+            combinedData.setData(lineData);
+            combinedData.setData(candleData);
+            combinedChartX.setData(combinedData);
 
-        combinedChartX.setVisibleXRange(MAX_COUNT_K, MIN_COUNT_K);
-        combinedChartX.notifyDataSetChanged();
-        combinedChartX.invalidate();
-        combinedChartX.moveViewToX(combinedData.getEntryCount());
+            combinedChartX.setVisibleXRange(MAX_COUNT_K, MIN_COUNT_K);
+            combinedChartX.notifyDataSetChanged();
+            combinedChartX.invalidate();
+            combinedChartX.moveViewToX(combinedData.getEntryCount());
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
     }
 
     protected void initChartPriceData(AppCombinedChart combinedChartX) {
-
-        if (mData == null || mData.isEmpty()) {
-            return;
-        }
-
-        ArrayList<Entry> lineCJEntries = new ArrayList<>(MAX_COUNT_LINE);
-        ArrayList<Entry> lineJJEntries = new ArrayList<>(MAX_COUNT_LINE);
-        ArrayList<Entry> paddingEntries = new ArrayList<>(MAX_COUNT_LINE);
-
-        for (int i = 0; i < mData.size(); i++) {
-            lineCJEntries.add(new Entry(i, (float) mData.get(i).getClose()));
-            lineJJEntries.add(new Entry(i, (float) mData.get(i).getAvePrice()));
-        }
-        if (!mData.isEmpty() && mData.size() < MAX_COUNT_LINE) {
-            for (int i = mData.size(); i < MAX_COUNT_LINE; i++) {
-                paddingEntries.add(new Entry(i, (float) mData.get(mData.size() - 1).getClose()));
+        try {
+            if (mData == null || mData.isEmpty()) {
+                return;
             }
-        }
-        ArrayList<ILineDataSet> sets = new ArrayList<>();
-        sets.add(setLine(0, lineCJEntries));
-        sets.add(setLine(1, lineJJEntries));
-        sets.add(setLine(2, paddingEntries));
+
+            ArrayList<Entry> lineCJEntries = new ArrayList<>(MAX_COUNT_LINE);
+            ArrayList<Entry> lineJJEntries = new ArrayList<>(MAX_COUNT_LINE);
+            ArrayList<Entry> paddingEntries = new ArrayList<>(MAX_COUNT_LINE);
+
+            for (int i = 0; i < mData.size(); i++) {
+                lineCJEntries.add(new Entry(i, (float) mData.get(i).getClose()));
+                lineJJEntries.add(new Entry(i, (float) mData.get(i).getAvePrice()));
+            }
+            if (!mData.isEmpty() && mData.size() < MAX_COUNT_LINE) {
+                for (int i = mData.size(); i < MAX_COUNT_LINE; i++) {
+                    paddingEntries.add(new Entry(i, (float) mData.get(mData.size() - 1).getClose()));
+                }
+            }
+            ArrayList<ILineDataSet> sets = new ArrayList<>();
+            sets.add(setLine(0, lineCJEntries));
+            sets.add(setLine(1, lineJJEntries));
+            sets.add(setLine(2, paddingEntries));
         /*注老版本LineData参数可以为空，最新版本会报错，修改进入ChartData加入if判断*/
-        LineData lineData = new LineData(sets);
+            LineData lineData = new LineData(sets);
 
-        CombinedData combinedData = new CombinedData();
-        combinedData.setData(lineData);
-        combinedChartX.setData(combinedData);
+            CombinedData combinedData = new CombinedData();
+            combinedData.setData(lineData);
+            combinedChartX.setData(combinedData);
 
-        combinedChartX.setVisibleXRange(MAX_COUNT_LINE, MIN_COUNT_LINE);
+            combinedChartX.setVisibleXRange(MAX_COUNT_LINE, MIN_COUNT_LINE);
 
-        combinedChartX.notifyDataSetChanged();
-        combinedChartX.invalidate();
-        combinedChartX.moveViewToX(combinedData.getEntryCount());
+            combinedChartX.notifyDataSetChanged();
+            combinedChartX.invalidate();
+            combinedChartX.moveViewToX(combinedData.getEntryCount());
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
     }
 
     @android.support.annotation.NonNull

@@ -4,7 +4,6 @@ package com.yjjr.yjfutures.ui.trade;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.listener.ChartTouchListener;
@@ -12,7 +11,6 @@ import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.google.gson.Gson;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
-import com.yjjr.yjfutures.event.ChartTouchEvent;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.HistoryDataRequest;
@@ -24,10 +22,9 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
-import com.yjjr.yjfutures.widget.chart.ChartInfoViewHandler;
+import com.yjjr.yjfutures.widget.chart.ChartScrollTouchListener;
 import com.yjjr.yjfutures.widget.chart.InfoViewListener;
 import com.yjjr.yjfutures.widget.chart.KLineXValueFormatter;
-import com.yjjr.yjfutures.widget.chart.YValueFormatter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -133,29 +130,13 @@ public class KLineChartFragment extends BaseFullScreenChartFragment {
         };
         mChartPrice.setOnChartGestureListener(l);
         mChartVolume.setOnChartGestureListener(l);
-        mChartPrice.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        EventBus.getDefault().post(new ChartTouchEvent(true));
-                        break;
-                    }
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP: {
-                        EventBus.getDefault().post(new ChartTouchEvent(false));
-                        break;
-                    }
-                }
-
-                return false;
-            }
-        });
+        mChartPrice.setOnTouchListener(new ChartScrollTouchListener());
+        mChartVolume.setOnTouchListener(new ChartScrollTouchListener());
         mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mKInfo, mChartVolume));
         mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mKInfo, mChartPrice));
 
-        mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
-        if (mQuote == null) return;
+       mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
+       /*  if (mQuote == null) return;
 
         DateTime dateTime = DateUtils.getChartStartTime(mQuote, mType);
 
@@ -193,7 +174,8 @@ public class KLineChartFragment extends BaseFullScreenChartFragment {
                     }
                 });
             }
-        });
+        });*/
+       loadDataByType(mType);
     }
 
 
@@ -226,6 +208,53 @@ public class KLineChartFragment extends BaseFullScreenChartFragment {
         });
     }
 
+    public void loadDataByType(String type) {
+        SocketUtils.getSocket().off(SocketUtils.HIS_DATA);
+        mType = type;
+        xAxisVolume.setValueFormatter(new KLineXValueFormatter(mType, mData));
+        final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+        if(quote == null) {
+            return;
+        }
+
+        DateTime dateTime = DateUtils.getChartStartTime(quote, mType);
+        if (SocketUtils.getSocket() == null) {
+            mChartPrice.setNoDataText(getString(R.string.data_load_fail));
+            mChartVolume.setNoDataText(getString(R.string.data_load_fail));
+            return;
+        }
+
+        String json = mGson.toJson(new HistoryDataRequest(quote.getSymbol(), quote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType));
+        SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, json);
+        LogUtils.d("history request data -> %s", json);
+        SocketUtils.getSocket().once(SocketUtils.HIS_DATA, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                LogUtils.d("history data -> " + args[0].toString());
+                mData.clear();
+                final List<HisData> list = StringUtils.parseHisData(args[0].toString(), null);
+                mData.addAll(list);
+
+                mChartPrice.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (list.isEmpty()) {
+                            mChartPrice.setNoDataText(getString(R.string.data_load_fail));
+                            mChartVolume.setNoDataText(getString(R.string.data_load_fail));
+                            return;
+                        }
+
+                        boolean isMin = TextUtils.equals(mType, HttpConfig.MIN);
+//                        if (isMin) {
+//                            setLimitLine(quote);
+//                        }
+                        initChartKData(mChartPrice, isMin);
+                        initChartVolumeData(mChartVolume);
+                    }
+                });
+            }
+        });
+    }
 
     @Override
     public void onDestroy() {

@@ -478,6 +478,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
+        android:paddingTop="6dp"
         android:layout_marginTop="1dp"
         android:background="@color/background_dark"
         android:gravity="center">

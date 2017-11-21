@@ -102,5 +102,8 @@ public class HttpConfig {
     public static final String MIN15 = "min15";
     public static final String HOUR = "hour";
     public static final String DAY = "day";
+    public static final String DAY5 = "day5";
+    public static final String WEEK = "week";
+    public static final String MONTH = "month";
 
 }

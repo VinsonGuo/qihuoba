@@ -27,7 +27,7 @@ public class KLineXValueFormatter implements IAxisValueFormatter {
     public String getFormattedValue(float value, AxisBase axis) {
         if (mData != null && value < mData.size() && value >= 0) {
             DateTime dateTime = new DateTime(mData.get((int) value).getsDate());
-            if (mType.equals(HttpConfig.DAY)) {
+            if (mType.equals(HttpConfig.DAY) || mType.equals(HttpConfig.WEEK) || mType.equals(HttpConfig.MONTH)) {
                 return DateUtils.formatDataOnly(dateTime.getMillis());
             }
             return DateUtils.formatTime(dateTime.getMillis());

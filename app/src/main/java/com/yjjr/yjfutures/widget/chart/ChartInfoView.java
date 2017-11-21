@@ -15,7 +15,7 @@ import com.yjjr.yjfutures.model.HisData;
 public abstract class ChartInfoView extends LinearLayout {
 
 
-    protected Chart[] mLineCharts;
+    public Chart[] mLineCharts;
     protected Runnable mRunnable = new Runnable() {
         @Override
         public void run() {

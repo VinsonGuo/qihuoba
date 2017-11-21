@@ -3,16 +3,23 @@ package com.yjjr.yjfutures.ui.trade;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.google.gson.Gson;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.event.ChartTouchEvent;
 import com.yjjr.yjfutures.event.OneMinuteEvent;
 import com.yjjr.yjfutures.model.HisData;
 import com.yjjr.yjfutures.model.HistoryDataRequest;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.utils.DateUtils;
+import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
@@ -31,7 +38,7 @@ import java.util.List;
 
 import io.socket.emitter.Emitter;
 
-public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
+public class KLineChartFragment extends BaseFullScreenChartFragment {
 
     private String mSymbol;
     private boolean mIsDemo;
@@ -40,12 +47,12 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
     private Quote mQuote;
 
 
-    public FullScreenKLineChartFragment() {
+    public KLineChartFragment() {
         // Required empty public constructor
     }
 
-    public static FullScreenKLineChartFragment newInstance(String symbol, boolean isDemo, String type) {
-        FullScreenKLineChartFragment fragment = new FullScreenKLineChartFragment();
+    public static KLineChartFragment newInstance(String symbol, boolean isDemo, String type) {
+        KLineChartFragment fragment = new KLineChartFragment();
         Bundle args = new Bundle();
         args.putString(Constants.CONTENT_PARAMETER, symbol);
         args.putBoolean(Constants.CONTENT_PARAMETER_2, isDemo);
@@ -68,16 +75,88 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
 
     @Override
     protected void initData() {
+//        xAxisVolume.setDrawLabels(false);
+        axisLeftPrice.setDrawLabels(false);
+        axisLeftVolume.setDrawLabels(false);
+
+        mChartPrice.setDrawBorders(false);
+        mChartVolume.setDrawBorders(false);
+
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mChartVolume.getLayoutParams();
+        params.topMargin = DisplayUtils.dip2px(mContext, -30);
+        params.height = params.height + DisplayUtils.dip2px(mContext, 30);
+        mChartVolume.setLayoutParams(params);
 
         xAxisVolume.setValueFormatter(new KLineXValueFormatter(mType, mData));
+        mChartPrice.setDragEnabled(false);
+        mChartVolume.setDragEnabled(false);
+        OnChartGestureListener l = new OnChartGestureListener() {
+            @Override
+            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+            }
+
+            @Override
+            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+            }
+
+            @Override
+            public void onChartLongPressed(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartDoubleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartSingleTapped(MotionEvent me) {
+                FullScreenChartActivity.startActivity(mContext, mSymbol, mIsDemo);
+            }
+
+            @Override
+            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+            }
+
+            @Override
+            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+            }
+
+            @Override
+            public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+            }
+        };
+        mChartPrice.setOnChartGestureListener(l);
+        mChartVolume.setOnChartGestureListener(l);
+        mChartPrice.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        EventBus.getDefault().post(new ChartTouchEvent(true));
+                        break;
+                    }
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP: {
+                        EventBus.getDefault().post(new ChartTouchEvent(false));
+                        break;
+                    }
+                }
+
+                return false;
+            }
+        });
+        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mKInfo, mChartVolume));
+        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mKInfo, mChartPrice));
+
         mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (mQuote == null) return;
 
-        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mKInfo, mChartVolume));
-        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mKInfo, mChartPrice));
-        mChartPrice.setOnTouchListener(new ChartInfoViewHandler(mChartPrice));
-        axisLeftPrice.setValueFormatter(new YValueFormatter(mQuote.getTick()));
-//        mMvx.setType(type);
         DateTime dateTime = DateUtils.getChartStartTime(mQuote, mType);
 
         if (SocketUtils.getSocket() == null) {

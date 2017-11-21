@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -21,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
+import com.yjjr.yjfutures.event.ChartTouchEvent;
 import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
@@ -38,7 +40,6 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
-import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
@@ -58,7 +59,6 @@ import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 import com.yjjr.yjfutures.widget.dropdownmenu.MenuItem;
 import com.yjjr.yjfutures.widget.dropdownmenu.TopRightMenu;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -118,7 +118,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private MarketDepthView marketDepthView;
     private MarketHisAdapter mMarketHisAdapter;
     private RecyclerView mRvMarketHis;
-    private ArrayList<Quote> mHisList = new ArrayList<>(10);
+    private ArrayList<Quote> mHisList = new ArrayList<Quote>(20) {{
+        for (int i = 0; i < 20; i++) {
+            add(null);
+        }
+    }};
+    private NestedScrollView mScrollView;
 
 
     public TradeFragment() {
@@ -192,11 +197,16 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             }
         });
         mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
-        Fragment[] fragments = {LineChartFragment.newInstance(mSymbol, mIsDemo), FullScreenKLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN5),
+        Fragment[] fragments = {
+                LineChartFragment.newInstance(mSymbol, mIsDemo),
+                KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.DAY5),
+                KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.DAY),
+                KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.WEEK),
+                KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MONTH),
                 mCandleStickChartFragment};
         SimpleFragmentPagerAdapter KLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
         mViewpager.setAdapter(KLineAdapter);
-        mViewpager.setOffscreenPageLimit(fragments.length);
+//        mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(NestRadioGroup group, int checkedId) {
@@ -206,6 +216,15 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         break;
                     case R.id.rb_chart2:
                         mViewpager.setCurrentItem(1, false);
+                        break;
+                    case R.id.rb_chart3:
+                        mViewpager.setCurrentItem(2, false);
+                        break;
+                    case R.id.rb_chart4:
+                        mViewpager.setCurrentItem(3, false);
+                        break;
+                    case R.id.rb_chart5:
+                        mViewpager.setCurrentItem(4, false);
                         break;
                 }
                 mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.background_dark));
@@ -238,7 +257,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.color_333333));
                         mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.third_text_color));
                         mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow), null);
-                        mViewpager.setCurrentItem(2, false);
+                        mViewpager.setCurrentItem(5, false);
                         String type = HttpConfig.MIN;
                         switch (position) {
                             case 0:
@@ -261,13 +280,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     }
                 });
         fillViews(quote);
-        mHeaderView.setMainTitle(quote.getSymbolname());
+        mHeaderView.setMainTitle(TextUtils.concat(quote.getSymbolname(), "\n", SpannableUtil.getStringBySize(quote.getSymbol(), .6f)));
         tvLeft.setOnClickListener(this);
         tvRight.setOnClickListener(this);
         v.findViewById(R.id.tv_position).setOnClickListener(this);
         v.findViewById(R.id.tv_close_order).setOnClickListener(this);
         v.findViewById(R.id.tv_kchart).setOnClickListener(this);
-        v.findViewById(R.id.tv_fullscreen).setOnClickListener(this);
         getMarketDepth(quote);
         return v;
     }
@@ -278,7 +296,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             Emitter.Listener fn = new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    LogUtils.d("getMarketDepth -> %s", args[0].toString());
                     final List<MarketDepth> list = gson.fromJson(args[0].toString(), new TypeToken<List<MarketDepth>>() {
                     }.getType());
                     marketDepthView.post(new Runnable() {
@@ -302,7 +319,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      */
     private void setRestView(Quote quote) {
         if (quote == null || quote.isRest()) { // 休市的状态
-            tvRest.setText(TextUtils.concat("休市中", String.format("\t下一个交易时间段：%s", quote.getTradingTime())));
+            tvRest.setText(TextUtils.concat("休市中", String.format("\t下一个交易时间段：%s\n", quote.getTradingTime())));
         } else {
             tvRest.setText("交易中 " + quote.getLastTime());
         }
@@ -332,6 +349,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private void findViews(View v) {
         mHeaderView = (HeaderView) v.findViewById(R.id.header_view);
         mHeaderView.bindActivity(getActivity());
+        mScrollView = (NestedScrollView) v.findViewById(R.id.scrollView);
         rgNav = (NestRadioGroup) v.findViewById(R.id.rg_nav);
         tvLeft = (TextView) v.findViewById(R.id.tv_left);
         tvRight = (TextView) v.findViewById(R.id.tv_right);
@@ -346,7 +364,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         if (animator instanceof SimpleItemAnimator) {
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
         }
-        mRvMarketHis.setLayoutManager(new LinearLayoutManager(mContext){
+        mRvMarketHis.setLayoutManager(new LinearLayoutManager(mContext) {
             @Override
             public boolean canScrollVertically() {
                 return false;
@@ -478,10 +496,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         }
     }
 
-    /*@Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(FastTakeOrderEvent event) {
-        tvCenter.setText(event.isOpened() ? R.string.opened : R.string.closed);
-    }*/
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ChartTouchEvent event) {
+        if (mScrollView != null) {
+            mScrollView.requestDisallowInterceptTouchEvent(event.isStatues());
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -551,9 +571,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.tv_kchart:
                 mTopRightMenu.showAsDropDown(mTvKchart, 0, 0);
-                break;
-            case R.id.tv_fullscreen:
-                FullScreenChartActivity.startActivity(mContext, mSymbol, mIsDemo);
                 break;
         }
     }

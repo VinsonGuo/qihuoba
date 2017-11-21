@@ -58,7 +58,7 @@ public class KLineChartInfoView extends ChartInfoView {
         mTvHighPrice.setText(DoubleUtil.formatDecimal(data.getHigh()));
         mTvLowPrice.setText(DoubleUtil.formatDecimal(data.getLow()));
 //        mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose()- data.getOpen()) / data.getOpen() * 100));
-        mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose()- lastClose) / lastClose * 100));
+        mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose() - lastClose) / lastClose * 100));
         mTvVol.setText(data.getVol() + "");
         removeCallbacks(mRunnable);
         postDelayed(mRunnable, 2000);

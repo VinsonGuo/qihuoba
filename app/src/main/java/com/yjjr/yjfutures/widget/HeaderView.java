@@ -118,7 +118,7 @@ public class HeaderView extends LinearLayout implements View.OnClickListener {
         return mTextMainTitle.getText().toString().trim();
     }
 
-    public void setMainTitle(String text) {
+    public void setMainTitle(CharSequence text) {
         mTextMainTitle.setText(text);
     }
 

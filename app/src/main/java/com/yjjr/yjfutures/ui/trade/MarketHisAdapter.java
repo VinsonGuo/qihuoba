@@ -1,12 +1,12 @@
 package com.yjjr.yjfutures.ui.trade;
 
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.model.Quote;
+import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
 
 import java.util.List;
@@ -23,9 +23,19 @@ public class MarketHisAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, Quote item) {
-        helper
-                .setText(R.id.tv_time, TextUtils.isEmpty(item.getLastTime()) ? "----" : item.getLastTime().split(" ")[1])
-                .setText(R.id.tv_price, StringUtils.getStringByTick(item.getLastPrice(), item.getTick()))
-                .setText(R.id.tv_vol, item.getLastSize() + "");
+        try {
+            String s = mContext.getString(R.string.number_holder);
+            if (item == null) {
+                helper.setText(R.id.tv_time, s)
+                        .setText(R.id.tv_price, s)
+                        .setText(R.id.tv_vol, s);
+            } else {
+                helper.setText(R.id.tv_time, item.getLastTime().split(" ")[1].substring(3))
+                        .setText(R.id.tv_price, StringUtils.getStringByTick(item.getLastPrice(), item.getTick()))
+                        .setText(R.id.tv_vol, item.getLastSize() + "");
+            }
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
     }
 }

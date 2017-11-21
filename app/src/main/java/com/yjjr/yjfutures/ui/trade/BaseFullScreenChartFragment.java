@@ -41,6 +41,7 @@ import com.yjjr.yjfutures.widget.chart.LineChartXMarkerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by dell on 2017/10/26.
@@ -48,10 +49,10 @@ import java.util.List;
 
 public class BaseFullScreenChartFragment extends BaseFragment {
 
-    public static final int MAX_COUNT_LINE = 200;
-    public static final int MIN_COUNT_LINE = 100;
-    public static final int MAX_COUNT_K = 100;
-    public static final int MIN_COUNT_K = 60;
+    public int MAX_COUNT_LINE = 200;
+    public int MIN_COUNT_LINE = 100;
+    public int MAX_COUNT_K = 100;
+    public int MIN_COUNT_K = 60;
 
 
     protected AppCombinedChart mChartPrice;
@@ -88,6 +89,11 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         return v;
     }
 
+    public void setLineCount(int max, int min) {
+        MAX_COUNT_LINE = max;
+        MIN_COUNT_LINE = min;
+    }
+
     protected void initChartPrice() {
         mChartPrice.setScaleEnabled(true);//启用图表缩放事件
         mChartPrice.setDrawBorders(true);//是否绘制边线
@@ -109,7 +115,6 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         xAxisPrice.setDrawLabels(false);//是否显示X坐标轴上的刻度，默认是true
         xAxisPrice.setDrawAxisLine(false);//是否绘制坐标轴的线，即含有坐标的那条线，默认是true
         xAxisPrice.setDrawGridLines(false);//是否显示X坐标轴上的刻度竖线，默认是true
-        xAxisPrice.enableGridDashedLine(10f, 10f, 0f);//绘制成虚线，只有在关闭硬件加速的情况下才能使用
 
         //左边y
         axisLeftPrice = mChartPrice.getAxisLeft();
@@ -120,6 +125,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         axisLeftPrice.setDrawAxisLine(false);//是否绘制坐标轴的线，即含有坐标的那条线，默认是true
         axisLeftPrice.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART); //参数是INSIDE_CHART(Y轴坐标在内部) 或 OUTSIDE_CHART(在外部（默认是这个）)
         axisLeftPrice.setTextColor(textColor);
+        axisLeftPrice.enableGridDashedLine(10f, 10f, 0f);//绘制成虚线，只有在关闭硬件加速的情况下才能使用
 
 
         //右边y
@@ -141,6 +147,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         mChartVolume.setBorderColor(getResources().getColor(R.color.divider_color));
         mChartVolume.setDragEnabled(true);//启用图表拖拽事件
         mChartVolume.setScaleYEnabled(false);//启用Y轴上的缩放
+        mChartVolume.setAutoScaleMinMaxEnabled(true);
         mChartVolume.getDescription().setEnabled(false);//右下角对图表的描述信息
         Legend lineChartLegend = mChartVolume.getLegend();
         lineChartLegend.setEnabled(false);//是否绘制 Legend 图例
@@ -169,12 +176,15 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         axisLeftVolume.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
+                String s;
                 if (value > 10000) {
-                    return (int) (value / 10000) + "万";
+                    s = (int) (value / 10000) + "万";
                 } else if (value > 1000) {
-                    return (int) (value / 1000) + "千";
+                    s = (int) (value / 1000) + "千";
+                } else {
+                    s = (int) value + "";
                 }
-                return (int) value + "";
+                return String.format(Locale.getDefault(), "%1$5s", s);
             }
         });
 
@@ -215,12 +225,15 @@ public class BaseFullScreenChartFragment extends BaseFragment {
 
 
         /*注老版本LineData参数可以为空，最新版本会报错，修改进入ChartData加入if判断*/
-        LineData lineData = new LineData(setLine(1, lineJJEntries), setLine(2, paddingEntries));
+        LineData lineData;
+        if (isShowAve) {
+            lineData = new LineData(setLine(1, lineJJEntries), setLine(2, paddingEntries));
+        } else {
+            lineData = new LineData(setLine(2, paddingEntries));
+        }
         CandleData candleData = new CandleData(setKLine(0, lineCJEntries));
         CombinedData combinedData = new CombinedData();
-        if (isShowAve) {
-            combinedData.setData(lineData);
-        }
+        combinedData.setData(lineData);
         combinedData.setData(candleData);
         combinedChartX.setData(combinedData);
 
@@ -279,7 +292,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
             lineDataSetMa.setColor(getResources().getColor(R.color.ave_color));
             lineDataSetMa.setCircleColor(getResources().getColor(R.color.transparent));
             lineDataSetMa.setHighlightEnabled(false);
-        } else if(type == 2){
+        } else if (type == 2) {
             lineDataSetMa.setVisible(false);
             lineDataSetMa.setHighlightEnabled(false);
         } else {
@@ -288,7 +301,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
             lineDataSetMa.setDrawHorizontalHighlightIndicator(false);
         }
         lineDataSetMa.setAxisDependency(YAxis.AxisDependency.LEFT);
-        lineDataSetMa.setLineWidth(1f);
+        lineDataSetMa.setLineWidth(.8f);
         lineDataSetMa.setCircleRadius(1f);
 
         lineDataSetMa.setDrawCircles(false);
@@ -312,6 +325,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         set1.setNeutralColor(ContextCompat.getColor(getContext(), R.color.increasing_color));
         //set1.setHighlightLineWidth(1f);
         set1.setDrawValues(false);
+        set1.setHighlightEnabled(true);
         if (type != 0) {
             set1.setVisible(false);
         }
@@ -463,6 +477,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
     protected void setLimitLine(Quote quote) {
         LimitLine limitLine = new LimitLine((float) quote.getLastclose());
         limitLine.enableDashedLine(5, 10, 0);
+        limitLine.setLineColor(getResources().getColor(R.color.second_text_color));
         axisLeftPrice.addLimitLine(limitLine);
     }
 }

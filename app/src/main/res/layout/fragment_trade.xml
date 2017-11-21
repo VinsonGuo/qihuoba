@@ -14,10 +14,10 @@
         android:layout_height="wrap_content"
         app:background_color="@color/background_dark"
         app:singleline="false"
-        app:main_title="美原油 CL1078"
         app:sub_title="玩法"/>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_trade"
@@ -296,128 +296,114 @@
             <View
                 style="@style/style_divider"/>
 
-            <FrameLayout
+
+            <com.yjjr.yjfutures.widget.NestRadioGroup
+                android:id="@+id/rg_nav"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="30dp"
+                android:background="@color/chart_background"
+                android:orientation="horizontal">
 
-                <com.yjjr.yjfutures.widget.NestRadioGroup
-                    android:id="@+id/rg_nav"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:background="@color/chart_background"
-                    android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/rb_chart1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_chart_rb_bg"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="分时图"
+                    android:textColor="@color/selector_chart_rb_text_color"
+                    android:textSize="@dimen/sp_12"/>
 
-                    <RadioButton
-                        android:id="@+id/rb_chart1"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/selector_chart_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="分时图"
-                        android:textColor="@color/selector_chart_rb_text_color"
-                        android:textSize="@dimen/sp_12"/>
+                <View
+                    android:layout_width="@dimen/common_divider_small"
+                    android:layout_height="match_parent"
+                    android:background="@color/divider_color"/>
 
-                    <View
-                        android:layout_width="@dimen/common_divider_small"
-                        android:layout_height="match_parent"
-                        android:background="@color/divider_color"/>
+                <RadioButton
+                    android:id="@+id/rb_chart2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_chart_rb_bg"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="5日"
+                    android:textColor="@color/selector_chart_rb_text_color"
+                    android:textSize="@dimen/sp_12"/>
 
-                    <RadioButton
-                        android:id="@+id/rb_chart2"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/selector_chart_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="5日"
-                        android:textColor="@color/selector_chart_rb_text_color"
-                        android:textSize="@dimen/sp_12"/>
+                <View
+                    android:layout_width="@dimen/common_divider_small"
+                    android:layout_height="match_parent"
+                    android:background="@color/divider_color"/>
 
-                    <View
-                        android:layout_width="@dimen/common_divider_small"
-                        android:layout_height="match_parent"
-                        android:background="@color/divider_color"/>
+                <RadioButton
+                    android:id="@+id/rb_chart3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_chart_rb_bg"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="日K"
+                    android:textColor="@color/selector_chart_rb_text_color"
+                    android:textSize="@dimen/sp_12"/>
 
-                    <RadioButton
-                        android:id="@+id/rb_chart3"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/selector_chart_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="5日"
-                        android:textColor="@color/selector_chart_rb_text_color"
-                        android:textSize="@dimen/sp_12"/>
+                <View
+                    android:layout_width="@dimen/common_divider_small"
+                    android:layout_height="match_parent"
+                    android:background="@color/divider_color"/>
 
-                    <View
-                        android:layout_width="@dimen/common_divider_small"
-                        android:layout_height="match_parent"
-                        android:background="@color/divider_color"/>
+                <RadioButton
+                    android:id="@+id/rb_chart4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_chart_rb_bg"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="周K"
+                    android:textColor="@color/selector_chart_rb_text_color"
+                    android:textSize="@dimen/sp_12"/>
 
-                    <RadioButton
-                        android:id="@+id/rb_chart4"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/selector_chart_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="5日"
-                        android:textColor="@color/selector_chart_rb_text_color"
-                        android:textSize="@dimen/sp_12"/>
+                <View
+                    android:layout_width="@dimen/common_divider_small"
+                    android:layout_height="match_parent"
+                    android:background="@color/divider_color"/>
 
-                    <View
-                        android:layout_width="@dimen/common_divider_small"
-                        android:layout_height="match_parent"
-                        android:background="@color/divider_color"/>
+                <RadioButton
+                    android:id="@+id/rb_chart5"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_chart_rb_bg"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="月K"
+                    android:textColor="@color/selector_chart_rb_text_color"
+                    android:textSize="@dimen/sp_12"/>
 
-                    <RadioButton
-                        android:id="@+id/rb_chart5"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/selector_chart_rb_bg"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:text="5日"
-                        android:textColor="@color/selector_chart_rb_text_color"
-                        android:textSize="@dimen/sp_12"/>
+                <View
+                    android:layout_width="@dimen/common_divider_small"
+                    android:layout_height="match_parent"
+                    android:background="@color/divider_color"/>
 
-                    <View
-                        android:layout_width="@dimen/common_divider_small"
-                        android:layout_height="match_parent"
-                        android:background="@color/divider_color"/>
-
-                    <TextView
-                        android:id="@+id/tv_kchart"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/selector_chart_rb_bg"
-                        android:button="@null"
-                        android:drawableRight="@drawable/ic_down_arrow"
-                        android:gravity="center"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp"
-                        android:text="分钟"
-                        android:textColor="@color/selector_chart_rb_text_color"
-                        android:textSize="@dimen/sp_12"
-                        />
-                </com.yjjr.yjfutures.widget.NestRadioGroup>
-
-                <ImageView
-                    android:id="@+id/tv_fullscreen"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:layout_gravity="right|center_vertical"
-                    android:layout_marginRight="@dimen/dp_10"
-                    android:src="@drawable/ic_full_chart"
+                <TextView
+                    android:id="@+id/tv_kchart"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_chart_rb_bg"
+                    android:button="@null"
+                    android:drawableRight="@drawable/ic_down_arrow"
+                    android:gravity="center"
+                    android:text="分钟"
+                    android:textColor="@color/selector_chart_rb_text_color"
+                    android:textSize="@dimen/sp_12"
                     />
-            </FrameLayout>
+            </com.yjjr.yjfutures.widget.NestRadioGroup>
+
 
             <View
                 style="@style/style_divider"/>
@@ -428,15 +414,17 @@
 
                 <LinearLayout
                     android:id="@+id/ll_list_title"
-                    android:layout_width="120dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="4dp">
 
                     <TextView
-                        android:layout_width="50dp"
-                        android:gravity="center"
+                        android:layout_width="30dp"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:text="时间"
                         android:textColor="@color/main_text_color"
                         android:textSize="@dimen/sp_12"/>
@@ -445,7 +433,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
+                        android:gravity="right"
                         android:text="位价"
                         android:textColor="@color/main_text_color"
                         android:textSize="@dimen/sp_12"/>
@@ -453,8 +441,8 @@
                     <TextView
                         android:layout_width="30dp"
                         android:layout_height="wrap_content"
-                        android:text="现手"
                         android:gravity="right"
+                        android:text="现手"
                         android:textColor="@color/main_text_color"
                         android:textSize="@dimen/sp_12"/>
                 </LinearLayout>
@@ -465,7 +453,8 @@
                     android:layout_height="match_parent"
                     android:layout_alignLeft="@id/ll_list_title"
                     android:layout_alignRight="@id/ll_list_title"
-                    android:layout_below="@id/ll_list_title"/>
+                    android:layout_below="@id/ll_list_title"
+                    android:layout_marginBottom="10dp"/>
 
                 <com.yjjr.yjfutures.widget.NoTouchScrollViewpager
                     android:id="@+id/viewpager"

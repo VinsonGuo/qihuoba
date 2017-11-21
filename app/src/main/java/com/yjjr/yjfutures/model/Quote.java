@@ -264,6 +264,36 @@ public class Quote {
         Currency = currency;
     }
 
+    public int getTradeTimeCount() {
+        if (TradingTime.contains(",")) {
+            int count = 0;
+            String[] timeRanges = TradingTime.split(",");
+            for (String timeRange : timeRanges) {
+                count += calcTradeTime(timeRange);
+            }
+            return count;
+        } else {
+            return calcTradeTime(TradingTime);
+        }
+    }
+
+    private int calcTradeTime(String timeRange) {
+        DateTime now = DateUtils.nowDateTime();
+        String[] times = timeRange.split("-");
+        DateTime startTime = new DateTime(DateUtils.parseTime(times[0])).withYear(now.getYear()).withMonthOfYear(now.getMonthOfYear()).withDayOfMonth(now.getDayOfMonth());
+        DateTime endTime = new DateTime(DateUtils.parseTime(times[1])).withYear(now.getYear()).withMonthOfYear(now.getMonthOfYear()).withDayOfMonth(now.getDayOfMonth());
+        // 如果结束时间在开始时间之前
+        if (endTime.isBefore(startTime)) {
+            if (now.isBefore(startTime)) {
+                startTime = startTime.minusDays(1);
+            } else {
+                endTime = endTime.plusDays(1);
+            }
+        }
+
+        return (int) ((endTime.getMillis() - startTime.getMillis()) / 1000 / 60);
+    }
+
     public boolean isRest() {
         if (AskPrice == -1 && BidPrice == -1) {
             return true;

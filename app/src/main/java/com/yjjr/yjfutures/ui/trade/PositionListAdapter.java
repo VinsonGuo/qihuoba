@@ -17,6 +17,7 @@ import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.StringUtils;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by dell on 2017/6/20.
@@ -47,9 +48,10 @@ public class PositionListAdapter extends BaseQuickAdapter<Holds, BaseViewHolder>
                     .addOnClickListener(R.id.tv_setting);
             TextView tvCloseOrder = helper.getView(R.id.tv_close_order);
             // 是否为平仓中
-            boolean isClosing = item.getStatue() == 2;
+//            boolean isClosing = item.getStatue() == 2;
+            boolean isClosing = item.getFilledQty() < item.getQty();
             tvCloseOrder.setEnabled(!isClosing);
-            tvCloseOrder.setText(isClosing ? "平仓中" : "X 平仓");
+            tvCloseOrder.setText(isClosing ? String.format(Locale.getDefault(), "成交 %d/%d", item.getFilledQty(), item.getQty()) : "X 平仓");
             tvCloseOrder.setTextColor(ContextCompat.getColor(mContext, isClosing ? R.color.color_666666 : R.color.third_text_color));
             TextView tvHand = helper.getView(R.id.tv_hand);
             if (TextUtils.equals(item.getBuySell(), "买入")) {

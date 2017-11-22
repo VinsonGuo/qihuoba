@@ -230,7 +230,6 @@ public class PublishActivity extends BaseActivity {
                 LogUtils.d("topMarketDepth1 -> %s", args[0]);
             }
         })*/;
-        SocketUtils.getSocket().connect();
         SocketUtils.getSocket().emit("getSymbolList");
     }
 

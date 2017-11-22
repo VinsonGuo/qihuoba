@@ -43,6 +43,7 @@ import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.HoldingSocketUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
@@ -64,16 +65,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.socket.emitter.Emitter;
 
 public class TradeFragment extends BaseFragment implements View.OnClickListener {
@@ -391,6 +390,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvRest = (TextView) v.findViewById(R.id.tv_rest);
         marketDepthView = (MarketDepthView) v.findViewById(R.id.market_depth_view);
         v.findViewById(R.id.iv_more).setOnClickListener(this);
+        v.findViewById(R.id.tv_pankou).setOnClickListener(this);
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage(getString(R.string.operaing));
         mProgressDialog.setCancelable(false);
@@ -403,22 +403,24 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void getHolding() {
-        HttpManager.getBizService(mIsDemo).getHolding()
-                .flatMap(new Function<BizResponse<List<Holds>>, ObservableSource<Holds>>() {
+//        HttpManager.getBizService(mIsDemo).getHolding()
+        HoldingSocketUtils.getHolding(mIsDemo)
+                .map(new Function<BizResponse<List<Holds>>, List<Holds>>() {
                     @Override
-                    public ObservableSource<Holds> apply(@NonNull BizResponse<List<Holds>> listBizResponse) throws Exception {
-                        return Observable.fromIterable(listBizResponse.getResult());
+                    public List<Holds> apply(@NonNull BizResponse<List<Holds>> listBizResponse) throws Exception {
+                        List<Holds> holdsList = listBizResponse.getResult();
+                        Iterator<Holds> it = holdsList.iterator();
+                        while (it.hasNext()) {
+                            Holds holds = it.next();
+                            if (!TextUtils.equals(holds.getSymbol(), mSymbol)) {
+                                it.remove();
+                            }
+                        }
+                        return holdsList;
                     }
                 })
-                .filter(new Predicate<Holds>() {
-                    @Override
-                    public boolean test(@NonNull Holds holding) throws Exception {
-                        return TextUtils.equals(holding.getSymbol(), mSymbol);
-                    }
-                })
-                .compose(RxUtils.<Holds>applySchedulers())
-                .compose(this.<Holds>bindUntilEvent(FragmentEvent.DESTROY))
-                .toList()
+                .compose(RxUtils.<List<Holds>>applySchedulers())
+                .compose(this.<List<Holds>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<Holds>>() {
                     @Override
                     public void accept(@NonNull List<Holds> holdses) throws Exception {
@@ -436,7 +438,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             vgSettlement.setVisibility(View.GONE);
                             vgOrder.setVisibility(View.VISIBLE);
                             tvDirection.setText((TextUtils.equals(holding.getBuySell(), "买入") ? "看涨" : "看跌") + Math.abs(sumQty) + "手");
-                            tvTotal.setText(TextUtils.concat("持仓盈亏\n", StringUtils.formatUnrealizePL(mContext, sumUnrealizedPL)));
+                            tvTotal.setText(TextUtils.concat(StringUtils.formatUnrealizePL(mContext, sumUnrealizedPL), "\n持仓盈亏"));
                             if (TextUtils.equals(holding.getBuySell(), "买入")) {
                                 leftText = "追加";
                                 rightText = "平仓";
@@ -506,11 +508,19 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         FastTakeOrderConfig fastTakeOrder = FastOrderSharePrefernce.getFastTakeOrder(mContext, mSymbol);
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+        if (quote == null) {
+            return;
+        }
         switch (v.getId()) {
             case R.id.tv_close_order:
                 mCloseAllDialog.show();
                 break;
             case R.id.tv_left:
+                if (quote.isRest()) {
+                    ToastUtils.show(mContext, "休市中，暂时不能下单");
+                    return;
+                }
                 if (TextUtils.equals("平仓", leftText)) {
                     if (fastTakeOrder != null) {
                         closeOrder();
@@ -527,6 +537,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 }
                 break;
             case R.id.tv_right:
+                if (quote.isRest()) {
+                    ToastUtils.show(mContext, "休市中，暂时不能下单");
+                    return;
+                }
                 if (TextUtils.equals("平仓", rightText)) {
                     if (fastTakeOrder != null) {
                         closeOrder();
@@ -567,6 +581,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 }
                 break;
             case R.id.iv_more:
+            case R.id.tv_pankou:
                 MarketDetailActivity.startActivity(mContext, mSymbol);
                 break;
             case R.id.tv_kchart:

@@ -23,6 +23,7 @@ import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.utils.DialogUtils;
+import com.yjjr.yjfutures.utils.HoldingSocketUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
@@ -37,6 +38,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.annotations.NonNull;
@@ -51,7 +54,6 @@ public class PositionListFragment extends ListFragment<Holds> {
     private TextView mTvProfit;
     private ProgressDialog mProgressDialog;
     private CustomPromptDialog mCloseAllDialog;
-    private CustomPromptDialog mSuccessDialog;
     private boolean mIsDemo;
 
     public static PositionListFragment newInstance(boolean isDemo) {
@@ -85,15 +87,6 @@ public class PositionListFragment extends ListFragment<Holds> {
                     }
                 })
                 .isShowClose(true)
-                .create();
-        mSuccessDialog = new CustomPromptDialog.Builder(mContext)
-                .setMessage("卖出委托成交完毕")
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
                 .create();
     }
 
@@ -150,13 +143,17 @@ public class PositionListFragment extends ListFragment<Holds> {
         mProgressDialog.show();
         HttpManager.getBizService(mIsDemo).closeAllOrder(BaseApplication.getInstance().getTradeToken(mIsDemo), "ALL")
                 .delay(1, TimeUnit.SECONDS)
-                .compose(RxUtils.<BizResponse>applyBizSchedulers())
-                .compose(this.<BizResponse>bindUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(new Consumer<BizResponse>() {
+                .compose(RxUtils.<BizResponse<Map<String, Integer>>>applyBizSchedulers())
+                .compose(this.<BizResponse<Map<String, Integer>>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribe(new Consumer<BizResponse<Map<String, Integer>>>() {
                     @Override
-                    public void accept(@NonNull BizResponse commonResponse) throws Exception {
+                    public void accept(@NonNull BizResponse<Map<String, Integer>> commonResponse) throws Exception {
                         mProgressDialog.dismiss();
-                        mSuccessDialog.show();
+                        Map<String, Integer> result = commonResponse.getResult();
+                        int success = result.get("success");
+                        int fail = result.get("fail");
+                        DialogUtils.createCommonDialog(mContext, String.format(Locale.getDefault(), "共%d笔 成功%d笔 失败%d笔", success + fail, success, fail))
+                                .show();
                         EventBus.getDefault().post(new SendOrderEvent());
                     }
                 }, new Consumer<Throwable>() {
@@ -196,7 +193,8 @@ public class PositionListFragment extends ListFragment<Holds> {
 
     @Override
     protected void loadData() {
-        HttpManager.getBizService(mIsDemo).getHolding()
+//        HttpManager.getBizService(mIsDemo).getHolding()
+        HoldingSocketUtils.getHolding(mIsDemo)
                 .compose(RxUtils.<BizResponse<List<Holds>>>applySchedulers())
                 .compose(this.<BizResponse<List<Holds>>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<List<Holds>>>() {

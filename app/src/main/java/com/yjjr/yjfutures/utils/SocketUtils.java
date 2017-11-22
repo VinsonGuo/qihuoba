@@ -23,9 +23,9 @@ public class SocketUtils {
             options.forceNew = false;
             options.reconnection = true;
             options.transports = new String[]{WebSocket.NAME};
-            options.secure = false;
             //创建连接
             sSocket = IO.socket(HttpConfig.SOCKET_URL, options);
+            sSocket.connect();
         } catch (Exception e) {
             LogUtils.e(e);
         }
@@ -35,4 +35,10 @@ public class SocketUtils {
         return sSocket;
     }
 
+
+    public static void disconnect() {
+        if(sSocket != null && sSocket.connected()) {
+            sSocket.disconnect();
+        }
+    }
 }

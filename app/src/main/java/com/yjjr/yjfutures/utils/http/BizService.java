@@ -20,6 +20,7 @@ import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.model.publish.News;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -147,8 +148,8 @@ public interface BizService {
     @POST("trader/closedOrderList/{start}/{count}")
     Observable<BizResponse<PageResponse<CloseOrder>>> getCloseOrder(@Path("start") int start, @Path("count") int count);
 
-    @POST("trader/holdingList")
-    Observable<BizResponse<List<Holds>>> getHolding();
+//    @POST("trader/holdingList")
+//    Observable<BizResponse<List<Holds>>> getHolding();
 
     @FormUrlEncoded
     @POST("trader/sendOrder")
@@ -179,7 +180,7 @@ public interface BizService {
 
     @FormUrlEncoded
     @POST("trader/onkeyCloseOrder")
-    Observable<BizResponse> closeAllOrder(
+    Observable<BizResponse<Map<String, Integer>>> closeAllOrder(
             @Field("cid") String account,
             @Field("symbol") String symbol);
 

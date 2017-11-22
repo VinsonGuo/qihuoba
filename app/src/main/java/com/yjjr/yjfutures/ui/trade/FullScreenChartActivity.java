@@ -17,6 +17,7 @@ import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
+import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.widget.NestRadioGroup;
@@ -128,9 +129,10 @@ public class FullScreenChartActivity extends BaseActivity {
         int profitColor = StringUtils.getProfitColor(mContext, quote.getChange());
         mTvInfo.setTextColor(profitColor);
         mTvSymbol.setText(quote.getSymbolname());
-        mTvInfo.setText(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()) + "\n"
-                + String.format(Locale.getDefault(), "%+.2f", quote.getChange()) +
-                String.format(Locale.getDefault(), "(%+.2f%%)", quote.getChangeRate()));
+        mTvInfo.setText(TextUtils.concat(SpannableUtil.getStringBySize(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()), 1.5f),
+                "\n",
+                String.format(Locale.getDefault(), "%+.2f", quote.getChange()),
+                String.format(Locale.getDefault(), "(%+.2f%%)", quote.getChangeRate())));
         tvOpen.setText(StringUtils.getStringByTick(quote.getOpen(), quote.getTick()));
         tvHigh.setText(StringUtils.getStringByTick(quote.getHigh(), quote.getTick()));
         tvLow.setText(StringUtils.getStringByTick(quote.getLow(), quote.getTick()));

@@ -42,10 +42,11 @@ public class FullScreenChartActivity extends BaseActivity {
     private TextView mTvSymbol;
     private TextView mTvInfo;
 
-    public static void startActivity(Context context, String symbol, boolean isDemo) {
+    public static void startActivity(Context context, String symbol, boolean isDemo, int index) {
         Intent intent = new Intent(context, FullScreenChartActivity.class);
         intent.putExtra(Constants.CONTENT_PARAMETER, symbol);
         intent.putExtra(Constants.CONTENT_PARAMETER_2, isDemo);
+        intent.putExtra(Constants.CONTENT_PARAMETER_3, index);
         context.startActivity(intent);
     }
 
@@ -55,6 +56,7 @@ public class FullScreenChartActivity extends BaseActivity {
         setContentView(R.layout.activity_full_screen_chart);
         mSymbol = getIntent().getStringExtra(Constants.CONTENT_PARAMETER);
         mIsDemo = getIntent().getBooleanExtra(Constants.CONTENT_PARAMETER_2, false);
+        int index = getIntent().getIntExtra(Constants.CONTENT_PARAMETER_3, 0);
         mViewpager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
         mTvSymbol = (TextView) findViewById(R.id.tv_symbol);
         mTvInfo = (TextView) findViewById(R.id.tv_info);
@@ -72,7 +74,8 @@ public class FullScreenChartActivity extends BaseActivity {
                 FullScreenKLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN15),
                 FullScreenKLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.HOUR),
                 FullScreenKLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.DAY),
-                HandicapFragment.newInstance(mSymbol, mIsDemo)}));
+                FullScreenKLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.WEEK),
+                FullScreenKLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MONTH)}));
         NestRadioGroup rgNav = (NestRadioGroup) findViewById(R.id.rg_nav);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
             @Override
@@ -99,10 +102,13 @@ public class FullScreenChartActivity extends BaseActivity {
                     case R.id.rb_chart7:
                         mViewpager.setCurrentItem(6, false);
                         break;
+                    case R.id.rb_chart8:
+                        mViewpager.setCurrentItem(7, false);
+                        break;
                 }
             }
         });
-        ((RadioButton) rgNav.findViewById(R.id.rb_chart1)).setChecked(true);
+        ((RadioButton) rgNav.getChildAt(index)).setChecked(true);
         findViewById(R.id.iv_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

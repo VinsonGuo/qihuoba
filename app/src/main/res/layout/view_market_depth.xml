@@ -411,8 +411,5 @@
                 android:textSize="@dimen/sp_14"
                 tools:text="132"/>
         </LinearLayout>
-
-        <View
-            style="@style/style_divider"/>
     </LinearLayout>
 </LinearLayout>

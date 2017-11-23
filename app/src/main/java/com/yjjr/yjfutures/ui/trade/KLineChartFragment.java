@@ -79,6 +79,8 @@ public class KLineChartFragment extends BaseFullScreenChartFragment {
         mChartPrice.setDrawBorders(false);
         mChartVolume.setDrawBorders(false);
 
+        setKCount(120, 120);
+
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mChartVolume.getLayoutParams();
         params.topMargin = DisplayUtils.dip2px(mContext, -30);
         params.height = params.height + DisplayUtils.dip2px(mContext, 30);
@@ -110,7 +112,31 @@ public class KLineChartFragment extends BaseFullScreenChartFragment {
 
             @Override
             public void onChartSingleTapped(MotionEvent me) {
-                FullScreenChartActivity.startActivity(mContext, mSymbol, mIsDemo);
+                int index = 0;
+                switch (mType) {
+                    case HttpConfig.MIN:
+                        index = 1;
+                        break;
+                    case HttpConfig.MIN5:
+                        index = 2;
+                        break;
+                    case HttpConfig.MIN15:
+                        index = 3;
+                        break;
+                    case HttpConfig.HOUR:
+                        index = 4;
+                        break;
+                    case HttpConfig.DAY:
+                        index = 5;
+                        break;
+                    case HttpConfig.WEEK:
+                        index = 6;
+                        break;
+                    case HttpConfig.MONTH:
+                        index = 7;
+                        break;
+                }
+                FullScreenChartActivity.startActivity(mContext, mSymbol, mIsDemo, index);
             }
 
             @Override
@@ -135,8 +161,8 @@ public class KLineChartFragment extends BaseFullScreenChartFragment {
 
 
         mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
-        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext,  TextUtils.equals(mType, HttpConfig.MIN)?mQuote.getLastclose():0, mData, mKInfo, mChartVolume));
-        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext,  TextUtils.equals(mType, HttpConfig.MIN)?mQuote.getLastclose():0, mData, mKInfo, mChartPrice));
+        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, TextUtils.equals(mType, HttpConfig.MIN) ? mQuote.getLastclose() : 0, mData, mKInfo, mChartVolume));
+        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, TextUtils.equals(mType, HttpConfig.MIN) ? mQuote.getLastclose() : 0, mData, mKInfo, mChartPrice));
 
        /*  if (mQuote == null) return;
 
@@ -177,7 +203,7 @@ public class KLineChartFragment extends BaseFullScreenChartFragment {
                 });
             }
         });*/
-       loadDataByType(mType);
+        loadDataByType(mType);
     }
 
 
@@ -215,7 +241,7 @@ public class KLineChartFragment extends BaseFullScreenChartFragment {
         mType = type;
         xAxisVolume.setValueFormatter(new KLineXValueFormatter(mType, mData));
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-        if(quote == null) {
+        if (quote == null) {
             return;
         }
 

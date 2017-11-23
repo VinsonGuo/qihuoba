@@ -156,5 +156,7 @@
 
     <color name="increasing_color">#d2083c</color>
     <color name="decreasing_color">#3ee694</color>
-    <color name="ave_color">@color/color_bbbbbb</color>
+    <color name="ave_color">#9c5309</color>
+    <color name="line_color">#cecece</color>
+    <color name="limit_color">#adadad</color>
 </resources>

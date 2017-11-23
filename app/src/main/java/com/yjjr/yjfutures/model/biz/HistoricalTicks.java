@@ -6,32 +6,25 @@ package com.yjjr.yjfutures.model.biz;
 
 public class HistoricalTicks {
 
-    /**
-     * time : 20171123 11:24:37
-     * mask : 0
-     * price : 57.849998
-     * size : 7
-     */
-
-    private String time;
-    private int mask;
+    private long time;
+    private int buySell;
     private double price;
     private int size;
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
-    public int getMask() {
-        return mask;
+    public int getBuySell() {
+        return buySell;
     }
 
-    public void setMask(int mask) {
-        this.mask = mask;
+    public void setBuySell(int buySell) {
+        this.buySell = buySell;
     }
 
     public double getPrice() {
@@ -48,5 +41,15 @@ public class HistoricalTicks {
 
     public void setSize(int size) {
         this.size = size;
+    }
+
+    @Override
+    public String toString() {
+        return "HistoricalTicks{" +
+                "time=" + time +
+                ", buySell=" + buySell +
+                ", price=" + price +
+                ", size=" + size +
+                '}';
     }
 }

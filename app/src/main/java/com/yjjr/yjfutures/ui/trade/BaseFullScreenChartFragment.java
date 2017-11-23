@@ -49,9 +49,9 @@ import java.util.Locale;
 
 public class BaseFullScreenChartFragment extends BaseFragment {
 
-    public int MAX_COUNT_LINE = 200;
+    public int MAX_COUNT_LINE = 300;
     public int MIN_COUNT_LINE = 100;
-    public int MAX_COUNT_K = 100;
+    public int MAX_COUNT_K = 200;
     public int MIN_COUNT_K = 60;
 
 
@@ -92,6 +92,11 @@ public class BaseFullScreenChartFragment extends BaseFragment {
     public void setLineCount(int max, int min) {
         MAX_COUNT_LINE = max;
         MIN_COUNT_LINE = min;
+    }
+
+    public void setKCount(int max, int min) {
+        MAX_COUNT_K = max;
+        MIN_COUNT_K = min;
     }
 
     protected void initChartPrice() {
@@ -290,8 +295,8 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         lineDataSetMa.setDrawValues(false);
         if (type == 0) {
 //            lineDataSetMa.setDrawFilled(true);
-            lineDataSetMa.setColor(getResources().getColor(R.color.third_text_color));
-            lineDataSetMa.setCircleColor(ContextCompat.getColor(mContext, R.color.third_text_color));
+            lineDataSetMa.setColor(getResources().getColor(R.color.line_color));
+            lineDataSetMa.setCircleColor(ContextCompat.getColor(mContext, R.color.line_color));
         } else if (type == 1) {
             lineDataSetMa.setColor(getResources().getColor(R.color.ave_color));
             lineDataSetMa.setCircleColor(getResources().getColor(R.color.transparent));
@@ -477,8 +482,8 @@ public class BaseFullScreenChartFragment extends BaseFragment {
 
     protected void setLimitLine(Quote quote) {
         LimitLine limitLine = new LimitLine((float) quote.getLastclose());
-        limitLine.enableDashedLine(5, 10, 0);
-        limitLine.setLineColor(getResources().getColor(R.color.second_text_color));
+        limitLine.enableDashedLine(10, 10, 0);
+        limitLine.setLineColor(getResources().getColor(R.color.limit_color));
         axisLeftPrice.addLimitLine(limitLine);
     }
 }

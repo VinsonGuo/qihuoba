@@ -67,6 +67,18 @@
                     android:textColor="@color/color_bbbbbb"/>
 
                 <TextView
+                    android:id="@+id/tv_type"
+                    android:background="@color/main_color"
+                    android:text="@string/number_holder"
+                    android:textSize="@dimen/sp_12"
+                    android:textColor="@color/main_text_color"
+                    android:layout_marginLeft="4dp"
+                    android:layout_alignBottom="@id/tv_rest"
+                    android:layout_toRightOf="@id/tv_rest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
                     android:id="@+id/tv_change_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -344,29 +356,23 @@
                     android:textSize="@dimen/sp_12"/>
 
 
-                <View
-                    android:layout_width="@dimen/common_divider_small"
-                    android:layout_height="match_parent"
-                    android:background="@color/divider_color"/>
 
                 <TextView
                     android:id="@+id/tv_kchart"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_chart_rb_bg"
                     android:button="@null"
-                    android:drawableRight="@drawable/ic_down_arrow"
+                    android:drawableRight="@drawable/ic_down_arrow_white"
                     android:gravity="center"
                     android:text="分钟"
                     android:textColor="@color/selector_chart_rb_text_color"
                     android:textSize="@dimen/sp_12"
                     />
 
-                <View
-                    android:layout_width="@dimen/common_divider_small"
-                    android:layout_height="match_parent"
-                    android:background="@color/divider_color"/>
 
 
                 <RadioButton
@@ -381,11 +387,6 @@
                     android:textColor="@color/selector_chart_rb_text_color"
                     android:textSize="@dimen/sp_12"/>
 
-                <View
-                    android:layout_width="@dimen/common_divider_small"
-                    android:layout_height="match_parent"
-                    android:background="@color/divider_color"/>
-
                 <RadioButton
                     android:id="@+id/rb_chart3"
                     android:layout_width="0dp"
@@ -398,10 +399,6 @@
                     android:textColor="@color/selector_chart_rb_text_color"
                     android:textSize="@dimen/sp_12"/>
 
-                <View
-                    android:layout_width="@dimen/common_divider_small"
-                    android:layout_height="match_parent"
-                    android:background="@color/divider_color"/>
 
                 <RadioButton
                     android:id="@+id/rb_chart4"

@@ -219,7 +219,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mViewpager.setCurrentItem(5, false);
                         break;
                 }
-                mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.background_dark));
                 mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.main_text_color));
                 mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow_white), null);
             }
@@ -245,9 +244,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     public void onMenuItemClick(int position) {
                         rgNav.clearCheck();
                         mTvKchart.setText(menuItems.get(position).getText());
-                        mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.color_333333));
-                        mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.third_text_color));
-                        mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow), null);
+                        mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.third_text_color));
+//                        mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow), null);
                         mViewpager.setCurrentItem(1, false);
                         String type = HttpConfig.MIN;
                         switch (position) {
@@ -298,24 +296,21 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             SocketUtils.getSocket().on("topMarketDepth" + quote.getSort(), fn);
             SocketUtils.getSocket().once("getMktDepthList", fn);
             SocketUtils.getSocket().emit("getMktDepthList", quote.getSort());
-            SocketUtils.getSocket().on("topHistoricalTicks" + quote.getSort(), new Emitter.Listener() {
+            SocketUtils.getSocket().on(SocketUtils.HIS_TICKS, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    LogUtils.d(" -> %s", args[0]);
                     final List<HistoricalTicks> list = gson.fromJson(args[0].toString(), new TypeToken<List<HistoricalTicks>>() {
                     }.getType());
-                    if(list.isEmpty()) {
-                        return;
-                    }
                     marketDepthView.post(new Runnable() {
                         @Override
                         public void run() {
                             mMarketHisAdapter.replaceData(list);
-                            mRvMarketHis.scrollToPosition(mMarketHisAdapter.getItemCount() - 1);
+//                            mRvMarketHis.scrollToPosition(mMarketHisAdapter.getItemCount() - 1);
                         }
                     });
                 }
             });
+            SocketUtils.getSocket().emit(SocketUtils.HIS_TICKS, mSymbol);
         }
     }
 
@@ -326,9 +321,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      */
     private void setRestView(Quote quote) {
         if (quote == null || quote.isRest()) { // 休市的状态
-            tvRest.setText(String.format("休市中\t下一个交易时间段：\n%s", quote.getTradingTime()));
+//            tvRest.setText(String.format("休市中\t下一个交易时间段：\n%s", quote.getTradingTime()));
+            tvRest.setText("休市中    " + quote.getLastTime());
         } else {
-            tvRest.setText("交易中 " + quote.getLastTime());
+            tvRest.setText("交易中    " + quote.getLastTime());
         }
     }
 
@@ -397,6 +393,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
         tvRest = (TextView) v.findViewById(R.id.tv_rest);
         marketDepthView = (MarketDepthView) v.findViewById(R.id.market_depth_view);
+        TextView tvType = (TextView) v.findViewById(R.id.tv_type);
+        tvType.setText(quote.getCurrency());
         v.findViewById(R.id.iv_more).setOnClickListener(this);
         v.findViewById(R.id.tv_pankou).setOnClickListener(this);
         mProgressDialog = new ProgressDialog(mContext);
@@ -486,6 +484,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             getHolding();
             Funds result = StaticStore.getFunds(mIsDemo);
             tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
+            if (SocketUtils.getSocket() != null) {
+                SocketUtils.getSocket().emit(SocketUtils.HIS_TICKS, mSymbol);
+            }
         }
     }
 
@@ -677,6 +678,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (SocketUtils.getSocket() != null && quote != null) {
             SocketUtils.getSocket().off("topMarketDepth" + quote.getSort());
+            SocketUtils.getSocket().off(SocketUtils.HIS_TICKS);
         }
     }
 }

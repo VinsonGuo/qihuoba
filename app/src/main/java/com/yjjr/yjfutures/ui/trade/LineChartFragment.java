@@ -111,7 +111,7 @@ public class LineChartFragment extends BaseFullScreenChartFragment {
 
             @Override
             public void onChartSingleTapped(MotionEvent me) {
-                FullScreenChartActivity.startActivity(mContext, mSymbol, mIsDemo);
+                FullScreenChartActivity.startActivity(mContext, mSymbol, mIsDemo, 0);
             }
 
             @Override

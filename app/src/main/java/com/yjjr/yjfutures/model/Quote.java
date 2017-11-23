@@ -1,7 +1,5 @@
 package com.yjjr.yjfutures.model;
 
-import android.text.TextUtils;
-
 import com.yjjr.yjfutures.utils.DateUtils;
 
 import org.joda.time.DateTime;
@@ -36,6 +34,8 @@ public class Quote {
     private String Currency;
     private int sort;
     private String lastTime;
+
+    private int status;
     /**
      * 是否持仓，根据需求加的字段
      */
@@ -67,6 +67,7 @@ public class Quote {
         this.Currency = q.Currency;
         this.sort = q.sort;
         this.lastTime = q.lastTime;
+        this.status = q.status;
     }
 
     public Quote() {
@@ -294,7 +295,7 @@ public class Quote {
         return (int) ((endTime.getMillis() - startTime.getMillis()) / 1000 / 60);
     }
 
-    public boolean isRest() {
+    /*public boolean isRest() {
         if (AskPrice == -1 && BidPrice == -1) {
             return true;
         }
@@ -313,6 +314,10 @@ public class Quote {
         } else {
             return testIsRest(TradingTime);
         }
+    }*/
+
+    public boolean isRest() {
+        return status == 1;
     }
 
     /**
@@ -350,6 +355,19 @@ public class Quote {
     public void setLastTime(String lastTime) {
         this.lastTime = lastTime;
     }
+
+
+    /**
+     * 0: 正常   1:休市   2:连接中断
+     */
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
 
     @Override
     public String toString() {

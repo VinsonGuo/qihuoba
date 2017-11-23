@@ -3,7 +3,6 @@ package com.yjjr.yjfutures.ui.home;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -63,18 +62,18 @@ public class HomePageAdapter extends BaseQuickAdapter<Quote, BaseViewHolder> {
     protected void convert(BaseViewHolder helper, Quote item) {
         try {
             String title = StringUtils.getRuleName(item);
-            String des = mDescMap.get(title);
             helper.setText(R.id.tv_title, item.getSymbolname())
-                    .setText(R.id.tv_desc, des)
-                    .setText(R.id.tv_icon, title);
-            int colorIndex = (helper.getLayoutPosition() - getHeaderLayoutCount()) % (colors.length - 1);
-            helper.setTextColor(R.id.tv_icon, colors[colorIndex]);
-            TextView tvInfo = helper.getView(R.id.tv_info);
+                    .setText(R.id.tv_desc, title);
+            TextView tvPrice = helper.getView(R.id.tv_price);
+            TextView tvChangeRate = helper.getView(R.id.tv_change_rate);
             double changeRate = item.getChangeRate();
             String changeText = DoubleUtil.format2Decimal(changeRate) + "%";
-            tvInfo.setText(StringUtils.getStringByTick(item.getLastPrice(), item.getTick()) + "\n" + changeText);
+            tvPrice.setText(StringUtils.getStringByTick(item.getLastPrice(), item.getTick()));
+            tvChangeRate.setText(changeText);
             double change = item.getChange();
-            tvInfo.setTextColor(ContextCompat.getColor(mContext, change >= 0 ? R.color.main_color_red : R.color.main_color_green));
+            int color = ContextCompat.getColor(mContext, change >= 0 ? R.color.main_color_red : R.color.main_color_green);
+            tvPrice.setTextColor(color);
+            tvChangeRate.setTextColor(color);
         } catch (Exception e) {
             LogUtils.e(e);
         }

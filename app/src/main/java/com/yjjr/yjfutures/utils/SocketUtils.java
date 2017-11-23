@@ -14,6 +14,7 @@ public class SocketUtils {
 
     public static final String HIS_DATA = "getHistoryData";
     public static final String SYMBOL_LIST = "getSymbolList";
+    public static final String HIS_TICKS = "topHistoricalTicks";
 
     private static Socket sSocket;
 

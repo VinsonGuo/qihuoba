@@ -73,7 +73,7 @@ public class LineChartFragment extends BaseFullScreenChartFragment {
 
     @Override
     protected void initData() {
-//        xAxisVolume.setDrawLabels(false);
+        xAxisVolume.setLabelCount(3, true);
         axisLeftPrice.setDrawLabels(false);
         axisLeftVolume.setDrawLabels(false);
 
@@ -136,8 +136,8 @@ public class LineChartFragment extends BaseFullScreenChartFragment {
         if (mQuote == null) return;
         int tradeTimeCount = mQuote.getTradeTimeCount();
         setLineCount(tradeTimeCount, tradeTimeCount);
-        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mLineInfo, mChartVolume));
-        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mLineInfo, mChartPrice));
+        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote.getLastclose(), mData, mLineInfo, mChartVolume));
+        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote.getLastclose(), mData, mLineInfo, mChartPrice));
         axisLeftPrice.setValueFormatter(new YValueFormatter(mQuote.getTick()));
 
         mChartPrice.setOnTouchListener(new ChartScrollTouchListener());

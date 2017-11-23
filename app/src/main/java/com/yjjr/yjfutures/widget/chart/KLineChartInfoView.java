@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.Chart;
@@ -29,6 +30,7 @@ public class KLineChartInfoView extends ChartInfoView {
     private TextView mTvChangeRate;
     private TextView mTvVol;
     private TextView mTvTime;
+    private View mVgChangeRate;
 
     public KLineChartInfoView(Context context) {
         this(context, null);
@@ -48,6 +50,7 @@ public class KLineChartInfoView extends ChartInfoView {
         mTvLowPrice = (TextView) findViewById(R.id.tv_low_price);
         mTvChangeRate = (TextView) findViewById(R.id.tv_change_rate);
         mTvVol = (TextView) findViewById(R.id.tv_vol);
+        mVgChangeRate = findViewById(R.id.vg_change_rate);
     }
 
     @Override
@@ -58,7 +61,11 @@ public class KLineChartInfoView extends ChartInfoView {
         mTvHighPrice.setText(DoubleUtil.formatDecimal(data.getHigh()));
         mTvLowPrice.setText(DoubleUtil.formatDecimal(data.getLow()));
 //        mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose()- data.getOpen()) / data.getOpen() * 100));
-        mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose() - lastClose) / lastClose * 100));
+        if(lastClose == 0) {
+            mVgChangeRate.setVisibility(GONE);
+        }else {
+            mTvChangeRate.setText(String.format(Locale.getDefault(), "%.2f%%", (data.getClose() - lastClose) / lastClose * 100));
+        }
         mTvVol.setText(data.getVol() + "");
         removeCallbacks(mRunnable);
         postDelayed(mRunnable, 2000);

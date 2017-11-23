@@ -154,7 +154,7 @@
     <color name="ma20">#3C7193</color>
     <color name="ma30">#7F9976</color>
 
-    <color name="increasing_color">@color/main_color_red</color>
-    <color name="decreasing_color">@color/main_color_green</color>
+    <color name="increasing_color">#d2083c</color>
+    <color name="decreasing_color">#3ee694</color>
     <color name="ave_color">@color/color_bbbbbb</color>
 </resources>

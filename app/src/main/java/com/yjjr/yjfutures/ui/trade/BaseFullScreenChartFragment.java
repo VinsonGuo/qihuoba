@@ -223,8 +223,6 @@ public class BaseFullScreenChartFragment extends BaseFragment {
                 }
             }
 
-
-        /*注老版本LineData参数可以为空，最新版本会报错，修改进入ChartData加入if判断*/
             LineData lineData;
             if (isShowAve) {
                 lineData = new LineData(setLine(1, lineJJEntries), setLine(2, paddingEntries));
@@ -233,8 +231,8 @@ public class BaseFullScreenChartFragment extends BaseFragment {
             }
             CandleData candleData = new CandleData(setKLine(0, lineCJEntries));
             CombinedData combinedData = new CombinedData();
-            combinedData.setData(lineData);
             combinedData.setData(candleData);
+            combinedData.setData(lineData);
             combinedChartX.setData(combinedData);
 
             combinedChartX.setVisibleXRange(MAX_COUNT_K, MIN_COUNT_K);
@@ -329,7 +327,6 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         set1.setIncreasingColor(ContextCompat.getColor(getContext(), R.color.increasing_color));
         set1.setIncreasingPaintStyle(Paint.Style.FILL);
         set1.setNeutralColor(ContextCompat.getColor(getContext(), R.color.increasing_color));
-        //set1.setHighlightLineWidth(1f);
         set1.setDrawValues(false);
         set1.setHighlightEnabled(true);
         if (type != 0) {
@@ -346,26 +343,24 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         for (int i = 0; i < mData.size(); i++) {
             HisData t = mData.get(i);
             barEntries.add(new BarEntry(i, t.getVol(), t));
-            highlightEntries.add(new BarEntry(i, 0));
+            highlightEntries.add(new Entry(i, 0));
         }
         int maxCount = mChartPrice.getData().getCandleData() == null ? MAX_COUNT_LINE : MAX_COUNT_K;
         if (!mData.isEmpty() && mData.size() < maxCount) {
             for (int i = mData.size(); i < maxCount; i++) {
-                paddingEntries.add(new BarEntry(i, 0));
+                paddingEntries.add(new Entry(i, 0));
             }
         }
         BarDataSet barDataSet = new BarDataSet(barEntries, "成交量");
-        barDataSet.setHighlightEnabled(false);
+        barDataSet.setHighLightAlpha(255);
+        barDataSet.setHighLightColor(getResources().getColor(R.color.third_text_color));
         barDataSet.setDrawValues(false);//是否在线上绘制数值
-        List<Integer> list = new ArrayList<>();
-        list.add(getResources().getColor(R.color.increasing_color));
-        list.add(getResources().getColor(R.color.decreasing_color));
-        barDataSet.setColors(list);//可以给树状图设置多个颜色，判断条件在BarChartRenderer 类的140行以下修改了判断条件
+        barDataSet.setColors(getResources().getColor(R.color.increasing_color), getResources().getColor(R.color.decreasing_color));//可以给树状图设置多个颜色，判断条件在BarChartRenderer 类的140行以下修改了判断条件
         BarData barData = new BarData(barDataSet);
         LineData lineData = new LineData(setLine(3, highlightEntries), setLine(2, paddingEntries));
         CombinedData combinedData = new CombinedData();
-        combinedData.setData(barData);
         combinedData.setData(lineData);
+        combinedData.setData(barData);
         combinedChartX.setData(combinedData);
 
         if (mChartPrice.getData().getCandleData() != null) {

@@ -32,6 +32,7 @@ import com.yjjr.yjfutures.model.MarketDepth;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
+import com.yjjr.yjfutures.model.biz.HistoricalTicks;
 import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.store.FastOrderSharePrefernce;
 import com.yjjr.yjfutures.store.StaticStore;
@@ -117,12 +118,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private MarketDepthView marketDepthView;
     private MarketHisAdapter mMarketHisAdapter;
     private RecyclerView mRvMarketHis;
-    private ArrayList<Quote> mHisList = new ArrayList<Quote>(20) {{
+    private ArrayList<HistoricalTicks> mHisList = new ArrayList<HistoricalTicks>(20) {{
         for (int i = 0; i < 20; i++) {
             add(null);
         }
     }};
     private NestedScrollView mScrollView;
+    private Fragment[] mFragments;
 
 
     public TradeFragment() {
@@ -146,15 +148,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             mIsDemo = getArguments().getBoolean(Constants.CONTENT_PARAMETER);
             mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER_2);
         }
-        mCloseSuccessDialog = new CustomPromptDialog.Builder(mContext)
-                .setMessage("卖出委托成交完毕")
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
+        mCloseSuccessDialog = DialogUtils.createCommonDialog(mContext, "卖出委托成交完毕");
         mCloseAllDialog = new CustomPromptDialog.Builder(mContext)
                 .setMessage("您确定要卖出全部持仓么？")
                 .isShowClose(true)
@@ -187,7 +181,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-        findViews(v);
+        findViews(v, quote);
         setRestView(quote);
         mHeaderView.setOperateClickListener(new View.OnClickListener() {
             @Override
@@ -196,14 +190,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             }
         });
         mCandleStickChartFragment = KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
-        Fragment[] fragments = {
+        mFragments = new Fragment[]{
                 LineChartFragment.newInstance(mSymbol, mIsDemo),
-                KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.DAY5),
+                mCandleStickChartFragment,
                 KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.DAY),
                 KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.WEEK),
-                KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MONTH),
-                mCandleStickChartFragment};
-        SimpleFragmentPagerAdapter KLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
+                KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MONTH)};
+        SimpleFragmentPagerAdapter KLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), mFragments);
         mViewpager.setAdapter(KLineAdapter);
 //        mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
@@ -214,16 +207,16 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mViewpager.setCurrentItem(0, false);
                         break;
                     case R.id.rb_chart2:
-                        mViewpager.setCurrentItem(1, false);
-                        break;
-                    case R.id.rb_chart3:
                         mViewpager.setCurrentItem(2, false);
                         break;
-                    case R.id.rb_chart4:
+                    case R.id.rb_chart3:
                         mViewpager.setCurrentItem(3, false);
                         break;
-                    case R.id.rb_chart5:
+                    case R.id.rb_chart4:
                         mViewpager.setCurrentItem(4, false);
+                        break;
+                    case R.id.rb_chart5:
+                        mViewpager.setCurrentItem(5, false);
                         break;
                 }
                 mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.background_dark));
@@ -240,9 +233,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         menuItems.add(new MenuItem(R.drawable.transport, "5分钟"));
         menuItems.add(new MenuItem(R.drawable.transport, "15分钟"));
         menuItems.add(new MenuItem(R.drawable.transport, "1小时"));
-        menuItems.add(new MenuItem(R.drawable.transport, "日线"));
         mTopRightMenu
-                .setWidth(DisplayUtils.getWidthHeight(mContext)[0] / 3)      //默认宽度wrap_content
+                .setWidth(DisplayUtils.getWidthHeight(mContext)[0] / mFragments.length)      //默认宽度wrap_content
                 .setHeight(DisplayUtils.dip2px(mContext, 30 * menuItems.size()))
                 .showIcon(false)     //显示菜单图标，默认为true
                 .dimBackground(false)        //背景变暗，默认为true
@@ -256,7 +248,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.color_333333));
                         mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.third_text_color));
                         mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow), null);
-                        mViewpager.setCurrentItem(5, false);
+                        mViewpager.setCurrentItem(1, false);
                         String type = HttpConfig.MIN;
                         switch (position) {
                             case 0:
@@ -271,9 +263,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             case 3:
                                 type = HttpConfig.HOUR;
                                 break;
-                            case 4:
-                                type = HttpConfig.DAY;
-                                break;
                         }
                         mCandleStickChartFragment.loadDataByType(type);
                     }
@@ -282,6 +271,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         mHeaderView.setMainTitle(TextUtils.concat(quote.getSymbolname(), "\n", SpannableUtil.getStringBySize(quote.getSymbol(), .6f)));
         tvLeft.setOnClickListener(this);
         tvRight.setOnClickListener(this);
+        v.findViewById(R.id.tv_deposit).setOnClickListener(this);
         v.findViewById(R.id.tv_position).setOnClickListener(this);
         v.findViewById(R.id.tv_close_order).setOnClickListener(this);
         v.findViewById(R.id.tv_kchart).setOnClickListener(this);
@@ -308,6 +298,24 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             SocketUtils.getSocket().on("topMarketDepth" + quote.getSort(), fn);
             SocketUtils.getSocket().once("getMktDepthList", fn);
             SocketUtils.getSocket().emit("getMktDepthList", quote.getSort());
+            SocketUtils.getSocket().on("topHistoricalTicks" + quote.getSort(), new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    LogUtils.d(" -> %s", args[0]);
+                    final List<HistoricalTicks> list = gson.fromJson(args[0].toString(), new TypeToken<List<HistoricalTicks>>() {
+                    }.getType());
+                    if(list.isEmpty()) {
+                        return;
+                    }
+                    marketDepthView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMarketHisAdapter.replaceData(list);
+                            mRvMarketHis.scrollToPosition(mMarketHisAdapter.getItemCount() - 1);
+                        }
+                    });
+                }
+            });
         }
     }
 
@@ -345,7 +353,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     }
 
 
-    private void findViews(View v) {
+    private void findViews(View v, Quote quote) {
         mHeaderView = (HeaderView) v.findViewById(R.id.header_view);
         mHeaderView.bindActivity(getActivity());
         mScrollView = (NestedScrollView) v.findViewById(R.id.scrollView);
@@ -369,7 +377,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 return false;
             }
         });
-        mMarketHisAdapter = new MarketHisAdapter(mHisList);
+        mMarketHisAdapter = new MarketHisAdapter(mHisList, quote.getTick());
         mMarketHisAdapter.bindToRecyclerView(mRvMarketHis);
         if (mIsDemo) {
             TextView tvYue = (TextView) v.findViewById(R.id.tv_yue);
@@ -485,12 +493,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     public void onEvent(PriceRefreshEvent event) {
         if (TextUtils.equals(event.getSymbol(), mSymbol)) {
             Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-            if (mHisList.size() > 20) {
-                mHisList.remove(0);
-            }
-            mHisList.add(new Quote(quote));
-            mMarketHisAdapter.notifyDataSetChanged();
-            mRvMarketHis.scrollToPosition(mHisList.size() - 1);
+//            if (mHisList.size() > 20) {
+//                mHisList.remove(0);
+//            }
+//            mHisList.add(new Quote(quote));
+//            mMarketHisAdapter.notifyDataSetChanged();
+//            mRvMarketHis.scrollToPosition(mHisList.size() - 1);
             fillViews(quote);
             setRestView(quote);
             Funds result = StaticStore.getFunds(mIsDemo);

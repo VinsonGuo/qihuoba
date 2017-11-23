@@ -2,7 +2,9 @@ package com.yjjr.yjfutures.widget.chart;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
@@ -436,7 +438,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
         }
     }
 
-    @Override
+    /*@Override
     public void drawHighlighted(Canvas c, Highlight[] indices) {
 
         BarData barData = mChart.getBarData();
@@ -489,7 +491,164 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
             c.drawRect(mBarRect, mHighlightPaint);
         }
+    }*/
+
+
+    @Override
+    public void drawHighlighted(Canvas c, Highlight[] indices) {
+
+        BarData barData = mChart.getBarData();
+
+        for (Highlight high : indices) {
+
+            IBarDataSet set = barData.getDataSetByIndex(high.getDataSetIndex());
+
+            if (set == null || !set.isHighlightEnabled())
+                continue;
+
+            BarEntry e = set.getEntryForXValue(high.getX(), high.getY());
+
+            if (!isInBoundsX(e, set))
+                continue;
+
+            Transformer trans = mChart.getTransformer(set.getAxisDependency());
+
+            mHighlightPaint.setColor(set.getHighLightColor());
+            mHighlightPaint.setAlpha(set.getHighLightAlpha());
+
+            boolean isStack = (high.getStackIndex() >= 0 && e.isStacked()) ? true : false;
+
+            final float y1;
+            final float y2;
+
+            if (isStack) {
+
+                if (mChart.isHighlightFullBarEnabled()) {
+
+                    y1 = e.getPositiveSum();
+                    y2 = -e.getNegativeSum();
+
+                } else {
+
+                    Range range = e.getRanges()[high.getStackIndex()];
+
+                    y1 = range.from;
+                    y2 = range.to;
+                }
+
+            } else {
+                y1 = e.getY();
+                y2 = 0.f;
+            }
+
+            prepareBarHighlight(e.getX(), y1, y2, barData.getBarWidth() / 2f, trans);
+
+            setHighlightDrawPos(high, mBarRect);
+
+//            c.drawRect(mBarRect, mHighlightPaint);
+             /*重写高亮*/
+             mHighlightPaint.setStrokeWidth(Utils.convertDpToPixel(1f));
+            c.drawLine(mBarRect.centerX(), mViewPortHandler.getContentRect().bottom, mBarRect.centerX(), 0, mHighlightPaint);
+        }
     }
+
+    /*@Override
+    public void drawHighlighted(Canvas c, Highlight[] indices) {
+
+        BarData barData = mChart.getBarData();
+        int setCount = barData.getDataSetCount();
+
+        for (Highlight high : indices) {
+
+            final int minDataSetIndex = high.getDataSetIndex() == -1
+                    ? 0
+                    : high.getDataSetIndex();
+            final int maxDataSetIndex = high.getDataSetIndex() == -1
+                    ? barData.getDataSetCount()
+                    : (high.getDataSetIndex() + 1);
+            if (maxDataSetIndex - minDataSetIndex < 1)
+                continue;
+
+            for (int dataSetIndex = minDataSetIndex;
+                 dataSetIndex < maxDataSetIndex;
+                 dataSetIndex++) {
+
+                IBarDataSet set = barData.getDataSetByIndex(dataSetIndex);
+
+                if (set == null || !set.isHighlightEnabled())
+                    continue;
+
+                float barspaceHalf = set.getBarSpace() / 2f;
+
+                Transformer trans = mChart.getTransformer(set.getAxisDependency());
+
+                mHighlightPaint.setColor(set.getHighLightColor());
+                mHighlightPaint.setAlpha(set.getHighLightAlpha());
+
+                int index = high.getXIndex();
+
+                // check outofbounds
+                if (index >= 0
+                        && index < (mChart.getXChartMax() * mAnimator.getPhaseX()) / setCount) {
+
+                    BarEntry e = set.getEntryForXIndex(index);
+
+                    if (e == null || e.getXIndex() != index)
+                        continue;
+
+                    float groupspace = barData.getGroupSpace();
+                    boolean isStack = high.getStackIndex() < 0 ? false : true;
+
+                    // calculate the correct x-position
+                    float x = index * setCount + dataSetIndex + groupspace / 2f
+                            + groupspace * index;
+
+                    final float y1;
+                    final float y2;
+
+                    if (isStack) {
+                        y1 = high.getRange().from;
+                        y2 = high.getRange().to;
+                    } else {
+                        y1 = e.getVal();
+                        y2 = 0.f;
+                    }
+
+                    prepareBarHighlight(x, y1, y2, barspaceHalf, trans);
+
+                    *//*重写高亮*//*
+                    c.drawLine(mBarRect.centerX(), mViewPortHandler.getContentRect().bottom, mBarRect.centerX(), 0, mHighlightPaint);
+                    // c.drawRect(mBarRect, mHighlightPaint);
+
+                    if (mChart.isDrawHighlightArrowEnabled()) {
+
+                        mHighlightPaint.setAlpha(255);
+
+                        // distance between highlight arrow and bar
+                        float offsetY = mAnimator.getPhaseY() * 0.07f;
+
+                        float[] values = new float[9];
+                        trans.getPixelToValueMatrix().getValues(values);
+                        final float xToYRel = Math.abs(
+                                values[Matrix.MSCALE_Y] / values[Matrix.MSCALE_X]);
+
+                        final float arrowWidth = set.getBarSpace() / 2.f;
+                        final float arrowHeight = arrowWidth * xToYRel;
+
+                        final float yArrow = (y1 > -y2 ? y1 : y1) * mAnimator.getPhaseY();
+
+                        Path arrow = new Path();
+                        arrow.moveTo(x + 0.4f, yArrow + offsetY);
+                        arrow.lineTo(x + 0.4f + arrowWidth, yArrow + offsetY - arrowHeight);
+                        arrow.lineTo(x + 0.4f + arrowWidth, yArrow + offsetY + arrowHeight);
+
+                        trans.pathValueToPixel(arrow);
+                        c.drawPath(arrow, mHighlightPaint);
+                    }
+                }
+            }
+        }
+    }*/
 
     /**
      * Sets the drawing position of the highlight object based on the riven bar-rect.

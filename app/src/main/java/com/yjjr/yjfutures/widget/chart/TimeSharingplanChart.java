@@ -323,7 +323,7 @@ public class TimeSharingplanChart extends RelativeLayout {
         LineChartYMarkerView mv = new LineChartYMarkerView(mContext, mQuote.getTick());
         mv.setChartView(mChart);
         mChart.setMarker(mv);
-        mChart.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mList, mInfoView));
+        mChart.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote.getLastclose(), mList, mInfoView));
         mChart.setOnTouchListener(new ChartInfoViewHandler(mChart));
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override

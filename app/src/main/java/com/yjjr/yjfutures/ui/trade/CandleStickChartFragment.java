@@ -164,7 +164,7 @@ public class CandleStickChartFragment extends BaseFragment {
 
 
         mChart.getLegend().setEnabled(false);
-        mChart.setOnChartValueSelectedListener(new InfoViewListener(mContext, quote, mList, mInfoView));
+        mChart.setOnChartValueSelectedListener(new InfoViewListener(mContext, quote.getLastclose(), mList, mInfoView));
         mChart.setOnTouchListener(new ChartInfoViewHandler(mChart));
         mChart.setOnChartGestureListener(new OnChartGestureListener() {
             @Override

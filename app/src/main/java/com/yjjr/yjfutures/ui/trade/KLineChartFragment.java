@@ -72,7 +72,7 @@ public class KLineChartFragment extends BaseFullScreenChartFragment {
 
     @Override
     protected void initData() {
-//        xAxisVolume.setDrawLabels(false);
+        xAxisVolume.setLabelCount(3, true);
         axisLeftPrice.setDrawLabels(false);
         axisLeftVolume.setDrawLabels(false);
 
@@ -132,10 +132,12 @@ public class KLineChartFragment extends BaseFullScreenChartFragment {
         mChartVolume.setOnChartGestureListener(l);
         mChartPrice.setOnTouchListener(new ChartScrollTouchListener());
         mChartVolume.setOnTouchListener(new ChartScrollTouchListener());
-        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mKInfo, mChartVolume));
-        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mKInfo, mChartPrice));
 
-       mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
+
+        mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
+        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext,  TextUtils.equals(mType, HttpConfig.MIN)?mQuote.getLastclose():0, mData, mKInfo, mChartVolume));
+        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext,  TextUtils.equals(mType, HttpConfig.MIN)?mQuote.getLastclose():0, mData, mKInfo, mChartPrice));
+
        /*  if (mQuote == null) return;
 
         DateTime dateTime = DateUtils.getChartStartTime(mQuote, mType);

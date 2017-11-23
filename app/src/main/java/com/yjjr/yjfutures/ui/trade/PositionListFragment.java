@@ -152,7 +152,7 @@ public class PositionListFragment extends ListFragment<Holds> {
                         Map<String, Integer> result = commonResponse.getResult();
                         int success = result.get("success");
                         int fail = result.get("fail");
-                        DialogUtils.createCommonDialog(mContext, String.format(Locale.getDefault(), "共%d笔 成功%d笔 失败%d笔", success + fail, success, fail))
+                        DialogUtils.createCommonDialog(mContext, String.format(Locale.getDefault(), "平仓提交完毕\n\n共%d笔 成功%d笔 失败%d笔", success + fail, success, fail))
                                 .show();
                         EventBus.getDefault().post(new SendOrderEvent());
                     }

@@ -22,7 +22,7 @@ import java.util.List;
 public class InfoViewListener implements OnChartValueSelectedListener {
 
     private List<HisData> mList;
-    private Quote mQuote;
+    private double mLastClose;
     private ChartInfoView mInfoView;
     private int mWidth;
     /**
@@ -30,16 +30,16 @@ public class InfoViewListener implements OnChartValueSelectedListener {
      */
     private Chart mOtherChart;
 
-    public InfoViewListener(Context context, Quote quote, List<HisData> list, ChartInfoView infoView) {
+    public InfoViewListener(Context context, double lastClose, List<HisData> list, ChartInfoView infoView) {
         mWidth = DisplayUtils.getWidthHeight(context)[0];
-        mQuote = quote;
+        mLastClose = lastClose;
         mList = list;
         mInfoView = infoView;
     }
 
-    public InfoViewListener(Context context, Quote quote, List<HisData> list, ChartInfoView infoView, Chart otherChart) {
+    public InfoViewListener(Context context,  double lastClose, List<HisData> list, ChartInfoView infoView, Chart otherChart) {
         mWidth = DisplayUtils.getWidthHeight(context)[0];
-        mQuote = quote;
+        mLastClose = lastClose;
         mList = list;
         mInfoView = infoView;
         mOtherChart = otherChart;
@@ -50,7 +50,7 @@ public class InfoViewListener implements OnChartValueSelectedListener {
         int x = (int) e.getX();
         if (x < mList.size()) {
             mInfoView.setVisibility(View.VISIBLE);
-            mInfoView.setData(mQuote == null ? 0 : mQuote.getLastclose(), mList.get(x));
+            mInfoView.setData(mLastClose, mList.get(x));
         }
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mInfoView.getLayoutParams();
         if (h.getXPx() < mWidth / 2) {

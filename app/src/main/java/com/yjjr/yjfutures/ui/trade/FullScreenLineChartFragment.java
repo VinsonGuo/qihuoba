@@ -71,8 +71,8 @@ public class FullScreenLineChartFragment extends BaseFullScreenChartFragment {
         xAxisVolume.setValueFormatter(new KLineXValueFormatter(HttpConfig.MIN, mData));
         mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (mQuote == null) return;
-        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mLineInfo, mChartVolume));
-        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mLineInfo, mChartPrice));
+        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote.getLastclose(), mData, mLineInfo, mChartVolume));
+        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote.getLastclose(), mData, mLineInfo, mChartPrice));
         mChartPrice.setOnTouchListener(new ChartInfoViewHandler(mChartPrice));
         axisLeftPrice.setValueFormatter(new YValueFormatter(mQuote.getTick()));
 

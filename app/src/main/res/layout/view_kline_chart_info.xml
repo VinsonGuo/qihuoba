@@ -110,6 +110,7 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/vg_change_rate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp"

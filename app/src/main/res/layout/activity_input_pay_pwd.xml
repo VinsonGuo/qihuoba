@@ -15,7 +15,7 @@
         android:id="@+id/header_view"
         app:background_color="@color/white"
         app:main_title_color="@color/color_333333"
-        app:main_title="输入支付密码"
+        app:main_title="请输入交易密码"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

@@ -34,7 +34,7 @@ public class DES3Util {
      */
     public static String encode(String plainText) {
         try {
-            return URLEncoder.encode(encode(plainText, secretKey), "UTF-8");
+            return encode(plainText, secretKey);
         } catch (Exception e) {
             return null;
         }
@@ -51,7 +51,7 @@ public class DES3Util {
         IvParameterSpec ips = new IvParameterSpec(iv.getBytes());
         cipher.init(Cipher.ENCRYPT_MODE, deskey, ips);
         byte[] encryptData = cipher.doFinal(plainText.getBytes(encoding));
-        return new String(Base64.encodeBase64(encryptData));
+        return new String(android.util.Base64.encode(encryptData, android.util.Base64.DEFAULT));
     }
 
 }

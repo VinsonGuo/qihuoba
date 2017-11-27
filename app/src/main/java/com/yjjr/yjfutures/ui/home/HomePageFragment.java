@@ -43,9 +43,10 @@ import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
+import com.yjjr.yjfutures.utils.DES3Util;
 import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DialogUtils;
-import com.yjjr.yjfutures.utils.HoldingSocketUtils;
+import com.yjjr.yjfutures.utils.BizSocketUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
@@ -386,13 +387,13 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         });
         SocketUtils.getSocket().emit("getSymbolList");
 
-        HoldingSocketUtils.init();
+        BizSocketUtils.init();
 
     }
 
     private void getHolding() {
 //        HttpManager.getBizService().getHolding()
-        HoldingSocketUtils.getHolding(false)
+        BizSocketUtils.getHolding(false)
                 .compose(RxUtils.<BizResponse<List<Holds>>>applySchedulers())
                 .compose(this.<BizResponse<List<Holds>>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<List<Holds>>>() {
@@ -459,7 +460,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 DemoTradeActivity.startActivity(mContext);
                 break;
             case R.id.tv_title2:
-                WebActivity.startActivity(mContext, HttpConfig.URL_QUALIFICATION);
+//                WebActivity.startActivity(mContext, HttpConfig.URL_QUALIFICATION);
+                WebActivity.startActivity(mContext, HttpConfig.URL_PROMOTION + DES3Util.encode(UserSharePrefernce.getAccount(mContext)), WebActivity.TYPE_SHARE);
                 break;
             case R.id.tv_title3:
                 WebActivity.startActivity(mContext, HttpConfig.URL_WARNING);
@@ -484,7 +486,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
         EMClient.getInstance().logout(true);
         SocketUtils.disconnect();
-        HoldingSocketUtils.disconnect();
+        BizSocketUtils.disconnect();
     }
 
 }

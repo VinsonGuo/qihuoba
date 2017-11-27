@@ -18,7 +18,7 @@ import com.yjjr.yjfutures.store.UserSharePrefernce;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.market.MarketPriceFragment;
-import com.yjjr.yjfutures.utils.HoldingSocketUtils;
+import com.yjjr.yjfutures.utils.BizSocketUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.http.HttpManager;
@@ -142,7 +142,7 @@ public class DemoTradeActivity extends BaseActivity {
 
     private void getHolding() {
 //        HttpManager.getBizService(true).getHolding()
-        HoldingSocketUtils.getHolding(true)
+        BizSocketUtils.getHolding(true)
                 .compose(RxUtils.<BizResponse<List<Holds>>>applyBizSchedulers())
                 .compose(this.<BizResponse<List<Holds>>>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<List<Holds>>>() {

@@ -22,7 +22,10 @@ import io.socket.engineio.client.transports.WebSocket;
  * Created by dell on 2017/9/29.
  */
 
-public class HoldingSocketUtils {
+public class BizSocketUtils {
+
+
+    public static final String TRADE_RECORD = "singleTopSendRecord";
 
     private static Socket sSocket;
 

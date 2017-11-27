@@ -23,7 +23,7 @@ import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseApplication;
 import com.yjjr.yjfutures.ui.ListFragment;
 import com.yjjr.yjfutures.utils.DialogUtils;
-import com.yjjr.yjfutures.utils.HoldingSocketUtils;
+import com.yjjr.yjfutures.utils.BizSocketUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.StringUtils;
@@ -194,7 +194,7 @@ public class PositionListFragment extends ListFragment<Holds> {
     @Override
     protected void loadData() {
 //        HttpManager.getBizService(mIsDemo).getHolding()
-        HoldingSocketUtils.getHolding(mIsDemo)
+        BizSocketUtils.getHolding(mIsDemo)
                 .compose(RxUtils.<BizResponse<List<Holds>>>applySchedulers())
                 .compose(this.<BizResponse<List<Holds>>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<List<Holds>>>() {

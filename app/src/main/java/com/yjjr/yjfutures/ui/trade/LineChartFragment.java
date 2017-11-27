@@ -167,7 +167,7 @@ public class LineChartFragment extends BaseFullScreenChartFragment {
                             return;
                         }
 
-                        setLimitLine(mQuote);
+//                        setLimitLine(mQuote);
                         initChartPriceData(mChartPrice);
                         initChartVolumeData(mChartVolume);
                     }

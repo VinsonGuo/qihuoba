@@ -117,7 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/root_padding_10"
         android:gravity="center"
-        android:text="09:00-24:00 (30分钟内到账)\n24点以后 (次日09:00前到账)"
+        android:text="09:00-24:00 (30分钟内到账)\n24:00以后 (次日09:00前到账)"
         android:textColor="@color/second_text_color"
         android:textSize="12sp"/>
 
@@ -126,7 +126,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="如需急转账，请"
+        android:text="如需急转账，请电话"
         android:textColor="@color/second_text_color"
         android:textSize="12sp"/>
 

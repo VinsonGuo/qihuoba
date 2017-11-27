@@ -11,20 +11,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.event.FinishEvent;
 import com.yjjr.yjfutures.event.PollRefreshEvent;
+import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.BaseActivity;
 import com.yjjr.yjfutures.utils.DoubleUtil;
+import com.yjjr.yjfutures.utils.LogUtils;
+import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SpannableUtil;
+import com.yjjr.yjfutures.utils.ToastUtils;
+import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.HeaderView;
 import com.yjjr.yjfutures.widget.RegisterInput;
 import com.yjjr.yjfutures.widget.listener.TextWatcherAdapter;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import io.reactivex.functions.Consumer;
 
 public class WithdrawActivity extends BaseActivity {
 
@@ -57,7 +65,21 @@ public class WithdrawActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mBtnConfirm.isSelected()) {
-                    InputPayPwdActivity.startActivity(mContext, riMoney.getValue());
+                    HttpManager.getBizService().whetherApply()
+                            .compose(RxUtils.applyBizSchedulers())
+                            .compose(mContext.<BizResponse>bindUntilEvent(ActivityEvent.DESTROY))
+                            .subscribe(new Consumer<BizResponse>() {
+                                @Override
+                                public void accept(BizResponse bizResponse) throws Exception {
+                                    InputPayPwdActivity.startActivity(mContext, riMoney.getValue());
+                                }
+                            }, new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable throwable) throws Exception {
+                                    LogUtils.e(throwable);
+                                    ToastUtils.show(mContext, throwable.getMessage());
+                                }
+                            });
                 }
             }
         });

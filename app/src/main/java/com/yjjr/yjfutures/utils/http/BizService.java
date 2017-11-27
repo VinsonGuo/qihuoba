@@ -88,6 +88,9 @@ public interface BizService {
     @POST("user/validPayPwd")
     Observable<BizResponse> validPayPwd(@Field("account") String account, @Field("payPwd") String payPwd);
 
+    @POST("user/whetherApply")
+    Observable<BizResponse> whetherApply();
+
     @GET("version/checkUpdate/android")
     Observable<BizResponse<Update>> checkUpdate(@Query("version") String version, @Query("appCode") String appCode);
 

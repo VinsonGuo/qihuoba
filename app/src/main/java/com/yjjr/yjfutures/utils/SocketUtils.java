@@ -38,7 +38,7 @@ public class SocketUtils {
 
 
     public static void disconnect() {
-        if(sSocket != null && sSocket.connected()) {
+        if (sSocket != null && sSocket.connected()) {
             sSocket.disconnect();
         }
     }

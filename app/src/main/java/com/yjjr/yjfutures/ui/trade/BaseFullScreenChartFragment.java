@@ -69,6 +69,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
     protected ChartInfoView mLineInfo;
     protected ChartInfoView mKInfo;
     private int textColor;
+    private double mLastPrice;
 
     @Override
     protected View initViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -344,11 +345,9 @@ public class BaseFullScreenChartFragment extends BaseFragment {
 
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         ArrayList<Entry> paddingEntries = new ArrayList<>();
-        ArrayList<Entry> highlightEntries = new ArrayList<>();
         for (int i = 0; i < mData.size(); i++) {
             HisData t = mData.get(i);
             barEntries.add(new BarEntry(i, t.getVol(), t));
-            highlightEntries.add(new Entry(i, 0));
         }
         int maxCount = mChartPrice.getData().getCandleData() == null ? MAX_COUNT_LINE : MAX_COUNT_K;
         if (!mData.isEmpty() && mData.size() < maxCount) {
@@ -362,7 +361,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         barDataSet.setDrawValues(false);//是否在线上绘制数值
         barDataSet.setColors(getResources().getColor(R.color.increasing_color), getResources().getColor(R.color.decreasing_color));//可以给树状图设置多个颜色，判断条件在BarChartRenderer 类的140行以下修改了判断条件
         BarData barData = new BarData(barDataSet);
-        LineData lineData = new LineData(setLine(3, highlightEntries), setLine(2, paddingEntries));
+        LineData lineData = new LineData(setLine(2, paddingEntries));
         CombinedData combinedData = new CombinedData();
         combinedData.setData(lineData);
         combinedData.setData(barData);
@@ -381,6 +380,10 @@ public class BaseFullScreenChartFragment extends BaseFragment {
 
     protected void refreshData(float price) {
         try {
+            if (price <= 0 || price == mLastPrice) {
+                return;
+            }
+            mLastPrice = price;
             CombinedData data = mChartPrice.getData();
             if (data == null) return;
             LineData lineData = data.getLineData();

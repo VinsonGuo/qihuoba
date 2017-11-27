@@ -556,7 +556,7 @@ public class StringUtils {
     }
 
     public static String getProfitText(double unrealizedPL) {
-        return (unrealizedPL > 0 ? "+" : "") + DoubleUtil.formatDecimal(unrealizedPL);
+        return (unrealizedPL > 0 ? "+" : "") + DoubleUtil.format2Decimal(unrealizedPL);
     }
 
     /**

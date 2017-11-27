@@ -44,7 +44,7 @@ import com.yjjr.yjfutures.utils.ActivityTools;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
-import com.yjjr.yjfutures.utils.HoldingSocketUtils;
+import com.yjjr.yjfutures.utils.BizSocketUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
@@ -278,7 +278,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void getMarketDepth(final Quote quote) {
-        if (SocketUtils.getSocket() != null) {
+        if (SocketUtils.getSocket() != null && quote != null) {
             final Gson gson = new Gson();
             Emitter.Listener fn = new Emitter.Listener() {
                 @Override
@@ -296,7 +296,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             SocketUtils.getSocket().on("topMarketDepth" + quote.getSort(), fn);
             SocketUtils.getSocket().once("getMktDepthList", fn);
             SocketUtils.getSocket().emit("getMktDepthList", quote.getSort());
-            SocketUtils.getSocket().on(SocketUtils.HIS_TICKS, new Emitter.Listener() {
+            SocketUtils.getSocket().on(SocketUtils.HIS_TICKS + quote.getSort(), new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
                     final List<HistoricalTicks> list = gson.fromJson(args[0].toString(), new TypeToken<List<HistoricalTicks>>() {
@@ -311,6 +311,12 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 }
             });
             SocketUtils.getSocket().emit(SocketUtils.HIS_TICKS, mSymbol);
+            BizSocketUtils.getSocket().on(BizSocketUtils.TRADE_RECORD, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    ToastUtils.show(mContext, args[0].toString());
+                }
+            });
         }
     }
 
@@ -410,7 +416,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
 
     private void getHolding() {
 //        HttpManager.getBizService(mIsDemo).getHolding()
-        HoldingSocketUtils.getHolding(mIsDemo)
+        BizSocketUtils.getHolding(mIsDemo)
                 .map(new Function<BizResponse<List<Holds>>, List<Holds>>() {
                     @Override
                     public List<Holds> apply(@NonNull BizResponse<List<Holds>> listBizResponse) throws Exception {
@@ -678,7 +684,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (SocketUtils.getSocket() != null && quote != null) {
             SocketUtils.getSocket().off("topMarketDepth" + quote.getSort());
-            SocketUtils.getSocket().off(SocketUtils.HIS_TICKS);
+            SocketUtils.getSocket().off(SocketUtils.HIS_TICKS + quote.getSort());
+            BizSocketUtils.getSocket().off(BizSocketUtils.TRADE_RECORD);
         }
     }
 }

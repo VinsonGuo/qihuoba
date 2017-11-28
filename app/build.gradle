@@ -46,8 +46,8 @@ android {
     productFlavors {
         app {
             applicationId "com.yjjr.yjfutures"
-            versionCode 7
-            versionName "2.1.0"
+            versionCode 9
+            versionName "2.2.1"
         }
         gjqh {
             applicationId "com.yjjr.yjapp2"

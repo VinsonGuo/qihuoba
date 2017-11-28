@@ -43,7 +43,7 @@
             android:value="597fd6f29f06fd70360000c0"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="official"/>
+            android:value="default"/>
 
         <service
             android:name="com.hyphenate.chat.EMChatService"

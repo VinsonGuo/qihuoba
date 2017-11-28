@@ -1,5 +1,6 @@
 package com.yjjr.yjfutures.ui.trade;
 
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -41,10 +42,10 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
+import com.yjjr.yjfutures.utils.BizSocketUtils;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
-import com.yjjr.yjfutures.utils.BizSocketUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
@@ -125,6 +126,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     }};
     private NestedScrollView mScrollView;
     private Fragment[] mFragments;
+    private TextView mTvTradeToast;
 
 
     public TradeFragment() {
@@ -283,14 +285,18 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             Emitter.Listener fn = new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    final List<MarketDepth> list = gson.fromJson(args[0].toString(), new TypeToken<List<MarketDepth>>() {
-                    }.getType());
-                    marketDepthView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            marketDepthView.setData(list, quote.getTick());
-                        }
-                    });
+                    try {
+                        final List<MarketDepth> list = gson.fromJson(args[0].toString(), new TypeToken<List<MarketDepth>>() {
+                        }.getType());
+                        marketDepthView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                marketDepthView.setData(list, quote.getTick());
+                            }
+                        });
+                    } catch (Exception e) {
+                        LogUtils.e(e);
+                    }
                 }
             };
             SocketUtils.getSocket().on("topMarketDepth" + quote.getSort(), fn);
@@ -299,22 +305,44 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             SocketUtils.getSocket().on(SocketUtils.HIS_TICKS + quote.getSort(), new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    final List<HistoricalTicks> list = gson.fromJson(args[0].toString(), new TypeToken<List<HistoricalTicks>>() {
-                    }.getType());
-                    marketDepthView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mMarketHisAdapter.replaceData(list);
-//                            mRvMarketHis.scrollToPosition(mMarketHisAdapter.getItemCount() - 1);
-                        }
-                    });
+                    try {
+                        final List<HistoricalTicks> list = gson.fromJson(args[0].toString(), new TypeToken<List<HistoricalTicks>>() {
+                        }.getType());
+                        marketDepthView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mMarketHisAdapter.replaceData(list);
+                            }
+                        });
+                    } catch (Exception e) {
+                        LogUtils.e(e);
+                    }
                 }
             });
             SocketUtils.getSocket().emit(SocketUtils.HIS_TICKS, mSymbol);
+        }
+        if (BizSocketUtils.getSocket() != null) {
             BizSocketUtils.getSocket().on(BizSocketUtils.TRADE_RECORD, new Emitter.Listener() {
                 @Override
-                public void call(Object... args) {
-                    ToastUtils.show(mContext, args[0].toString());
+                public void call(final Object... args) {
+                    if (mTvTradeToast == null) return;
+                    Runnable hide = new Runnable() {
+                        @Override
+                        public void run() {
+                            mTvTradeToast.setVisibility(View.INVISIBLE);
+                        }
+                    };
+                    mTvTradeToast.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTvTradeToast.setText(args[0].toString());
+                            mTvTradeToast.setVisibility(View.VISIBLE);
+                            ObjectAnimator animator = ObjectAnimator.ofFloat(mTvTradeToast, "x", -mTvTradeToast.getMeasuredWidth(), 0);
+                            animator.start();
+                        }
+                    });
+                    mTvTradeToast.removeCallbacks(hide);
+                    mTvTradeToast.postDelayed(hide, 3000);
                 }
             });
         }
@@ -369,6 +397,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvDirection = (TextView) v.findViewById(R.id.tv_direction);
         tvYueValue = (TextView) v.findViewById(R.id.tv_yue_value);
         mRvMarketHis = (RecyclerView) v.findViewById(R.id.rv_list);
+        mTvTradeToast = (TextView) v.findViewById(R.id.tv_trade_toast);
         RecyclerView.ItemAnimator animator = mRvMarketHis.getItemAnimator();
         if (animator instanceof SimpleItemAnimator) {
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);

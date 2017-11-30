@@ -21,6 +21,9 @@ public class DoubleUtil {
 
 
     public static String format2Decimal(Double d) {
+        if (d.isNaN()) {
+            return "----";
+        }
         NumberFormat instance = DecimalFormat.getInstance();
         instance.setMinimumFractionDigits(2);
         instance.setMaximumFractionDigits(2);
@@ -28,6 +31,9 @@ public class DoubleUtil {
     }
 
     public static String formatDecimal(Double d) {
+        if (d.isNaN()) {
+            return "----";
+        }
         NumberFormat instance = DecimalFormat.getInstance();
         instance.setMinimumFractionDigits(0);
         instance.setMaximumFractionDigits(8);

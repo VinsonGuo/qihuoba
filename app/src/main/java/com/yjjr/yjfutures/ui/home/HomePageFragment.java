@@ -43,7 +43,10 @@ import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.ui.trade.DemoTradeActivity;
 import com.yjjr.yjfutures.ui.trade.TradeActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
+import com.yjjr.yjfutures.utils.DES3Util;
+import com.yjjr.yjfutures.utils.DateUtils;
 import com.yjjr.yjfutures.utils.DialogUtils;
+import com.yjjr.yjfutures.utils.BizSocketUtils;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
@@ -203,9 +206,9 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         @Override
                         public void accept(@NonNull Boolean symbols) throws Exception {
                             mLoadingView.setVisibility(View.GONE);
+                            initSocket();
                             getHolding();
                             getHuodong();
-                            initSocket();
                             loginHx();
                         }
                     }, new Consumer<Throwable>() {
@@ -217,9 +220,9 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                     });
         } else {
             mLoadingView.setVisibility(View.GONE);
+            initSocket();
             getHolding();
             getHuodong();
-            initSocket();
             loginHx();
         }
         //获得banner
@@ -312,6 +315,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                     Quote quote = mGson.fromJson(data, Quote.class);
                     // 真实
                     Quote oldQuote = StaticStore.getQuote(quote.getSymbol(), false);
+                    String lastTime = DateUtils.formatDateTime(DateUtils.nowTime());
                     if (oldQuote != null) {
                         oldQuote.setAskPrice(quote.getAskPrice());
                         oldQuote.setBidPrice(quote.getBidPrice());
@@ -325,6 +329,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         oldQuote.setHigh(quote.getHigh());
                         oldQuote.setLow(quote.getLow());
                         oldQuote.setVol(quote.getVol());
+                        oldQuote.setLastTime(lastTime);
                         oldQuote.setHolding(StaticStore.sHoldSet.contains(quote.getSymbol()));
                     }
 
@@ -343,6 +348,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                         demoQuote.setHigh(quote.getHigh());
                         demoQuote.setLow(quote.getLow());
                         demoQuote.setVol(quote.getVol());
+                        demoQuote.setLastTime(lastTime);
                         demoQuote.setHolding(StaticStore.sDemoHoldSet.contains(quote.getSymbol()));
                     }
                     EventBus.getDefault().post(new PriceRefreshEvent(quote.getSymbol()));
@@ -378,18 +384,16 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                     LogUtils.e(e);
                 }
             }
-        })/*.on("topMarketDepth1", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                LogUtils.d("topMarketDepth1 -> %s", args[0]);
-            }
-        })*/;
-        SocketUtils.getSocket().connect();
+        });
         SocketUtils.getSocket().emit("getSymbolList");
+
+        BizSocketUtils.init();
+
     }
 
     private void getHolding() {
-        HttpManager.getBizService().getHolding()
+//        HttpManager.getBizService().getHolding()
+        BizSocketUtils.getHolding(false)
                 .compose(RxUtils.<BizResponse<List<Holds>>>applySchedulers())
                 .compose(this.<BizResponse<List<Holds>>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<List<Holds>>>() {
@@ -456,7 +460,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
                 DemoTradeActivity.startActivity(mContext);
                 break;
             case R.id.tv_title2:
-                WebActivity.startActivity(mContext, HttpConfig.URL_QUALIFICATION);
+//                WebActivity.startActivity(mContext, HttpConfig.URL_QUALIFICATION);
+                WebActivity.startActivity(mContext, HttpConfig.URL_PROMOTION + DES3Util.encode(UserSharePrefernce.getAccount(mContext)), WebActivity.TYPE_SHARE);
                 break;
             case R.id.tv_title3:
                 WebActivity.startActivity(mContext, HttpConfig.URL_WARNING);
@@ -480,9 +485,8 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
         EventBus.getDefault().unregister(this);
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
         EMClient.getInstance().logout(true);
-        if (SocketUtils.getSocket() != null && SocketUtils.getSocket().connected()) {
-            SocketUtils.getSocket().disconnect();
-        }
+        SocketUtils.disconnect();
+        BizSocketUtils.disconnect();
     }
 
 }

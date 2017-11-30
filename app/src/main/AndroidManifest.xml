@@ -17,7 +17,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
@@ -43,7 +42,7 @@
             android:value="597fd6f29f06fd70360000c0"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="official"/>
+            android:value="default"/>
 
         <service
             android:name="com.hyphenate.chat.EMChatService"
@@ -346,7 +345,14 @@
             android:name=".ui.mine.AboutUsActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".ui.trade.PositionActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".ui.publish.PublishActivity">
+        </activity>
+        <activity android:name=".ui.trade.MarketDetailActivity"
+            android:theme="@android:style/Theme.Dialog">
         </activity>
     </application>
 

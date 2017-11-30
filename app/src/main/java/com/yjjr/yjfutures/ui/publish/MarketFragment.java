@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -12,6 +13,7 @@ import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.store.StaticStore;
 import com.yjjr.yjfutures.ui.ListFragment;
+import com.yjjr.yjfutures.ui.trade.TradeActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -44,15 +46,21 @@ public class MarketFragment extends ListFragment<Quote> {
     @Override
     public BaseQuickAdapter<Quote, BaseViewHolder> getAdapter() {
         mRvList.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
-        MarketAdapter adapter = new MarketAdapter(null);
+        final MarketAdapter adapter = new MarketAdapter(null);
         adapter.addHeaderView(LayoutInflater.from(getActivity()).inflate(R.layout.header_market_list, mRvList, false));
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter a, View view, int position) {
+                TradeActivity.startActivity(mContext, adapter.getData().get(position).getSymbol(), true);
+            }
+        });
         return adapter;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PriceRefreshEvent event) {
         if (isResumed()) {
-            Quote quote = StaticStore.getQuote(event.getSymbol(), false);
+            Quote quote = StaticStore.getQuote(event.getSymbol(), true);
             int position = mAdapter.getData().indexOf(quote);
             mAdapter.notifyItemChanged(position);
         }

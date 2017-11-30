@@ -2,7 +2,6 @@ package com.yjjr.yjfutures.utils;
 
 import org.apache.commons.codec.binary.Base64;
 
-import java.net.URLEncoder;
 import java.security.Key;
 
 import javax.crypto.Cipher;
@@ -34,7 +33,7 @@ public class DES3Util {
      */
     public static String encode(String plainText) {
         try {
-            return URLEncoder.encode(encode(plainText, secretKey), "UTF-8");
+            return android.util.Base64.encodeToString(encode(plainText, secretKey).getBytes(), android.util.Base64.DEFAULT);
         } catch (Exception e) {
             return null;
         }

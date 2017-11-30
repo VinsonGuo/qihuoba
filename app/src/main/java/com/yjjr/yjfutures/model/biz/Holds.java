@@ -53,6 +53,7 @@ public class Holds {
     private double RivalPrice;
 
     private int statue;
+    private int FilledQty;
 
     public String getAccount() {
         return Account;
@@ -158,6 +159,26 @@ public class Holds {
         this.RivalPrice = RivalPrice;
     }
 
+
+    /**
+     *  -1已失效 0正常 1已触发 2平仓中
+     */
+    public int getStatue() {
+        return statue;
+    }
+
+    public void setStatue(int statue) {
+        this.statue = statue;
+    }
+
+    public int getFilledQty() {
+        return FilledQty;
+    }
+
+    public void setFilledQty(int filledQty) {
+        FilledQty = filledQty;
+    }
+
     @Override
     public String toString() {
         return "Holds{" +
@@ -174,17 +195,8 @@ public class Holds {
                 ", MarketPrice=" + MarketPrice +
                 ", UnrealizedPL=" + UnrealizedPL +
                 ", RivalPrice=" + RivalPrice +
+                ", statue=" + statue +
+                ", FilledQty=" + FilledQty +
                 '}';
-    }
-
-    /**
-     *  -1已失效 0正常 1已触发 2平仓中
-     */
-    public int getStatue() {
-        return statue;
-    }
-
-    public void setStatue(int statue) {
-        this.statue = statue;
     }
 }

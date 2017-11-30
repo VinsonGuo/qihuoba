@@ -16,49 +16,4 @@
         android:layout_weight="1"
         app:tabBackground="@color/white"/>
 
-    <View
-        style="@style/style_divider"/>
-
-    <RadioGroup
-        android:id="@+id/rg_nav"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/background_dark"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/rb_market"
-            android:layout_width="wrap_content"
-            android:layout_height="33dp"
-            android:background="@drawable/selector_trade_bottom_rb_bg"
-            android:button="@null"
-            android:checked="true"
-            android:drawableLeft="@drawable/selector_ic_chart"
-            android:drawablePadding="6dp"
-            android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="@string/market_quotations"
-            android:textColor="@color/selector_trade_bottom_rb_color"
-            android:textSize="@dimen/sp_16"/>
-
-        <RadioButton
-            android:id="@+id/rb_order"
-            android:layout_width="wrap_content"
-            android:layout_height="33dp"
-            android:layout_marginLeft="30dp"
-            android:background="@drawable/selector_trade_bottom_rb_bg"
-            android:button="@null"
-            android:drawableLeft="@drawable/selector_ic_position"
-            android:drawablePadding="6dp"
-            android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="@string/positions"
-            android:textColor="@color/selector_trade_bottom_rb_color"
-            android:textSize="@dimen/sp_16"/>
-
-    </RadioGroup>
-
 </LinearLayout>

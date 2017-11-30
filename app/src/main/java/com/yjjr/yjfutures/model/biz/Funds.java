@@ -6,9 +6,9 @@ package com.yjjr.yjfutures.model.biz;
 
 public class Funds {
 
-    private double availableFunds;
-    private double frozenMargin;
-    private double netAssets;
+    private double availableFunds = Double.NaN;
+    private double frozenMargin = Double.NaN;
+    private double netAssets = Double.NaN;
 
     public double getAvailableFunds() {
         return availableFunds;

@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_dark"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="买盘"
+            android:textColor="@color/main_text_color"
+            android:textSize="16sp"/>
+
+        <View
+            style="@style/style_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="买1"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/buy_price1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/main_color_red"
+                android:textSize="@dimen/sp_14"
+                tools:text="买1"/>
+
+            <TextView
+                android:id="@+id/buy_vol1"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"
+                tools:text="132"/>
+        </LinearLayout>
+
+        <View
+            style="@style/style_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="买2"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/buy_price2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/main_color_red"
+                android:textSize="@dimen/sp_14"
+                tools:text="买1"/>
+
+            <TextView
+                android:id="@+id/buy_vol2"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"
+                tools:text="132"/>
+        </LinearLayout>
+
+        <View
+            style="@style/style_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="买3"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/buy_price3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/main_color_red"
+                android:textSize="@dimen/sp_14"
+                tools:text="买1"/>
+
+            <TextView
+                android:id="@+id/buy_vol3"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"
+                tools:text="132"/>
+        </LinearLayout>
+
+        <View
+            style="@style/style_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="买4"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/buy_price4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/main_color_red"
+                android:textSize="@dimen/sp_14"
+                tools:text="买1"/>
+
+            <TextView
+                android:id="@+id/buy_vol4"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"
+                tools:text="132"/>
+        </LinearLayout>
+
+        <View
+            style="@style/style_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="买5"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/buy_price5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/main_color_red"
+                android:textSize="@dimen/sp_14"
+                tools:text="买2"/>
+
+            <TextView
+                android:id="@+id/buy_vol5"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"
+                tools:text="132"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="卖盘"
+            android:textColor="@color/main_text_color"
+            android:textSize="16sp"/>
+
+        <View
+            style="@style/style_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="卖1"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/sell_price1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/main_color_green"
+                android:textSize="@dimen/sp_14"
+                tools:text="卖1"/>
+
+            <TextView
+                android:id="@+id/sell_vol1"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"
+                tools:text="132"/>
+        </LinearLayout>
+
+        <View
+            style="@style/style_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="卖2"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/sell_price2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/main_color_green"
+                android:textSize="@dimen/sp_14"
+                tools:text="卖1"/>
+
+            <TextView
+                android:id="@+id/sell_vol2"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"
+                tools:text="132"/>
+        </LinearLayout>
+
+        <View
+            style="@style/style_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="卖3"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/sell_price3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/main_color_green"
+                android:textSize="@dimen/sp_14"
+                tools:text="卖1"/>
+
+            <TextView
+                android:id="@+id/sell_vol3"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"
+                tools:text="132"/>
+        </LinearLayout>
+
+        <View
+            style="@style/style_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="卖4"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/sell_price4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/main_color_green"
+                android:textSize="@dimen/sp_14"
+                tools:text="卖1"/>
+
+            <TextView
+                android:id="@+id/sell_vol4"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"
+                tools:text="132"/>
+        </LinearLayout>
+
+        <View
+            style="@style/style_divider"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="卖5"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:id="@+id/sell_price5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/main_color_green"
+                android:textSize="@dimen/sp_14"
+                tools:text="卖1"/>
+
+            <TextView
+                android:id="@+id/sell_vol5"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@color/second_text_color"
+                android:textSize="@dimen/sp_14"
+                tools:text="132"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

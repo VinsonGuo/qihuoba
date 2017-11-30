@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_account_name"
             android:layout_below="@id/tv_account_value"
-            android:text="深圳前海有间金融有限公司"
+            android:text="深圳市前海有间金融投资有限公司"
             android:textColor="@color/second_text_color"
             android:textSize="@dimen/sp_14"/>
 

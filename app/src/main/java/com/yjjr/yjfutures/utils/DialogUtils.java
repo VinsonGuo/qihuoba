@@ -203,6 +203,8 @@ public class DialogUtils {
                 .create();
     }
 
+
+
     public static CustomPromptDialog createSettingOrderDialog(final Context context, final Holds holding, final boolean isDemo) {
         View v = LayoutInflater.from(context).inflate(R.layout.dialog_setting_order, null);
         final RadioGroup rgSl = (RadioGroup) v.findViewById(R.id.rg_sl);

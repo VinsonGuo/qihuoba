@@ -1,6 +1,5 @@
 package com.yjjr.yjfutures.utils.http;
 
-import com.yjjr.yjfutures.BuildConfig;
 import com.yjjr.yjfutures.model.CloseOrder;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.biz.Active;
@@ -11,7 +10,6 @@ import com.yjjr.yjfutures.model.biz.CashRecord;
 import com.yjjr.yjfutures.model.biz.ChargeResult;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Funds;
-import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.model.biz.Info;
 import com.yjjr.yjfutures.model.biz.Notice;
 import com.yjjr.yjfutures.model.biz.NumberResult;
@@ -21,6 +19,7 @@ import com.yjjr.yjfutures.model.biz.UserInfo;
 import com.yjjr.yjfutures.model.publish.News;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -88,8 +87,11 @@ public interface BizService {
     @POST("user/validPayPwd")
     Observable<BizResponse> validPayPwd(@Field("account") String account, @Field("payPwd") String payPwd);
 
-    @GET("version/checkUpdate/android?appCode=" + BuildConfig.APPLICATION_ID)
-    Observable<BizResponse<Update>> checkUpdate(@Query("version") String version);
+    @POST("user/whetherApply")
+    Observable<BizResponse> whetherApply();
+
+    @GET("version/checkUpdate/android")
+    Observable<BizResponse<Update>> checkUpdate(@Query("version") String version, @Query("appCode") String appCode);
 
     @FormUrlEncoded
     @POST("trader/getContractInfo")
@@ -148,8 +150,8 @@ public interface BizService {
     @POST("trader/closedOrderList/{start}/{count}")
     Observable<BizResponse<PageResponse<CloseOrder>>> getCloseOrder(@Path("start") int start, @Path("count") int count);
 
-    @POST("trader/holdingList")
-    Observable<BizResponse<List<Holds>>> getHolding();
+//    @POST("trader/holdingList")
+//    Observable<BizResponse<List<Holds>>> getHolding();
 
     @FormUrlEncoded
     @POST("trader/sendOrder")
@@ -180,13 +182,16 @@ public interface BizService {
 
     @FormUrlEncoded
     @POST("trader/onkeyCloseOrder")
-    Observable<BizResponse> closeAllOrder(
+    Observable<BizResponse<Map<String, Integer>>> closeAllOrder(
             @Field("cid") String account,
             @Field("symbol") String symbol);
 
     @FormUrlEncoded
     @POST("user/resetCapitalAccount")
     Observable<BizResponse> resetCapitalAccount(@Field("cid") String account);
+
+    @POST("user/resetSimualAccount")
+    Observable<BizResponse> resetSimualAccount();
 
 
     @GET("activict/queryActivict")

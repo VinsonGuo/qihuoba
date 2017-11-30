@@ -41,6 +41,7 @@ import com.yjjr.yjfutures.widget.chart.LineChartXMarkerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by dell on 2017/10/26.
@@ -48,10 +49,10 @@ import java.util.List;
 
 public class BaseFullScreenChartFragment extends BaseFragment {
 
-    public static final int MAX_COUNT_LINE = 200;
-    public static final int MIN_COUNT_LINE = 100;
-    public static final int MAX_COUNT_K = 100;
-    public static final int MIN_COUNT_K = 60;
+    public int MAX_COUNT_LINE = 300;
+    public int MIN_COUNT_LINE = 100;
+    public int MAX_COUNT_K = 200;
+    public int MIN_COUNT_K = 60;
 
 
     protected AppCombinedChart mChartPrice;
@@ -68,6 +69,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
     protected ChartInfoView mLineInfo;
     protected ChartInfoView mKInfo;
     private int textColor;
+    private double mLastPrice;
 
     @Override
     protected View initViews(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +78,8 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         mChartVolume = (AppCombinedChart) v.findViewById(R.id.bar_chart);
         mLineInfo = (ChartInfoView) v.findViewById(R.id.line_info);
         mKInfo = (ChartInfoView) v.findViewById(R.id.k_info);
+        mLineInfo.setChart(mChartPrice, mChartVolume);
+        mKInfo.setChart(mChartPrice, mChartVolume);
         textColor = ContextCompat.getColor(mContext, R.color.main_text_color);
         mChartVolume.setNoDataText(getString(R.string.loading));
         mChartPrice.setNoDataText(getString(R.string.loading));
@@ -86,10 +90,21 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         return v;
     }
 
-    private void initChartPrice() {
+    public void setLineCount(int max, int min) {
+        MAX_COUNT_LINE = max;
+        MIN_COUNT_LINE = min;
+    }
+
+    public void setKCount(int max, int min) {
+        MAX_COUNT_K = max;
+        MIN_COUNT_K = min;
+    }
+
+    protected void initChartPrice() {
         mChartPrice.setScaleEnabled(true);//启用图表缩放事件
-        mChartPrice.setDrawBorders(false);//是否绘制边线
+        mChartPrice.setDrawBorders(true);//是否绘制边线
         mChartPrice.setBorderWidth(1);//边线宽度，单位dp
+        mChartPrice.setBorderColor(getResources().getColor(R.color.divider_color));
         mChartPrice.setDragEnabled(true);//启用图表拖拽事件
         mChartPrice.setScaleYEnabled(false);//启用Y轴上的缩放
 //        mChartPrice.setBorderColor(getResources().getColor(R.color.border_color));//边线颜色
@@ -106,7 +121,6 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         xAxisPrice.setDrawLabels(false);//是否显示X坐标轴上的刻度，默认是true
         xAxisPrice.setDrawAxisLine(false);//是否绘制坐标轴的线，即含有坐标的那条线，默认是true
         xAxisPrice.setDrawGridLines(false);//是否显示X坐标轴上的刻度竖线，默认是true
-        xAxisPrice.enableGridDashedLine(10f, 10f, 0f);//绘制成虚线，只有在关闭硬件加速的情况下才能使用
 
         //左边y
         axisLeftPrice = mChartPrice.getAxisLeft();
@@ -117,6 +131,7 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         axisLeftPrice.setDrawAxisLine(false);//是否绘制坐标轴的线，即含有坐标的那条线，默认是true
         axisLeftPrice.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART); //参数是INSIDE_CHART(Y轴坐标在内部) 或 OUTSIDE_CHART(在外部（默认是这个）)
         axisLeftPrice.setTextColor(textColor);
+        axisLeftPrice.enableGridDashedLine(10f, 10f, 0f);//绘制成虚线，只有在关闭硬件加速的情况下才能使用
 
 
         //右边y
@@ -131,15 +146,15 @@ public class BaseFullScreenChartFragment extends BaseFragment {
     }
 
 
-    private void initChartVolume() {
+    protected void initChartVolume() {
         mChartVolume.setScaleEnabled(true);//启用图表缩放事件
-        mChartVolume.setDrawBorders(false);//是否绘制边线
+        mChartVolume.setDrawBorders(true);//是否绘制边线
         mChartVolume.setBorderWidth(1);//边线宽度，单位dp
+        mChartVolume.setBorderColor(getResources().getColor(R.color.divider_color));
         mChartVolume.setDragEnabled(true);//启用图表拖拽事件
         mChartVolume.setScaleYEnabled(false);//启用Y轴上的缩放
-//        mChartVolume.setBorderColor(getResources().getColor(R.color.border_color));//边线颜色
+        mChartVolume.setAutoScaleMinMaxEnabled(true);
         mChartVolume.getDescription().setEnabled(false);//右下角对图表的描述信息
-//        mChartVolume.setAutoScaleMinMaxEnabled(true);
         Legend lineChartLegend = mChartVolume.getLegend();
         lineChartLegend.setEnabled(false);//是否绘制 Legend 图例
 
@@ -167,12 +182,15 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         axisLeftVolume.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
+                String s;
                 if (value > 10000) {
-                    return (int) (value / 10000) + "万";
+                    s = (int) (value / 10000) + "万";
                 } else if (value > 1000) {
-                    return (int) (value / 1000) + "千";
+                    s = (int) (value / 1000) + "千";
+                } else {
+                    s = (int) value + "";
                 }
-                return (int) value + "";
+                return String.format(Locale.getDefault(), "%1$5s", s);
             }
         });
 
@@ -194,75 +212,82 @@ public class BaseFullScreenChartFragment extends BaseFragment {
     }
 
     protected void initChartKData(AppCombinedChart combinedChartX, boolean isShowAve) {
+        try {
+            ArrayList<CandleEntry> lineCJEntries = new ArrayList<>(MAX_COUNT_K);
+            ArrayList<Entry> lineJJEntries = new ArrayList<>(MAX_COUNT_K);
+            ArrayList<Entry> paddingEntries = new ArrayList<>(MAX_COUNT_K);
 
-        ArrayList<CandleEntry> lineCJEntries = new ArrayList<>(MAX_COUNT_K);
-        ArrayList<Entry> lineJJEntries = new ArrayList<>(MAX_COUNT_K);
-        ArrayList<Entry> paddingEntries = new ArrayList<>(MAX_COUNT_K);
-
-        for (int i = 0; i < mData.size(); i++) {
-            HisData hisData = mData.get(i);
-            lineCJEntries.add(new CandleEntry(i, (float) hisData.getHigh(), (float) hisData.getLow(), (float) hisData.getOpen(), (float) hisData.getClose()));
-            lineJJEntries.add(new Entry(i, (float) hisData.getAvePrice()));
-        }
-
-        if (!mData.isEmpty() && mData.size() < MAX_COUNT_K) {
-            for (int i = mData.size(); i < MAX_COUNT_K; i++) {
-                paddingEntries.add(new Entry(i, (float) mData.get(mData.size() - 1).getClose()));
+            for (int i = 0; i < mData.size(); i++) {
+                HisData hisData = mData.get(i);
+                lineCJEntries.add(new CandleEntry(i, (float) hisData.getHigh(), (float) hisData.getLow(), (float) hisData.getOpen(), (float) hisData.getClose()));
+                lineJJEntries.add(new Entry(i, (float) hisData.getAvePrice()));
             }
-        }
 
+            if (!mData.isEmpty() && mData.size() < MAX_COUNT_K) {
+                for (int i = mData.size(); i < MAX_COUNT_K; i++) {
+                    paddingEntries.add(new Entry(i, (float) mData.get(mData.size() - 1).getClose()));
+                }
+            }
 
-        /*注老版本LineData参数可以为空，最新版本会报错，修改进入ChartData加入if判断*/
-        LineData lineData = new LineData(setLine(1, lineJJEntries), setLine(2, paddingEntries));
-        CandleData candleData = new CandleData(setKLine(0, lineCJEntries));
-        CombinedData combinedData = new CombinedData();
-        if (isShowAve) {
+            LineData lineData;
+            if (isShowAve) {
+                lineData = new LineData(setLine(1, lineJJEntries), setLine(2, paddingEntries));
+            } else {
+                lineData = new LineData(setLine(2, paddingEntries));
+            }
+            CandleData candleData = new CandleData(setKLine(0, lineCJEntries));
+            CombinedData combinedData = new CombinedData();
+            combinedData.setData(candleData);
             combinedData.setData(lineData);
-        }
-        combinedData.setData(candleData);
-        combinedChartX.setData(combinedData);
+            combinedChartX.setData(combinedData);
 
-        combinedChartX.setVisibleXRange(MAX_COUNT_K, MIN_COUNT_K);
-        combinedChartX.notifyDataSetChanged();
-        combinedChartX.invalidate();
-        combinedChartX.moveViewToX(combinedData.getEntryCount());
+            combinedChartX.setVisibleXRange(MAX_COUNT_K, MIN_COUNT_K);
+            combinedChartX.notifyDataSetChanged();
+            combinedChartX.invalidate();
+            combinedChartX.moveViewToX(combinedData.getEntryCount());
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
     }
 
     protected void initChartPriceData(AppCombinedChart combinedChartX) {
-
-        if (mData == null || mData.isEmpty()) {
-            return;
-        }
-
-        ArrayList<Entry> lineCJEntries = new ArrayList<>(MAX_COUNT_LINE);
-        ArrayList<Entry> lineJJEntries = new ArrayList<>(MAX_COUNT_LINE);
-        ArrayList<Entry> paddingEntries = new ArrayList<>(MAX_COUNT_LINE);
-
-        for (int i = 0; i < mData.size(); i++) {
-            lineCJEntries.add(new Entry(i, (float) mData.get(i).getClose()));
-            lineJJEntries.add(new Entry(i, (float) mData.get(i).getAvePrice()));
-        }
-        if (!mData.isEmpty() && mData.size() < MAX_COUNT_LINE) {
-            for (int i = mData.size(); i < MAX_COUNT_LINE; i++) {
-                paddingEntries.add(new Entry(i, (float) mData.get(mData.size() - 1).getClose()));
+        try {
+            if (mData == null || mData.isEmpty()) {
+                return;
             }
-        }
-        ArrayList<ILineDataSet> sets = new ArrayList<>();
-        sets.add(setLine(0, lineCJEntries));
-        sets.add(setLine(1, lineJJEntries));
-        sets.add(setLine(2, paddingEntries));
+
+            ArrayList<Entry> lineCJEntries = new ArrayList<>(MAX_COUNT_LINE);
+            ArrayList<Entry> lineJJEntries = new ArrayList<>(MAX_COUNT_LINE);
+            ArrayList<Entry> paddingEntries = new ArrayList<>(MAX_COUNT_LINE);
+
+            for (int i = 0; i < mData.size(); i++) {
+                lineCJEntries.add(new Entry(i, (float) mData.get(i).getClose()));
+                lineJJEntries.add(new Entry(i, (float) mData.get(i).getAvePrice()));
+            }
+            if (!mData.isEmpty() && mData.size() < MAX_COUNT_LINE) {
+                for (int i = mData.size(); i < MAX_COUNT_LINE; i++) {
+                    paddingEntries.add(new Entry(i, (float) mData.get(mData.size() - 1).getClose()));
+                }
+            }
+            ArrayList<ILineDataSet> sets = new ArrayList<>();
+            sets.add(setLine(0, lineCJEntries));
+            sets.add(setLine(1, lineJJEntries));
+            sets.add(setLine(2, paddingEntries));
         /*注老版本LineData参数可以为空，最新版本会报错，修改进入ChartData加入if判断*/
-        LineData lineData = new LineData(sets);
+            LineData lineData = new LineData(sets);
 
-        CombinedData combinedData = new CombinedData();
-        combinedData.setData(lineData);
-        combinedChartX.setData(combinedData);
+            CombinedData combinedData = new CombinedData();
+            combinedData.setData(lineData);
+            combinedChartX.setData(combinedData);
 
-        combinedChartX.setVisibleXRange(MAX_COUNT_LINE, MIN_COUNT_LINE);
+            combinedChartX.setVisibleXRange(MAX_COUNT_LINE, MIN_COUNT_LINE);
 
-        combinedChartX.notifyDataSetChanged();
-        combinedChartX.invalidate();
-        combinedChartX.moveViewToX(combinedData.getEntryCount());
+            combinedChartX.notifyDataSetChanged();
+            combinedChartX.invalidate();
+            combinedChartX.moveViewToX(combinedData.getEntryCount());
+        } catch (Exception e) {
+            LogUtils.e(e);
+        }
     }
 
     @android.support.annotation.NonNull
@@ -271,19 +296,22 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         lineDataSetMa.setDrawValues(false);
         if (type == 0) {
 //            lineDataSetMa.setDrawFilled(true);
-            lineDataSetMa.setColor(getResources().getColor(R.color.third_text_color));
-            lineDataSetMa.setCircleColor(ContextCompat.getColor(mContext, R.color.third_text_color));
+            lineDataSetMa.setColor(getResources().getColor(R.color.line_color));
+            lineDataSetMa.setCircleColor(ContextCompat.getColor(mContext, R.color.line_color));
         } else if (type == 1) {
             lineDataSetMa.setColor(getResources().getColor(R.color.ave_color));
-            lineDataSetMa.setCircleColor(ContextCompat.getColor(mContext, R.color.ave_color));
             lineDataSetMa.setCircleColor(getResources().getColor(R.color.transparent));
-        } else {
-//            lineDataSetMa.setColor(getResources().getColor(R.color.main_color_green));
+            lineDataSetMa.setHighlightEnabled(false);
+        } else if (type == 2) {
             lineDataSetMa.setVisible(false);
             lineDataSetMa.setHighlightEnabled(false);
+        } else {
+            lineDataSetMa.setVisible(false);
+            lineDataSetMa.setHighlightEnabled(true);
+            lineDataSetMa.setDrawHorizontalHighlightIndicator(false);
         }
         lineDataSetMa.setAxisDependency(YAxis.AxisDependency.LEFT);
-        lineDataSetMa.setLineWidth(1f);
+        lineDataSetMa.setLineWidth(.8f);
         lineDataSetMa.setCircleRadius(1f);
 
         lineDataSetMa.setDrawCircles(false);
@@ -305,8 +333,8 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         set1.setIncreasingColor(ContextCompat.getColor(getContext(), R.color.increasing_color));
         set1.setIncreasingPaintStyle(Paint.Style.FILL);
         set1.setNeutralColor(ContextCompat.getColor(getContext(), R.color.increasing_color));
-        //set1.setHighlightLineWidth(1f);
         set1.setDrawValues(false);
+        set1.setHighlightEnabled(true);
         if (type != 0) {
             set1.setVisible(false);
         }
@@ -319,26 +347,24 @@ public class BaseFullScreenChartFragment extends BaseFragment {
         ArrayList<Entry> paddingEntries = new ArrayList<>();
         for (int i = 0; i < mData.size(); i++) {
             HisData t = mData.get(i);
-            barEntries.add(new BarEntry(i, t.getVol()));
+            barEntries.add(new BarEntry(i, t.getVol(), t));
         }
         int maxCount = mChartPrice.getData().getCandleData() == null ? MAX_COUNT_LINE : MAX_COUNT_K;
         if (!mData.isEmpty() && mData.size() < maxCount) {
             for (int i = mData.size(); i < maxCount; i++) {
-                paddingEntries.add(new BarEntry(i, 0));
+                paddingEntries.add(new Entry(i, 0));
             }
         }
         BarDataSet barDataSet = new BarDataSet(barEntries, "成交量");
+        barDataSet.setHighLightAlpha(255);
+        barDataSet.setHighLightColor(getResources().getColor(R.color.third_text_color));
         barDataSet.setDrawValues(false);//是否在线上绘制数值
-        barDataSet.setColor(getResources().getColor(R.color.increasing_color));//设置树状图颜色
-        List<Integer> list = new ArrayList<>();
-        list.add(getResources().getColor(R.color.increasing_color));
-        list.add(getResources().getColor(R.color.decreasing_color));
-        barDataSet.setColors(list);//可以给树状图设置多个颜色，判断条件在BarChartRenderer 类的140行以下修改了判断条件
+        barDataSet.setColors(getResources().getColor(R.color.increasing_color), getResources().getColor(R.color.decreasing_color));//可以给树状图设置多个颜色，判断条件在BarChartRenderer 类的140行以下修改了判断条件
         BarData barData = new BarData(barDataSet);
         LineData lineData = new LineData(setLine(2, paddingEntries));
         CombinedData combinedData = new CombinedData();
-        combinedData.setData(barData);
         combinedData.setData(lineData);
+        combinedData.setData(barData);
         combinedChartX.setData(combinedData);
 
         if (mChartPrice.getData().getCandleData() != null) {
@@ -354,6 +380,10 @@ public class BaseFullScreenChartFragment extends BaseFragment {
 
     protected void refreshData(float price) {
         try {
+            if (price <= 0 || price == mLastPrice) {
+                return;
+            }
+            mLastPrice = price;
             CombinedData data = mChartPrice.getData();
             if (data == null) return;
             LineData lineData = data.getLineData();
@@ -450,13 +480,13 @@ public class BaseFullScreenChartFragment extends BaseFragment {
             offsetRight = Utils.convertPixelsToDp(barRight);
             mChartPrice.setExtraRightOffset(offsetRight);
         }
-
     }
 
 
     protected void setLimitLine(Quote quote) {
         LimitLine limitLine = new LimitLine((float) quote.getLastclose());
-        limitLine.enableDashedLine(5, 10, 0);
+        limitLine.enableDashedLine(10, 10, 0);
+        limitLine.setLineColor(getResources().getColor(R.color.limit_color));
         axisLeftPrice.addLimitLine(limitLine);
     }
 }

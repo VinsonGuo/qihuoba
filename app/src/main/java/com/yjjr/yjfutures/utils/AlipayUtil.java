@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 
 import java.net.URISyntaxException;
 
@@ -33,6 +34,10 @@ public class AlipayUtil {
      * @return 是否成功调用
      */
     public static boolean startAlipayClient(Activity activity, String urlCode) {
+        if (TextUtils.isEmpty(urlCode)) {
+            ToastUtils.show(activity, "网络错误，请重试");
+            return false;
+        }
         return startIntentUrl(activity, INTENT_URL_FORMAT.replace("{urlCode}", urlCode));
     }
 

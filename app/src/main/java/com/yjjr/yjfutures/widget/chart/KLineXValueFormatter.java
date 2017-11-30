@@ -8,7 +8,9 @@ import com.yjjr.yjfutures.utils.http.HttpConfig;
 
 import org.joda.time.DateTime;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by dell on 2017/10/28.
@@ -17,6 +19,8 @@ import java.util.List;
 public class KLineXValueFormatter implements IAxisValueFormatter {
     private String mType;
     private List<HisData> mData;
+
+    private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
 
     public KLineXValueFormatter(String type, List<HisData> hisDatas) {
         mType = type;
@@ -27,8 +31,10 @@ public class KLineXValueFormatter implements IAxisValueFormatter {
     public String getFormattedValue(float value, AxisBase axis) {
         if (mData != null && value < mData.size() && value >= 0) {
             DateTime dateTime = new DateTime(mData.get((int) value).getsDate());
-            if (mType.equals(HttpConfig.DAY)) {
+            if (mType.equals(HttpConfig.DAY) || mType.equals(HttpConfig.WEEK)) {
                 return DateUtils.formatDataOnly(dateTime.getMillis());
+            } else if (mType.equals(HttpConfig.MONTH)) {
+                return mFormat.format(dateTime.getMillis());
             }
             return DateUtils.formatTime(dateTime.getMillis());
         }

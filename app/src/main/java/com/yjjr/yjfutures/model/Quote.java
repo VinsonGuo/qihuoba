@@ -1,9 +1,5 @@
 package com.yjjr.yjfutures.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.text.TextUtils;
-
 import com.yjjr.yjfutures.utils.DateUtils;
 
 import org.joda.time.DateTime;
@@ -12,18 +8,7 @@ import org.joda.time.DateTime;
  * Created by dell on 2017/7/6.
  */
 
-public class Quote implements Parcelable {
-    public static final Parcelable.Creator<Quote> CREATOR = new Parcelable.Creator<Quote>() {
-        @Override
-        public Quote createFromParcel(Parcel source) {
-            return new Quote(source);
-        }
-
-        @Override
-        public Quote[] newArray(int size) {
-            return new Quote[size];
-        }
-    };
+public class Quote {
     private int askSize;
     private double Lastclose;
     private double openinterest;
@@ -40,46 +25,52 @@ public class Quote implements Parcelable {
     private double ExchangeRate;
     private int BidSize;
     private String Symbol;
-    private double LastSize;
+    private int LastSize;
     private double LastPrice;
     private double BidPrice;
     private double high;
     private int Multiple;
     private double low;
     private String Currency;
+    private int sort;
+    private String lastTime;
+
+    private int status;
     /**
      * 是否持仓，根据需求加的字段
      */
     private boolean isHolding;
 
-    public Quote() {
+    public Quote(Quote q) {
+        this.askSize = q.askSize;
+        this.Lastclose = q.Lastclose;
+        this.openinterest = q.openinterest;
+        this.Change = q.Change;
+        this.SecurityType = q.SecurityType;
+        this.TradingTime = q.TradingTime;
+        this.Vol = q.Vol;
+        this.Tick = q.Tick;
+        this.open = q.open;
+        this.ChangeRate = q.ChangeRate;
+        this.Exchange = q.Exchange;
+        this.Symbolname = q.Symbolname;
+        this.AskPrice = q.AskPrice;
+        this.ExchangeRate = q.ExchangeRate;
+        this.BidSize = q.BidSize;
+        this.Symbol = q.Symbol;
+        this.LastSize = q.LastSize;
+        this.LastPrice = q.LastPrice;
+        this.BidPrice = q.BidPrice;
+        this.high = q.high;
+        this.Multiple = q.Multiple;
+        this.low = q.low;
+        this.Currency = q.Currency;
+        this.sort = q.sort;
+        this.lastTime = q.lastTime;
+        this.status = q.status;
     }
 
-    protected Quote(Parcel in) {
-        this.askSize = in.readInt();
-        this.Lastclose = in.readDouble();
-        this.openinterest = in.readDouble();
-        this.Change = in.readDouble();
-        this.SecurityType = in.readString();
-        this.TradingTime = in.readString();
-        this.Vol = in.readInt();
-        this.Tick = in.readDouble();
-        this.open = in.readDouble();
-        this.ChangeRate = in.readDouble();
-        this.Exchange = in.readString();
-        this.Symbolname = in.readString();
-        this.AskPrice = in.readDouble();
-        this.ExchangeRate = in.readDouble();
-        this.BidSize = in.readInt();
-        this.Symbol = in.readString();
-        this.LastSize = in.readDouble();
-        this.LastPrice = in.readDouble();
-        this.BidPrice = in.readDouble();
-        this.high = in.readDouble();
-        this.Multiple = in.readInt();
-        this.low = in.readDouble();
-        this.Currency = in.readString();
-        this.isHolding = in.readByte() != 0;
+    public Quote() {
     }
 
     public boolean isHolding() {
@@ -218,11 +209,11 @@ public class Quote implements Parcelable {
         Symbol = symbol;
     }
 
-    public double getLastSize() {
+    public int getLastSize() {
         return LastSize;
     }
 
-    public void setLastSize(double lastSize) {
+    public void setLastSize(int lastSize) {
         LastSize = lastSize;
     }
 
@@ -274,7 +265,46 @@ public class Quote implements Parcelable {
         Currency = currency;
     }
 
-    public boolean isRest() {
+    public int getTradeTimeCount() {
+        if (TradingTime.contains(",")) {
+            int count = 0;
+            String[] timeRanges = TradingTime.split(",");
+            for (int i = 0; i < timeRanges.length; i++) {
+                String timeRange = timeRanges[i];
+                /*if (i == 0) {
+                    DateTime now = DateUtils.nowDateTime();
+                    String[] times = timeRange.split("-");
+                    DateTime startTime = new DateTime(DateUtils.parseTime(times[0])).withYear(now.getYear()).withMonthOfYear(now.getMonthOfYear()).withDayOfMonth(now.getDayOfMonth());
+                    if (startTime.getHourOfDay() < 6) {
+                        timeRange = "06:00-" + times[1];
+                    }
+                }*/
+                count += calcTradeTime(timeRange);
+            }
+            return count;
+        } else {
+            return calcTradeTime(TradingTime);
+        }
+    }
+
+    private int calcTradeTime(String timeRange) {
+        DateTime now = DateUtils.nowDateTime();
+        String[] times = timeRange.split("-");
+        DateTime startTime = new DateTime(DateUtils.parseTime(times[0])).withYear(now.getYear()).withMonthOfYear(now.getMonthOfYear()).withDayOfMonth(now.getDayOfMonth());
+        DateTime endTime = new DateTime(DateUtils.parseTime(times[1])).withYear(now.getYear()).withMonthOfYear(now.getMonthOfYear()).withDayOfMonth(now.getDayOfMonth());
+        // 如果结束时间在开始时间之前
+        if (endTime.isBefore(startTime)) {
+            if (now.isBefore(startTime)) {
+                startTime = startTime.minusDays(1);
+            } else {
+                endTime = endTime.plusDays(1);
+            }
+        }
+
+        return (int) ((endTime.getMillis() - startTime.getMillis()) / 1000 / 60);
+    }
+
+    /*public boolean isRest() {
         if (AskPrice == -1 && BidPrice == -1) {
             return true;
         }
@@ -293,6 +323,10 @@ public class Quote implements Parcelable {
         } else {
             return testIsRest(TradingTime);
         }
+    }*/
+
+    public boolean isRest() {
+        return status == 1;
     }
 
     /**
@@ -314,18 +348,40 @@ public class Quote implements Parcelable {
         return !(now.isAfter(startTime) && now.isBefore(endTime));
     }
 
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
+    }
+
+    public String getLastTime() {
+        return lastTime;
+    }
+
+    public void setLastTime(String lastTime) {
+        this.lastTime = lastTime;
+    }
+
+
+    /**
+     * 0: 正常   1:休市   2:连接中断
+     */
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+
     @Override
     public String toString() {
         return "Quote{" +
-                "Symbol='" + Symbol + '\'' +
-                ", Symbolname='" + Symbolname + '\'' +
-                ", AskPrice=" + AskPrice +
-                ", ExchangeRate=" + ExchangeRate +
-                ", BidSize=" + BidSize +
-                ", LastSize=" + LastSize +
-                ", LastPrice=" + LastPrice +
-                ", BidPrice=" + BidPrice +
-                ", askSize=" + askSize +
+                "askSize=" + askSize +
                 ", Lastclose=" + Lastclose +
                 ", openinterest=" + openinterest +
                 ", Change=" + Change +
@@ -335,45 +391,22 @@ public class Quote implements Parcelable {
                 ", Tick=" + Tick +
                 ", open=" + open +
                 ", ChangeRate=" + ChangeRate +
-                ", Exchange=" + Exchange +
+                ", Exchange='" + Exchange + '\'' +
+                ", Symbolname='" + Symbolname + '\'' +
+                ", AskPrice=" + AskPrice +
+                ", ExchangeRate=" + ExchangeRate +
+                ", BidSize=" + BidSize +
+                ", Symbol='" + Symbol + '\'' +
+                ", LastSize=" + LastSize +
+                ", LastPrice=" + LastPrice +
+                ", BidPrice=" + BidPrice +
                 ", high=" + high +
                 ", Multiple=" + Multiple +
                 ", low=" + low +
                 ", Currency='" + Currency + '\'' +
+                ", sort=" + sort +
+                ", lastTime='" + lastTime + '\'' +
                 ", isHolding=" + isHolding +
                 '}';
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.askSize);
-        dest.writeDouble(this.Lastclose);
-        dest.writeDouble(this.openinterest);
-        dest.writeDouble(this.Change);
-        dest.writeString(this.SecurityType);
-        dest.writeString(this.TradingTime);
-        dest.writeInt(this.Vol);
-        dest.writeDouble(this.Tick);
-        dest.writeDouble(this.open);
-        dest.writeDouble(this.ChangeRate);
-        dest.writeString(this.Exchange);
-        dest.writeString(this.Symbolname);
-        dest.writeDouble(this.AskPrice);
-        dest.writeDouble(this.ExchangeRate);
-        dest.writeInt(this.BidSize);
-        dest.writeString(this.Symbol);
-        dest.writeDouble(this.LastSize);
-        dest.writeDouble(this.LastPrice);
-        dest.writeDouble(this.BidPrice);
-        dest.writeDouble(this.high);
-        dest.writeInt(this.Multiple);
-        dest.writeDouble(this.low);
-        dest.writeString(this.Currency);
-        dest.writeByte(this.isHolding ? (byte) 1 : (byte) 0);
     }
 }

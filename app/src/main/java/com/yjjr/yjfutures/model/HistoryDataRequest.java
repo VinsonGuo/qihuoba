@@ -1,20 +1,30 @@
 package com.yjjr.yjfutures.model;
 
+import com.yjjr.yjfutures.utils.http.HttpConfig;
+
 /**
  * Created by dell on 2017/9/21.
  */
 
 public class HistoryDataRequest {
-    /** 合约代码 **/
+    /**
+     * 合约代码
+     **/
     private String symbol;
 
-    /** 交易所 **/
+    /**
+     * 交易所
+     **/
     private String exchange;
 
-    /** 开始时间 **/
+    /**
+     * 开始时间
+     **/
     private String starttime;
 
-    /** 时间类型 **/
+    /**
+     * 时间类型
+     **/
     private String datatype;
 
     public HistoryDataRequest() {
@@ -24,7 +34,11 @@ public class HistoryDataRequest {
         this.symbol = symbol;
         this.exchange = exchange;
         this.starttime = starttime;
-        this.datatype = datatype;
+        if (HttpConfig.DAY5.equals(datatype)) {
+            this.datatype = HttpConfig.MIN;
+        } else {
+            this.datatype = datatype;
+        }
     }
 
     public String getSymbol() {

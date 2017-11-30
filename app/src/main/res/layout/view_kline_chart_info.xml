@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_dark">
+    android:background="@color/color_80_000000">
 
     <TextView
         android:id="@+id/tv_time"
@@ -110,6 +110,7 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/vg_change_rate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="4dp"

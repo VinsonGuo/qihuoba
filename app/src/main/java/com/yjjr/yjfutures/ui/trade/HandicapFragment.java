@@ -84,7 +84,6 @@ public class HandicapFragment extends BaseFragment {
         tvLastPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()));
         tvOpen.setText(StringUtils.getStringByTick(quote.getOpen(), quote.getTick()));
         tvChange.setText(StringUtils.getStringByTick(quote.getChange(), quote.getTick()));
-        tvHigh.setText(StringUtils.getStringByTick(quote.getHigh(), quote.getTick()));
         tvChangeRate.setText(DoubleUtil.format2Decimal(quote.getChangeRate()) + "%");
         tvLow.setText(StringUtils.getStringByTick(quote.getLow(), quote.getTick()));
         tvVol.setText(quote.getVol() + "");

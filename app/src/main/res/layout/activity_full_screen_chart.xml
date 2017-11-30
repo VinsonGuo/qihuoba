@@ -1,17 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/chart_background"
     android:orientation="vertical"
     tools:context="com.yjjr.yjfutures.ui.trade.FullScreenChartActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_dark"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingLeft="@dimen/root_padding_15"
+        android:paddingRight="@dimen/root_padding_15"
+        android:paddingTop="@dimen/dp_10">
+
+        <TextView
+            android:id="@+id/tv_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/text_size_19sp"/>
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/main_color_red"
+            android:textSize="@dimen/sp_14"
+            tools:text="123245\n234243"/>
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/vg_settlement"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:alignmentMode="alignBounds"
+            app:columnCount="6"
+            app:rowOrderPreserved="false">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="最高"
+                android:textColor="@color/color_bbbbbb"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:id="@+id/tv_high"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/number_holder"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="今开"
+                android:textColor="@color/color_bbbbbb"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:id="@+id/tv_open"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/number_holder"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="成交量"
+                android:textColor="@color/color_bbbbbb"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:id="@+id/tv_vol"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/number_holder"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="最低"
+                android:textColor="@color/color_bbbbbb"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:id="@+id/tv_low"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/number_holder"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="昨收"
+                android:textColor="@color/color_bbbbbb"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:id="@+id/tv_last_close"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/number_holder"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="量    比"
+                android:textColor="@color/color_bbbbbb"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/number_holder"
+                android:textColor="@color/main_text_color"
+                android:textSize="@dimen/sp_12"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill_horizontal"/>
+        </android.support.v7.widget.GridLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_chart_close"/>
+    </LinearLayout>
+
     <com.yjjr.yjfutures.widget.NestRadioGroup
         android:id="@+id/rg_nav"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:background="@color/chart_background"
         android:orientation="horizontal">
 
         <RadioButton
@@ -27,10 +188,6 @@
             android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"
             />
-        <View
-            android:layout_width="@dimen/common_divider_small"
-            android:layout_height="match_parent"
-            android:background="@color/divider_color"/>
 
         <RadioButton
             android:id="@+id/rb_chart2"
@@ -45,11 +202,6 @@
             android:textSize="@dimen/sp_12"
             />
 
-        <View
-            android:layout_width="@dimen/common_divider_small"
-            android:layout_height="match_parent"
-            android:background="@color/divider_color"/>
-
         <RadioButton
             android:id="@+id/rb_chart3"
             android:layout_width="0dp"
@@ -62,11 +214,6 @@
             android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"/>
 
-        <View
-            android:layout_width="@dimen/common_divider_small"
-            android:layout_height="match_parent"
-            android:background="@color/divider_color"/>
-
         <RadioButton
             android:id="@+id/rb_chart4"
             android:layout_width="0dp"
@@ -78,10 +225,6 @@
             android:text="15分钟"
             android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"/>
-        <View
-            android:layout_width="@dimen/common_divider_small"
-            android:layout_height="match_parent"
-            android:background="@color/divider_color"/>
 
         <RadioButton
             android:id="@+id/rb_chart5"
@@ -91,13 +234,9 @@
             android:background="@drawable/selector_chart_rb_bg"
             android:button="@null"
             android:gravity="center"
-            android:text="60分钟"
+            android:text="1小时"
             android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"/>
-        <View
-            android:layout_width="@dimen/common_divider_small"
-            android:layout_height="match_parent"
-            android:background="@color/divider_color"/>
 
         <RadioButton
             android:id="@+id/rb_chart6"
@@ -107,13 +246,9 @@
             android:background="@drawable/selector_chart_rb_bg"
             android:button="@null"
             android:gravity="center"
-            android:text="1日"
+            android:text="日K"
             android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"/>
-        <View
-            android:layout_width="@dimen/common_divider_small"
-            android:layout_height="match_parent"
-            android:background="@color/divider_color"/>
 
         <RadioButton
             android:id="@+id/rb_chart7"
@@ -123,7 +258,19 @@
             android:background="@drawable/selector_chart_rb_bg"
             android:button="@null"
             android:gravity="center"
-            android:text="盘口"
+            android:text="周K"
+            android:textColor="@color/selector_chart_rb_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <RadioButton
+            android:id="@+id/rb_chart8"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_chart_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="月K"
             android:textColor="@color/selector_chart_rb_text_color"
             android:textSize="@dimen/sp_12"/>
 

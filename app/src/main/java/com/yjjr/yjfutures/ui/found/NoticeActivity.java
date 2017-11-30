@@ -18,8 +18,9 @@ public class NoticeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notice);
+        setContentView(R.layout.acitvity_common_with_fragment);
         HeaderView headerView = (HeaderView) findViewById(R.id.header_view);
+        headerView.setMainTitle("重要通知");
         headerView.bindActivity(mContext);
         NoticeListFragment fragment = new NoticeListFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragment).commit();

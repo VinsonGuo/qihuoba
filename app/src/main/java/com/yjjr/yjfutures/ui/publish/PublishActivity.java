@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -35,7 +34,6 @@ import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
 import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
-import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 
@@ -232,13 +230,12 @@ public class PublishActivity extends BaseActivity {
                 LogUtils.d("topMarketDepth1 -> %s", args[0]);
             }
         })*/;
-        SocketUtils.getSocket().connect();
         SocketUtils.getSocket().emit("getSymbolList");
     }
 
 
     private void checkUpdate() {
-        HttpManager.getBizService().checkUpdate(BuildConfig.VERSION_NAME)
+        HttpManager.getBizService().checkUpdate(BuildConfig.VERSION_NAME, BuildConfig.APPLICATION_ID + "," + ActivityTools.getChannelName(mContext))
                 .compose(RxUtils.<BizResponse<Update>>applyBizSchedulers())
                 .compose(this.<BizResponse<Update>>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribe(new Consumer<BizResponse<Update>>() {
@@ -256,7 +253,6 @@ public class PublishActivity extends BaseActivity {
     private void initViews() {
         final TextView tvHeader = (TextView) findViewById(R.id.tv_header);
         mBottomBar = (AlphaTabsIndicator) findViewById(R.id.alphaIndicator);
-        mBottomBar.setVisibility(HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
         final NoTouchScrollViewpager viewPager = (NoTouchScrollViewpager) findViewById(R.id.viewpager);
         Fragment[] fragments = {new NewsFragment(), new MarketFragment()};
         viewPager.setOffscreenPageLimit(fragments.length);

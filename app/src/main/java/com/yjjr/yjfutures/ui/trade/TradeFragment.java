@@ -1,32 +1,39 @@
 package com.yjjr.yjfutures.ui.trade;
 
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.yjjr.yjfutures.R;
 import com.yjjr.yjfutures.contants.Constants;
-import com.yjjr.yjfutures.event.FastTakeOrderEvent;
-import com.yjjr.yjfutures.event.OneMinuteEvent;
+import com.yjjr.yjfutures.event.ChartTouchEvent;
 import com.yjjr.yjfutures.event.PollRefreshEvent;
 import com.yjjr.yjfutures.event.PriceRefreshEvent;
 import com.yjjr.yjfutures.event.SendOrderEvent;
 import com.yjjr.yjfutures.model.CommonResponse;
 import com.yjjr.yjfutures.model.FastTakeOrderConfig;
+import com.yjjr.yjfutures.model.MarketDepth;
 import com.yjjr.yjfutures.model.Quote;
 import com.yjjr.yjfutures.model.biz.BizResponse;
 import com.yjjr.yjfutures.model.biz.Funds;
+import com.yjjr.yjfutures.model.biz.HistoricalTicks;
 import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.store.FastOrderSharePrefernce;
 import com.yjjr.yjfutures.store.StaticStore;
@@ -35,11 +42,13 @@ import com.yjjr.yjfutures.ui.BaseFragment;
 import com.yjjr.yjfutures.ui.SimpleFragmentPagerAdapter;
 import com.yjjr.yjfutures.ui.WebActivity;
 import com.yjjr.yjfutures.utils.ActivityTools;
+import com.yjjr.yjfutures.utils.BizSocketUtils;
 import com.yjjr.yjfutures.utils.DialogUtils;
 import com.yjjr.yjfutures.utils.DisplayUtils;
 import com.yjjr.yjfutures.utils.DoubleUtil;
 import com.yjjr.yjfutures.utils.LogUtils;
 import com.yjjr.yjfutures.utils.RxUtils;
+import com.yjjr.yjfutures.utils.SocketUtils;
 import com.yjjr.yjfutures.utils.SpannableUtil;
 import com.yjjr.yjfutures.utils.StringUtils;
 import com.yjjr.yjfutures.utils.ToastUtils;
@@ -47,6 +56,7 @@ import com.yjjr.yjfutures.utils.http.HttpConfig;
 import com.yjjr.yjfutures.utils.http.HttpManager;
 import com.yjjr.yjfutures.widget.CustomPromptDialog;
 import com.yjjr.yjfutures.widget.HeaderView;
+import com.yjjr.yjfutures.widget.MarketDepthView;
 import com.yjjr.yjfutures.widget.NestRadioGroup;
 import com.yjjr.yjfutures.widget.NoTouchScrollViewpager;
 import com.yjjr.yjfutures.widget.dropdownmenu.MenuItem;
@@ -57,41 +67,42 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
+import io.socket.emitter.Emitter;
 
 public class TradeFragment extends BaseFragment implements View.OnClickListener {
 
     private boolean mIsDemo;
-    private ProgressBar pbLeft;
-    private ProgressBar pbRight;
     private TextView tvLeft;
     private TextView tvRight;
     private String leftText = "看涨";
     private String rightText = "看跌";
-    private TextView tvCenter;
     private ProgressDialog mProgressDialog;
     private NoTouchScrollViewpager mViewpager;
     private NestRadioGroup rgNav;
     private TextView mTvKchart;
     private TopRightMenu mTopRightMenu;
     private String mSymbol;
-    private CandleStickChartFragment mCandleStickChartFragment;
-    private TextView tvLeftPb;
-    private TextView tvRightPb;
+    private KLineChartFragment mCandleStickChartFragment;
     private View vgOrder;
     private View vgSettlement;
     private TextView tvDirection;
     private TextView tvYueValue;
-    private TextView tvMarginValue;
     private TextView tvTotal;
+
+    private TextView tvOpen;
+    private TextView tvHigh;
+    private TextView tvLow;
+    private TextView tvVol;
+    private TextView tvLastClose;
+
     private View colorView;
     private List<Holds> mHoldsList;
     private TextView tvPrice;
@@ -102,17 +113,19 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     private CustomPromptDialog mCloseDialog;
     private HeaderView mHeaderView;
     /**
-     * 买、卖的View，休市时隐藏
-     */
-    private View tradeView1;
-    private View tradeView2;
-    private View tradeView3;
-    /**
      * 休市信息，休市时显示出来
      */
     private TextView tvRest;
-    private TextView mTvDeposit;
-    private SimpleFragmentPagerAdapter mKLineAdapter;
+    private MarketDepthView marketDepthView;
+    private MarketHisAdapter mMarketHisAdapter;
+    private RecyclerView mRvMarketHis;
+    private ArrayList<HistoricalTicks> mHisList = new ArrayList<HistoricalTicks>(20) {{
+        for (int i = 0; i < 20; i++) {
+            add(null);
+        }
+    }};
+    private NestedScrollView mScrollView;
+    private TextView mTvTradeToast;
 
 
     public TradeFragment() {
@@ -136,15 +149,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             mIsDemo = getArguments().getBoolean(Constants.CONTENT_PARAMETER);
             mSymbol = getArguments().getString(Constants.CONTENT_PARAMETER_2);
         }
-        mCloseSuccessDialog = new CustomPromptDialog.Builder(mContext)
-                .setMessage("卖出委托成交完毕")
-                .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
+        mCloseSuccessDialog = DialogUtils.createCommonDialog(mContext, "卖出委托成交完毕");
         mCloseAllDialog = new CustomPromptDialog.Builder(mContext)
                 .setMessage("您确定要卖出全部持仓么？")
                 .isShowClose(true)
@@ -177,7 +182,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     protected View initViews(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_trade, container, false);
         final Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-        findViews(v);
+        findViews(v, quote);
         setRestView(quote);
         mHeaderView.setOperateClickListener(new View.OnClickListener() {
             @Override
@@ -185,12 +190,16 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 WebActivity.startActivity(mContext, String.format(HttpConfig.URL_RULE, StringUtils.getRuleName(quote)));
             }
         });
-        mCandleStickChartFragment = CandleStickChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
-        Fragment[] fragments = {/*TickChartFragment.newInstance(mSymbol)*/new Fragment(), TimeSharingplanFragment.newInstance(mSymbol, mIsDemo),
-                mCandleStickChartFragment, HandicapFragment.newInstance(mSymbol, mIsDemo)};
-        mKLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
-        mViewpager.setAdapter(mKLineAdapter);
-        mViewpager.setOffscreenPageLimit(fragments.length);
+        mCandleStickChartFragment = KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
+        Fragment[] fragments = {
+                LineChartFragment.newInstance(mSymbol, mIsDemo),
+                mCandleStickChartFragment,
+                KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.DAY),
+                KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.WEEK),
+                KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MONTH)};
+        SimpleFragmentPagerAdapter KLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
+        mViewpager.setAdapter(KLineAdapter);
+//        mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(NestRadioGroup group, int checkedId) {
@@ -199,19 +208,23 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                         mViewpager.setCurrentItem(0, false);
                         break;
                     case R.id.rb_chart2:
-                        mViewpager.setCurrentItem(1, false);
+                        mViewpager.setCurrentItem(2, false);
                         break;
-                    case R.id.rb_chart4:
+                    case R.id.rb_chart3:
                         mViewpager.setCurrentItem(3, false);
                         break;
+                    case R.id.rb_chart4:
+                        mViewpager.setCurrentItem(4, false);
+                        break;
+                    case R.id.rb_chart5:
+                        mViewpager.setCurrentItem(5, false);
+                        break;
                 }
-                mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.background_dark));
                 mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.main_text_color));
                 mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow_white), null);
             }
         });
-        ((RadioButton) rgNav.getChildAt(1)).setChecked(true);
-        pbLeft.setRotation(180);
+        ((RadioButton) rgNav.getChildAt(0)).setChecked(true);
         mTopRightMenu = new TopRightMenu(getActivity());
 
 //添加菜单项
@@ -220,9 +233,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         menuItems.add(new MenuItem(R.drawable.transport, "5分钟"));
         menuItems.add(new MenuItem(R.drawable.transport, "15分钟"));
         menuItems.add(new MenuItem(R.drawable.transport, "1小时"));
-        menuItems.add(new MenuItem(R.drawable.transport, "日线"));
         mTopRightMenu
-                .setWidth(DisplayUtils.getWidthHeight(mContext)[0] / 3)      //默认宽度wrap_content
+                .setWidth(DisplayUtils.getWidthHeight(mContext)[0] / fragments.length)      //默认宽度wrap_content
                 .setHeight(DisplayUtils.dip2px(mContext, 30 * menuItems.size()))
                 .showIcon(false)     //显示菜单图标，默认为true
                 .dimBackground(false)        //背景变暗，默认为true
@@ -233,10 +245,9 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     public void onMenuItemClick(int position) {
                         rgNav.clearCheck();
                         mTvKchart.setText(menuItems.get(position).getText());
-                        mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.color_333333));
-                        mTvKchart.setBackgroundColor(ContextCompat.getColor(mContext, R.color.third_text_color));
-                        mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow), null);
-                        mViewpager.setCurrentItem(2, false);
+                        mTvKchart.setTextColor(ContextCompat.getColor(mContext, R.color.third_text_color));
+//                        mTvKchart.setCompoundDrawablesWithIntrinsicBounds(null, null, ContextCompat.getDrawable(mContext, R.drawable.ic_down_arrow), null);
+                        mViewpager.setCurrentItem(1, false);
                         String type = HttpConfig.MIN;
                         switch (position) {
                             case 0:
@@ -251,26 +262,90 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             case 3:
                                 type = HttpConfig.HOUR;
                                 break;
-                            case 4:
-                                type = HttpConfig.DAY;
-                                break;
                         }
                         mCandleStickChartFragment.loadDataByType(type);
                     }
                 });
-        tvCenter.setText(FastOrderSharePrefernce.getFastTakeOrder(mContext, mSymbol) != null ? R.string.opened : R.string.closed);
         fillViews(quote);
-        mHeaderView.setMainTitle(quote.getSymbolname());
+        mHeaderView.setMainTitle(TextUtils.concat(quote.getSymbolname(), "\n", SpannableUtil.getStringBySize(quote.getSymbol(), .6f)));
         tvLeft.setOnClickListener(this);
         tvRight.setOnClickListener(this);
-        v.findViewById(R.id.tv_center).setOnClickListener(this);
+        v.findViewById(R.id.ll_trade).setVisibility(HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
+        v.findViewById(R.id.tv_deposit).setOnClickListener(this);
+        v.findViewById(R.id.tv_position).setOnClickListener(this);
         v.findViewById(R.id.tv_close_order).setOnClickListener(this);
-        mTvDeposit = (TextView) v.findViewById(R.id.tv_deposit);
-        mTvDeposit.setSelected(true);
-        mTvDeposit.setOnClickListener(this);
         v.findViewById(R.id.tv_kchart).setOnClickListener(this);
-        v.findViewById(R.id.tv_fullscreen).setOnClickListener(this);
+        getMarketDepth(quote);
         return v;
+    }
+
+    private void getMarketDepth(final Quote quote) {
+        if (SocketUtils.getSocket() != null && quote != null) {
+            final Gson gson = new Gson();
+            Emitter.Listener fn = new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    try {
+                        final List<MarketDepth> list = gson.fromJson(args[0].toString(), new TypeToken<List<MarketDepth>>() {
+                        }.getType());
+                        marketDepthView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                marketDepthView.setData(list, quote.getTick());
+                            }
+                        });
+                    } catch (Exception e) {
+                        LogUtils.e(e);
+                    }
+                }
+            };
+            SocketUtils.getSocket().on("topMarketDepth" + quote.getSort(), fn);
+            SocketUtils.getSocket().once("getMktDepthList", fn);
+            SocketUtils.getSocket().emit("getMktDepthList", quote.getSort());
+            SocketUtils.getSocket().on(SocketUtils.HIS_TICKS + quote.getSort(), new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    try {
+                        final List<HistoricalTicks> list = gson.fromJson(args[0].toString(), new TypeToken<List<HistoricalTicks>>() {
+                        }.getType());
+                        marketDepthView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mMarketHisAdapter.replaceData(list);
+                            }
+                        });
+                    } catch (Exception e) {
+                        LogUtils.e(e);
+                    }
+                }
+            });
+            SocketUtils.getSocket().emit(SocketUtils.HIS_TICKS, mSymbol);
+        }
+        if (BizSocketUtils.getSocket() != null && HttpConfig.IS_OPEN_TRADE) {
+            BizSocketUtils.getSocket().on(BizSocketUtils.TRADE_RECORD, new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) {
+                    if (mTvTradeToast == null) return;
+                    Runnable hide = new Runnable() {
+                        @Override
+                        public void run() {
+                            mTvTradeToast.setVisibility(View.INVISIBLE);
+                        }
+                    };
+                    mTvTradeToast.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTvTradeToast.setText(args[0].toString());
+                            mTvTradeToast.setVisibility(View.VISIBLE);
+                            ObjectAnimator animator = ObjectAnimator.ofFloat(mTvTradeToast, "x", -mTvTradeToast.getMeasuredWidth(), 0);
+                            animator.start();
+                        }
+                    });
+                    mTvTradeToast.removeCallbacks(hide);
+                    mTvTradeToast.postDelayed(hide, 3000);
+                }
+            });
+        }
     }
 
     /**
@@ -280,70 +355,90 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
      */
     private void setRestView(Quote quote) {
         if (quote == null || quote.isRest()) { // 休市的状态
-            tradeView1.setVisibility(View.GONE);
-            tradeView2.setVisibility(View.GONE);
-            tradeView3.setVisibility(View.GONE);
-            tvRest.setVisibility(View.VISIBLE);
-            tvRest.setText(TextUtils.concat(SpannableUtil.getStringBySize("休市中", 1.4f), String.format("\n下一个交易时间段：%s", quote.getTradingTime())));
+//            tvRest.setText(String.format("休市中\t下一个交易时间段：\n%s", quote.getTradingTime()));
+            tvRest.setText("休市中    " + quote.getLastTime());
         } else {
-            tradeView1.setVisibility(View.VISIBLE);
-            tradeView2.setVisibility(View.VISIBLE);
-            tradeView3.setVisibility(View.VISIBLE);
-            tvRest.setVisibility(View.GONE);
+            tvRest.setText("交易中    " + quote.getLastTime());
         }
     }
 
     private void fillViews(Quote quote) {
         if (quote == null) return;
-        tvLeft.setText(leftText + StringUtils.getStringByTick(quote.getAskPrice(), quote.getTick()));
-        tvRight.setText(StringUtils.getStringByTick(quote.getBidPrice(), quote.getTick()) + rightText);
+        tvLeft.setText(leftText);
+        tvRight.setText(rightText);
 
-        int allSize = quote.getBidSize() + quote.getAskSize();
-        if (allSize != 0) {
-            pbRight.setProgress(quote.getBidSize() * 100 / allSize);
-            pbLeft.setProgress(quote.getAskSize() * 100 / allSize);
-        }
-        tvRightPb.setText(String.valueOf(quote.getBidSize()));
-        tvLeftPb.setText(String.valueOf(quote.getAskSize()));
+        int profitColor = StringUtils.getProfitColor(mContext, quote.getChange());
+        tvPrice.setTextColor(profitColor);
+        tvChange.setTextColor(profitColor);
+        tvChangeRate.setTextColor(profitColor);
         tvPrice.setText(StringUtils.getStringByTick(quote.getLastPrice(), quote.getTick()));
-        tvChange.setText(DoubleUtil.format2Decimal(quote.getChange()));
-        tvChangeRate.setText(DoubleUtil.format2Decimal(quote.getChangeRate()) + "%");
+        tvChange.setText(String.format(Locale.getDefault(), "%+.2f", quote.getChange()));
+        tvChangeRate.setText(String.format(Locale.getDefault(), "(%+.2f%%)", quote.getChangeRate()));
+
+        tvOpen.setText(StringUtils.getStringByTick(quote.getOpen(), quote.getTick()));
+        tvHigh.setText(StringUtils.getStringByTick(quote.getHigh(), quote.getTick()));
+        tvLow.setText(StringUtils.getStringByTick(quote.getLow(), quote.getTick()));
+        tvVol.setText(quote.getVol() + "");
+        tvLastClose.setText(StringUtils.getStringByTick(quote.getLastclose(), quote.getTick()));
     }
 
 
-    private void findViews(View v) {
+    private void findViews(View v, Quote quote) {
         mHeaderView = (HeaderView) v.findViewById(R.id.header_view);
         mHeaderView.bindActivity(getActivity());
+        mScrollView = (NestedScrollView) v.findViewById(R.id.scrollView);
         rgNav = (NestRadioGroup) v.findViewById(R.id.rg_nav);
-        pbLeft = (ProgressBar) v.findViewById(R.id.pb_left);
-        pbRight = (ProgressBar) v.findViewById(R.id.pb_right);
         tvLeft = (TextView) v.findViewById(R.id.tv_left);
         tvRight = (TextView) v.findViewById(R.id.tv_right);
-        tvLeftPb = (TextView) v.findViewById(R.id.tv_left_pb);
-        tvRightPb = (TextView) v.findViewById(R.id.tv_right_pb);
-        tvCenter = (TextView) v.findViewById(R.id.tv_center);
         mViewpager = (NoTouchScrollViewpager) v.findViewById(R.id.viewpager);
         mTvKchart = (TextView) v.findViewById(R.id.tv_kchart);
         vgOrder = v.findViewById(R.id.vg_order);
         vgSettlement = v.findViewById(R.id.vg_settlement);
         tvDirection = (TextView) v.findViewById(R.id.tv_direction);
         tvYueValue = (TextView) v.findViewById(R.id.tv_yue_value);
-        tvMarginValue = (TextView) v.findViewById(R.id.tv_margin_value);
+        mRvMarketHis = (RecyclerView) v.findViewById(R.id.rv_list);
+        mTvTradeToast = (TextView) v.findViewById(R.id.tv_trade_toast);
+        RecyclerView.ItemAnimator animator = mRvMarketHis.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
+        mRvMarketHis.setLayoutManager(new LinearLayoutManager(mContext) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+        mMarketHisAdapter = new MarketHisAdapter(mHisList, quote.getTick());
+        mMarketHisAdapter.bindToRecyclerView(mRvMarketHis);
         if (mIsDemo) {
             TextView tvYue = (TextView) v.findViewById(R.id.tv_yue);
-            TextView tvMargin = (TextView) v.findViewById(R.id.tv_margin);
             tvYue.setText("可用金币");
-            tvMargin.setText("保证金币");
+            tvYue.setVisibility(HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
+            tvYueValue.setVisibility(HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
         }
         tvTotal = (TextView) v.findViewById(R.id.tv_total);
         colorView = v.findViewById(R.id.view_color);
         tvPrice = (TextView) v.findViewById(R.id.tv_price);
         tvChange = (TextView) v.findViewById(R.id.tv_change);
         tvChangeRate = (TextView) v.findViewById(R.id.tv_change_rate);
-        tradeView1 = v.findViewById(R.id.trade_view1);
-        tradeView2 = v.findViewById(R.id.trade_view2);
-        tradeView3 = v.findViewById(R.id.trade_view3);
+
+        tvOpen = (TextView) v.findViewById(R.id.tv_open);
+        tvHigh = (TextView) v.findViewById(R.id.tv_high);
+        tvLow = (TextView) v.findViewById(R.id.tv_low);
+        tvVol = (TextView) v.findViewById(R.id.tv_vol);
+        tvLastClose = (TextView) v.findViewById(R.id.tv_last_close);
+
         tvRest = (TextView) v.findViewById(R.id.tv_rest);
+        marketDepthView = (MarketDepthView) v.findViewById(R.id.market_depth_view);
+        TextView tvType = (TextView) v.findViewById(R.id.tv_type);
+        tvType.setText(quote.getCurrency());
+        v.findViewById(R.id.iv_more).setOnClickListener(this);
+        v.findViewById(R.id.tv_pankou).setOnClickListener(this);
+
+        View reset = v.findViewById(R.id.tv_reset);
+        reset.setVisibility(mIsDemo && HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
+        reset.setOnClickListener(this);
+
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage(getString(R.string.operaing));
         mProgressDialog.setCancelable(false);
@@ -356,22 +451,24 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void getHolding() {
-        HttpManager.getBizService(mIsDemo).getHolding()
-                .flatMap(new Function<BizResponse<List<Holds>>, ObservableSource<Holds>>() {
+//        HttpManager.getBizService(mIsDemo).getHolding()
+        BizSocketUtils.getHolding(mIsDemo)
+                .map(new Function<BizResponse<List<Holds>>, List<Holds>>() {
                     @Override
-                    public ObservableSource<Holds> apply(@NonNull BizResponse<List<Holds>> listBizResponse) throws Exception {
-                        return Observable.fromIterable(listBizResponse.getResult());
+                    public List<Holds> apply(@NonNull BizResponse<List<Holds>> listBizResponse) throws Exception {
+                        List<Holds> holdsList = listBizResponse.getResult();
+                        Iterator<Holds> it = holdsList.iterator();
+                        while (it.hasNext()) {
+                            Holds holds = it.next();
+                            if (!TextUtils.equals(holds.getSymbol(), mSymbol)) {
+                                it.remove();
+                            }
+                        }
+                        return holdsList;
                     }
                 })
-                .filter(new Predicate<Holds>() {
-                    @Override
-                    public boolean test(@NonNull Holds holding) throws Exception {
-                        return TextUtils.equals(holding.getSymbol(), mSymbol);
-                    }
-                })
-                .compose(RxUtils.<Holds>applySchedulers())
-                .compose(this.<Holds>bindUntilEvent(FragmentEvent.DESTROY))
-                .toList()
+                .compose(RxUtils.<List<Holds>>applySchedulers())
+                .compose(this.<List<Holds>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribe(new Consumer<List<Holds>>() {
                     @Override
                     public void accept(@NonNull List<Holds> holdses) throws Exception {
@@ -389,7 +486,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             vgSettlement.setVisibility(View.GONE);
                             vgOrder.setVisibility(View.VISIBLE);
                             tvDirection.setText((TextUtils.equals(holding.getBuySell(), "买入") ? "看涨" : "看跌") + Math.abs(sumQty) + "手");
-                            tvTotal.setText(TextUtils.concat("持仓盈亏\n", StringUtils.formatUnrealizePL(mContext, sumUnrealizedPL)));
+                            tvTotal.setText(TextUtils.concat(StringUtils.formatUnrealizePL(mContext, sumUnrealizedPL), "\n持仓盈亏"));
                             if (TextUtils.equals(holding.getBuySell(), "买入")) {
                                 leftText = "追加";
                                 rightText = "平仓";
@@ -427,48 +524,54 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     public void onEvent(PollRefreshEvent event) {
         if (getActivity() instanceof TradeActivity && ((TradeActivity) getActivity()).mIndex == 0) {
             getHolding();
-            // 下面是轮询方式获取报价
-//            Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-//            fillViews(quote);
-            // end
             Funds result = StaticStore.getFunds(mIsDemo);
             tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
-            tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
+            if (SocketUtils.getSocket() != null) {
+                SocketUtils.getSocket().emit(SocketUtils.HIS_TICKS, mSymbol);
+            }
         }
     }
 
-   /* @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(OneMinuteEvent event) {
-        // 每分钟检查一下是否开盘
-        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
-        setRestView(quote);
-    }
-*/
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(PriceRefreshEvent event) {
         if (TextUtils.equals(event.getSymbol(), mSymbol)) {
             Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+//            if (mHisList.size() > 20) {
+//                mHisList.remove(0);
+//            }
+//            mHisList.add(new Quote(quote));
+//            mMarketHisAdapter.notifyDataSetChanged();
+//            mRvMarketHis.scrollToPosition(mHisList.size() - 1);
             fillViews(quote);
             setRestView(quote);
             Funds result = StaticStore.getFunds(mIsDemo);
             tvYueValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getAvailableFunds()));
-            tvMarginValue.setText(getString(R.string.rmb_symbol) + DoubleUtil.format2Decimal(result.getFrozenMargin()));
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(FastTakeOrderEvent event) {
-        tvCenter.setText(event.isOpened() ? R.string.opened : R.string.closed);
+    public void onEvent(ChartTouchEvent event) {
+        if (mScrollView != null) {
+            mScrollView.requestDisallowInterceptTouchEvent(event.isStatues());
+        }
     }
 
     @Override
     public void onClick(View v) {
         FastTakeOrderConfig fastTakeOrder = FastOrderSharePrefernce.getFastTakeOrder(mContext, mSymbol);
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+        if (quote == null) {
+            return;
+        }
         switch (v.getId()) {
             case R.id.tv_close_order:
                 mCloseAllDialog.show();
                 break;
             case R.id.tv_left:
+                if (quote.isRest()) {
+                    ToastUtils.show(mContext, "休市中，暂时不能下单");
+                    return;
+                }
                 if (TextUtils.equals("平仓", leftText)) {
                     if (fastTakeOrder != null) {
                         closeOrder();
@@ -485,6 +588,10 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 }
                 break;
             case R.id.tv_right:
+                if (quote.isRest()) {
+                    ToastUtils.show(mContext, "休市中，暂时不能下单");
+                    return;
+                }
                 if (TextUtils.equals("平仓", rightText)) {
                     if (fastTakeOrder != null) {
                         closeOrder();
@@ -500,8 +607,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     }
                 }
                 break;
-            case R.id.tv_center:
-                FastTakeOrderActivity.startActivity(mContext, mSymbol, mIsDemo);
+            case R.id.tv_position:
+                PositionActivity.startActivity(mContext, mIsDemo);
                 break;
             case R.id.tv_deposit:
                 if (mIsDemo) {
@@ -511,7 +618,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             .subscribe(new Consumer<BizResponse>() {
                                 @Override
                                 public void accept(@NonNull BizResponse response) throws Exception {
-                                    ToastUtils.show(mContext, R.string.opera_success);
+                                    ToastUtils.show(mContext, response.getRmsg());
                                 }
                             }, new Consumer<Throwable>() {
                                 @Override
@@ -524,11 +631,29 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                     ActivityTools.toDeposit(mContext);
                 }
                 break;
+            case R.id.iv_more:
+            case R.id.tv_pankou:
+                MarketDetailActivity.startActivity(mContext, mSymbol);
+                break;
             case R.id.tv_kchart:
                 mTopRightMenu.showAsDropDown(mTvKchart, 0, 0);
                 break;
-            case R.id.tv_fullscreen:
-                FullScreenChartActivity.startActivity(mContext, mSymbol, mIsDemo);
+            case R.id.tv_reset:
+                HttpManager.getBizService(true).resetSimualAccount()
+                        .compose(RxUtils.applyBizSchedulers())
+                        .compose(this.<BizResponse>bindUntilEvent(FragmentEvent.DESTROY))
+                        .subscribe(new Consumer<BizResponse>() {
+                            @Override
+                            public void accept(@NonNull BizResponse response) throws Exception {
+                                ToastUtils.show(mContext, response.getRmsg());
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                LogUtils.e(throwable);
+                                ToastUtils.show(mContext, throwable.getMessage());
+                            }
+                        });
                 break;
         }
     }
@@ -609,5 +734,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        Quote quote = StaticStore.getQuote(mSymbol, mIsDemo);
+        if (SocketUtils.getSocket() != null && quote != null) {
+            SocketUtils.getSocket().off("topMarketDepth" + quote.getSort());
+            SocketUtils.getSocket().off(SocketUtils.HIS_TICKS + quote.getSort());
+        }
+        if (BizSocketUtils.getSocket() != null) {
+            BizSocketUtils.getSocket().off(BizSocketUtils.TRADE_RECORD);
+        }
     }
 }

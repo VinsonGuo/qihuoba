@@ -1360,4 +1360,5 @@
     <string name="high_price">最高价</string>
     <string name="low_price">最低价</string>
     <string name="retry">重试</string>
+    <string name="number_holder">----</string>
 </resources>

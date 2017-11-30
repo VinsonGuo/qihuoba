@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:background="@color/background_dark"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/root_padding_15"
+    tools:context="com.yjjr.yjfutures.ui.trade.MarketDetailActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/root_padding_15"
+        android:text="行情数据"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="最高"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/tv_high"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            android:text="今开"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/tv_open"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="最低"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/tv_low"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            android:text="昨收"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/tv_last_close"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_weight="1"
+            android:background="@color/divider_color"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="1"
+            android:background="@color/divider_color"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="振幅"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/tv_change"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            android:text="成交额"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/tv_cje"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="换手率"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/tv_hsl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            android:text="成交量"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:id="@+id/tv_vol"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_weight="1"
+            android:background="@color/divider_color"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="1"
+            android:background="@color/divider_color"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="市盈率(动)"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            android:text="每股收益"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="市盈率"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            android:text="每股净收益"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_weight="1"
+            android:background="@color/divider_color"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="1"
+            android:background="@color/divider_color"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="总市值"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            android:text="机构持股"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="总股本"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            android:text="空头回补天数"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_weight="1"
+            android:background="@color/divider_color"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="1"
+            android:background="@color/divider_color"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="52周最高"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            android:text="股息"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="52周最低"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            android:text="股息收益率"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_weight="1"
+            android:background="@color/divider_color"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="@dimen/common_divider_small"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="1"
+            android:background="@color/divider_color"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="6">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="市销率"
+            android:textColor="@color/second_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:layout_weight="2"
+            android:gravity="right"
+            android:text="@string/number_holder"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/sp_12"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -40,7 +40,7 @@
             android:drawablePadding="15dp"
             android:drawableTop="@drawable/ic_home2"
             android:gravity="center"
-            android:text="监管资质"/>
+            android:text="邀请好友"/>
 
         <TextView
             android:id="@+id/tv_title3"

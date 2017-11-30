@@ -73,41 +73,21 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
         mQuote = StaticStore.getQuote(mSymbol, mIsDemo);
         if (mQuote == null) return;
 
-        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mKInfo, mChartVolume));
-        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext, mQuote, mData, mLineInfo, mChartPrice));
+        mChartPrice.setOnChartValueSelectedListener(new InfoViewListener(mContext, TextUtils.equals(mType, HttpConfig.MIN)?mQuote.getLastclose():0, mData, mKInfo, mChartVolume));
+        mChartVolume.setOnChartValueSelectedListener(new InfoViewListener(mContext,  TextUtils.equals(mType, HttpConfig.MIN)?mQuote.getLastclose():0, mData, mKInfo, mChartPrice));
         mChartPrice.setOnTouchListener(new ChartInfoViewHandler(mChartPrice));
         axisLeftPrice.setValueFormatter(new YValueFormatter(mQuote.getTick()));
 //        mMvx.setType(type);
-        DateTime dateTime;
-        if (mQuote.isRest()) { //未开盘，数据加载前一天的
-            dateTime = DateUtils.nowDateTime();
-            if (dateTime.getDayOfWeek() == 1 || dateTime.getDayOfWeek() == 7) { //星期一、星期天前一天还是没数据，要加载星期五的
-                dateTime = dateTime.minusDays(1).withDayOfWeek(5).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
-            } else {
-                dateTime = dateTime.minusDays(1).withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
-            }
-        } else {
-            dateTime = DateUtils.nowDateTime().withHourOfDay(6).withMinuteOfHour(0).withSecondOfMinute(0);
-            // 如果现在的时间在六点之前，减少一天
-            if (DateUtils.nowDateTime().isBefore(dateTime)) {
-                dateTime.minusDays(1);
-            }
-        }
-        if (HttpConfig.DAY.equals(mType)) {
-            dateTime = dateTime.minusYears(1);
-        } else if (HttpConfig.MIN15.equals(mType) || HttpConfig.MIN5.equals(mType)) {
-//            dateTime = dateTime.minusWeeks(1);
-            dateTime = dateTime.minusDays(5);
-        } else if (HttpConfig.HOUR.equals(mType)) {
-            dateTime = dateTime.minusMonths(1);
-        }
+        DateTime dateTime = DateUtils.getChartStartTime(mQuote, mType);
 
         if (SocketUtils.getSocket() == null) {
             mChartPrice.setNoDataText(getString(R.string.data_load_fail));
             mChartVolume.setNoDataText(getString(R.string.data_load_fail));
             return;
         }
-        SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, mGson.toJson(new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType)));
+        String s = mGson.toJson(new HistoryDataRequest(mQuote.getSymbol(), mQuote.getExchange(), DateUtils.formatData(dateTime.getMillis()), mType));
+        LogUtils.d("request data -> %s", s);
+        SocketUtils.getSocket().emit(SocketUtils.HIS_DATA, s);
         SocketUtils.getSocket().once(SocketUtils.HIS_DATA, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -136,6 +116,7 @@ public class FullScreenKLineChartFragment extends BaseFullScreenChartFragment {
             }
         });
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(OneMinuteEvent event) {

@@ -19,11 +19,8 @@ import com.yjjr.yjfutures.utils.http.HttpManager;
 import org.greenrobot.eventbus.EventBus;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
@@ -181,14 +178,13 @@ public class RxUtils {
 
     /**
      * 统一中铁登录接口
-     *
      */
     public static Observable<UserLoginResponse> createZTLoginObservable(final String phone, final String password, final boolean isDemo) {
         return Observable.just(1)
                 .flatMap(new Function<Object, ObservableSource<UserLoginResponse>>() {
                     @Override
                     public ObservableSource<UserLoginResponse> apply(@NonNull Object o) throws Exception {
-                        return HttpManager.getHttpService(isDemo).userLogin(phone, password, ActivityTools.getIpByNetwork());
+                        return HttpManager.getHttpService(isDemo).userLogin(phone, password, isDemo ? ActivityTools.getIpAddressString() : ActivityTools.getIpByNetwork());
                     }
                 });
     }

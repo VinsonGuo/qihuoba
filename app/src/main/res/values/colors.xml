@@ -46,6 +46,7 @@
     <color name="color_15_000000">#26000000</color>
     <color name="color_40_000000">#66000000</color>
     <color name="color_50_000000">#80000000</color>
+    <color name="color_80_000000">#bb000000</color>
     <color name="color_5_000000">#0d000000</color>
     <color name="color_50_ffffff">#80ffffff</color>
     <color name="color_70_ffffff">#B3ffffff</color>
@@ -153,7 +154,9 @@
     <color name="ma20">#3C7193</color>
     <color name="ma30">#7F9976</color>
 
-    <color name="increasing_color">@color/main_color_red</color>
-    <color name="decreasing_color">@color/main_color_green</color>
-    <color name="ave_color">@color/color_bbbbbb</color>
+    <color name="increasing_color">#d2083c</color>
+    <color name="decreasing_color">#3ee694</color>
+    <color name="ave_color">#9c5309</color>
+    <color name="line_color">#cecece</color>
+    <color name="limit_color">#adadad</color>
 </resources>

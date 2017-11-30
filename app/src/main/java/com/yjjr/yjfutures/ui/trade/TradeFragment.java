@@ -125,7 +125,6 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         }
     }};
     private NestedScrollView mScrollView;
-    private Fragment[] mFragments;
     private TextView mTvTradeToast;
 
 
@@ -192,13 +191,13 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             }
         });
         mCandleStickChartFragment = KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MIN);
-        mFragments = new Fragment[]{
+        Fragment[] fragments = {
                 LineChartFragment.newInstance(mSymbol, mIsDemo),
                 mCandleStickChartFragment,
                 KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.DAY),
                 KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.WEEK),
                 KLineChartFragment.newInstance(mSymbol, mIsDemo, HttpConfig.MONTH)};
-        SimpleFragmentPagerAdapter KLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), mFragments);
+        SimpleFragmentPagerAdapter KLineAdapter = new SimpleFragmentPagerAdapter(getChildFragmentManager(), fragments);
         mViewpager.setAdapter(KLineAdapter);
 //        mViewpager.setOffscreenPageLimit(fragments.length);
         rgNav.setOnCheckedChangeListener(new NestRadioGroup.OnCheckedChangeListener() {
@@ -235,7 +234,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         menuItems.add(new MenuItem(R.drawable.transport, "15分钟"));
         menuItems.add(new MenuItem(R.drawable.transport, "1小时"));
         mTopRightMenu
-                .setWidth(DisplayUtils.getWidthHeight(mContext)[0] / mFragments.length)      //默认宽度wrap_content
+                .setWidth(DisplayUtils.getWidthHeight(mContext)[0] / fragments.length)      //默认宽度wrap_content
                 .setHeight(DisplayUtils.dip2px(mContext, 30 * menuItems.size()))
                 .showIcon(false)     //显示菜单图标，默认为true
                 .dimBackground(false)        //背景变暗，默认为true
@@ -271,6 +270,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         mHeaderView.setMainTitle(TextUtils.concat(quote.getSymbolname(), "\n", SpannableUtil.getStringBySize(quote.getSymbol(), .6f)));
         tvLeft.setOnClickListener(this);
         tvRight.setOnClickListener(this);
+        v.findViewById(R.id.ll_trade).setVisibility(HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
         v.findViewById(R.id.tv_deposit).setOnClickListener(this);
         v.findViewById(R.id.tv_position).setOnClickListener(this);
         v.findViewById(R.id.tv_close_order).setOnClickListener(this);
@@ -321,7 +321,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
             });
             SocketUtils.getSocket().emit(SocketUtils.HIS_TICKS, mSymbol);
         }
-        if (BizSocketUtils.getSocket() != null) {
+        if (BizSocketUtils.getSocket() != null && HttpConfig.IS_OPEN_TRADE) {
             BizSocketUtils.getSocket().on(BizSocketUtils.TRADE_RECORD, new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
@@ -413,6 +413,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         if (mIsDemo) {
             TextView tvYue = (TextView) v.findViewById(R.id.tv_yue);
             tvYue.setText("可用金币");
+            tvYue.setVisibility(HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
+            tvYueValue.setVisibility(HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
         }
         tvTotal = (TextView) v.findViewById(R.id.tv_total);
         colorView = v.findViewById(R.id.view_color);
@@ -432,6 +434,11 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         tvType.setText(quote.getCurrency());
         v.findViewById(R.id.iv_more).setOnClickListener(this);
         v.findViewById(R.id.tv_pankou).setOnClickListener(this);
+
+        View reset = v.findViewById(R.id.tv_reset);
+        reset.setVisibility(mIsDemo && HttpConfig.IS_OPEN_TRADE ? View.VISIBLE : View.GONE);
+        reset.setOnClickListener(this);
+
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage(getString(R.string.operaing));
         mProgressDialog.setCancelable(false);
@@ -611,7 +618,7 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                             .subscribe(new Consumer<BizResponse>() {
                                 @Override
                                 public void accept(@NonNull BizResponse response) throws Exception {
-                                    ToastUtils.show(mContext, R.string.opera_success);
+                                    ToastUtils.show(mContext, response.getRmsg());
                                 }
                             }, new Consumer<Throwable>() {
                                 @Override
@@ -630,6 +637,23 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
                 break;
             case R.id.tv_kchart:
                 mTopRightMenu.showAsDropDown(mTvKchart, 0, 0);
+                break;
+            case R.id.tv_reset:
+                HttpManager.getBizService(true).resetSimualAccount()
+                        .compose(RxUtils.applyBizSchedulers())
+                        .compose(this.<BizResponse>bindUntilEvent(FragmentEvent.DESTROY))
+                        .subscribe(new Consumer<BizResponse>() {
+                            @Override
+                            public void accept(@NonNull BizResponse response) throws Exception {
+                                ToastUtils.show(mContext, response.getRmsg());
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception {
+                                LogUtils.e(throwable);
+                                ToastUtils.show(mContext, throwable.getMessage());
+                            }
+                        });
                 break;
         }
     }
@@ -714,6 +738,8 @@ public class TradeFragment extends BaseFragment implements View.OnClickListener 
         if (SocketUtils.getSocket() != null && quote != null) {
             SocketUtils.getSocket().off("topMarketDepth" + quote.getSort());
             SocketUtils.getSocket().off(SocketUtils.HIS_TICKS + quote.getSort());
+        }
+        if (BizSocketUtils.getSocket() != null) {
             BizSocketUtils.getSocket().off(BizSocketUtils.TRADE_RECORD);
         }
     }

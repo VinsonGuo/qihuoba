@@ -75,6 +75,8 @@
                     android:layout_marginLeft="4dp"
                     android:layout_toRightOf="@id/tv_rest"
                     android:background="@color/main_color"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
                     android:text="@string/number_holder"
                     android:textColor="@color/main_text_color"
                     android:textSize="@dimen/sp_12"/>
@@ -102,13 +104,30 @@
                     android:textSize="@dimen/sp_14"/>
 
                 <TextView
+                    android:id="@+id/tv_reset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_yue"
+                    android:layout_alignTop="@id/tv_yue"
+                    android:layout_marginLeft="@dimen/dp_4"
+                    android:layout_toRightOf="@id/tv_yue"
+                    android:background="@drawable/bg_trade_reset"
+                    android:gravity="center"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="@string/reset"
+                    android:textColor="@color/main_color_green"
+                    android:textSize="@dimen/sp_12"
+                    android:visibility="gone"/>
+
+                <TextView
                     android:id="@+id/tv_yue_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/tv_yue"
                     android:layout_marginTop="9dp"
-                    android:minWidth="80dp"
+                    android:minWidth="100dp"
                     android:text="@string/number_holder"
                     android:textColor="@color/third_text_color"
                     android:textSize="18sp"/>
@@ -534,6 +553,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:drawablePadding="2dp"
             android:drawableTop="@drawable/ic_deposit"
             android:gravity="center"
             android:text="@string/deposit"

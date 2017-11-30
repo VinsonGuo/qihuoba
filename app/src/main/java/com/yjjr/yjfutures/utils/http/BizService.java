@@ -10,7 +10,6 @@ import com.yjjr.yjfutures.model.biz.CashRecord;
 import com.yjjr.yjfutures.model.biz.ChargeResult;
 import com.yjjr.yjfutures.model.biz.ContractInfo;
 import com.yjjr.yjfutures.model.biz.Funds;
-import com.yjjr.yjfutures.model.biz.Holds;
 import com.yjjr.yjfutures.model.biz.Info;
 import com.yjjr.yjfutures.model.biz.Notice;
 import com.yjjr.yjfutures.model.biz.NumberResult;
@@ -190,6 +189,9 @@ public interface BizService {
     @FormUrlEncoded
     @POST("user/resetCapitalAccount")
     Observable<BizResponse> resetCapitalAccount(@Field("cid") String account);
+
+    @POST("user/resetSimualAccount")
+    Observable<BizResponse> resetSimualAccount();
 
 
     @GET("activict/queryActivict")

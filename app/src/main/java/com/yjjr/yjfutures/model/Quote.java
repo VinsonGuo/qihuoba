@@ -269,7 +269,16 @@ public class Quote {
         if (TradingTime.contains(",")) {
             int count = 0;
             String[] timeRanges = TradingTime.split(",");
-            for (String timeRange : timeRanges) {
+            for (int i = 0; i < timeRanges.length; i++) {
+                String timeRange = timeRanges[i];
+                /*if (i == 0) {
+                    DateTime now = DateUtils.nowDateTime();
+                    String[] times = timeRange.split("-");
+                    DateTime startTime = new DateTime(DateUtils.parseTime(times[0])).withYear(now.getYear()).withMonthOfYear(now.getMonthOfYear()).withDayOfMonth(now.getDayOfMonth());
+                    if (startTime.getHourOfDay() < 6) {
+                        timeRange = "06:00-" + times[1];
+                    }
+                }*/
                 count += calcTradeTime(timeRange);
             }
             return count;
